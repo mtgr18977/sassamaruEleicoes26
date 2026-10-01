@@ -30,6 +30,8 @@
   table.t { border-collapse:collapse; width:100%; font-size:.8rem; font-variant-numeric:tabular-nums } .t th,.t td { text-align:right; padding:3px 8px; border-bottom:1px solid var(--grid) } .t th:first-child,.t td:first-child { text-align:left }
   .heat td { text-align:center; padding:4px 2px; border:2px solid var(--surface); border-radius:3px; min-width:54px; font-size:.78rem } .heat td:first-child { text-align:left; border-radius:0; font-weight:600; min-width:36px }
   .heat th { font-weight:600; color:var(--ink2); padding:4px 2px }
+  .tiles { display:grid; grid-template-columns:repeat(7,1fr); grid-template-rows:repeat(8,1fr); gap:3px; max-width:430px } .tl { aspect-ratio:1; border-radius:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:.68rem; line-height:1.15; font-variant-numeric:tabular-nums } .tl b { font-size:.78rem }
+  .sl label { display:flex; flex-direction:column; min-width:240px } .sl b { color:var(--ink); font-weight:600 } .lnk { background:none; border:0; color:var(--ink2); text-decoration:underline; cursor:pointer; font:inherit }
   .aviso { border-left:3px solid var(--s4); background:var(--surface); padding:8px 12px; font-size:.84rem; color:var(--ink2); border-radius:0 8px 8px 0; margin:12px 0 }
 </style>
 </head>
@@ -102,20 +104,31 @@
       A estimativa do modelo é a média dos 4 institutos com correção de house effect e recência (<code>pesquisas.py</code>).</p>
   </div>
 
-  <h2>6. Projeção do 1º turno (4/10/2026)</h2>
-  <p class="sub">Base: como cada estado votou em 2022 (lulismo × bolsonarismo × terceira via). Os totais nacionais vêm das pesquisas; a distribuição por estado, do swing 2022→2026 com choques regionais medidos em 2002–2022.</p>
-  <div class="aviso"><b>É uma simulação condicional às pesquisas, não uma previsão validada.</b> Não há backtest do caminho pesquisa → resultado. O ruído por estado é grande (veja a largura dos intervalos). "Flávio" = bloco anti-PT de 2022 (Bolsonaro).</div>
+  <h2>6. Projeção e simulador</h2>
+  <p class="sub">Base: como cada estado votou em 2022 (lulismo × bolsonarismo × terceira via). Os totais nacionais vêm das pesquisas e você pode mexer neles; a distribuição por estado é o swing 2022→2026 com choques regionais medidos em 2002–2022.</p>
+  <div class="aviso"><b>Simulação condicional às pesquisas, não uma previsão validada.</b> Não há backtest do caminho pesquisa → resultado e o ruído por estado é grande (veja os intervalos). "Flávio" = bloco anti-PT de 2022. A projeção do 1º turno de 1/10 está congelada na tag <code>projecao-1turno-2026-10-01</code>; os sliders partem dela.</div>
   <div class="card">
-    <div class="filtros">Cenário <span class="seg" id="segProj"></span></div>
+    <div class="filtros">Turno <span class="seg" id="segProjT"></span> Cenário <span class="seg" id="segCen"></span> <button id="rst" class="lnk">redefinir</button></div>
+    <div class="filtros sl">
+      <label>Lula/(Lula+Flávio): <b id="vS"></b><input type="range" id="slS" min="44" max="60" step="0.1"></label>
+      <label id="lQ">Lula+Flávio nos válidos: <b id="vQ"></b><input type="range" id="slQ" min="75" max="95" step="0.5"></label>
+    </div>
     <div class="kpis" id="kpisProj" style="margin:6px 0 10px"></div>
+    <div class="row">
+      <div><h3>2022 (resultado) · Lula − adversário</h3><div class="tiles" id="mapa22"></div></div>
+      <div><h3>2026 (mediana simulada) · Lula − Flávio</h3><div class="tiles" id="mapa26"></div></div>
+    </div>
+    <p class="nota" style="margin:4px 0 10px">Cada quadrado é um estado, posicionado como no mapa. Azul: adversário na frente; vermelho: Lula. Escala até ±40 p.p.</p>
     <h3>Lula − Flávio por estado (p.p. dos válidos; barra = mediana, faixa = intervalo de 90%)</h3>
     <div class="cv alto"><canvas id="cProj"></canvas></div>
-    <details><summary>Ver tabela</summary><div id="tProj"></div></details>
-    <p class="nota"><b>Pesquisas:</b> usa a média dos 4 institutos com house effect e recência. <b>Viés se repete:</b> desconta 3 p.p. de Lula na parcela Lula/(Lula+Flávio), o erro médio das pesquisas finais de 2002, 2018 e 2022 (6 pesquisas, 3 institutos, não conferidas no TSE). Os "demais" (Caiado, Zema, Renan, Cury, outros) entram como um bloco só; o peso da terceira via tem incerteza assumida de 2 p.p. (não medida).</p>
+    <details><summary>Ver tabela</summary><div id="tProj"></div><div id="tProjCap" style="margin-top:10px"></div></details>
+    <p class="nota"><b>Viés se repete:</b> desconta do Lula/(Lula+Flávio) o erro médio das pesquisas finais anteriores (<span id="notaVies"></span>; poucas pesquisas, não conferidas no TSE). "Demais" (Caiado, Zema, Renan, Cury, outros) entram como um bloco; o peso da terceira via tem incerteza assumida de 2 p.p. O 2º turno usa o mesmo Monte Carlo de <code>apps/eleicoes.html</code>.</p>
   </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="modelos/eleicoes-model.js"></script>
+<script src="modelos/projecao-model.js"></script>
 <script>
 const D = __DATA__;
 const ANOS = ["2002","2006","2010","2014","2018","2022"], LULA = {2002:1,2006:1,2022:1};
@@ -123,18 +136,13 @@ const REG = ["N","NE","CO","SE","S"], REGNOME = {N:"Norte",NE:"Nordeste",CO:"Cen
 const INST = ["Datafolha","Quaest","AtlasIntel","RealTimeBigData"], INSTNOME = {RealTimeBigData:"Real Time Big Data"};
 const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const f1 = (x) => x == null ? "–" : x.toFixed(1).replace(".", ","), $ = (id) => document.getElementById(id);
-const state = { cen:"pesquisas", turnoReg:2, turnoHeat:2, turnoCap:2, ano:"2022" };
+const state = { projT:1, cen:"pesquisas", s:51.8, q:87.5, turnoReg:2, turnoHeat:2, turnoCap:2, ano:"2022" };
 let charts = {};
 
 // ---------- utilidades ----------
 function seg(el, key, redraw) {
   el.innerHTML = [1,2].map(t => `<button data-t="${t}" aria-pressed="${state[key]==t}">${t}º</button>`).join("");
   el.onclick = (e) => { const t = e.target.dataset.t; if (!t) return; state[key] = +t; seg(el, key, redraw); redraw(); };
-}
-function segCen() {
-  const el = $("segProj"), nomes = { pesquisas:"Pesquisas", vies_se_repete:"Viés se repete" };
-  el.innerHTML = Object.keys(nomes).map(k => `<button data-k="${k}" aria-pressed="${state.cen==k}">${nomes[k]}</button>`).join("");
-  el.onclick = (e) => { const k = e.target.dataset.k; if (!k) return; state.cen = k; segCen(); projecao(); };
 }
 function tabela(id, cab, linhas) {
   $(id).innerHTML = `<table class="t"><tr>${cab.map(c => `<th>${c}</th>`).join("")}</tr>` +
@@ -261,28 +269,71 @@ function pesq26() {
 const ic = (t, s) => 1 / (1 + Math.exp(-(Math.log(t.p_pesquisas / (1 - t.p_pesquisas)) + s * 1.645 * t.sd_logit)));
 
 
-// ---------- 6. projeção 1º turno ----------
+// ---------- 6. projeção e simulador ----------
+const TILES = { RR:[0,2],AP:[0,4], AC:[1,0],AM:[1,1],PA:[1,3],MA:[1,4],CE:[1,5],RN:[1,6], RO:[2,1],MT:[2,2],TO:[2,3],PI:[2,4],PB:[2,6],
+  MS:[3,2],GO:[3,3],DF:[3,4],BA:[3,5],PE:[3,6], SP:[4,3],MG:[4,4],ES:[4,5],AL:[4,6], PR:[5,3],RJ:[5,4],SE:[5,6], SC:[6,3], RS:[7,3] };
+function tiles(id, margens) {
+  const mix = (a, b, w) => a.map((x, i) => Math.round(x + (b[i] - x) * w)), rgb = (h) => [1,3,5].map(i => parseInt(h.slice(i, i+2), 16));
+  const [b, m, r] = ["--div-blue","--div-mid","--div-red"].map(v => rgb(css(v)));
+  $(id).innerHTML = Object.entries(TILES).map(([uf, [row, col]]) => { const v = margens[uf]; if (v == null) return "";
+    const c = mix(m, v < 0 ? b : r, Math.min(1, Math.abs(v) / 40)), lum = 0.299*c[0] + 0.587*c[1] + 0.114*c[2];
+    return `<div class="tl" style="grid-row:${row+1};grid-column:${col+1};background:rgb(${c});color:${lum > 140 ? "#0b0b0b" : "#fff"}" title="${uf}: ${v>0?"+":""}${f1(v)} p.p."><b>${uf}</b>${v>0?"+":""}${v.toFixed(0)}</div>`; }).join("");
+}
+const presets = () => {
+  const m = D.projmodel, v = D.projmodel.vies_medio;
+  return state.projT == 1 ? { pesquisas:{ s:100*m.s, q:100*m.q }, vies:{ s:100*m.s - v[1], q:100*m.q } }
+                          : { pesquisas:{ s:100*D.modelo.turno2.p_pesquisas }, vies:{ s:100*D.modelo.turno2.p_pesquisas - v[2] } };
+};
+function aplicarPreset() { const p = presets()[state.cen]; state.s = p.s; state.q = p.q ?? state.q;
+  $("slS").min = state.projT == 1 ? 44 : 42; $("slS").max = state.projT == 1 ? 60 : 58; $("lQ").style.display = state.projT == 1 ? "" : "none";
+  $("slS").value = state.s; if (p.q != null) $("slQ").value = state.q; projecao(); }
+function simularProj() {
+  if (state.projT == 1) { const r = ProjecaoModel.simular(D.projmodel, { s:state.s/100, q:state.q/100, n:5000 }); return { ...r, cap:null }; }
+  const t = D.modelo.turno2, r = EleicoesModel.simular(D.modelo, 2, { p:state.s/100, sd:t.sd_logit, n:6000 });
+  return { L:[0,0,0], dois:true, p_vence:r.p_nac_gt50, margem_nac:r.margem_mediana_pp, cap:r.capitais,
+    ufs:r.ufs.map(x => ({ uf:x.uf, lula:100*x.mediana, flavio:100-100*x.mediana, margem:200*x.mediana-100, m5:200*x.p5-100, m95:200*x.p95-100, pfrente:100*x.pvit, lula22:100*x.p2022 })) };
+}
 function projecao() {
-  const P = D.proj[state.cen], pct = (a) => `${f1(a[1])}% <small>IC90 ${f1(a[0])}–${f1(a[2])}</small>`;
-  $("kpisProj").innerHTML = `<div class="kpi"><span>Lula</span><b>${f1(P.L[1])}%</b><small>IC 90%: ${f1(P.L[0])}–${f1(P.L[2])}</small></div>
-    <div class="kpi"><span>Flávio Bolsonaro</span><b>${f1(P.F[1])}%</b><small>IC 90%: ${f1(P.F[0])}–${f1(P.F[2])}</small></div>
-    <div class="kpi"><span>Demais</span><b>${f1(P.O[1])}%</b><small>IC 90%: ${f1(P.O[0])}–${f1(P.O[2])}</small></div>
-    <div class="kpi"><span>P(Lula à frente de Flávio)</span><b>${f1(100*P.p_lula_a_frente)}%</b><small>margem mediana ${P.margem[1] > 0 ? "+" : ""}${f1(P.margem[1])} p.p.</small></div>
-    <div class="kpi"><span>P(2º turno)</span><b>${f1(100*P.p_2turno)}%</b><small>ninguém passa de 50% dos válidos</small></div>
-    <div class="kpi"><span>Estados com Lula à frente</span><b>${f1(P.ufs_lula_a_frente)}</b><small>esperado, de 27 + exterior</small></div>`;
-  const u = P.ufs, cor = (x) => x >= 0 ? css("--pt") : css("--anti");
+  $("vS").textContent = f1(state.s) + "%"; $("vQ").textContent = f1(state.q) + "%";
+  const R = simularProj(), u = R.ufs.filter(x => x.uf !== "ZZ" || true).sort((x, y) => y.margem - x.margem);
+  const k = (t, v, s) => `<div class="kpi"><span>${t}</span><b>${v}</b><small>${s}</small></div>`, ic = (a) => `IC 90%: ${f1(a[0])}–${f1(a[2])}`;
+  if (R.dois) {
+    const lN = u.reduce((a, x) => a, 0);
+    $("kpisProj").innerHTML = k("Lula/(Lula+Flávio), nacional", f1(state.s) + "%", "entrada do simulador") + k("P(Lula vence)", f1(100 * R.p_vence) + "%", `margem mediana ${R.margem_nac>0?"+":""}${f1(R.margem_nac)} p.p.`) +
+      k("Estados com Lula à frente", f1(u.reduce((a, x) => a + x.pfrente / 100, 0)), "esperado, de 27 + exterior");
+  } else {
+    $("kpisProj").innerHTML = k("Lula", f1(R.L[1]) + "%", ic(R.L)) + k("Flávio Bolsonaro", f1(R.F[1]) + "%", ic(R.F)) + k("Demais", f1(R.O[1]) + "%", ic(R.O)) +
+      k("P(Lula à frente de Flávio)", f1(100 * R.p_lula_a_frente) + "%", `margem mediana ${R.margem[1]>0?"+":""}${f1(R.margem[1])} p.p.`) + k("P(2º turno)", f1(100 * R.p_2turno) + "%", "ninguém passa de 50% dos válidos") +
+      k("Estados com Lula à frente", f1(R.ufs_lula_a_frente), "esperado, de 27 + exterior");
+  }
+  const m22 = {}; D.proj.pesquisas.ufs.forEach(x => { m22[x.uf] = state.projT == 1 ? x.lula_2022 - x.bolsonaro_2022 : 2 * D.heat[2]["2022"][x.uf] - 100; });
+  const m26 = {}; R.ufs.forEach(x => { m26[x.uf] = x.margem; });
+  tiles("mapa22", m22); tiles("mapa26", m26);
+  const cor = (x) => x >= 0 ? css("--pt") : css("--anti");
   chart("cProj", { type:"bar", data:{ labels:u.map(x => x.uf), datasets:[
-      { label:"Intervalo 90%", data:u.map(x => [x.margem_p5, x.margem_p95]), backgroundColor:u.map(x => cor(x.margem) + "44"), borderRadius:3, barThickness:12, grouped:false, order:2 },
+      { label:"Intervalo 90%", data:u.map(x => [x.m5, x.m95]), backgroundColor:u.map(x => cor(x.margem) + "44"), borderRadius:3, barThickness:12, grouped:false, order:2 },
       { label:"Mediana", data:u.map(x => x.margem), backgroundColor:u.map(x => cor(x.margem)), borderRadius:3, barThickness:5, grouped:false, order:1 } ] },
-    options:{ indexAxis:"y", scales:{ x:eixo({ ticks:{ color:css("--ink2"), callback:v=>(v>0?"+":"")+v } }), y:eixo({ grid:{display:false}, ticks:{ color:css("--ink2"), autoSkip:false, font:{size:10} } }) },
+    options:{ indexAxis:"y", animation:false, scales:{ x:eixo({ ticks:{ color:css("--ink2"), callback:v=>(v>0?"+":"")+v } }), y:eixo({ grid:{display:false}, ticks:{ color:css("--ink2"), autoSkip:false, font:{size:10} } }) },
       plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:(i)=>{ const x = u[i.dataIndex];
-        return i.datasetIndex === 0 ? `Intervalo 90%: ${f1(x.margem_p5)} a ${f1(x.margem_p95)} p.p.` : [`Lula ${f1(x.lula)}% (2022: ${f1(x.lula_2022)}%)`, `Flávio ${f1(x.flavio)}% (2022: ${f1(x.bolsonaro_2022)}%)`, `Margem ${f1(x.margem)} p.p.`, `P(Lula à frente) ${f1(x["P(Lula à frente)"])}%`]; } } } } } });
-  tabela("tProj", ["UF","Lula 2022","Lula 2026","Flávio 2022","Flávio 2026","Demais 2026","Margem (p.p.)","P(Lula à frente) %"],
-    u.map(x => [x.uf, x.lula_2022, x.lula, x.bolsonaro_2022, x.flavio, x.outros, x.margem, x["P(Lula à frente)"]]));
+        return i.datasetIndex === 0 ? `Intervalo 90%: ${f1(x.m5)} a ${f1(x.m95)} p.p.` : [`Lula ${f1(x.lula)}% · Flávio ${f1(x.flavio)}%`, `Margem ${f1(x.margem)} p.p.`, `P(Lula à frente) ${f1(x.pfrente)}%`]; } } } } } });
+  tabela("tProj", ["UF","Lula","Flávio","Margem (p.p.)","IC90 mín","IC90 máx","P(Lula à frente) %"], u.map(x => [x.uf, x.lula, x.flavio, x.margem, x.m5, x.m95, x.pfrente]));
+  $("tProjCap").innerHTML = ""; if (R.cap) { const c = R.cap.slice().sort((a, b) => b.mediana - a.mediana);
+    tabela("tProjCap", ["Capital (2º turno)","UF","2022 %","2026 mediana %","P(Lula>50%) %"], c.map(x => [x.capital, x.uf, 100*x.p2022, 100*x.mediana, 100*x.pvit])); }
+}
+let _deb; const adiar = (f) => { clearTimeout(_deb); _deb = setTimeout(f, 120); };
+function ligarProj() {
+  const segB = (el, key, opts, fn) => { el.innerHTML = Object.entries(opts).map(([k, n]) => `<button data-k="${k}" aria-pressed="${state[key] == k}">${n}</button>`).join("");
+    el.onclick = (e) => { const k = e.target.dataset.k; if (!k) return; state[key] = key === "projT" ? +k : k; segB(el, key, opts, fn); fn(); }; };
+  segB($("segProjT"), "projT", { 1:"1º", 2:"2º" }, aplicarPreset);
+  segB($("segCen"), "cen", { pesquisas:"Pesquisas", vies:"Viés se repete" }, aplicarPreset);
+  $("slS").oninput = () => { state.s = +$("slS").value; adiar(projecao); $("vS").textContent = f1(state.s) + "%"; };
+  $("slQ").oninput = () => { state.q = +$("slQ").value; adiar(projecao); $("vQ").textContent = f1(state.q) + "%"; };
+  $("rst").onclick = aplicarPreset;
+  $("notaVies").textContent = `+${f1(D.projmodel.vies_medio[1])} p.p. no 1º turno e +${f1(D.projmodel.vies_medio[2])} p.p. no 2º`;
 }
 
-function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); projecao(); }
-segCen(); seg($("segReg"), "turnoReg", regioes); seg($("segHeat"), "turnoHeat", heat); seg($("segCap"), "turnoCap", capitais);
+function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); }
+ligarProj(); seg($("segReg"), "turnoReg", regioes); seg($("segHeat"), "turnoHeat", heat); seg($("segCap"), "turnoCap", capitais);
 $("semLula").onchange = evolucao; $("semLula2").onchange = vies;
 tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
