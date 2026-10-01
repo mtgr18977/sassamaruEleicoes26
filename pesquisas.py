@@ -15,6 +15,7 @@ HOJE = pd.Timestamp("2026-10-01")
 TAU_DIAS = 14.0        # meia-vida do decaimento ≈ TAU·ln2
 DEFF = 1.5             # efeito de desenho: amostra efetiva = n / DEFF
 SD_VIES_HIST = 0.02    # padrão de estimar(); main() usa o RMSE medido por turno (vies_rmse)
+HORIZONTE = {1: 3, 2: 24}   # dias de 1/10 até 4/10 e 25/10: a incerteza da tendência cresce com o prazo
 P2022 = {1: 0.484307, 2: 0.509024}  # % PT nos válidos, tse-presidente-nacional.csv
 logit = lambda p: np.log(p / (1 - p))
 
@@ -43,7 +44,7 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
     return d
 
 
-def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST):
+def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0):
     """Retorna (p, sd_logit, house_effects, n_pesquisas)."""
     d = df.dropna(subset=[col]).copy()
     p = d[col].to_numpy()
@@ -60,7 +61,8 @@ def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST):
     cov = A @ (X.T @ ((w * w * var)[:, None] * X)) @ A      # sanduíche: pesos ≠ 1/var
     h = np.append(beta[2:], -beta[2:].sum())
     var_inst = h.var(ddof=1) / k if k > 1 else 0.0          # incerteza de qual conjunto de institutos
-    sd = np.sqrt(cov[0, 0] + var_inst + (sd_vies / (p.mean() * (1 - p.mean()))) ** 2)
+    var_drift = (h_dias / 30) ** 2 * cov[1, 1]               # incerteza da tendência até a eleição (média sem extrapolar)
+    sd = np.sqrt(cov[0, 0] + var_inst + var_drift + (sd_vies / (p.mean() * (1 - p.mean()))) ** 2)
     return 1 / (1 + np.exp(-beta[0])), sd, {i: round(float(x), 4) for i, x in zip(inst, h)}, len(d)
 
 
@@ -69,7 +71,7 @@ def main(saida="modelos/parametros.json"):
     out = {"data_referencia": str(HOJE.date())}
     for turno, col in ((1, "p1"), (2, "p2")):
         sv, nv = vies_rmse(turno)
-        p, sd, h, n = estimar(d, col, sd_vies=sv)
+        p, sd, h, n = estimar(d, col, sd_vies=sv, h_dias=HORIZONTE[turno])
         out[f"turno{turno}"] = dict(p_pesquisas=round(p, 4), sd_logit=round(sd, 4),
                                     delta=round(logit(p) - logit(P2022[turno]), 4),
                                     p_2022=P2022[turno], house_effects_logit=h, n_pesquisas=n,
