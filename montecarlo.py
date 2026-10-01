@@ -26,6 +26,17 @@ def ruido_historico(df, nac, turno):
     return float(np.sqrt(max(var_med, 0))), float(np.sqrt(var_uf))
 
 
+def gap_capitais(uf, cap, turno):
+    """gap capital–estado (logit) por UF, sd do choque comum a todas as capitais e sd idiossincrático.
+    Δgap entre eleições = deslocamento comum (média da transição) + resíduo por capital. DF (capital = UF) fica de fora."""
+    m = cap[cap.turno == turno].merge(uf[uf.turno == turno], on=["ano", "uf"], suffixes=("_c", "_u"))
+    m = m[m.uf != "DF"]
+    m["gap"] = logit(m.pct_pt_validos_c / 100) - logit(m.pct_pt_validos_u / 100)
+    g = m.pivot(index="uf", columns="ano", values="gap")
+    d = g.diff(axis=1).iloc[:, 1:]
+    return g[2022], float(np.sqrt((d.mean() ** 2).mean())), float((d - d.mean()).stack().std())
+
+
 def simular(unid, p_nac, sd_nac, sd_reg, sd_uf):
     """unid: DataFrame(uf, pct_pt_validos, validos). Retorna (p_unidades[N,k], p_nac_sorteado[N])."""
     y0 = logit(unid.pct_pt_validos.to_numpy() / 100)
@@ -66,6 +77,26 @@ def main():
                           "P(PT>50%)": (p > .5).mean(0) * 100}).sort_values("mediana", ascending=False)
         t.to_csv(f"modelos/previsao-uf-turno{turno}.csv", index=False)
         print(t.round(1).to_string(index=False))
+
+        gap, sd_com, sd_id = gap_capitais(uf, cap, turno)
+        print(f"\n-- Capitais {turno}º turno: estado simulado + gap 2022 + choque comum (sd {sd_com:.2f}) + ruído (sd {sd_id:.2f})")
+        pos = {x: i for i, x in enumerate(u.uf)}
+        comum = sd_com * rng.standard_normal((N, 1))
+        c22 = cap[(cap.ano == 2022) & (cap.turno == turno)].set_index("uf")
+        pc = {}
+        for x in c22.index:
+            if x == "DF":
+                pc[x] = p[:, pos[x]]
+            else:
+                y = logit(p[:, pos[x]]) + gap[x] + comum[:, 0] + sd_id * rng.standard_normal(N)
+                pc[x] = inv(y)
+        pc = pd.DataFrame(pc)
+        q = np.percentile(pc, [5, 50, 95], axis=0) * 100
+        tc = pd.DataFrame({"uf": pc.columns, "capital": c22.loc[pc.columns, "municipio"].to_numpy(),
+                           "2022": c22.loc[pc.columns, "pct_pt_validos"].to_numpy(), "p5": q[0], "mediana": q[1],
+                           "p95": q[2], "P(PT>50%)": (pc > .5).mean().to_numpy() * 100}).sort_values("mediana", ascending=False)
+        tc.to_csv(f"modelos/previsao-capitais-turno{turno}.csv", index=False)
+        print(tc.round(1).to_string(index=False))
 
 
 if __name__ == "__main__":
