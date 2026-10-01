@@ -78,6 +78,8 @@ out["projmodel"] = dict(s=round(float(_s), 4), q=round(float(_q), 4), sd_s=round
                                   q0=round((r.votos_pt + r.votos_antipt) / r.validos, 6), w=int(r.validos)) for r in _b.itertuples()],
                         vies_medio={t: round(float(np.mean([x["erro"] for x in out["vies"] if x["turno"] == t])), 2) for t in (1, 2)})
 import validar_regioes
+from pesquisas import evolucao
+out["evolucao"] = evolucao(pd.date_range("2026-08-20", "2026-10-01", freq="7D").strftime("%Y-%m-%d"))
 out["valreg"] = validar_regioes.comparar()
 out["modelo"] = json.load(open("modelos/parametros.json"))
 

@@ -38,6 +38,7 @@
   .comp { display:flex; height:12px; gap:2px; margin:10px 0 6px } .comp span { display:block; border-radius:3px; background:var(--c) } .comp .t1 { background:repeating-linear-gradient(45deg,var(--c) 0 3px,transparent 3px 6px); box-shadow:inset 0 0 0 1.5px var(--c) }
   .cand ul { list-style:none; margin:6px 0 0; padding:0; font-size:.86rem; color:var(--ink2) } .cand li { display:flex; justify-content:space-between; padding:2px 0; border-bottom:1px solid var(--grid) } .cand li b { color:var(--ink); font-variant-numeric:tabular-nums }
   .hero-foot { display:flex; flex-wrap:wrap; gap:6px 24px; font-size:.88rem; color:var(--ink2); padding-top:4px } .hero-foot b { color:var(--ink) }
+  .chaves { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px } .ch { border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:.82rem; color:var(--ink2) } .ch b { color:var(--ink); font-size:.92rem } .ch .bar { height:8px; background:var(--grid); border-radius:4px; position:relative; margin:6px 0 3px } .ch .bar i { position:absolute; top:0; bottom:0; left:0; background:var(--pt); border-radius:4px } .ch .bar u { position:absolute; top:-2px; bottom:-2px; left:50%; border-left:1.5px solid var(--ink2) }
   .aviso { border-left:3px solid var(--s4); background:var(--surface); padding:8px 12px; font-size:.84rem; color:var(--ink2); border-radius:0 8px 8px 0; margin:12px 0 }
 </style>
 </head>
@@ -52,6 +53,13 @@
     </div>
     <div class="hero-grid" id="heroGrid"></div>
     <div class="hero-foot" id="heroFoot"></div>
+    <h3 style="margin:14px 0 4px">Estados-chave do 2º turno</h3>
+    <div class="chaves" id="heroChaves"></div>
+    <p class="nota" style="margin:2px 0 0">Até 6 estados equilibrados (chance de Lula entre 25% e 75% no 2º turno), do maior eleitorado ao menor. Barra = chance de Lula vencer no estado; traço = 50%.</p>
+    <h3 style="margin:14px 0 4px">Como as chances evoluíram</h3>
+    <div class="cv" style="height:250px"><canvas id="cEvoChances"></canvas></div>
+    <details><summary>Ver tabela</summary><div id="tEvoCh"></div></details>
+    <p class="nota" style="margin:2px 0 0">Reconstrução semanal: para cada data, o modelo usa só as pesquisas já divulgadas até ela (mesma metodologia de hoje, inclusive o viés histórico atual). Poucas pesquisas em agosto: as primeiras semanas têm mais incerteza.</p>
     <p class="nota" id="heroNota"></p>
   </section>
   <div class="aviso"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code>: a série da Datafolha foi conferida no relatório oficial (BR-00304/2026); as demais vieram de busca web e não foram conferidas no TSE.</div>
@@ -355,6 +363,30 @@ function ligarProj() {
 function valReg() { tabela("tValReg", ["Turno","Região","Modelo %","Datafolha %","Dif. (p.p.)","ME (p.p.)"],
   D.valreg.map(x => [x.turno + "º", x.regiao, x.modelo, x.datafolha, x.dif, x.me])); }
 
+
+const UFNOME = {AC:"Acre",AL:"Alagoas",AP:"Amapá",AM:"Amazonas",BA:"Bahia",CE:"Ceará",DF:"Distrito Federal",ES:"Espírito Santo",GO:"Goiás",MA:"Maranhão",MT:"Mato Grosso",MS:"Mato Grosso do Sul",MG:"Minas Gerais",PA:"Pará",PB:"Paraíba",PR:"Paraná",PE:"Pernambuco",PI:"Piauí",RJ:"Rio de Janeiro",RN:"Rio Grande do Norte",RS:"Rio Grande do Sul",RO:"Rondônia",RR:"Roraima",SC:"Santa Catarina",SP:"São Paulo",SE:"Sergipe",TO:"Tocantins"};
+function chavesEstados(vies) {
+  const t2 = D.modelo.turno2, v = D.projmodel.vies_medio[2];
+  const r = EleicoesModel.simular(D.modelo, 2, { p: t2.p_pesquisas - (vies ? v / 100 : 0), sd: t2.sd_logit, n: 6000 });
+  const w = Object.fromEntries(D.modelo.mc.turno2.unidades.map(u => [u.uf, u.validos])), tot = Object.values(w).reduce((a, b) => a + b, 0);
+  const top = r.ufs.filter(u => UFNOME[u.uf] && u.pvit >= 0.25 && u.pvit <= 0.75).sort((a, b) => w[b.uf] - w[a.uf]).slice(0, 6);   // equilibrados, do maior eleitorado ao menor
+  if (!top.length) { $("heroChaves").innerHTML = "<div class='nota'>Nenhum estado com chance de Lula entre 25% e 75% neste cenário.</div>"; return; }
+  $("heroChaves").innerHTML = top.map(u => `<div class="ch"><b>${UFNOME[u.uf]}</b><div>Lula ${f1(100 * u.mediana)}% × Flávio ${f1(100 - 100 * u.mediana)}%</div>
+    <div class="bar"><i style="width:${100 * u.pvit}%"></i><u></u></div><div>chance de Lula: <b>${f1(100 * u.pvit)}%</b></div></div>`).join("");
+}
+function evolChances(vies) {
+  const v = D.projmodel.vies_medio, ev = D.evolucao;
+  const pts = ev.map(e => ProjecaoModel.chances({ s: e.s - (vies ? v[1] / 100 : 0), q: e.q, sd_s: e.sd_s, sd_q: e.sd_q, s2: e.s2 - (vies ? v[2] / 100 : 0), sd2: e.sd2, rho: 0.5, n: 8000 }));
+  const lab = ev.map(e => e.data.slice(8) + "/" + e.data.slice(5, 7)), ds = (nome, cor, k, pos) => ({ label: nome, data: pts.map(p => 100 * p[k]), borderColor: css(cor), backgroundColor: css(cor), borderWidth: 2, pointRadius: 4, tension: 0, rotPos: pos });
+  chart("cEvoChances", { type: "line", data: { labels: lab, datasets: [ds("Lula (PT)", "--pt", "lula", "baixo"), ds("Flávio Bolsonaro (PL)", "--anti", "flavio", "cima"),
+      { label: "50%", data: lab.map(() => 50), borderColor: css("--muted"), borderDash: [3, 4], borderWidth: 1, pointRadius: 0, aux: true }] },
+    options: { interaction: { mode: "index", intersect: false }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, max: 100, ticks: { color: css("--ink2"), callback: q => q + "%" } }) },
+      plugins: { rotulos: { on: true }, legend: { position: "bottom", labels: { color: css("--ink2"), usePointStyle: true, filter: l => l.text !== "50%" } },
+        tooltip: { callbacks: { title: i => "Pesquisas até " + ev[i[0].dataIndex].data.split("-").reverse().join("/"),
+          label: i => i.dataset.aux ? null : `${i.dataset.label}: ${f1(i.parsed.y)}% (1º turno: ${f1(100 * pts[i.dataIndex][i.datasetIndex ? "flavio_1t" : "lula_1t"])}%)` } } } } });
+  tabela("tEvoCh", ["Pesquisas até","Lula eleito %","Flávio eleito %","Lula 1º turno %","Flávio 1º turno %","Pesq. 1º / 2º turno"],
+    ev.map((e, i) => [e.data.split("-").reverse().join("/"), 100 * pts[i].lula, 100 * pts[i].flavio, 100 * pts[i].lula_1t, 100 * pts[i].flavio_1t, `${e.n1} / ${e.n2}`]));
+}
 // ---------- chances (card do topo) ----------
 function hero() {
   const m = D.projmodel, v = m.vies_medio, t2 = D.modelo.turno2, vies = state.heroCen === "vies";
@@ -373,6 +405,7 @@ function hero() {
   $("heroNota").innerHTML = `<b>Simulação condicional às pesquisas, não é previsão validada.</b> O 2º turno está em empate técnico: +1 p.p. de Lula/(Lula+Flávio) nele muda a chance de Lula em cerca de ${f1(100 * sens)} p.p. Soma a chance de vencer no 1º turno (mais de 50% dos válidos) com a de vencer o 2º, simulando os dois turnos juntos.
     A correlação entre os erros dos turnos é assumida (0,5; a faixa mostra 0 a 1). ${vies ? `Cenário "viés se repete": desconta +${f1(v[1])} p.p. (1º) e +${f1(v[2])} p.p. (2º) a favor do PT, o erro médio de pesquisas finais anteriores (poucas pesquisas).` : "Cenário \"pesquisas\": usa a média dos 4 institutos sem corrigir viés histórico."}
     Metodologia e limitações no README.`;
+  chavesEstados(vies); evolChances(vies);
   const el = $("segHero"), nomes = { pesquisas:"Pesquisas", vies:"Viés se repete" };
   el.innerHTML = Object.entries(nomes).map(([k, n]) => `<button data-k="${k}" aria-pressed="${state.heroCen == k}">${n}</button>`).join("");
   el.onclick = (e) => { const k = e.target.dataset.k; if (k) { state.heroCen = k; hero(); } };

@@ -66,6 +66,26 @@ def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0):
     return 1 / (1 + np.exp(-beta[0])), sd, {i: round(float(x), 4) for i, x in zip(inst, h)}, len(d)
 
 
+def evolucao(datas, csv="datasets/pesquisas-2026.csv"):
+    """Parâmetros do modelo "como estava em" cada data (só pesquisas até aquela data), para o gráfico de evolução.
+    Retorna [{data, s, q, sd_s, sd_q, s2, sd2, n1, n2}]; datas com pesquisas insuficientes para o ajuste são puladas.
+    ponytail: usa o viés histórico de hoje (RMSE) retroativamente; horizonte = dias até 4/10 (1º) e 25/10 (2º) a partir da data."""
+    d, sv1, sv2 = preparar(csv), vies_rmse(1)[0], vies_rmse(2)[0]
+    out = []
+    for t in map(pd.Timestamp, datas):
+        x = d[d.data <= t]
+        try:
+            s, sds, _, n1 = estimar(x, "p1s", hoje=t, sd_vies=sv1, h_dias=(pd.Timestamp("2026-10-04") - t).days)
+            q, sdq, _, _ = estimar(x, "q", hoje=t, h_dias=(pd.Timestamp("2026-10-04") - t).days)
+            s2, sd2, _, n2 = estimar(x, "p2", hoje=t, sd_vies=sv2, h_dias=(pd.Timestamp("2026-10-25") - t).days)
+        except np.linalg.LinAlgError:
+            continue
+        if min(n1, n2) >= 8 and np.isfinite([s, q, s2, sds, sdq, sd2]).all():
+            out.append(dict(data=str(t.date()), s=round(float(s), 4), q=round(float(q), 4), sd_s=round(float(sds), 4), sd_q=round(float(sdq), 4),
+                            s2=round(float(s2), 4), sd2=round(float(sd2), 4), n1=int(n1), n2=int(n2)))
+    return out
+
+
 def main(saida="modelos/parametros.json"):
     d = preparar()
     out = {"data_referencia": str(HOJE.date())}
