@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eleições 2026 — simulação</title>
+<style>
+  :root { color-scheme: light dark; --bg:#fff; --fg:#1a1a1a; --mut:#666; --bd:#ddd; --pt:#c0392b; --bar:#e8c4c0; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#16181b; --fg:#e8e8e8; --mut:#9a9a9a; --bd:#333; --pt:#e8776b; --bar:#4a2a27; } }
+  body { background:var(--bg); color:var(--fg); font:15px/1.4 system-ui,sans-serif; margin:0 auto; max-width:960px; padding:16px; }
+  h1 { font-size:1.3rem; margin:0 0 4px } h2 { font-size:1.05rem; margin:24px 0 6px }
+  .aviso { color:var(--mut); font-size:.85rem; margin-bottom:12px }
+  .ctl { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin:12px 0 }
+  label { display:flex; flex-direction:column; font-size:.8rem; color:var(--mut) } input,select,button { font:inherit; padding:4px 6px; }
+  .kpi { display:flex; gap:24px; flex-wrap:wrap } .kpi b { font-size:1.4rem; display:block }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:24px } @media (max-width:760px){ .grid{grid-template-columns:1fr} }
+  table { border-collapse:collapse; width:100%; font-size:.85rem } th,td { text-align:right; padding:2px 6px; border-bottom:1px solid var(--bd) }
+  th:first-child,td:first-child { text-align:left } td.b { width:30%; padding:0 } .bar { height:10px; background:var(--bar); position:relative }
+  .bar i { position:absolute; top:0; bottom:0; background:var(--pt) } .bar u { position:absolute; top:-2px; bottom:-2px; left:50%; border-left:1px dashed var(--mut) }
+</style>
+</head>
+<body>
+<h1>Eleições 2026 — simulação Monte Carlo</h1>
+<div class="aviso">Modelo estatístico condicionado às pesquisas, <b>não é pesquisa eleitoral nem previsão validada</b>: o erro do δ vindo das pesquisas não foi testado em backtest, e o viés histórico das pesquisas é assumido (2 p.p.). Barra: intervalo de 90%; linha tracejada = 50%.</div>
+<div class="ctl">
+  <label>Turno<select id="turno"><option value="1">1º (Lula / válidos)</option><option value="2" selected>2º (Lula / (Lula+Flávio))</option></select></label>
+  <label>Lula nacional (%)<input id="p" type="number" step="0.1" min="30" max="65" style="width:90px"></label>
+  <label>Incerteza nacional (σ logit)<input id="sd" type="number" step="0.01" min="0.01" max="0.5" style="width:90px"></label>
+  <label>Simulações<input id="n" type="number" step="5000" min="1000" max="100000" value="20000" style="width:90px"></label>
+  <button id="go">Simular</button>
+</div>
+<div class="kpi" id="kpi"></div>
+<div class="grid"><div><h2>Estados</h2><table id="uf"></table></div><div><h2>Capitais</h2><table id="cap"></table></div></div>
+<script src="../modelos/eleicoes-model.js"></script>
+<script>
+let par;
+const $ = (id) => document.getElementById(id), pct = (x) => (100 * x).toFixed(1);
+function preencher() { const t = par["turno" + $("turno").value]; $("p").value = pct(t.p_pesquisas); $("sd").value = t.sd_logit; }
+function tabela(el, linhas, nome) {
+  el.innerHTML = `<tr><th>${nome}</th><th>2022</th><th>Mediana</th><th></th><th>P(Lula&gt;50%)</th></tr>` + linhas.map((x) =>
+    `<tr><td>${x.capital ?? x.uf}</td><td>${pct(x.p2022)}</td><td>${pct(x.mediana)}</td>
+     <td class="b"><div class="bar"><i style="left:${100 * x.p5}%;width:${100 * (x.p95 - x.p5)}%"></i><u></u></div></td><td>${pct(x.pvit)}%</td></tr>`).join("");
+}
+function rodar() {
+  const turno = +$("turno").value;
+  const r = EleicoesModel.simular(par, turno, { p: $("p").value / 100, sd: +$("sd").value, n: +$("n").value });
+  $("kpi").innerHTML = `<div><b>${pct(r.p_nac_gt50)}%</b>P(Lula &gt; 50% dos válidos)</div>` +
+    (turno === 1 ? `<div><b>${pct(1 - r.p_nac_gt50)}%</b>P(2º turno)</div>` : "") +
+    `<div><b>${r.margem_mediana_pp.toFixed(1)} p.p.</b>margem mediana de Lula</div>`;
+  const ord = (a) => [...a].sort((x, y) => y.mediana - x.mediana);
+  tabela($("uf"), ord(r.ufs), "UF"); tabela($("cap"), ord(r.capitais), "Capital");
+}
+fetch("../modelos/parametros.json").then((r) => r.json()).then((j) => { par = j; preencher(); rodar(); })
+  .catch(() => { $("kpi").textContent = "Não consegui carregar modelos/parametros.json (abra via servidor: python -m http.server)."; });
+$("turno").onchange = () => { preencher(); rodar(); }; $("go").onclick = rodar;
+</script>
+</body>
+</html>

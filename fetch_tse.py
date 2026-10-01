@@ -219,8 +219,12 @@ def listar_csvs(zf: zipfile.ZipFile) -> list[str]:
         and "leiame" not in n.lower()
         and "layout" not in n.lower()
     ]
-    nacional = [n for n in nomes if Path(n).stem.upper().endswith(("_BRASIL", "_BR"))]
-    return nacional or nomes
+    # _BR (só presidente) e _BRASIL (todos os cargos) repetem as linhas de presidente: ler só um.
+    for sufixo in ("_BR", "_BRASIL"):
+        nacional = [n for n in nomes if Path(n).stem.upper().endswith(sufixo)]
+        if nacional:
+            return nacional
+    return nomes
 
 
 def ler_zip(zip_path: Path, aliases: dict, obrigatorias: list[str], encoding: str = "latin-1") -> pd.DataFrame:
@@ -261,6 +265,7 @@ def agregar_candidatos(df: pd.DataFrame, ano: int) -> pd.DataFrame:
     df["turno"] = pd.to_numeric(df["turno"], errors="coerce").astype(int)
     for col in ("uf", "cod_municipio", "municipio", "numero", "partido", "nome"):
         df[col] = df[col].astype(str).str.strip()
+    df["cod_municipio"] = df["cod_municipio"].str.zfill(5)  # alguns anos vêm sem zero à esquerda
 
     if "zona" in df.columns:
         dup = df.duplicated(["turno", "uf", "cod_municipio", "zona", "numero"]).sum()
@@ -327,6 +332,7 @@ def agregar_detalhe(df: pd.DataFrame, ano: int) -> pd.DataFrame:
     df["turno"] = pd.to_numeric(df["turno"], errors="coerce").astype(int)
     for col in ("uf", "cod_municipio"):
         df[col] = df[col].astype(str).str.strip()
+    df["cod_municipio"] = df["cod_municipio"].str.zfill(5)
     cols = ["aptos", "comparecimento", "brancos", "nulos"]
     for c in cols:
         if c not in df.columns:
