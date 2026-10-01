@@ -265,6 +265,7 @@ def agregar_candidatos(df: pd.DataFrame, ano: int) -> pd.DataFrame:
     df["turno"] = pd.to_numeric(df["turno"], errors="coerce").astype(int)
     for col in ("uf", "cod_municipio", "municipio", "numero", "partido", "nome"):
         df[col] = df[col].astype(str).str.strip()
+    df["cod_municipio"] = df["cod_municipio"].str.zfill(5)  # alguns anos vêm sem zero à esquerda
 
     if "zona" in df.columns:
         dup = df.duplicated(["turno", "uf", "cod_municipio", "zona", "numero"]).sum()
@@ -331,6 +332,7 @@ def agregar_detalhe(df: pd.DataFrame, ano: int) -> pd.DataFrame:
     df["turno"] = pd.to_numeric(df["turno"], errors="coerce").astype(int)
     for col in ("uf", "cod_municipio"):
         df[col] = df[col].astype(str).str.strip()
+    df["cod_municipio"] = df["cod_municipio"].str.zfill(5)
     cols = ["aptos", "comparecimento", "brancos", "nulos"]
     for c in cols:
         if c not in df.columns:
