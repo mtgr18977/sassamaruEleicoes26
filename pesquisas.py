@@ -15,6 +15,7 @@ HOJE = pd.Timestamp("2026-10-01")
 TAU_DIAS = 14.0        # meia-vida do decaimento ≈ TAU·ln2
 DEFF = 1.5             # efeito de desenho: amostra efetiva = n / DEFF
 SD_VIES_HIST = 0.02    # padrão de estimar(); main() usa o RMSE medido por turno (vies_rmse)
+SD_PISO_2T_PP = 2.5   # ASSUMIDO: piso (p.p. de Lula/(Lula+Flávio)) para a incerteza do 2º turno; o erro medido é de pesquisas FINAIS e a 24 dias da eleição tende a ser maior
 HORIZONTE = {1: 3, 2: 24}   # dias de 1/10 até 4/10 e 25/10: a incerteza da tendência cresce com o prazo
 P2022 = {1: 0.484307, 2: 0.509024}  # % PT nos válidos, tse-presidente-nacional.csv
 logit = lambda p: np.log(p / (1 - p))
@@ -55,7 +56,7 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
     return d
 
 
-def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0):
+def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, piso_pp=0.0):
     """Retorna (p, sd_logit, house_effects, n_pesquisas)."""
     d = df.dropna(subset=[col]).copy()
     p = d[col].to_numpy()
@@ -74,7 +75,9 @@ def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0):
     var_inst = h.var(ddof=1) / k if k > 1 else 0.0          # incerteza de qual conjunto de institutos
     var_drift = (h_dias / 30) ** 2 * cov[1, 1]               # incerteza da tendência até a eleição (média sem extrapolar)
     sd = np.sqrt(cov[0, 0] + var_inst + var_drift + (sd_vies / (p.mean() * (1 - p.mean()))) ** 2)
-    return 1 / (1 + np.exp(-beta[0])), sd, {i: round(float(x), 4) for i, x in zip(inst, h)}, len(d)
+    p_est = 1 / (1 + np.exp(-beta[0]))
+    sd = max(sd, piso_pp / 100 / (p_est * (1 - p_est)))     # piso da incerteza, convertido de p.p. para logit
+    return p_est, sd, {i: round(float(x), 4) for i, x in zip(inst, h)}, len(d)
 
 
 def evolucao(datas, csv="datasets/pesquisas-2026.csv"):
@@ -88,7 +91,7 @@ def evolucao(datas, csv="datasets/pesquisas-2026.csv"):
         try:
             s, sds, _, n1 = estimar(x, "p1s", hoje=t, sd_vies=sv1, h_dias=(pd.Timestamp("2026-10-04") - t).days)
             q, sdq, _, _ = estimar(x, "q", hoje=t, h_dias=(pd.Timestamp("2026-10-04") - t).days)
-            s2, sd2, _, n2 = estimar(x, "p2", hoje=t, sd_vies=sv2, h_dias=(pd.Timestamp("2026-10-25") - t).days)
+            s2, sd2, _, n2 = estimar(x, "p2", hoje=t, sd_vies=sv2, h_dias=(pd.Timestamp("2026-10-25") - t).days, piso_pp=SD_PISO_2T_PP)
         except np.linalg.LinAlgError:
             continue
         if min(n1, n2) >= 8 and np.isfinite([s, q, s2, sds, sdq, sd2]).all():
@@ -102,7 +105,7 @@ def main(saida="modelos/parametros.json"):
     out = {"data_referencia": str(HOJE.date())}
     for turno, col in ((1, "p1"), (2, "p2")):
         sv, nv = vies_rmse(turno)
-        p, sd, h, n = estimar(d, col, sd_vies=sv, h_dias=HORIZONTE[turno])
+        p, sd, h, n = estimar(d, col, sd_vies=sv, h_dias=HORIZONTE[turno], piso_pp=SD_PISO_2T_PP if turno == 2 else 0.0)
         out[f"turno{turno}"] = dict(p_pesquisas=round(p, 4), sd_logit=round(sd, 4),
                                     delta=round(logit(p) - logit(P2022[turno]), 4),
                                     p_2022=P2022[turno], house_effects_logit=h, n_pesquisas=n,

@@ -7,7 +7,7 @@ Data: 1/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 |---|---|
 | ETL (`fetch_tse.py`) | rodado com dados reais do TSE; 12/12 OK contra o oficial; corrigidas dupla contagem (`_BR`+`_BRASIL`) e `cod_municipio` sem zero |
 | Backtest (`backtest.py`, `nivel2.py`) | swing uniforme (δ real) erra ~6,2 p.p. por UF no 1º turno vs 9,95 da persistência; λ regional não melhora de forma clara |
-| Pesquisas (`pesquisas.py`) | δ com house effect, recência, viés histórico (RMSE 3,6 p.p. 1º / 1,5 p.p. 2º; correção opcional por eleição: +2,3 / +0,8 p.p.) e incerteza da tendência |
+| Pesquisas (`pesquisas.py`) | δ com house effect, recência, viés histórico (RMSE 3,6 p.p. 1º / 1,5 p.p. 2º; correção opcional por eleição: +2,3 / +0,8 p.p.), incerteza da tendência e piso assumido de 2,5 p.p. no 2º turno |
 | Monte Carlo (`montecarlo.py`, JS) | UF e capitais; teste node compara JS com Python |
 | Projeção 1º turno (`projecao.py`, JS) | Lula 45,2 / Flávio 42,1 / demais 12,6; P(2º turno) 91%. **Congelada na tag `projecao-1turno-2026-10-01`** |
 | Dashboard | `index.html` (Netlify serve a raiz), simulador interativo, mapa em tiles; `apps/eleicoes.html` |
