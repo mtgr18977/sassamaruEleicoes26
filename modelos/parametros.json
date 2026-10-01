@@ -16,17 +16,17 @@
   "n_vies": 6
  },
  "turno2": {
-  "p_pesquisas": 0.4934,
-  "sd_logit": 0.0702,
-  "delta": -0.0627,
+  "p_pesquisas": 0.4964,
+  "sd_logit": 0.069,
+  "delta": -0.0505,
   "p_2022": 0.509024,
   "house_effects_logit": {
-   "AtlasIntel": 0.0134,
-   "Datafolha": 0.0013,
-   "Quaest": 0.0059,
-   "RealTimeBigData": -0.0206
+   "AtlasIntel": 0.0043,
+   "Datafolha": 0.0293,
+   "Quaest": -0.0026,
+   "RealTimeBigData": -0.031
   },
-  "n_pesquisas": 15,
+  "n_pesquisas": 16,
   "sd_vies_hist": 0.0146,
   "n_vies": 4
  },
