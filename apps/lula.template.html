@@ -39,7 +39,7 @@
 <main>
   <h1>Lula nas urnas, 2002–2026</h1>
   <p class="sub">Votação do PT para presidente (2002–2022), recortes por região e capital, pesquisas contra resultado real e a corrida de 2026 contra Flávio Bolsonaro.</p>
-  <div class="aviso"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code> (parte conferida só por busca web, ainda não contra os registros do TSE).</div>
+  <div class="aviso"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code>: a série da Datafolha foi conferida no relatório oficial (BR-00304/2026); as demais vieram de busca web e não foram conferidas no TSE.</div>
   <div class="kpis" id="kpis"></div>
 
   <h2>1. Evolução da votação</h2>
@@ -122,6 +122,10 @@
     <h3>Lula − Flávio por estado (p.p. dos válidos; barra = mediana, faixa = intervalo de 90%)</h3>
     <div class="cv alto"><canvas id="cProj"></canvas></div>
     <details><summary>Ver tabela</summary><div id="tProj"></div><div id="tProjCap" style="margin-top:10px"></div></details>
+    <details><summary>Validação regional: modelo × Datafolha (22–23/9)</summary>
+      <div id="tValReg"></div>
+      <p class="nota">Lula/(Lula+Flávio) por região. O modelo parte de 2022 e do total nacional das pesquisas; a Datafolha vem do cruzamento por região do relatório oficial (BR-00304/2026). "ME" = margem de erro da região (por candidato). As diferenças ficam dentro dela, mas o total nacional do modelo mistura 4 institutos, então parte da diferença é de nível.</p>
+    </details>
     <p class="nota"><b>Viés se repete:</b> desconta do Lula/(Lula+Flávio) o erro médio das pesquisas finais anteriores (<span id="notaVies"></span>; poucas pesquisas, não conferidas no TSE). "Demais" (Caiado, Zema, Renan, Cury, outros) entram como um bloco; o peso da terceira via tem incerteza assumida de 2 p.p. O 2º turno usa o mesmo Monte Carlo de <code>apps/eleicoes.html</code>.</p>
   </div>
 </main>
@@ -332,7 +336,10 @@ function ligarProj() {
   $("notaVies").textContent = `+${f1(D.projmodel.vies_medio[1])} p.p. no 1º turno e +${f1(D.projmodel.vies_medio[2])} p.p. no 2º`;
 }
 
-function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); }
+
+function valReg() { tabela("tValReg", ["Turno","Região","Modelo %","Datafolha %","Dif. (p.p.)","ME (p.p.)"],
+  D.valreg.map(x => [x.turno + "º", x.regiao, x.modelo, x.datafolha, x.dif, x.me])); }
+function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); valReg(); }
 ligarProj(); seg($("segReg"), "turnoReg", regioes); seg($("segHeat"), "turnoHeat", heat); seg($("segCap"), "turnoCap", capitais);
 $("semLula").onchange = evolucao; $("semLula2").onchange = vies;
 tudo();

@@ -219,3 +219,6 @@ __marimo__/
 
 # Sassamaru Eleicoes: zips brutos do TSE
 datasets/tse_raw/
+
+# Relatórios de institutos (direitos autorais): ficam só localmente
+docs/*.pdf

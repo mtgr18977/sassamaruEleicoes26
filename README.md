@@ -23,14 +23,15 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `montecarlo.py`, `modelos/eleicoes-model.js` | Monte Carlo por UF e capital (Python e JS, com teste de equivalência) |
 | `projecao.py`, `modelos/projecao-model.js` | Projeção do 1º turno (Lula × Flávio × demais) com base em 2022 |
 | `gerar_pagina_lula.py` | Gera `index.html` (dados embutidos) a partir de `apps/lula.template.html` |
-| `datasets/` | CSVs do TSE e das pesquisas (`pesquisas-2026.csv`, `vies-pesquisas.csv`) |
+| `validar_regioes.py` | Compara a distribuição regional do modelo com o cruzamento por região da Datafolha (22–23/9) |
+| `datasets/` | CSVs do TSE e das pesquisas (`pesquisas-2026.csv`, `vies-pesquisas.csv`, `datafolha-regioes-2026-09-22.csv`) |
 
 ## Método em uma linha
 Em logit, `y_UF,2026 = y_UF,2022 + δ`, com δ vindo das pesquisas; choque regional e ruído por UF **medidos** nos resíduos 2002–2022; um deslocamento comum é recalibrado para que o total nacional bata com o sorteado. No 1º turno há dois eixos: Lula/(Lula+Flávio) e o peso de Lula+Flávio.
 
 ## Limitações (leia antes de usar os números)
 - **Sem validação ponta a ponta.** Só foi testada a parte "dado o total nacional, distribuir por UF" (backtest 2006–2022). O caminho pesquisa → resultado não tem backtest.
-- **Pesquisas não conferidas no TSE.** Os dados de 2026 e das pesquisas históricas vêm de busca web (Wikipedia, Poder360, CNN, Gazeta do Povo, CartaCapital), sem os PDFs registrados. Faltam RTBD 2022, Quaest/Atlas 2018, pesquisas de 2006 e o 2º turno de setembro do Datafolha. Uma nota técnica sobre isso está prevista.
+- **Pesquisas só parcialmente conferidas.** A série da Datafolha (22/7 a 23/9) foi conferida no relatório oficial (registro BR-00304/2026), que fica só local por direitos autorais. Quaest, Atlas, RTBD e as pesquisas históricas (2002, 2018, 2022) vêm de busca web (Wikipedia, Poder360, CNN, Gazeta do Povo, CartaCapital), sem os PDFs do TSE. Faltam RTBD 2022, Quaest/Atlas 2018 e pesquisas de 2006. Uma nota técnica sobre isso está prevista.
 - **Viés histórico das pesquisas com poucos pontos:** 6 pesquisas no 1º turno e 4 no 2º, de 2 eleições (2002, 2018, 2022 no 1º). O viés de +2,8 p.p. (1º) e +1,2 p.p. (2º) em favor do PT é uma ordem de grandeza. O cenário "viés se repete" é ilustrativo.
 - **Pouco histórico:** 5 transições eleitorais para estimar choques regionais; λ por região é instável. Falácia ecológica (resultado por UF não é comportamento individual).
 - **Mudança de oferta eleitoral:** 2018 e as eleições de Dilma não têm Lula na urna; o "bloco anti-PT" muda de candidato a cada eleição.
