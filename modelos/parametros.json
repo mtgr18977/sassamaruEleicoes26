@@ -1,0 +1,29 @@
+{
+  "data_referencia": "2026-10-01",
+  "turno1": {
+    "p_pesquisas": 0.4514,
+    "sd_logit": 0.0889,
+    "delta": -0.1321,
+    "p_2022": 0.484307,
+    "house_effects_logit": {
+      "AtlasIntel": 0.0535,
+      "Datafolha": -0.0327,
+      "Quaest": 0.0223,
+      "RealTimeBigData": -0.0431
+    },
+    "n_pesquisas": 23
+  },
+  "turno2": {
+    "p_pesquisas": 0.4895,
+    "sd_logit": 0.0884,
+    "delta": -0.078,
+    "p_2022": 0.509024,
+    "house_effects_logit": {
+      "AtlasIntel": 0.0247,
+      "Datafolha": 0.0042,
+      "Quaest": -0.0211,
+      "RealTimeBigData": -0.0077
+    },
+    "n_pesquisas": 14
+  }
+}
