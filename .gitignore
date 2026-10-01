@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Sassamaru Eleicoes: zips brutos do TSE
+datasets/tse_raw/

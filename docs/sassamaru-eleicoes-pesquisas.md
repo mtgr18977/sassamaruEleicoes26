@@ -17,7 +17,7 @@ Data da coleta: 1º de outubro de 2026 (3 dias antes do 1º turno, 4/10).
 | Arquivo | Conteúdo |
 |---|---|
 | `datasets/pesquisas-2026.csv` | 25 rodadas (jun–out/2026), 1º e 2º turno, com metodologia, amostra e observações |
-| `pesquisas-2026-tendencia.png` | Gráfico: diferença Lula − Flávio no 1º turno e % de Lula no 2º turno simulado |
+| `docs/pesquisas-2026-tendencia.png` | Gráfico: diferença Lula − Flávio no 1º turno e % de Lula no 2º turno simulado |
 
 Colunas do CSV: `instituto, metodo, campo_ini, campo_fim, divulgacao, amostra, base, t1_*, t2_*, obs`.
 `base` é `total` (sobre todos os entrevistados) ou `validos`. Células vazias significam "não localizei", não zero.
@@ -78,7 +78,7 @@ Boa parte dos números veio da tabela da Wikipedia sobre pesquisas de 2026 e de 
   + incerteza = erro amostral + viés histórico das pesquisas + variância entre institutos
 ```
 
-O δ é aplicado ao resultado de 2022 de cada município com a sensibilidade λ regional estimada no histórico 2002–2022 (ver `sassamaru-eleicoes-plano.md`).
+O δ é aplicado ao resultado de 2022 de cada município com a sensibilidade λ regional estimada no histórico 2002–2022 (ver `docs/sassamaru-eleicoes-plano.md`).
 
 ## 8. Próximo passo
 
