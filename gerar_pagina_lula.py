@@ -62,9 +62,22 @@ out["pesq26"] = [dict(inst=r.instituto, data=str(r.data.date()),
                       s2=r1(100 * r.t2_lula / (r.t2_lula + r.t2_flavio)) if pd.notna(r.t2_lula) else None,
                       l2=r1(r.t2_lula), f2=r1(r.t2_flavio)) for r in p.sort_values("data").itertuples()]
 out["proj"] = {k: v for k, v in json.load(open("modelos/projecao-1turno.json")).items() if k != "data"}
+# parâmetros do simulador interativo (projecao-model.js)
+import projecao
+from pesquisas import estimar, preparar, vies_rmse, SD_VIES_HIST
+_d, _sv = preparar(), vies_rmse(1)[0]
+_s, _sds, _, _ = estimar(_d, "p1s", sd_vies=_sv)
+_q, _sdq, _, _ = estimar(_d, "q", sd_vies=SD_VIES_HIST)
+_u = uf_all = pd.read_csv(D + "tse-presidente-uf.csv")
+_rs = projecao.ruido(_u.assign(num=_u.votos_pt, den=_u.votos_pt + _u.votos_antipt), "num", "den")
+_qs = projecao.ruido(_u.assign(num=_u.votos_pt + _u.votos_antipt), "num", "validos")
+_b = _u[(_u.ano == 2022) & (_u.turno == 1) & (_u.uf != "VT")]
+out["projmodel"] = dict(s=round(float(_s), 4), q=round(float(_q), 4), sd_s=round(float(_sds), 4), sd_q=round(float(_sdq), 4),
+                        ruido=dict(s=[round(x, 4) for x in _rs], q=[round(x, 4) for x in _qs]),
+                        ufs=[dict(uf=r.uf, regiao=("EX" if r.uf == "ZZ" else REGIAO[r.uf]), s0=round(r.votos_pt / (r.votos_pt + r.votos_antipt), 6),
+                                  q0=round((r.votos_pt + r.votos_antipt) / r.validos, 6), w=int(r.validos)) for r in _b.itertuples()],
+                        vies_medio={t: round(float(np.mean([x["erro"] for x in out["vies"] if x["turno"] == t])), 2) for t in (1, 2)})
 out["modelo"] = json.load(open("modelos/parametros.json"))
-for k in ("mc",):
-    out["modelo"].pop(k, None)
 
 html = open("apps/lula.template.html", encoding="utf-8").read().replace("__DATA__", json.dumps(out, ensure_ascii=False))
 open("index.html", "w", encoding="utf-8").write(html)

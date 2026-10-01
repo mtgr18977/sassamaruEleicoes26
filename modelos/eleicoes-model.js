@@ -50,6 +50,6 @@
     };
   }
 
-  const api = { simular };
+  const api = { simular, rng, quantil };
   if (typeof module !== "undefined") module.exports = api; else root.EleicoesModel = api;
 })(this);

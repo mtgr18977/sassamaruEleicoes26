@@ -77,6 +77,9 @@ def main(saida="modelos/parametros.json"):
         lo, hi = (1 / (1 + np.exp(-(logit(p) + s * 1.645 * sd))) for s in (-1, 1))
         print(f"{turno}º turno: Lula {p:.1%} (90%: {lo:.1%}–{hi:.1%}) | δ={out[f'turno{turno}']['delta']:+.3f} "
               f"| sd_logit={sd:.3f} | viés hist. RMSE={sv:.1%} (n={nv}) | n={n}\n   house effects (logit): {h}")
+    antigo = json.loads(Path(saida).read_text()) if Path(saida).exists() else {}
+    if "mc" in antigo:                      # parâmetros do Monte Carlo (montecarlo.py) não podem se perder
+        out["mc"] = antigo["mc"]
     Path(saida).write_text(json.dumps(out, indent=2, ensure_ascii=False))
 
 
