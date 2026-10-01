@@ -10,6 +10,7 @@ Data: 1/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 | Pesquisas (`pesquisas.py`) | δ com house effect, recência, viés histórico (RMSE 3,6 p.p. 1º / 1,5 p.p. 2º; correção opcional por eleição: +2,3 / +0,8 p.p.), incerteza da tendência e piso assumido de 2,5 p.p. no 2º turno |
 | Monte Carlo (`montecarlo.py`, JS) | UF e capitais; teste node compara JS com Python |
 | Projeção 1º turno (`projecao.py`, JS) | Lula 45,2 / Flávio 42,1 / demais 12,6; P(2º turno) 91%. **Congelada na tag `projecao-1turno-2026-10-01`** |
+| Aba RS (`rs.html`) | Governador: histórico TSE 2002–2022 por bloco/região, 10 pesquisas de 2026, chances e projeção por região (Zucco 90% · Brizola 10% com as pesquisas de 1/10; premissas assumidas, ver README) |
 | Dashboard | `index.html` (Netlify serve a raiz), simulador interativo, mapa em tiles; `apps/eleicoes.html` |
 | Testes | `python -m pytest -q tests`; `node tests/eleicoes-model.test.js`; `node tests/projecao-model.test.js`; `python atualizar.py` roda tudo |
 
@@ -17,6 +18,9 @@ Data: 1/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 - Bloco **Anti-PT** (Flávio em 2026); 2022 é a base por UF; município como base de dados, UF/capital como saída.
 - Eleições sem Lula (2010, 2014 Dilma; 2018 Haddad) aparecem como contexto na página.
 - Pesquisas: Datafolha, Quaest, AtlasIntel e Real Time Big Data.
+
+## Dados do RS
+Pesquisas do governador em `datasets/pesquisas-rs-governador-2026.csv` (cada linha com registro no TSE e fonte; somam 100%). Para atualizar: acrescentar a linha, rodar `python atualizar.py`. Cuidado com resumos de busca web: conferir a atribuição ao instituto na matéria.
 
 ## Regras de trabalho
 - Não inventar dados: sem fonte, deixar vazio e anotar em `obs`.

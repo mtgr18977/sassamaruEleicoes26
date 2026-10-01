@@ -2,6 +2,7 @@
 
 Simulação estatística da eleição presidencial de 2026 a partir do histórico do TSE (2002–2022) e das pesquisas de 2026. Python faz ETL e ajuste; o JS roda a simulação no navegador. **É um modelo estatístico condicional às pesquisas, não uma pesquisa eleitoral nem uma previsão validada.**
 
+- **Abas:** `index.html` (Presidente 2026) e `rs.html` (Governo do RS 2026), com estilos e utilidades comuns em `assets/`.
 - **Dashboard:** `index.html` ("Eleições Dashboard 2026": card com a chance de Lula e de Flávio serem eleitos, tema claro/escuro, notas laterais, histórico do Lula, regiões, capitais, pesquisa × resultado, 2026 e simulador). `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
 - **Projeção congelada do 1º turno (1/10/2026):** tag `projecao-1turno-2026-10-01`. Compare com o resultado real com `python avaliar_projecao.py resultado.csv`.
 
@@ -24,7 +25,10 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `projecao.py`, `modelos/projecao-model.js` | Projeção do 1º turno (Lula × Flávio × demais) com base em 2022 |
 | `gerar_pagina_lula.py` | Gera `index.html` (dados embutidos) a partir de `apps/lula.template.html` |
 | `validar_regioes.py` | Compara a distribuição regional do modelo com o cruzamento por região da Datafolha (22–23/9) |
-| `datasets/` | CSVs do TSE e das pesquisas (`pesquisas-2026.csv`, `vies-pesquisas.csv`, `datafolha-regioes-2026-09-22.csv`) |
+| `fetch_tse_rs.py`, `regioes_rs.py`, `rs_dados.py` | ETL do governador do RS (zips do TSE já baixados), mapa município → mesorregião do IBGE (rede) e blocos/unidades |
+| `rs_modelo.py`, `modelos/rs-model.js` | Aba do RS: estimativa das pesquisas, chances (1º e 2º turno simulados juntos) e projeção por região, em Python e JS (teste de equivalência) |
+| `gerar_pagina_rs.py` | Gera `rs.html` a partir de `apps/rs.template.html` |
+| `datasets/` | CSVs do TSE e das pesquisas (`pesquisas-2026.csv`, `vies-pesquisas.csv`, `datafolha-regioes-2026-09-22.csv`, `pesquisas-rs-governador-2026.csv`, `tse-governador-rs-municipio.csv`, `rs-municipios-regioes.csv`) |
 
 ## Método em uma linha
 Em logit, `y_UF,2026 = y_UF,2022 + δ`, com δ vindo das pesquisas; choque regional e ruído por UF **medidos** nos resíduos 2002–2022; um deslocamento comum é recalibrado para que o total nacional bata com o sorteado. No 1º turno há dois eixos: Lula/(Lula+Flávio) e o peso de Lula+Flávio.
@@ -41,3 +45,10 @@ Em logit, `y_UF,2026 = y_UF,2022 + δ`, com δ vindo das pesquisas; choque regio
 - **Sem drift de opinião até a eleição** além da incerteza da tendência; a deriva semanal observada em 2026 não passa do ruído amostral.
 - **Abstenção e comparecimento** ficam fixos em 2022. Regiões entram com choques independentes (o total nacional calibrado absorve o componente comum).
 - **Regras do TSE/legislação** sobre divulgação de projeções devem ser checadas antes de qualquer publicação.
+
+## Limitações da aba do RS (governador)
+- **Pesquisas extraídas de matérias** (Gazeta do Povo, CartaCapital, Band, Terra Brasil, Studio TV), sem conferência no TSE. Uma busca web chegou a atribuir ao Datafolha uma pesquisa que era do Real Time Big Data; por isso cada linha do CSV traz o registro no TSE e a fonte. Há 10 pesquisas de 5 institutos, poucas por instituto, com house effects grandes.
+- **Sem histórico de pesquisas estaduais.** O erro sistemático do 1º turno (3,6 p.p.) usa como proxy o RMSE nacional medido; o piso do 2º turno (2,5 p.p.) é o mesmo assumido no nacional. Não dá para medir o viés das pesquisas do RS.
+- **Blocos por partido** (esquerda: PT, PDT, PSOL, PSB, PV e nanicos; centro: MDB/PMDB, PSDB, PPS; direita: PL, PP, PSC, Novo e demais) são um pressuposto. Zucco = direita, Brizola = esquerda, Souza e Maranata = centro. A direita quase não existia em 2010 (0,3%), o que torna instáveis razões em log que a envolvem.
+- **Ruído regional de 5 transições** (2002–2022), com 8 unidades (mesorregiões, a Grande POA sem a capital e Porto Alegre à parte); sem correlação espacial.
+- **Sem Eduardo Leite** (limitado por mandato) o centro encolhe de 26,8% (2022) para ~17% nas pesquisas: a base 2022 do centro não se aplica diretamente.

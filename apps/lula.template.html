@@ -4,56 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Eleições Dashboard 2026</title>
-<style>
-  :root { color-scheme: light; --bg:#f6f5f2; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#85847f; --grid:#e6e5e0; --line:#d6d5cf;
-    --pt:#e34948; --anti:#2a78d6; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s7:#4a3aa7;
-    --div-blue:#2a78d6; --div-mid:#f0efec; --div-red:#e34948; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; --bg:#121211; --surface:#1a1a19; --ink:#fff; --ink2:#c3c2b7; --muted:#8d8c84; --grid:#2c2c2a; --line:#3a3a37;
-    --pt:#e66767; --anti:#3987e5; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s7:#9085e9;
-    --div-blue:#3987e5; --div-mid:#383835; --div-red:#e66767; } }
-  :root[data-theme="dark"] { color-scheme: dark; --bg:#121211; --surface:#1a1a19; --ink:#fff; --ink2:#c3c2b7; --muted:#8d8c84; --grid:#2c2c2a; --line:#3a3a37;
-    --pt:#e66767; --anti:#3987e5; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s7:#9085e9;
-    --div-blue:#3987e5; --div-mid:#383835; --div-red:#e66767; }
-  * { box-sizing:border-box } body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
-  main { max-width:1360px; margin:0 auto; padding:24px 16px 64px }
-  .topo { display:flex; justify-content:space-between; align-items:flex-start; gap:12px }
-  .tema { border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:6px 10px; cursor:pointer; font:inherit; font-size:.82rem; white-space:nowrap }
-  .sec { display:grid; grid-template-columns:minmax(0,1fr) 262px; gap:28px; align-items:start }
-  .side { position:sticky; top:16px; margin-top:46px; font-size:.82rem; color:var(--ink2); border-left:3px solid var(--line); padding:2px 0 2px 12px }
-  .side h4 { margin:0 0 8px; font-size:.68rem; letter-spacing:.09em; text-transform:uppercase; color:var(--muted) } .side ul { margin:0; padding:0; list-style:none } .side li { margin:0 0 9px; line-height:1.4 } .side li b { color:var(--ink) }
-  @media (min-width:1201px) { .semnota { max-width:calc(100% - 290px) } }
-  @media (max-width:1200px) { .sec { grid-template-columns:1fr; gap:0 } .side { position:static; margin:0 0 6px } }
-  h1 { font-size:1.7rem; margin:0 0 4px; letter-spacing:-.02em } h2 { font-size:1.2rem; margin:40px 0 4px } h3 { font-size:.95rem; margin:0 0 2px }
-  .sub { color:var(--ink2); margin:0 0 16px } .nota { color:var(--muted); font-size:.82rem; margin:6px 0 0 }
-  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:16px 0 }
-  .kpi { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px 12px } .kpi b { display:block; font-size:1.55rem; letter-spacing:-.02em; font-variant-numeric:tabular-nums }
-  .kpi span { color:var(--ink2); font-size:.8rem } .kpi small { display:block; color:var(--muted); font-size:.74rem }
-  .card { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 14px 10px; margin:12px 0 }
-  .row { display:grid; grid-template-columns:1fr 1fr; gap:12px } @media (max-width:820px) { .row { grid-template-columns:1fr } }
-  .filtros { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 8px; font-size:.85rem; color:var(--ink2) }
-  .seg { display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden } .seg button { border:0; background:transparent; color:var(--ink2); padding:5px 12px; cursor:pointer; font:inherit }
-  .seg button[aria-pressed=true] { background:var(--ink); color:var(--surface) }
-  select { font:inherit; padding:4px 8px; background:var(--surface); color:var(--ink); border:1px solid var(--line); border-radius:8px }
-  label.chk { display:inline-flex; gap:6px; align-items:center; cursor:pointer }
-  .cv { position:relative; height:320px } .cv.alto { height:640px } .cv.med { height:380px }
-  details { margin-top:6px; font-size:.82rem; color:var(--ink2) } summary { cursor:pointer }
-  table.t { border-collapse:collapse; width:100%; font-size:.8rem; font-variant-numeric:tabular-nums } .t th,.t td { text-align:right; padding:3px 8px; border-bottom:1px solid var(--grid) } .t th:first-child,.t td:first-child { text-align:left }
-  .heat td { text-align:center; padding:4px 2px; border:2px solid var(--surface); border-radius:3px; min-width:54px; font-size:.78rem } .heat td:first-child { text-align:left; border-radius:0; font-weight:600; min-width:36px }
-  .heat th { font-weight:600; color:var(--ink2); padding:4px 2px }
-  .tiles { display:grid; grid-template-columns:repeat(7,1fr); grid-template-rows:repeat(8,1fr); gap:3px; max-width:430px } .tl { aspect-ratio:1; border-radius:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:.68rem; line-height:1.15; font-variant-numeric:tabular-nums } .tl b { font-size:.78rem }
-  .sl label { display:flex; flex-direction:column; min-width:240px } .sl b { color:var(--ink); font-weight:600 } .lnk { background:none; border:0; color:var(--ink2); text-decoration:underline; cursor:pointer; font:inherit }
-  .hero { padding:16px 16px 12px } .hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:8px 0 } @media (max-width:640px) { .hero-grid { grid-template-columns:1fr } }
-  .cand { border:1px solid var(--line); border-radius:12px; padding:12px 14px; border-top:4px solid var(--c) } .cand .nome { display:flex; align-items:center; gap:8px; font-weight:600; color:var(--ink) } .cand .nome i { width:10px; height:10px; border-radius:50%; background:var(--c); display:inline-block }
-  .cand .big { font-size:3.2rem; line-height:1; letter-spacing:-.03em; font-weight:700; font-variant-numeric:tabular-nums; margin:6px 0 2px; color:var(--ink) } .cand .rot { color:var(--ink2); font-size:.82rem }
-  .comp { display:flex; height:12px; gap:2px; margin:10px 0 6px } .comp span { display:block; border-radius:3px; background:var(--c) } .comp .t1 { background:repeating-linear-gradient(45deg,var(--c) 0 3px,transparent 3px 6px); box-shadow:inset 0 0 0 1.5px var(--c) }
-  .cand ul { list-style:none; margin:6px 0 0; padding:0; font-size:.86rem; color:var(--ink2) } .cand li { display:flex; justify-content:space-between; padding:2px 0; border-bottom:1px solid var(--grid) } .cand li b { color:var(--ink); font-variant-numeric:tabular-nums }
-  .hero-foot { display:flex; flex-wrap:wrap; gap:6px 24px; font-size:.88rem; color:var(--ink2); padding-top:4px } .hero-foot b { color:var(--ink) }
-  .chaves { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px } .ch { border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:.82rem; color:var(--ink2) } .ch b { color:var(--ink); font-size:.92rem } .ch .bar { height:8px; background:var(--grid); border-radius:4px; position:relative; margin:6px 0 3px } .ch .bar i { position:absolute; top:0; bottom:0; left:0; background:var(--pt); border-radius:4px } .ch .bar u { position:absolute; top:-2px; bottom:-2px; left:50%; border-left:1.5px solid var(--ink2) }
-  .aviso { border-left:3px solid var(--s4); background:var(--surface); padding:8px 12px; font-size:.84rem; color:var(--ink2); border-radius:0 8px 8px 0; margin:12px 0 }
-</style>
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
 <main>
+  <nav class="tabs" aria-label="Seções do site"><a href="index.html" aria-current="page">Presidente 2026</a><a href="rs.html">Governo do RS 2026</a></nav>
   <div class="topo"><div class="semnota"><h1>Eleições Dashboard 2026</h1>
   <p class="sub">Chances na corrida de 2026, o histórico do Lula (2002–2022) por região e capital, pesquisas contra resultado real e um simulador interativo.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
   <div class="sec"><div class="mainc">
@@ -179,6 +134,7 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
 <script src="modelos/eleicoes-model.js"></script>
 <script src="modelos/projecao-model.js"></script>
 <script>
@@ -186,35 +142,8 @@ const D = __DATA__;
 const ANOS = ["2002","2006","2010","2014","2018","2022"], LULA = {2002:1,2006:1,2022:1};
 const REG = ["N","NE","CO","SE","S"], REGNOME = {N:"Norte",NE:"Nordeste",CO:"Centro-Oeste",SE:"Sudeste",S:"Sul"};
 const INST = ["Datafolha","Quaest","AtlasIntel","RealTimeBigData"], INSTNOME = {RealTimeBigData:"Real Time Big Data"};
-const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-const f1 = (x) => x == null ? "–" : x.toFixed(1).replace(".", ","), $ = (id) => document.getElementById(id);
 const FATOR = { pesquisas:0, meio:0.5, total:1 }, NOMEVIES = { pesquisas:"Pesquisas", meio:"½ do viés histórico", total:"Viés histórico" };
 const state = { heroCen:"pesquisas", projT:1, cen:"pesquisas", s:51.8, q:87.5, turnoReg:2, turnoHeat:2, turnoCap:2, ano:"2022" };
-let charts = {};
-
-// ---------- utilidades ----------
-function seg(el, key, redraw) {
-  el.innerHTML = [1,2].map(t => `<button data-t="${t}" aria-pressed="${state[key]==t}">${t}º</button>`).join("");
-  el.onclick = (e) => { const t = e.target.dataset.t; if (!t) return; state[key] = +t; seg(el, key, redraw); redraw(); };
-}
-function tabela(id, cab, linhas) {
-  $(id).innerHTML = `<table class="t"><tr>${cab.map(c => `<th>${c}</th>`).join("")}</tr>` +
-    linhas.map(l => `<tr>${l.map(c => `<td>${typeof c === "number" ? f1(c) : (c ?? "–")}</td>`).join("")}</tr>`).join("") + "</table>";
-}
-function chart(id, cfg) {
-  if (charts[id]) charts[id].destroy();
-  cfg.options = Object.assign({ responsive:true, maintainAspectRatio:false, animation:{duration:250} }, cfg.options);
-  const o = cfg.options; o.plugins = Object.assign({ legend:{ position:"bottom", labels:{ color:css("--ink2"), boxWidth:12, boxHeight:12, usePointStyle:true } } }, o.plugins);
-  charts[id] = new Chart($(id), cfg);
-}
-const eixo = (extra = {}) => ({ grid:{ color:css("--grid") }, border:{ display:false }, ticks:{ color:css("--ink2") }, ...extra });
-const rotulos = { id:"rotulos", afterDatasetsDraw(c, _, o) {   // rótulos diretos só nos pontos plotados (≤ 12)
-  if (!o || !o.on) return; const ctx = c.ctx; ctx.save(); ctx.font = "600 11px system-ui"; ctx.fillStyle = css("--ink"); ctx.textAlign = "center";
-  c.data.datasets.forEach((ds, i) => { if (ds.aux || c.getDatasetMeta(i).hidden) return;
-    c.getDatasetMeta(i).data.forEach((pt, k) => { const v = ds.data[k]; if (v == null) return; ctx.fillText(f1(v), pt.x, pt.y + (ds.rotPos === "baixo" ? 16 : -9)); }); });
-  ctx.restore(); } };
-Chart.register(rotulos);
-
 // ---------- KPIs ----------
 function kpis() {
   const g = (a, t) => D.nac.find(x => x.ano == a && x.turno == t);
@@ -438,20 +367,7 @@ function hero() {
   el.onclick = (e) => { const k = e.target.dataset.k; if (k) { state.heroCen = k; hero(); } };
 }
 
-// ---------- tema (auto / claro / escuro) ----------
-const TEMAS = ["auto", "claro", "escuro"];
-function temaAtual() { try { return localStorage.getItem("tema") || "auto"; } catch (e) { return "auto"; } }
-function aplicarTema(tm) {
-  const r = document.documentElement;
-  if (tm === "claro") r.setAttribute("data-theme", "light"); else if (tm === "escuro") r.setAttribute("data-theme", "dark"); else r.removeAttribute("data-theme");
-  const b = $("tema"); if (b) b.textContent = { auto: "◐ Tema: auto", claro: "☀ Tema: claro", escuro: "☾ Tema: escuro" }[tm];
-}
-let temaEscolhido = temaAtual();   // em memória: funciona mesmo se o localStorage estiver bloqueado
-function alternarTema() { temaEscolhido = TEMAS[(TEMAS.indexOf(temaEscolhido) + 1) % TEMAS.length]; try { localStorage.setItem("tema", temaEscolhido); } catch (e) {} aplicarTema(temaEscolhido); tudo(); }
-
 // ---------- notas laterais (microcopy) ----------
-function nota(id, itens) { $(id).innerHTML = `<h4>Em resumo</h4><ul>${itens.map(i => `<li>${i}</li>`).join("")}</ul>`; }
-const sg = (x) => (x > 0 ? "+" : "−") + f1(Math.abs(x));
 function notas() {
   const g = (a, t) => D.nac.find(x => x.ano == a && x.turno == t), m = D.projmodel, v = m.vies_medio, t2 = D.modelo.turno2;
   nota("nota0", [`O 2º turno é um <b>empate técnico</b>: Lula/(Lula+Flávio) está em ${f1(100 * t2.p_pesquisas)}%.`,

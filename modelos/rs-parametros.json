@@ -1,0 +1,231 @@
+{
+ "par": {
+  "data": "2026-10-01",
+  "mu": [
+   -0.17702352109125374,
+   -0.9403798848355391
+  ],
+  "cov": [
+   [
+    0.020200939136813912,
+    0.009872532496337648
+   ],
+   [
+    0.009872532496337648,
+    0.06396354148147869
+   ]
+  ],
+  "rbar": 0.038295929614878335,
+  "n": 10,
+  "pares": {
+   "ZB": {
+    "mu": 0.12958360045134804,
+    "sd": 0.10042038550035327,
+    "n": 7
+   },
+   "ZS": {
+    "mu": 0.17723942203980433,
+    "sd": 0.10078740336300787,
+    "n": 7
+   },
+   "BS": {
+    "mu": 0.12784667828291954,
+    "sd": 0.10040917619787197,
+    "n": 7
+   }
+  }
+ },
+ "sigma": 0.2881465617790454,
+ "unidades": [
+  {
+   "unidade_nome": "Centro Ocidental",
+   "E": 0.3170483317038931,
+   "C": 0.25795918878945123,
+   "D": 0.42499247950665564,
+   "validos": 319128
+  },
+  {
+   "unidade_nome": "Centro Oriental",
+   "E": 0.24199228166825007,
+   "C": 0.2522820344334431,
+   "D": 0.5057256838983069,
+   "validos": 491557
+  },
+  {
+   "unidade_nome": "Grande POA (sem capital)",
+   "E": 0.25926914238365995,
+   "C": 0.2786278587551481,
+   "D": 0.46210299886119194,
+   "validos": 1959944
+  },
+  {
+   "unidade_nome": "Nordeste (Serra)",
+   "E": 0.1714545194551523,
+   "C": 0.24230328070853324,
+   "D": 0.5862421998363144,
+   "validos": 657358
+  },
+  {
+   "unidade_nome": "Noroeste",
+   "E": 0.30887200814318044,
+   "C": 0.21812265135826978,
+   "D": 0.47300534049854975,
+   "validos": 1227039
+  },
+  {
+   "unidade_nome": "Porto Alegre",
+   "E": 0.3511804900977845,
+   "C": 0.3284945282165011,
+   "D": 0.3203249816857144,
+   "validos": 799922
+  },
+  {
+   "unidade_nome": "Sudeste",
+   "E": 0.3833818443578549,
+   "C": 0.32652809727242854,
+   "D": 0.2900900583697166,
+   "validos": 511224
+  },
+  {
+   "unidade_nome": "Sudoeste",
+   "E": 0.343906064749116,
+   "C": 0.24325151703043402,
+   "D": 0.41284241822045004,
+   "validos": 385457
+  }
+ ],
+ "ref": {
+  "chances": {
+   "eleito": [
+    0.9027,
+    0.0966,
+    0.0007
+   ],
+   "vence_1t": [
+    0.018775,
+    2.5e-05,
+    0.0
+   ],
+   "segundo_turno": 0.9812,
+   "par_final": {
+    "ZB": 0.979825,
+    "ZS": 0.001275,
+    "BS": 0.0001
+   }
+  },
+  "regioes": [
+   {
+    "unidade": "Centro Ocidental",
+    "zucco": 40.43,
+    "brizola": 39.16,
+    "centro": 19.28,
+    "margem_zb": 1.43,
+    "margem_p5": -20.96,
+    "margem_p95": 21.99,
+    "p_zucco_a_frente_1t": 54.34,
+    "zb2t": 49.72,
+    "zb2t_p5": 36.91,
+    "zb2t_p95": 62.57,
+    "p_zucco_vence_2t": 48.44
+   },
+   {
+    "unidade": "Centro Oriental",
+    "zucco": 49.19,
+    "brizola": 30.43,
+    "centro": 19.35,
+    "margem_zb": 18.91,
+    "margem_p5": -2.22,
+    "margem_p95": 37.06,
+    "p_zucco_a_frente_1t": 93.08,
+    "zb2t": 60.76,
+    "zb2t_p5": 48.15,
+    "zb2t_p95": 72.14,
+    "p_zucco_vence_2t": 91.84
+   },
+   {
+    "unidade": "Grande POA (sem capital)",
+    "zucco": 45.16,
+    "brizola": 32.76,
+    "centro": 21.39,
+    "margem_zb": 12.47,
+    "margem_p5": -4.07,
+    "margem_p95": 28.06,
+    "p_zucco_a_frente_1t": 89.16,
+    "zb2t": 56.82,
+    "zb2t_p5": 47.09,
+    "zb2t_p95": 66.32,
+    "p_zucco_vence_2t": 87.58
+   },
+   {
+    "unidade": "Nordeste (Serra)",
+    "zucco": 58.23,
+    "brizola": 21.96,
+    "centro": 18.85,
+    "margem_zb": 36.19,
+    "margem_p5": 17.51,
+    "margem_p95": 51.72,
+    "p_zucco_a_frente_1t": 99.9,
+    "zb2t": 71.68,
+    "zb2t_p5": 60.41,
+    "zb2t_p95": 80.84,
+    "p_zucco_vence_2t": 99.88
+   },
+   {
+    "unidade": "Noroeste",
+    "zucco": 44.97,
+    "brizola": 37.81,
+    "centro": 16.34,
+    "margem_zb": 7.29,
+    "margem_p5": -12.88,
+    "margem_p95": 25.7,
+    "p_zucco_a_frente_1t": 72.86,
+    "zb2t": 53.13,
+    "zb2t_p5": 42.13,
+    "zb2t_p95": 64.01,
+    "p_zucco_vence_2t": 67.88
+   },
+   {
+    "unidade": "Porto Alegre",
+    "zucco": 30.64,
+    "brizola": 43.63,
+    "centro": 24.87,
+    "margem_zb": -12.74,
+    "margem_p5": -32.22,
+    "margem_p95": 6.06,
+    "p_zucco_a_frente_1t": 13.74,
+    "zb2t": 40.23,
+    "zb2t_p5": 29.39,
+    "zb2t_p95": 52.48,
+    "p_zucco_vence_2t": 9.56
+   },
+   {
+    "unidade": "Sudeste",
+    "zucco": 27.48,
+    "brizola": 47.06,
+    "centro": 24.58,
+    "margem_zb": -19.33,
+    "margem_p5": -38.99,
+    "margem_p95": 0.23,
+    "p_zucco_a_frente_1t": 5.23,
+    "zb2t": 35.98,
+    "zb2t_p5": 25.36,
+    "zb2t_p95": 48.3,
+    "p_zucco_vence_2t": 3.11
+   },
+   {
+    "unidade": "Sudoeste",
+    "zucco": 38.91,
+    "brizola": 41.94,
+    "centro": 18.07,
+    "margem_zb": -2.95,
+    "margem_p5": -25.06,
+    "margem_p95": 18.42,
+    "p_zucco_a_frente_1t": 41.34,
+    "zb2t": 47.05,
+    "zb2t_p5": 34.66,
+    "zb2t_p95": 60.06,
+    "p_zucco_vence_2t": 35.14
+   }
+  ]
+ }
+}
