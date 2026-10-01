@@ -38,6 +38,8 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
     completo = d[cands].notna().all(axis=1)
     d["p1"] = np.where(completo, d.t1_lula / d[cands].sum(axis=1), np.nan)
     d["p2"] = d.t2_lula / (d.t2_lula + d.t2_flavio)
+    d["p1s"] = d.t1_lula / (d.t1_lula + d.t1_flavio)                       # Lula/(Lula+Flávio), 1º turno
+    d["q"] = np.where(completo, (d.t1_lula + d.t1_flavio) / d[cands].sum(axis=1), np.nan)  # Lula+Flávio nos válidos
     return d
 
 

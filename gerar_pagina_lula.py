@@ -61,6 +61,7 @@ out["pesq26"] = [dict(inst=r.instituto, data=str(r.data.date()),
                       s1=r1(100 * r.t1_lula / (r.t1_lula + r.t1_flavio)), l1=r1(r.t1_lula), f1=r1(r.t1_flavio),
                       s2=r1(100 * r.t2_lula / (r.t2_lula + r.t2_flavio)) if pd.notna(r.t2_lula) else None,
                       l2=r1(r.t2_lula), f2=r1(r.t2_flavio)) for r in p.sort_values("data").itertuples()]
+out["proj"] = {k: v for k, v in json.load(open("modelos/projecao-1turno.json")).items() if k != "data"}
 out["modelo"] = json.load(open("modelos/parametros.json"))
 for k in ("mc",):
     out["modelo"].pop(k, None)
