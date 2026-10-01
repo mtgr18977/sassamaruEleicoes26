@@ -67,6 +67,7 @@ def resumo(L, F, O):
     pc = lambda x: np.percentile(x, [5, 50, 95]) * 100
     return dict(L=pc(ln), F=pc(fn), O=pc(on), p_lula_a_frente=float((ln > fn).mean()), p_lula_gt50=float((ln > .5).mean()),
                 p_flavio_gt50=float((fn > .5).mean()), p_2turno=float(((ln <= .5) & (fn <= .5)).mean()),
+                p_lf_2turno=float((np.minimum(ln, fn) > on).mean()),   # cota: todos os demais como UM candidato
                 margem=pc(ln - fn))
 
 

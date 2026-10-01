@@ -303,7 +303,7 @@ function projecao() {
       k("Estados com Lula à frente", f1(u.reduce((a, x) => a + x.pfrente / 100, 0)), "esperado, de 27 + exterior");
   } else {
     $("kpisProj").innerHTML = k("Lula", f1(R.L[1]) + "%", ic(R.L)) + k("Flávio Bolsonaro", f1(R.F[1]) + "%", ic(R.F)) + k("Demais", f1(R.O[1]) + "%", ic(R.O)) +
-      k("P(Lula à frente de Flávio)", f1(100 * R.p_lula_a_frente) + "%", `margem mediana ${R.margem[1]>0?"+":""}${f1(R.margem[1])} p.p.`) + k("P(2º turno)", f1(100 * R.p_2turno) + "%", "ninguém passa de 50% dos válidos") +
+      k("P(Lula à frente de Flávio)", f1(100 * R.p_lula_a_frente) + "%", `margem mediana ${R.margem[1]>0?"+":""}${f1(R.margem[1])} p.p.`) + k("P(2º turno)", f1(100 * R.p_2turno) + "%", `ninguém passa de 50% · Lula × Flávio: ≥ ${f1(100 * R.p_lf_2turno)}%`) +
       k("Estados com Lula à frente", f1(R.ufs_lula_a_frente), "esperado, de 27 + exterior");
   }
   const m22 = {}; D.proj.pesquisas.ufs.forEach(x => { m22[x.uf] = state.projT == 1 ? x.lula_2022 - x.bolsonaro_2022 : 2 * D.heat[2]["2022"][x.uf] - 100; });
