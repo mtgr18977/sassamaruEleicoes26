@@ -2,7 +2,7 @@
 
 Simulação estatística da eleição presidencial de 2026 a partir do histórico do TSE (2002–2022) e das pesquisas de 2026. Python faz ETL e ajuste; o JS roda a simulação no navegador. **É um modelo estatístico condicional às pesquisas, não uma pesquisa eleitoral nem uma previsão validada.**
 
-- **Dashboard:** `index.html` (histórico do Lula, regiões, capitais, pesquisa × resultado, 2026 e simulador). `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
+- **Dashboard:** `index.html` ("Eleições Dashboard 2026": card com a chance de Lula e de Flávio serem eleitos, histórico do Lula, regiões, capitais, pesquisa × resultado, 2026 e simulador). `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
 - **Projeção congelada do 1º turno (1/10/2026):** tag `projecao-1turno-2026-10-01`. Compare com o resultado real com `python avaliar_projecao.py resultado.csv`.
 
 ## Como rodar
@@ -35,6 +35,7 @@ Em logit, `y_UF,2026 = y_UF,2022 + δ`, com δ vindo das pesquisas; choque regio
 - **Viés histórico das pesquisas com poucos pontos:** 6 pesquisas no 1º turno e 4 no 2º, de 2 eleições (2002, 2018, 2022 no 1º). O viés de +2,8 p.p. (1º) e +1,2 p.p. (2º) em favor do PT é uma ordem de grandeza. O cenário "viés se repete" é ilustrativo.
 - **Pouco histórico:** 5 transições eleitorais para estimar choques regionais; λ por região é instável. Falácia ecológica (resultado por UF não é comportamento individual).
 - **Mudança de oferta eleitoral:** 2018 e as eleições de Dilma não têm Lula na urna; o "bloco anti-PT" muda de candidato a cada eleição.
+- **Chance de ser eleito (card do topo):** soma vencer no 1º turno com vencer o 2º numa simulação conjunta; a correlação entre os erros dos dois turnos é assumida (0,5; a página mostra a faixa 0 a 1). Com o 2º turno em empate técnico, +1 p.p. de Lula/(Lula+Flávio) muda a chance de Lula em ~22 p.p.
 - **Terceira via:** os "demais" entram como um bloco; o viés das pesquisas sobre eles não foi medido (2 p.p. assumidos).
 - **Sem drift de opinião até a eleição** além da incerteza da tendência; a deriva semanal observada em 2026 não passa do ruído amostral.
 - **Abstenção e comparecimento** ficam fixos em 2022. Regiões entram com choques independentes (o total nacional calibrado absorve o componente comum).
