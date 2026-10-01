@@ -59,6 +59,7 @@ def main():
     uf = pd.read_csv(D + "tse-presidente-uf.csv")
     cap = pd.read_csv(D + "tse-presidente-capitais.csv")
     pd.options.display.float_format = "{:.1f}".format
+    mc = {}
     for turno in (1, 2):
         pr = par[f"turno{turno}"]
         hist = uf[~uf.uf.isin(["ZZ", "VT"])]
@@ -96,7 +97,15 @@ def main():
                            "2022": c22.loc[pc.columns, "pct_pt_validos"].to_numpy(), "p5": q[0], "mediana": q[1],
                            "p95": q[2], "P(PT>50%)": (pc > .5).mean().to_numpy() * 100}).sort_values("mediana", ascending=False)
         tc.to_csv(f"modelos/previsao-capitais-turno{turno}.csv", index=False)
+        mc[f"turno{turno}"] = dict(
+            sd_reg=round(sd_reg, 4), sd_uf=round(sd_uf, 4), sd_com=round(sd_com, 4), sd_id=round(sd_id, 4),
+            unidades=[dict(uf=r.uf, regiao=REGIAO[r.uf], p2022=round(r.pct_pt_validos / 100, 6), validos=int(r.validos),
+                           capital=str(c22.municipio.get(r.uf, "")), cap2022=round(float(c22.pct_pt_validos[r.uf]) / 100, 6) if r.uf in c22.index else None,
+                           gap=None if r.uf == "DF" or r.uf not in gap.index else round(float(gap[r.uf]), 4))
+                      for r in u.itertuples()])
         print(tc.round(1).to_string(index=False))
+    par["mc"] = mc
+    json.dump(par, open("modelos/parametros.json", "w"), indent=1, ensure_ascii=False)
 
 
 if __name__ == "__main__":
