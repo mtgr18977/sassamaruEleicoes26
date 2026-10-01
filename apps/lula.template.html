@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lula nas urnas, 2002–2026</title>
+<title>Eleições Dashboard 2026</title>
 <style>
   :root { color-scheme: light; --bg:#f6f5f2; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#85847f; --grid:#e6e5e0; --line:#d6d5cf;
     --pt:#e34948; --anti:#2a78d6; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s7:#4a3aa7;
@@ -32,14 +32,29 @@
   .heat th { font-weight:600; color:var(--ink2); padding:4px 2px }
   .tiles { display:grid; grid-template-columns:repeat(7,1fr); grid-template-rows:repeat(8,1fr); gap:3px; max-width:430px } .tl { aspect-ratio:1; border-radius:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:.68rem; line-height:1.15; font-variant-numeric:tabular-nums } .tl b { font-size:.78rem }
   .sl label { display:flex; flex-direction:column; min-width:240px } .sl b { color:var(--ink); font-weight:600 } .lnk { background:none; border:0; color:var(--ink2); text-decoration:underline; cursor:pointer; font:inherit }
+  .hero { padding:16px 16px 12px } .hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:8px 0 } @media (max-width:640px) { .hero-grid { grid-template-columns:1fr } }
+  .cand { border:1px solid var(--line); border-radius:12px; padding:12px 14px; border-top:4px solid var(--c) } .cand .nome { display:flex; align-items:center; gap:8px; font-weight:600; color:var(--ink) } .cand .nome i { width:10px; height:10px; border-radius:50%; background:var(--c); display:inline-block }
+  .cand .big { font-size:3.2rem; line-height:1; letter-spacing:-.03em; font-weight:700; font-variant-numeric:tabular-nums; margin:6px 0 2px; color:var(--ink) } .cand .rot { color:var(--ink2); font-size:.82rem }
+  .comp { display:flex; height:12px; gap:2px; margin:10px 0 6px } .comp span { display:block; border-radius:3px; background:var(--c) } .comp .t1 { background:repeating-linear-gradient(45deg,var(--c) 0 3px,transparent 3px 6px); box-shadow:inset 0 0 0 1.5px var(--c) }
+  .cand ul { list-style:none; margin:6px 0 0; padding:0; font-size:.86rem; color:var(--ink2) } .cand li { display:flex; justify-content:space-between; padding:2px 0; border-bottom:1px solid var(--grid) } .cand li b { color:var(--ink); font-variant-numeric:tabular-nums }
+  .hero-foot { display:flex; flex-wrap:wrap; gap:6px 24px; font-size:.88rem; color:var(--ink2); padding-top:4px } .hero-foot b { color:var(--ink) }
   .aviso { border-left:3px solid var(--s4); background:var(--surface); padding:8px 12px; font-size:.84rem; color:var(--ink2); border-radius:0 8px 8px 0; margin:12px 0 }
 </style>
 </head>
 <body>
 <main>
-  <h1>Lula nas urnas, 2002–2026</h1>
-  <p class="sub">Votação do PT para presidente (2002–2022), recortes por região e capital, pesquisas contra resultado real e a corrida de 2026 contra Flávio Bolsonaro.</p>
-  <div class="aviso"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code> (parte conferida só por busca web, ainda não contra os registros do TSE).</div>
+  <h1>Eleições Dashboard 2026</h1>
+  <p class="sub">Chances na corrida de 2026, o histórico do Lula (2002–2022) por região e capital, pesquisas contra resultado real e um simulador interativo.</p>
+  <section class="card hero" id="hero">
+    <div class="filtros" style="justify-content:space-between;margin:0 0 6px">
+      <div><b style="font-size:1.05rem;color:var(--ink)">Quem ganha a eleição? Chances simuladas</b><div class="nota" style="margin:0">Lula × Flávio Bolsonaro, condicionado às pesquisas até 1/10/2026</div></div>
+      <span class="seg" id="segHero"></span>
+    </div>
+    <div class="hero-grid" id="heroGrid"></div>
+    <div class="hero-foot" id="heroFoot"></div>
+    <p class="nota" id="heroNota"></p>
+  </section>
+  <div class="aviso"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code>: a série da Datafolha foi conferida no relatório oficial (BR-00304/2026); as demais vieram de busca web e não foram conferidas no TSE.</div>
   <div class="kpis" id="kpis"></div>
 
   <h2>1. Evolução da votação</h2>
@@ -122,6 +137,10 @@
     <h3>Lula − Flávio por estado (p.p. dos válidos; barra = mediana, faixa = intervalo de 90%)</h3>
     <div class="cv alto"><canvas id="cProj"></canvas></div>
     <details><summary>Ver tabela</summary><div id="tProj"></div><div id="tProjCap" style="margin-top:10px"></div></details>
+    <details><summary>Validação regional: modelo × Datafolha (22–23/9)</summary>
+      <div id="tValReg"></div>
+      <p class="nota">Lula/(Lula+Flávio) por região. O modelo parte de 2022 e do total nacional das pesquisas; a Datafolha vem do cruzamento por região do relatório oficial (BR-00304/2026). "ME" = margem de erro da região (por candidato). As diferenças ficam dentro dela, mas o total nacional do modelo mistura 4 institutos, então parte da diferença é de nível.</p>
+    </details>
     <p class="nota"><b>Viés se repete:</b> desconta do Lula/(Lula+Flávio) o erro médio das pesquisas finais anteriores (<span id="notaVies"></span>; poucas pesquisas, não conferidas no TSE). "Demais" (Caiado, Zema, Renan, Cury, outros) entram como um bloco; o peso da terceira via tem incerteza assumida de 2 p.p. O 2º turno usa o mesmo Monte Carlo de <code>apps/eleicoes.html</code>.</p>
   </div>
 </main>
@@ -136,7 +155,7 @@ const REG = ["N","NE","CO","SE","S"], REGNOME = {N:"Norte",NE:"Nordeste",CO:"Cen
 const INST = ["Datafolha","Quaest","AtlasIntel","RealTimeBigData"], INSTNOME = {RealTimeBigData:"Real Time Big Data"};
 const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const f1 = (x) => x == null ? "–" : x.toFixed(1).replace(".", ","), $ = (id) => document.getElementById(id);
-const state = { projT:1, cen:"pesquisas", s:51.8, q:87.5, turnoReg:2, turnoHeat:2, turnoCap:2, ano:"2022" };
+const state = { heroCen:"pesquisas", projT:1, cen:"pesquisas", s:51.8, q:87.5, turnoReg:2, turnoHeat:2, turnoCap:2, ano:"2022" };
 let charts = {};
 
 // ---------- utilidades ----------
@@ -332,7 +351,33 @@ function ligarProj() {
   $("notaVies").textContent = `+${f1(D.projmodel.vies_medio[1])} p.p. no 1º turno e +${f1(D.projmodel.vies_medio[2])} p.p. no 2º`;
 }
 
-function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); }
+
+function valReg() { tabela("tValReg", ["Turno","Região","Modelo %","Datafolha %","Dif. (p.p.)","ME (p.p.)"],
+  D.valreg.map(x => [x.turno + "º", x.regiao, x.modelo, x.datafolha, x.dif, x.me])); }
+
+// ---------- chances (card do topo) ----------
+function hero() {
+  const m = D.projmodel, v = m.vies_medio, t2 = D.modelo.turno2, vies = state.heroCen === "vies";
+  const base = { s: m.s - (vies ? v[1] / 100 : 0), q: m.q, sd_s: m.sd_s, sd_q: m.sd_q, s2: t2.p_pesquisas - (vies ? v[2] / 100 : 0), sd2: t2.sd_logit, n: 20000 };
+  const r = ProjecaoModel.chances({ ...base, rho: 0.5 }), a = ProjecaoModel.chances({ ...base, rho: 0 }), b = ProjecaoModel.chances({ ...base, rho: 1 });
+  const c = (cls, nome, cor, p, p1, p2, lo, hi) => `<div class="cand" style="--c:${css(cor)}"><div class="nome"><i></i>${nome}</div>
+    <div class="big">${f1(100 * p)}%</div><div class="rot">chance de ser eleito · faixa ${f1(100 * lo)}–${f1(100 * hi)}% conforme a correlação entre os turnos</div>
+    <div class="comp"><span class="t1" style="flex:${Math.max(p1, 0.004)}"></span><span style="flex:${Math.max(p2, 0.004)}"></span></div>
+    <ul><li>Vence já no 1º turno <b>${f1(100 * p1)}%</b></li><li>Vence no 2º turno <b>${f1(100 * p2)}%</b></li></ul></div>`;
+  const sens = ProjecaoModel.chances({ ...base, s2: base.s2 + 0.01, rho: 0.5 }).lula - r.lula;   // +1 p.p. de Lula no 2º turno
+  const fl = [r.flavio, a.flavio, b.flavio];
+  $("heroGrid").innerHTML = c("l", "Lula (PT)", "--pt", r.lula, r.lula_1t, r.lula_2t, Math.min(a.lula, b.lula), Math.max(a.lula, b.lula)) +
+    c("f", "Flávio Bolsonaro (PL)", "--anti", r.flavio, r.flavio_1t, r.flavio_2t, Math.min(...fl), Math.max(...fl));
+  $("heroFoot").innerHTML = `<span>Eleição decidida no 1º turno: <b>${f1(100 * (r.lula_1t + r.flavio_1t))}%</b></span><span>Vai ao 2º turno: <b>${f1(100 * r.segundo_turno)}%</b></span>
+    <span>Final Lula × Flávio: <b>≥ ${f1(100 * (1 - r.outro))}%</b></span>`;
+  $("heroNota").innerHTML = `<b>Simulação condicional às pesquisas, não é previsão validada.</b> O 2º turno está em empate técnico: +1 p.p. de Lula/(Lula+Flávio) nele muda a chance de Lula em cerca de ${f1(100 * sens)} p.p. Soma a chance de vencer no 1º turno (mais de 50% dos válidos) com a de vencer o 2º, simulando os dois turnos juntos.
+    A correlação entre os erros dos turnos é assumida (0,5; a faixa mostra 0 a 1). ${vies ? `Cenário "viés se repete": desconta +${f1(v[1])} p.p. (1º) e +${f1(v[2])} p.p. (2º) a favor do PT, o erro médio de pesquisas finais anteriores (poucas pesquisas).` : "Cenário \"pesquisas\": usa a média dos 4 institutos sem corrigir viés histórico."}
+    Metodologia e limitações no README.`;
+  const el = $("segHero"), nomes = { pesquisas:"Pesquisas", vies:"Viés se repete" };
+  el.innerHTML = Object.entries(nomes).map(([k, n]) => `<button data-k="${k}" aria-pressed="${state.heroCen == k}">${n}</button>`).join("");
+  el.onclick = (e) => { const k = e.target.dataset.k; if (k) { state.heroCen = k; hero(); } };
+}
+function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); valReg(); hero(); }
 ligarProj(); seg($("segReg"), "turnoReg", regioes); seg($("segHeat"), "turnoHeat", heat); seg($("segCap"), "turnoCap", capitais);
 $("semLula").onchange = evolucao; $("semLula2").onchange = vies;
 tudo();

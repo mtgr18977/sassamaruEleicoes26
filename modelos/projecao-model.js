@@ -36,6 +36,21 @@
     return { L: iv(nL), F: iv(nF), O: iv(nO), margem: iv(d), p_lula_a_frente: cont(d, (x) => x > 0), p_2turno: cont(nL.map((x, t) => Math.max(x, nF[t])), (x) => x <= 0.5),
       p_lf_2turno: cont(nL.map((x, t) => Math.min(x, nF[t]) - nO[t]), (x) => x > 0), /* cota: todos os demais como UM candidato */ ufs_lula_a_frente: ufsAFrente, ufs };
   }
-  const api = { simular };
+  // Chances nacionais de ser eleito (1º turno + 2º turno), simulação conjunta dos dois turnos.
+  // o: {s, q, sd_s, sd_q, s2, sd2, rho, n, seed}. rho = correlação (ASSUMIDA, não medida) entre os erros de s (1º turno) e s2 (2º turno).
+  function chances(o) {
+    const N = o.n ?? 20000, z = EM.rng(o.seed ?? 2026), rho = o.rho ?? 0.5;
+    let lOut = 0, fOut = 0, lWin = 0, fWin = 0, run = 0, outro = 0;
+    for (let t = 0; t < N; t++) {
+      const zc = z(), e1 = zc, e2 = rho * zc + Math.sqrt(1 - rho * rho) * z();
+      const s1 = inv(logit(o.s) + o.sd_s * e1), q = inv(logit(o.q) + o.sd_q * z()), s2 = inv(logit(o.s2) + o.sd2 * e2);
+      const L = q * s1, F = q * (1 - s1);
+      if (L > 0.5) { lOut++; lWin++; } else if (F > 0.5) { fOut++; fWin++; }
+      else { run++; if (Math.min(L, F) <= 1 - q) outro++; else if (s2 > 0.5) lWin++; else fWin++; }
+    }
+    return { lula: lWin / N, flavio: fWin / N, lula_1t: lOut / N, flavio_1t: fOut / N, lula_2t: (lWin - lOut) / N, flavio_2t: (fWin - fOut) / N,
+             segundo_turno: run / N, outro: outro / N };
+  }
+  const api = { simular, chances };
   if (typeof module !== "undefined") module.exports = api; else root.ProjecaoModel = api;
 })(this);

@@ -13,5 +13,5 @@ for p in passos:
     subprocess.run([sys.executable, p], check=True, stdout=subprocess.DEVNULL if p == "montecarlo.py" else None)
 print("\n>>> testes")
 subprocess.run([sys.executable, "-m", "pytest", "-q", "tests"], check=True)
-for t in ("eleicoes-model", "projecao-model"):
+for t in ("eleicoes-model", "projecao-model", "chances-model"):
     subprocess.run(["node", f"tests/{t}.test.js"], check=True)

@@ -22,7 +22,7 @@ Data: 1/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 - Não inventar dados: sem fonte, deixar vazio e anotar em `obs`.
 - **Não sobrescrever `modelos/projecao-1turno*`** (a versão de 1/10 é a referência para avaliar depois de 4/10). `python atualizar.py` sem `--projecao` não toca neles.
 - Não apresentar baseline/backtest como "previsão" sem validação ponta a ponta.
-- Pesquisas não foram conferidas contra os PDFs do TSE (o usuário não os tem): manter o aviso; há uma **nota técnica a escrever** sobre isso.
+- Só a Datafolha foi conferida (relatório oficial local em `docs/`, ignorado pelo git por direitos autorais). Quaest, Atlas, RTBD e as históricas não têm PDF: manter o aviso; há uma **nota técnica a escrever**.
 
 ## Próximos passos
 1. Depois de 4/10: rodar `python fetch_tse.py` para 2026 (se o TSE publicar o arquivo) ou montar `resultado.csv` e `python avaliar_projecao.py resultado.csv`; reportar erro por UF e cobertura do IC.
@@ -31,4 +31,4 @@ Data: 1/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 4. Checar regras do TSE sobre divulgação de projeções antes de publicar.
 
 ## Lacunas conhecidas nas pesquisas 2026
-Células vazias no CSV = "não localizei". Datafolha/Quaest sem 2º turno em setembro (exceto Quaest 24–27/9 e Datafolha 1–2/9); RTBD 26–30/9 em base de válidos e sem Renan Santos; Atlas 23–28/9 só Lula e Flávio.
+Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exceto 24–27/9); Datafolha completa (conferida no relatório oficial); RTBD 26–30/9 em base de válidos e sem Renan Santos; Atlas 23–28/9 só Lula e Flávio.
