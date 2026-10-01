@@ -1,32 +1,32 @@
 {
  "data_referencia": "2026-10-01",
  "turno1": {
-  "p_pesquisas": 0.4514,
-  "sd_logit": 0.1602,
-  "delta": -0.1321,
+  "p_pesquisas": 0.4515,
+  "sd_logit": 0.149,
+  "delta": -0.132,
   "p_2022": 0.484307,
   "house_effects_logit": {
-   "AtlasIntel": 0.0535,
-   "Datafolha": -0.0327,
-   "Quaest": 0.0223,
-   "RealTimeBigData": -0.0431
+   "AtlasIntel": 0.053,
+   "Datafolha": -0.0332,
+   "Quaest": 0.0237,
+   "RealTimeBigData": -0.0435
   },
   "n_pesquisas": 23,
-  "sd_vies_hist": 0.0385,
-  "n_vies": 5
+  "sd_vies_hist": 0.0357,
+  "n_vies": 6
  },
  "turno2": {
-  "p_pesquisas": 0.4895,
-  "sd_logit": 0.0694,
-  "delta": -0.078,
+  "p_pesquisas": 0.4935,
+  "sd_logit": 0.0663,
+  "delta": -0.0622,
   "p_2022": 0.509024,
   "house_effects_logit": {
-   "AtlasIntel": 0.0247,
-   "Datafolha": 0.0042,
-   "Quaest": -0.0211,
-   "RealTimeBigData": -0.0077
+   "AtlasIntel": 0.013,
+   "Datafolha": 0.0025,
+   "Quaest": 0.0055,
+   "RealTimeBigData": -0.0211
   },
-  "n_pesquisas": 14,
+  "n_pesquisas": 15,
   "sd_vies_hist": 0.0146,
   "n_vies": 4
  },
