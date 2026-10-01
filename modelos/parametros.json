@@ -17,7 +17,7 @@
  },
  "turno2": {
   "p_pesquisas": 0.4963,
-  "sd_logit": 0.0685,
+  "sd_logit": 0.1,
   "delta": -0.0509,
   "p_2022": 0.509024,
   "house_effects_logit": {

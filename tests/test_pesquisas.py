@@ -32,3 +32,13 @@ def test_vies_por_eleicao_nao_conta_2022_tres_vezes():
     m1, n1, _ = vies_eleicao(1)
     m2, n2, _ = vies_eleicao(2)
     assert (n1, n2) == (3, 2) and abs(m1 - 2.25) < 0.1 and abs(m2 - 0.83) < 0.1   # por pesquisa seriam 2,75 e 1,17
+
+
+def test_piso_de_incerteza_em_pp_vira_logit_e_so_age_quando_maior():
+    datas = pd.date_range("2026-08-01", periods=12, freq="5D")
+    d = pd.DataFrame([dict(instituto=i, data=t, n=5000, p=.50) for t in datas for i in "AB"])
+    hoje = pd.Timestamp("2026-09-30")
+    p, sd0, _, _ = estimar(d, "p", hoje=hoje, sd_vies=0.0)
+    _, sd1, _, _ = estimar(d, "p", hoje=hoje, sd_vies=0.0, piso_pp=2.5)
+    assert abs(sd1 - 0.025 / (p * (1 - p))) < 1e-9 and sd1 > sd0          # 2,5 p.p. em p=0,5 = 0,10 em logit
+    assert estimar(d, "p", hoje=hoje, sd_vies=0.05, piso_pp=0.1)[1] > 0.1  # piso menor que a incerteza: não muda

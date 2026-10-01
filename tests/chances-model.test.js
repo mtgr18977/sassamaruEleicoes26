@@ -12,6 +12,6 @@ assert(Math.abs(r.lula_1t + r.lula_2t - r.lula) < 1e-9);
 assert(r.flavio_1t < 0.03 && r.lula_1t > 0.03 && r.lula_1t < 0.15, `1º turno: Lula ${r.lula_1t}, Flávio ${r.flavio_1t}`);
 assert(r.segundo_turno > 0.85 && r.outro < 0.005, `2º turno ${r.segundo_turno}, outro cenário ${r.outro}`);
 const lo = chances({ ...base, rho: 0 }).lula, hi = chances({ ...base, rho: 1 }).lula;
-assert(Math.abs(r.lula - 0.43) < 0.05 && Math.abs(lo - 0.455) < 0.05 && Math.abs(hi - 0.414) < 0.05, `Lula eleito: ρ=0 ${lo}, ρ=.5 ${r.lula}, ρ=1 ${hi}`);
+assert(Math.abs(r.lula - 0.456) < 0.02 && Math.abs(lo - 0.478) < 0.02 && Math.abs(hi - 0.441) < 0.02, `Lula eleito: ρ=0 ${lo}, ρ=.5 ${r.lula}, ρ=1 ${hi}`);
 assert(chances({ ...base, s2: base.s2 + 0.02, rho: 0.5 }).lula > r.lula, "mais Lula no 2º turno deve aumentar a chance");
 console.log(`OK  Lula ${(100 * r.lula).toFixed(1)}% (1T ${(100 * r.lula_1t).toFixed(1)}%) | Flávio ${(100 * r.flavio).toFixed(1)}% (1T ${(100 * r.flavio_1t).toFixed(1)}%) | faixa Lula ${(100 * hi).toFixed(0)}–${(100 * lo).toFixed(0)}%`);

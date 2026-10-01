@@ -2,7 +2,7 @@
 
 Simulação estatística da eleição presidencial de 2026 a partir do histórico do TSE (2002–2022) e das pesquisas de 2026. Python faz ETL e ajuste; o JS roda a simulação no navegador. **É um modelo estatístico condicional às pesquisas, não uma pesquisa eleitoral nem uma previsão validada.**
 
-- **Dashboard:** `index.html` ("Eleições Dashboard 2026": card com a chance de Lula e de Flávio serem eleitos, histórico do Lula, regiões, capitais, pesquisa × resultado, 2026 e simulador). `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
+- **Dashboard:** `index.html` ("Eleições Dashboard 2026": card com a chance de Lula e de Flávio serem eleitos, tema claro/escuro, notas laterais, histórico do Lula, regiões, capitais, pesquisa × resultado, 2026 e simulador). `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
 - **Projeção congelada do 1º turno (1/10/2026):** tag `projecao-1turno-2026-10-01`. Compare com o resultado real com `python avaliar_projecao.py resultado.csv`.
 
 ## Como rodar
@@ -35,8 +35,9 @@ Em logit, `y_UF,2026 = y_UF,2022 + δ`, com δ vindo das pesquisas; choque regio
 - **Viés histórico das pesquisas com poucas eleições.** Medido com a eleição como unidade (média das médias por eleição, para não contar 2022 três vezes): +2,3 p.p. no 1º turno (2002, 2018, 2022) e +0,8 p.p. no 2º (2018, 2022) a favor do PT, mas o erro-padrão da média é ~1,1 e ~0,7 p.p., então o viés mal se distingue de zero. A página mostra três cenários: **Pesquisas** (sem correção, padrão), **½ do viés histórico** e **Viés histórico** (extremo, não o mais provável). A projeção congelada de 1/10 usou a média por pesquisa (+3,0 p.p. no 1º turno).
 - **Pouco histórico:** 5 transições eleitorais para estimar choques regionais; λ por região é instável. Falácia ecológica (resultado por UF não é comportamento individual).
 - **Mudança de oferta eleitoral:** 2018 e as eleições de Dilma não têm Lula na urna; o "bloco anti-PT" muda de candidato a cada eleição.
-- **Chance de ser eleito (card do topo):** soma vencer no 1º turno com vencer o 2º numa simulação conjunta; a correlação entre os erros dos dois turnos é assumida (0,5; a página mostra a faixa 0 a 1). Com o 2º turno em empate técnico, +1 p.p. de Lula/(Lula+Flávio) muda a chance de Lula em ~22 p.p.
+- **Chance de ser eleito (card do topo):** soma vencer no 1º turno com vencer o 2º numa simulação conjunta; a correlação entre os erros dos dois turnos é assumida (0,5; a página mostra a faixa 0 a 1). Com o 2º turno em empate técnico, +1 p.p. de Lula/(Lula+Flávio) muda a chance de Lula em ~15 p.p. (a página calcula o valor atual).
 - **Terceira via:** os "demais" entram como um bloco; o viés das pesquisas sobre eles não foi medido (2 p.p. assumidos).
+- **Piso de incerteza no 2º turno (assumido):** 2,5 p.p. em Lula/(Lula+Flávio) (`SD_PISO_2T_PP` em `pesquisas.py`). O erro medido (1,5 p.p.) é de pesquisas finais; a 24 dias da eleição tende a ser maior. É um parâmetro, não uma medida.
 - **Sem drift de opinião até a eleição** além da incerteza da tendência; a deriva semanal observada em 2026 não passa do ruído amostral.
 - **Abstenção e comparecimento** ficam fixos em 2022. Regiões entram com choques independentes (o total nacional calibrado absorve o componente comum).
 - **Regras do TSE/legislação** sobre divulgação de projeções devem ser checadas antes de qualquer publicação.

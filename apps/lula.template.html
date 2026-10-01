@@ -8,11 +8,21 @@
   :root { color-scheme: light; --bg:#f6f5f2; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#85847f; --grid:#e6e5e0; --line:#d6d5cf;
     --pt:#e34948; --anti:#2a78d6; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s7:#4a3aa7;
     --div-blue:#2a78d6; --div-mid:#f0efec; --div-red:#e34948; }
-  @media (prefers-color-scheme: dark) { :root { color-scheme: dark; --bg:#121211; --surface:#1a1a19; --ink:#fff; --ink2:#c3c2b7; --muted:#8d8c84; --grid:#2c2c2a; --line:#3a3a37;
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; --bg:#121211; --surface:#1a1a19; --ink:#fff; --ink2:#c3c2b7; --muted:#8d8c84; --grid:#2c2c2a; --line:#3a3a37;
     --pt:#e66767; --anti:#3987e5; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s7:#9085e9;
     --div-blue:#3987e5; --div-mid:#383835; --div-red:#e66767; } }
+  :root[data-theme="dark"] { color-scheme: dark; --bg:#121211; --surface:#1a1a19; --ink:#fff; --ink2:#c3c2b7; --muted:#8d8c84; --grid:#2c2c2a; --line:#3a3a37;
+    --pt:#e66767; --anti:#3987e5; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s7:#9085e9;
+    --div-blue:#3987e5; --div-mid:#383835; --div-red:#e66767; }
   * { box-sizing:border-box } body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
-  main { max-width:1040px; margin:0 auto; padding:24px 16px 64px }
+  main { max-width:1360px; margin:0 auto; padding:24px 16px 64px }
+  .topo { display:flex; justify-content:space-between; align-items:flex-start; gap:12px }
+  .tema { border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:6px 10px; cursor:pointer; font:inherit; font-size:.82rem; white-space:nowrap }
+  .sec { display:grid; grid-template-columns:minmax(0,1fr) 262px; gap:28px; align-items:start }
+  .side { position:sticky; top:16px; margin-top:46px; font-size:.82rem; color:var(--ink2); border-left:3px solid var(--line); padding:2px 0 2px 12px }
+  .side h4 { margin:0 0 8px; font-size:.68rem; letter-spacing:.09em; text-transform:uppercase; color:var(--muted) } .side ul { margin:0; padding:0; list-style:none } .side li { margin:0 0 9px; line-height:1.4 } .side li b { color:var(--ink) }
+  @media (min-width:1201px) { .semnota { max-width:calc(100% - 290px) } }
+  @media (max-width:1200px) { .sec { grid-template-columns:1fr; gap:0 } .side { position:static; margin:0 0 6px } }
   h1 { font-size:1.7rem; margin:0 0 4px; letter-spacing:-.02em } h2 { font-size:1.2rem; margin:40px 0 4px } h3 { font-size:.95rem; margin:0 0 2px }
   .sub { color:var(--ink2); margin:0 0 16px } .nota { color:var(--muted); font-size:.82rem; margin:6px 0 0 }
   .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:16px 0 }
@@ -44,8 +54,9 @@
 </head>
 <body>
 <main>
-  <h1>Eleições Dashboard 2026</h1>
-  <p class="sub">Chances na corrida de 2026, o histórico do Lula (2002–2022) por região e capital, pesquisas contra resultado real e um simulador interativo.</p>
+  <div class="topo"><div class="semnota"><h1>Eleições Dashboard 2026</h1>
+  <p class="sub">Chances na corrida de 2026, o histórico do Lula (2002–2022) por região e capital, pesquisas contra resultado real e um simulador interativo.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="sec"><div class="mainc">
   <section class="card hero" id="hero">
     <div class="filtros" style="justify-content:space-between;margin:0 0 6px">
       <div><b style="font-size:1.05rem;color:var(--ink)">Quem ganha a eleição? Chances simuladas</b><div class="nota" style="margin:0">Lula × Flávio Bolsonaro, condicionado às pesquisas até 1/10/2026</div></div>
@@ -62,9 +73,11 @@
     <p class="nota" style="margin:2px 0 0">Reconstrução semanal: para cada data, o modelo usa só as pesquisas já divulgadas até ela (mesma metodologia de hoje, inclusive o viés histórico atual). Poucas pesquisas em agosto: as primeiras semanas têm mais incerteza.</p>
     <p class="nota" id="heroNota"></p>
   </section>
-  <div class="aviso"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code>: a série da Datafolha foi conferida no relatório oficial (BR-00304/2026); as demais vieram de busca web e não foram conferidas no TSE.</div>
-  <div class="kpis" id="kpis"></div>
+  </div><aside class="side" id="nota0"></aside></div>
+  <div class="aviso semnota"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code>: a série da Datafolha foi conferida no relatório oficial (BR-00304/2026); as demais vieram de busca web e não foram conferidas no TSE.</div>
+  <div class="kpis semnota" id="kpis"></div>
 
+  <section class="sec"><div class="mainc">
   <h2>1. Evolução da votação</h2>
   <p class="sub">Percentual de votos válidos e votos absolutos do candidato do PT, 1º e 2º turnos.</p>
   <div class="card">
@@ -76,6 +89,8 @@
     <details><summary>Ver tabela</summary><div id="tEvo"></div></details>
   </div>
 
+  </div><aside class="side" id="nota1"></aside></section>
+  <section class="sec"><div class="mainc">
   <h2>2. Regiões</h2>
   <p class="sub">O PT é um partido do Nordeste que vem crescendo no Sudeste: veja o recorte por região e o mapa de calor por estado.</p>
   <div class="card">
@@ -92,6 +107,8 @@
     <p class="nota">Azul = abaixo de 50% dos válidos, vermelho = acima. Sem exterior (ZZ) e voto em trânsito (2010).</p>
   </div>
 
+  </div><aside class="side" id="nota2"></aside></section>
+  <section class="sec"><div class="mainc">
   <h2>3. Capitais</h2>
   <p class="sub">As capitais votam diferente do interior, e essa distância muda de eleição para eleição.</p>
   <div class="card">
@@ -104,6 +121,8 @@
     <details><summary>Ver tabela</summary><div id="tCap"></div></details>
   </div>
 
+  </div><aside class="side" id="nota3"></aside></section>
+  <section class="sec"><div class="mainc">
   <h2>4. Pesquisa × resultado real</h2>
   <p class="sub">Parcela Lula/(Lula + principal rival) nas últimas pesquisas antes da eleição, contra o resultado nas urnas. Positivo = a pesquisa deu mais votos ao PT do que ele teve.</p>
   <div class="card">
@@ -114,6 +133,8 @@
     <p class="nota">Fontes: Wikipedia (en) e Poder360 via busca web, não conferidas contra os registros do TSE. RTBD 2022, Quaest e Atlas 2018 e 2006 não localizados; poucos pontos por eleição.</p>
   </div>
 
+  </div><aside class="side" id="nota4"></aside></section>
+  <section class="sec"><div class="mainc">
   <h2>5. 2026: Lula × Flávio Bolsonaro</h2>
   <p class="sub">Parcela Lula/(Lula + Flávio) por instituto. Em 50% é empate; é comparável entre institutos independentemente da base (total ou válidos).</p>
   <div class="card">
@@ -127,6 +148,8 @@
       A estimativa do modelo é a média dos 4 institutos com correção de house effect e recência (<code>pesquisas.py</code>).</p>
   </div>
 
+  </div><aside class="side" id="nota5"></aside></section>
+  <section class="sec"><div class="mainc">
   <h2>6. Projeção e simulador</h2>
   <p class="sub">Base: como cada estado votou em 2022 (lulismo × bolsonarismo × terceira via). Os totais nacionais vêm das pesquisas e você pode mexer neles; a distribuição por estado é o swing 2022→2026 com choques regionais medidos em 2002–2022.</p>
   <div class="aviso"><b>Simulação condicional às pesquisas, não uma previsão validada.</b> Não há backtest do caminho pesquisa → resultado e o ruído por estado é grande (veja os intervalos). "Flávio" = bloco anti-PT de 2022. A projeção do 1º turno de 1/10 está congelada na tag <code>projecao-1turno-2026-10-01</code>; os sliders partem dela.</div>
@@ -151,6 +174,8 @@
     </details>
     <p class="nota"><b>Viés se repete:</b> desconta do Lula/(Lula+Flávio) o erro médio das pesquisas finais anteriores (<span id="notaVies"></span>; poucas pesquisas, não conferidas no TSE). "Demais" (Caiado, Zema, Renan, Cury, outros) entram como um bloco; o peso da terceira via tem incerteza assumida de 2 p.p. O 2º turno usa o mesmo Monte Carlo de <code>apps/eleicoes.html</code>.</p>
   </div>
+
+  </div><aside class="side" id="nota6"></aside></section>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -398,20 +423,67 @@ function hero() {
     <div class="comp"><span class="t1" style="flex:${Math.max(p1, 0.004)}"></span><span style="flex:${Math.max(p2, 0.004)}"></span></div>
     <ul><li>Vence já no 1º turno <b>${f1(100 * p1)}%</b></li><li>Vence no 2º turno <b>${f1(100 * p2)}%</b></li></ul></div>`;
   const sens = ProjecaoModel.chances({ ...base, s2: base.s2 + 0.01, rho: 0.5 }).lula - r.lula;   // +1 p.p. de Lula no 2º turno
+  state.sens = sens;
   const fl = [r.flavio, a.flavio, b.flavio];
   $("heroGrid").innerHTML = c("l", "Lula (PT)", "--pt", r.lula, r.lula_1t, r.lula_2t, Math.min(a.lula, b.lula), Math.max(a.lula, b.lula)) +
     c("f", "Flávio Bolsonaro (PL)", "--anti", r.flavio, r.flavio_1t, r.flavio_2t, Math.min(...fl), Math.max(...fl));
   $("heroFoot").innerHTML = `<span>Eleição decidida no 1º turno: <b>${f1(100 * (r.lula_1t + r.flavio_1t))}%</b></span><span>Vai ao 2º turno: <b>${f1(100 * r.segundo_turno)}%</b></span>
     <span>Final Lula × Flávio: <b>≥ ${f1(100 * (1 - r.outro))}%</b></span>`;
   $("heroNota").innerHTML = `<b>Simulação condicional às pesquisas, não é previsão validada.</b> O 2º turno está em empate técnico: +1 p.p. de Lula/(Lula+Flávio) nele muda a chance de Lula em cerca de ${f1(100 * sens)} p.p. Soma a chance de vencer no 1º turno (mais de 50% dos válidos) com a de vencer o 2º, simulando os dois turnos juntos.
-    A correlação entre os erros dos turnos é assumida (0,5; a faixa mostra 0 a 1). ${f === 0 ? `Cenário "Pesquisas": média dos 4 institutos sem corrigir o viés histórico (a incerteza já embute o erro histórico das pesquisas).` : `Cenário "${NOMEVIES[state.heroCen]}": desconta ${f1(f * v[1])} p.p. (1º turno) e ${f1(f * v[2])} p.p. (2º) de Lula/(Lula+Flávio), ${f === 1 ? "o viés médio" : "metade do viés médio"} das pesquisas finais por eleição (${m.vies_n_eleicoes[1]} e ${m.vies_n_eleicoes[2]} eleições). Com tão poucas eleições o viés mal se distingue de zero (erro-padrão ~1,1 e ~0,7 p.p.): trate "Viés histórico" como cenário extremo, não como o mais provável.`}
+    A correlação entre os erros dos turnos é assumida (0,5; a faixa mostra 0 a 1), e a incerteza do 2º turno tem piso assumido de ${f1(D.piso2t)} p.p. ${f === 0 ? `Cenário "Pesquisas": média dos 4 institutos sem corrigir o viés histórico (a incerteza já embute o erro histórico das pesquisas).` : `Cenário "${NOMEVIES[state.heroCen]}": desconta ${f1(f * v[1])} p.p. (1º turno) e ${f1(f * v[2])} p.p. (2º) de Lula/(Lula+Flávio), ${f === 1 ? "o viés médio" : "metade do viés médio"} das pesquisas finais por eleição (${m.vies_n_eleicoes[1]} e ${m.vies_n_eleicoes[2]} eleições). Com tão poucas eleições o viés mal se distingue de zero (erro-padrão ~1,1 e ~0,7 p.p.): trate "Viés histórico" como cenário extremo, não como o mais provável.`}
     Metodologia e limitações no README.`;
   chavesEstados(f); evolChances(f);
   const el = $("segHero"), nomes = NOMEVIES;
   el.innerHTML = Object.entries(nomes).map(([k, n]) => `<button data-k="${k}" aria-pressed="${state.heroCen == k}">${n}</button>`).join("");
   el.onclick = (e) => { const k = e.target.dataset.k; if (k) { state.heroCen = k; hero(); } };
 }
-function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); valReg(); hero(); }
+
+// ---------- tema (auto / claro / escuro) ----------
+const TEMAS = ["auto", "claro", "escuro"];
+function temaAtual() { try { return localStorage.getItem("tema") || "auto"; } catch (e) { return "auto"; } }
+function aplicarTema(tm) {
+  const r = document.documentElement;
+  if (tm === "claro") r.setAttribute("data-theme", "light"); else if (tm === "escuro") r.setAttribute("data-theme", "dark"); else r.removeAttribute("data-theme");
+  const b = $("tema"); if (b) b.textContent = { auto: "◐ Tema: auto", claro: "☀ Tema: claro", escuro: "☾ Tema: escuro" }[tm];
+}
+let temaEscolhido = temaAtual();   // em memória: funciona mesmo se o localStorage estiver bloqueado
+function alternarTema() { temaEscolhido = TEMAS[(TEMAS.indexOf(temaEscolhido) + 1) % TEMAS.length]; try { localStorage.setItem("tema", temaEscolhido); } catch (e) {} aplicarTema(temaEscolhido); tudo(); }
+
+// ---------- notas laterais (microcopy) ----------
+function nota(id, itens) { $(id).innerHTML = `<h4>Em resumo</h4><ul>${itens.map(i => `<li>${i}</li>`).join("")}</ul>`; }
+const sg = (x) => (x > 0 ? "+" : "−") + f1(Math.abs(x));
+function notas() {
+  const g = (a, t) => D.nac.find(x => x.ano == a && x.turno == t), m = D.projmodel, v = m.vies_medio, t2 = D.modelo.turno2;
+  nota("nota0", [`O 2º turno é um <b>empate técnico</b>: Lula/(Lula+Flávio) está em ${f1(100 * t2.p_pesquisas)}%.`,
+    `Por isso <b>1 p.p.</b> a mais para Lula nele muda a chance dele em ~${f1(100 * (state.sens ?? 0))} p.p.`,
+    `O cenário padrão é <b>Pesquisas</b>, sem correção de viés. Os cenários de viés são hipóteses, não o caso base.`,
+    `A incerteza do 2º turno tem piso assumido de <b>${f1(D.piso2t)} p.p.</b>`]);
+  nota("nota1", [`Lula no 2º turno: <b>${f1(g(2002,2).pt)}%</b> (2002), <b>${f1(g(2006,2).pt)}%</b> (2006) e <b>${f1(g(2022,2).pt)}%</b> (2022).`,
+    `Votos no 2º turno: ${f1(g(2002,2).votos / 1e6)} mi em 2002, ${f1(g(2022,2).votos / 1e6)} mi em 2022.`,
+    `Dilma (2010, 2014) e Haddad (2018) aparecem só como <b>contexto</b>, em ponto vazado.`]);
+  const r = D.reg[2], sh = D.share[2];
+  nota("nota2", [`Nordeste: <b>${f1(r["2002"].NE)}% → ${f1(r["2022"].NE)}%</b> do PT (2002 → 2022).`,
+    `Sudeste: <b>${f1(r["2002"].SE)}% → ${f1(r["2022"].SE)}%</b>; Sul: ${f1(r["2002"].S)}% → ${f1(r["2022"].S)}%.`,
+    `O Nordeste passou de ${f1(sh["2002"].NE)}% para <b>${f1(sh["2022"].NE)}%</b> dos votos do PT.`]);
+  const c = D.cvi[2], gp = (a) => c[a].capitais - c[a].interior;
+  nota("nota3", [`Capitais menos interior (2º turno): <b>${sg(gp("2002"))} p.p.</b> em 2002, <b>${sg(gp("2018"))}</b> em 2018 e <b>${sg(gp("2022"))}</b> em 2022.`,
+    `A distância não é estável: em 2002 as capitais votavam mais no PT; em 2018, menos.`,
+    `Por isso a projeção das capitais usa o estado mais um <b>gap</b> com choque comum.`]);
+  nota("nota4", [`Eleições com Lula: as pesquisas finais deram em média <b>${sg(v[1])} p.p.</b> (1º turno) e <b>${sg(v[2])} p.p.</b> (2º) a mais ao PT, por eleição.`,
+    `São só ${m.vies_n_eleicoes[1]} e ${m.vies_n_eleicoes[2]} eleições: o viés mal se distingue de zero.`,
+    `Pesquisa não é previsão: use os cenários do card do topo.`]);
+  const ult = {}; D.pesq26.forEach(p => { if (p.s2 != null) ult[p.inst] = p; });
+  const lst = Object.values(ult).sort((a, b) => b.s2 - a.s2).map(p => `${INSTNOME[p.inst] || p.inst} <b>${f1(p.s2)}%</b>`);
+  nota("nota5", [`Última rodada, Lula/(Lula+Flávio) no 2º turno: ${lst.join(" · ")}.`,
+    `Em 50% é empate. Só a <b>Datafolha</b> foi conferida em relatório oficial; as demais não foram conferidas no TSE.`,
+    `A média usa os 4 institutos com correção de house effect e peso por recência.`]);
+  const dm = Math.max(...D.valreg.map(x => Math.abs(x.dif)));
+  nota("nota6", [`No cenário das pesquisas, Lula lidera em ~<b>${f1(D.proj.pesquisas.ufs_lula_a_frente)} de 27</b> estados no 1º turno.`,
+    `A distribuição regional do modelo fica a até <b>${f1(dm)} p.p.</b> da Datafolha em todas as regiões (margem 3 a 6).`,
+    `Mexa nos sliders: mudar o total nacional redistribui estado a estado.`]);
+}
+function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); valReg(); hero(); notas(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 ligarProj(); seg($("segReg"), "turnoReg", regioes); seg($("segHeat"), "turnoHeat", heat); seg($("segCap"), "turnoCap", capitais);
 $("semLula").onchange = evolucao; $("semLula2").onchange = vies;
 tudo();
