@@ -14,10 +14,19 @@ import pandas as pd
 HOJE = pd.Timestamp("2026-10-01")
 TAU_DIAS = 14.0        # meia-vida do decaimento ≈ TAU·ln2
 DEFF = 1.5             # efeito de desenho: amostra efetiva = n / DEFF
-SD_VIES_HIST = 0.02    # ponytail: ASSUMIDO (2 p.p. em p), vindo do 2022 citado no plano; trocar por erro
-                       # medido (pesquisa final vs. resultado 2018/2022) quando esses dados entrarem
+SD_VIES_HIST = 0.02    # padrão de estimar(); main() usa o RMSE medido por turno (vies_rmse)
 P2022 = {1: 0.484307, 2: 0.509024}  # % PT nos válidos, tse-presidente-nacional.csv
 logit = lambda p: np.log(p / (1 - p))
+
+
+def vies_rmse(turno, csv="datasets/vies-pesquisas.csv", nac="datasets/tse-presidente-nacional.csv"):
+    """RMSE (em p, não p.p.) da parcela Lula/(Lula+rival) das pesquisas finais 2018/2022 vs. resultado.
+    Inclui o viés médio (as pesquisas erraram para o lado do PT). ponytail: poucos pontos (4–5 por turno,
+    2 eleições, 3 institutos); RTBD 2022 não localizado. Vale como ordem de grandeza."""
+    v = pd.read_csv(csv).query("turno == @turno")
+    n = pd.read_csv(nac).set_index(["ano", "turno"])
+    real = [n.loc[(a, turno), "votos_pt"] / (n.loc[(a, turno), "votos_pt"] + n.loc[(a, turno), "votos_antipt"]) for a in v.ano]
+    return float(np.sqrt(((v.pt / (v.pt + v.rival) - real) ** 2).mean())), len(v)
 
 
 def preparar(csv="datasets/pesquisas-2026.csv"):
@@ -32,7 +41,7 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
     return d
 
 
-def estimar(df, col, hoje=HOJE, tau=TAU_DIAS):
+def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST):
     """Retorna (p, sd_logit, house_effects, n_pesquisas)."""
     d = df.dropna(subset=[col]).copy()
     p = d[col].to_numpy()
@@ -49,7 +58,7 @@ def estimar(df, col, hoje=HOJE, tau=TAU_DIAS):
     cov = A @ (X.T @ ((w * w * var)[:, None] * X)) @ A      # sanduíche: pesos ≠ 1/var
     h = np.append(beta[2:], -beta[2:].sum())
     var_inst = h.var(ddof=1) / k if k > 1 else 0.0          # incerteza de qual conjunto de institutos
-    sd = np.sqrt(cov[0, 0] + var_inst + (SD_VIES_HIST / (p.mean() * (1 - p.mean()))) ** 2)
+    sd = np.sqrt(cov[0, 0] + var_inst + (sd_vies / (p.mean() * (1 - p.mean()))) ** 2)
     return 1 / (1 + np.exp(-beta[0])), sd, {i: round(float(x), 4) for i, x in zip(inst, h)}, len(d)
 
 
@@ -57,13 +66,15 @@ def main(saida="modelos/parametros.json"):
     d = preparar()
     out = {"data_referencia": str(HOJE.date())}
     for turno, col in ((1, "p1"), (2, "p2")):
-        p, sd, h, n = estimar(d, col)
+        sv, nv = vies_rmse(turno)
+        p, sd, h, n = estimar(d, col, sd_vies=sv)
         out[f"turno{turno}"] = dict(p_pesquisas=round(p, 4), sd_logit=round(sd, 4),
                                     delta=round(logit(p) - logit(P2022[turno]), 4),
-                                    p_2022=P2022[turno], house_effects_logit=h, n_pesquisas=n)
+                                    p_2022=P2022[turno], house_effects_logit=h, n_pesquisas=n,
+                                    sd_vies_hist=round(sv, 4), n_vies=nv)
         lo, hi = (1 / (1 + np.exp(-(logit(p) + s * 1.645 * sd))) for s in (-1, 1))
         print(f"{turno}º turno: Lula {p:.1%} (90%: {lo:.1%}–{hi:.1%}) | δ={out[f'turno{turno}']['delta']:+.3f} "
-              f"| sd_logit={sd:.3f} | n={n}\n   house effects (logit): {h}")
+              f"| sd_logit={sd:.3f} | viés hist. RMSE={sv:.1%} (n={nv}) | n={n}\n   house effects (logit): {h}")
     Path(saida).write_text(json.dumps(out, indent=2, ensure_ascii=False))
 
 

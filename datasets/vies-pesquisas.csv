@@ -1,0 +1,10 @@
+ano,turno,instituto,campo_fim,amostra,pt,rival,base,obs
+2022,1,Datafolha,2022-10-01,12800,48,34,total,"Wikipedia (en) via WebFetch, nao conferido no PDF/TSE"
+2022,1,Quaest,2022-09-27,2000,46,33,total,"idem"
+2022,1,AtlasIntel,2022-09-28,4500,49.3,39.9,total,"idem"
+2022,2,Datafolha,2022-10-29,8308,49,45,total,"idem"
+2022,2,Quaest,2022-10-29,2000,45,42,total,"idem"
+2022,2,AtlasIntel,2022-10-29,7500,52.4,45.7,total,"idem"
+2018,1,Datafolha,2018-10-04,19552,22,36,validos,"Wikipedia (en) via WebFetch; base duvidosa (Datafolha divulgou total), irrelevante na parcela de dois"
+2018,1,RealTimeBigData,2018-10-04,10000,24,34,validos,"idem; nao conferido"
+2018,2,Datafolha,2018-10-27,18371,45,55,validos,"Poder360 via WebSearch: Bolsonaro 55 x Haddad 45 nos validos"
