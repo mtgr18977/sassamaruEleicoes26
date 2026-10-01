@@ -219,8 +219,12 @@ def listar_csvs(zf: zipfile.ZipFile) -> list[str]:
         and "leiame" not in n.lower()
         and "layout" not in n.lower()
     ]
-    nacional = [n for n in nomes if Path(n).stem.upper().endswith(("_BRASIL", "_BR"))]
-    return nacional or nomes
+    # _BR (só presidente) e _BRASIL (todos os cargos) repetem as linhas de presidente: ler só um.
+    for sufixo in ("_BR", "_BRASIL"):
+        nacional = [n for n in nomes if Path(n).stem.upper().endswith(sufixo)]
+        if nacional:
+            return nacional
+    return nomes
 
 
 def ler_zip(zip_path: Path, aliases: dict, obrigatorias: list[str], encoding: str = "latin-1") -> pd.DataFrame:
