@@ -25,3 +25,10 @@ def test_evolucao_so_usa_pesquisas_ate_a_data_e_a_ultima_bate_com_o_modelo_atual
     s, _, _, _ = estimar(d, "p1s", sd_vies=vies_rmse(1)[0], h_dias=3)
     assert abs(atual["s"] - s) < 1e-4
     assert evolucao(["2026-09-24"])[0]["n2"] < atual["n2"]     # menos pesquisas de 2º turno na data anterior
+
+
+def test_vies_por_eleicao_nao_conta_2022_tres_vezes():
+    from pesquisas import vies_eleicao
+    m1, n1, _ = vies_eleicao(1)
+    m2, n2, _ = vies_eleicao(2)
+    assert (n1, n2) == (3, 2) and abs(m1 - 2.25) < 0.1 and abs(m2 - 0.83) < 0.1   # por pesquisa seriam 2,75 e 1,17

@@ -30,6 +30,17 @@ def vies_rmse(turno, csv="datasets/vies-pesquisas.csv", nac="datasets/tse-presid
     return float(np.sqrt(((v.pt / (v.pt + v.rival) - real) ** 2).mean())), len(v)
 
 
+def vies_eleicao(turno, csv="datasets/vies-pesquisas.csv", nac="datasets/tse-presidente-nacional.csv"):
+    """Viés médio das pesquisas finais (p.p.; + = deram mais ao PT) com a ELEIÇÃO como unidade: média das médias por eleição.
+    Evita contar 2022 três vezes (3 institutos). Retorna (média, n_eleições, sd entre eleições).
+    ponytail: 2-3 eleições; o erro-padrão da média é ~0,7 p.p. (2º) e ~1,1 p.p. (1º), então o viés mal se distingue de zero."""
+    v = pd.read_csv(csv).query("turno == @turno")
+    n = pd.read_csv(nac).set_index(["ano", "turno"])
+    v["erro"] = [100 * (r.pt / (r.pt + r.rival) - n.loc[(r.ano, turno), "votos_pt"] / (n.loc[(r.ano, turno), "votos_pt"] + n.loc[(r.ano, turno), "votos_antipt"])) for r in v.itertuples()]
+    por_eleicao = v.groupby("ano").erro.mean()
+    return float(por_eleicao.mean()), len(por_eleicao), float(por_eleicao.std()) if len(por_eleicao) > 1 else float("nan")
+
+
 def preparar(csv="datasets/pesquisas-2026.csv"):
     d = pd.read_csv(csv, parse_dates=["campo_ini", "campo_fim", "divulgacao"])
     d["data"] = d.campo_ini + (d.campo_fim - d.campo_ini) / 2

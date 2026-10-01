@@ -64,7 +64,7 @@ out["pesq26"] = [dict(inst=r.instituto, data=str(r.data.date()),
 out["proj"] = {k: v for k, v in json.load(open("modelos/projecao-1turno.json")).items() if k != "data"}
 # parâmetros do simulador interativo (projecao-model.js)
 import projecao
-from pesquisas import estimar, preparar, vies_rmse, SD_VIES_HIST
+from pesquisas import estimar, preparar, vies_eleicao, vies_rmse, SD_VIES_HIST
 _d, _sv = preparar(), vies_rmse(1)[0]
 _s, _sds, _, _ = estimar(_d, "p1s", sd_vies=_sv)
 _q, _sdq, _, _ = estimar(_d, "q", sd_vies=SD_VIES_HIST)
@@ -76,7 +76,7 @@ out["projmodel"] = dict(s=round(float(_s), 4), q=round(float(_q), 4), sd_s=round
                         ruido=dict(s=[round(x, 4) for x in _rs], q=[round(x, 4) for x in _qs]),
                         ufs=[dict(uf=r.uf, regiao=("EX" if r.uf == "ZZ" else REGIAO[r.uf]), s0=round(r.votos_pt / (r.votos_pt + r.votos_antipt), 6),
                                   q0=round((r.votos_pt + r.votos_antipt) / r.validos, 6), w=int(r.validos)) for r in _b.itertuples()],
-                        vies_medio={t: round(float(np.mean([x["erro"] for x in out["vies"] if x["turno"] == t])), 2) for t in (1, 2)})
+                        vies_medio={t: round(vies_eleicao(t)[0], 2) for t in (1, 2)}, vies_n_eleicoes={t: vies_eleicao(t)[1] for t in (1, 2)})
 import validar_regioes
 from pesquisas import evolucao
 out["evolucao"] = evolucao(pd.date_range("2026-08-20", "2026-10-01", freq="7D").strftime("%Y-%m-%d"))
