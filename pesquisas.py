@@ -30,6 +30,17 @@ def vies_rmse(turno, csv="datasets/vies-pesquisas.csv", nac="datasets/tse-presid
     return float(np.sqrt(((v.pt / (v.pt + v.rival) - real) ** 2).mean())), len(v)
 
 
+def vies_eleicao(turno, csv="datasets/vies-pesquisas.csv", nac="datasets/tse-presidente-nacional.csv"):
+    """Viés médio das pesquisas finais (p.p.; + = deram mais ao PT) com a ELEIÇÃO como unidade: média das médias por eleição.
+    Evita contar 2022 três vezes (3 institutos). Retorna (média, n_eleições, sd entre eleições).
+    ponytail: 2-3 eleições; o erro-padrão da média é ~0,7 p.p. (2º) e ~1,1 p.p. (1º), então o viés mal se distingue de zero."""
+    v = pd.read_csv(csv).query("turno == @turno")
+    n = pd.read_csv(nac).set_index(["ano", "turno"])
+    v["erro"] = [100 * (r.pt / (r.pt + r.rival) - n.loc[(r.ano, turno), "votos_pt"] / (n.loc[(r.ano, turno), "votos_pt"] + n.loc[(r.ano, turno), "votos_antipt"])) for r in v.itertuples()]
+    por_eleicao = v.groupby("ano").erro.mean()
+    return float(por_eleicao.mean()), len(por_eleicao), float(por_eleicao.std()) if len(por_eleicao) > 1 else float("nan")
+
+
 def preparar(csv="datasets/pesquisas-2026.csv"):
     d = pd.read_csv(csv, parse_dates=["campo_ini", "campo_fim", "divulgacao"])
     d["data"] = d.campo_ini + (d.campo_fim - d.campo_ini) / 2
@@ -64,6 +75,26 @@ def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0):
     var_drift = (h_dias / 30) ** 2 * cov[1, 1]               # incerteza da tendência até a eleição (média sem extrapolar)
     sd = np.sqrt(cov[0, 0] + var_inst + var_drift + (sd_vies / (p.mean() * (1 - p.mean()))) ** 2)
     return 1 / (1 + np.exp(-beta[0])), sd, {i: round(float(x), 4) for i, x in zip(inst, h)}, len(d)
+
+
+def evolucao(datas, csv="datasets/pesquisas-2026.csv"):
+    """Parâmetros do modelo "como estava em" cada data (só pesquisas até aquela data), para o gráfico de evolução.
+    Retorna [{data, s, q, sd_s, sd_q, s2, sd2, n1, n2}]; datas com pesquisas insuficientes para o ajuste são puladas.
+    ponytail: usa o viés histórico de hoje (RMSE) retroativamente; horizonte = dias até 4/10 (1º) e 25/10 (2º) a partir da data."""
+    d, sv1, sv2 = preparar(csv), vies_rmse(1)[0], vies_rmse(2)[0]
+    out = []
+    for t in map(pd.Timestamp, datas):
+        x = d[d.data <= t]
+        try:
+            s, sds, _, n1 = estimar(x, "p1s", hoje=t, sd_vies=sv1, h_dias=(pd.Timestamp("2026-10-04") - t).days)
+            q, sdq, _, _ = estimar(x, "q", hoje=t, h_dias=(pd.Timestamp("2026-10-04") - t).days)
+            s2, sd2, _, n2 = estimar(x, "p2", hoje=t, sd_vies=sv2, h_dias=(pd.Timestamp("2026-10-25") - t).days)
+        except np.linalg.LinAlgError:
+            continue
+        if min(n1, n2) >= 8 and np.isfinite([s, q, s2, sds, sdq, sd2]).all():
+            out.append(dict(data=str(t.date()), s=round(float(s), 4), q=round(float(q), 4), sd_s=round(float(sds), 4), sd_q=round(float(sdq), 4),
+                            s2=round(float(s2), 4), sd2=round(float(sd2), 4), n1=int(n1), n2=int(n2)))
+    return out
 
 
 def main(saida="modelos/parametros.json"):
