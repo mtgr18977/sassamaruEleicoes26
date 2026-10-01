@@ -33,7 +33,8 @@
     const ufs = U.map((u, i) => { const pf = cont(M[i], (x) => x > 0); ufsAFrente += pf;
       return { uf: u.uf, lula: med(L[i]), flavio: med(F[i]), outros: 100 - med(L[i]) - med(F[i]), margem: med(M[i]), m5: 100 * Q(M[i], 0.05), m95: 100 * Q(M[i], 0.95), pfrente: 100 * pf }; });
     const iv = (v) => [100 * Q(v, 0.05), med(v), 100 * Q(v, 0.95)], d = Float64Array.from(nL, (x, t) => x - nF[t]);
-    return { L: iv(nL), F: iv(nF), O: iv(nO), margem: iv(d), p_lula_a_frente: cont(d, (x) => x > 0), p_2turno: cont(nL.map((x, t) => Math.max(x, nF[t])), (x) => x <= 0.5), ufs_lula_a_frente: ufsAFrente, ufs };
+    return { L: iv(nL), F: iv(nF), O: iv(nO), margem: iv(d), p_lula_a_frente: cont(d, (x) => x > 0), p_2turno: cont(nL.map((x, t) => Math.max(x, nF[t])), (x) => x <= 0.5),
+      p_lf_2turno: cont(nL.map((x, t) => Math.min(x, nF[t]) - nO[t]), (x) => x > 0), /* cota: todos os demais como UM candidato */ ufs_lula_a_frente: ufsAFrente, ufs };
   }
   const api = { simular };
   if (typeof module !== "undefined") module.exports = api; else root.ProjecaoModel = api;
