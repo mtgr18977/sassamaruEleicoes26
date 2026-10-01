@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Governo do RS 2026 · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .hero-grid.tres { grid-template-columns:repeat(3,1fr) } @media (max-width:820px) { .hero-grid.tres { grid-template-columns:1fr } }
+  .sl label { min-width:210px } .tag { display:inline-block; background:var(--s4); color:#0b0b0b; border-radius:6px; padding:1px 8px; font-size:.74rem; margin-left:8px }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site"><a href="index.html">Presidente 2026</a><a href="rs.html" aria-current="page">Governo do RS 2026</a></nav>
+  <div class="topo"><div class="semnota"><h1>Governo do RS 2026</h1>
+  <p class="sub">Chances na corrida entre Zucco (PL), Juliana Brizola (PDT) e Gabriel Souza (MDB), o histórico do governo do RS (2002–2022) por região e pelo recorte Porto Alegre × resto do estado, as pesquisas de 2026 e um simulador interativo.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+
+  <div class="sec"><div class="mainc">
+  <section class="card hero" id="hero">
+    <div class="filtros" style="justify-content:space-between;margin:0 0 6px">
+      <div><b style="font-size:1.05rem;color:var(--ink)">Quem ganha o governo do RS? Chances simuladas<span class="tag" id="heroTag" hidden>simulador ajustado</span></b><div class="nota" style="margin:0">Condicionado às pesquisas até 1/10/2026</div></div>
+    </div>
+    <div class="hero-grid tres" id="heroGrid"></div>
+    <div class="hero-foot" id="heroFoot"></div>
+    <h3 style="margin:14px 0 4px">Como as chances evoluíram</h3>
+    <div class="cv" style="height:250px"><canvas id="cEvoChances"></canvas></div>
+    <details><summary>Ver tabela</summary><div id="tEvoCh"></div></details>
+    <p class="nota" style="margin:2px 0 0">Reconstrução semanal: para cada data, o modelo usa só as pesquisas já divulgadas até ela. Com 10 pesquisas e poucas por instituto, a incerteza é grande.</p>
+    <p class="nota" id="heroNota"></p>
+  </section>
+  </div><aside class="side" id="nota0"></aside></div>
+
+  <div class="aviso semnota"><b>Como ler:</b> blocos por partido: <b>Esquerda</b> (PT, PDT, PSOL, PSB, PV e nanicos), <b>Centro</b> (MDB/PMDB, PSDB, PPS) e <b>Direita</b> (PL, PP, PSC, Novo e demais). Para 2026, Brizola = esquerda, Souza e Maranata = centro e Zucco = direita. Dados do TSE (2002–2022); as pesquisas vieram de matérias (Gazeta do Povo, CartaCapital, Band, Terra Brasil, Studio TV) e <b>não foram conferidas no TSE</b>.</div>
+
+  <section class="sec"><div class="mainc">
+  <h2>1. Histórico do governo do RS</h2>
+  <p class="sub">Votos para governador no 1º turno, por bloco, e candidatos de cada eleição.</p>
+  <div class="card">
+    <div class="row">
+      <div><h3>Blocos no 1º turno (% dos válidos)</h3><div class="cv"><canvas id="cBlocos"></canvas></div></div>
+      <div><h3>Candidatos <select id="selAno" style="margin-left:6px"></select></h3><div id="tCand" style="margin-top:4px"></div></div>
+    </div>
+    <details><summary>Ver tabela</summary><div id="tBlocos"></div></details>
+    <p class="nota">A direita passou de 3% (2018) para 44% (2022), com Onyx Lorenzoni (PL), e o centro caiu de 67% para 27%. Em 2018 e 2022 o 2º turno não teve a esquerda.</p>
+  </div>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div class="mainc">
+  <h2>2. Regiões</h2>
+  <p class="sub">Mesorregiões do IBGE; a Grande POA aparece sem a capital, que é analisada à parte.</p>
+  <div class="card">
+    <div class="filtros">Bloco <span class="seg" id="segBloco"></span></div>
+    <div class="row">
+      <div style="overflow-x:auto"><h3>% do bloco por região e eleição (1º turno)</h3><table class="t heat" id="heat"></table></div>
+      <div><h3>2022: composição por região</h3><div class="cv"><canvas id="cUn22"></canvas></div></div>
+    </div>
+    <p class="nota">Quanto mais forte a cor, maior a fatia do bloco selecionado na região.</p>
+  </div>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div class="mainc">
+  <h2>3. Porto Alegre × resto do estado</h2>
+  <p class="sub">A capital vota diferente do resto do estado, e a distância muda entre eleições.</p>
+  <div class="card">
+    <div class="filtros">Bloco <span class="seg" id="segBloco2"></span></div>
+    <div class="cv"><canvas id="cCvi"></canvas></div>
+    <details><summary>Ver tabela</summary><div id="tCvi"></div></details>
+  </div>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div class="mainc">
+  <h2>4. Pesquisas de 2026</h2>
+  <p class="sub">Shares sobre os três principais mais "outros", normalizados em votos válidos. Cada linha é um instituto; as diferenças entre eles (house effects) são grandes.</p>
+  <div class="card">
+    <div class="row">
+      <div><h3>Zucco − Brizola (p.p. dos válidos)</h3><div class="cv med"><canvas id="cPoll1"></canvas></div></div>
+      <div><h3>2º turno: Zucco/(Zucco+Brizola)</h3><div class="cv med"><canvas id="cPoll2"></canvas></div></div>
+    </div>
+    <details><summary>Ver tabela</summary><div id="tPoll"></div></details>
+    <p class="nota">Linha tracejada = empate. Não há histórico de pesquisas estaduais coletado, então não é possível medir o viés das pesquisas do RS: a incerteza usa a dispersão entre elas e um erro sistemático assumido.</p>
+  </div>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div class="mainc">
+  <h2>5. Projeção por região e simulador</h2>
+  <p class="sub">Base: como cada região votou em 2022. Os totais estaduais vêm das pesquisas e você pode mexer neles.</p>
+  <div class="aviso"><b>Simulação condicional às pesquisas, não é previsão validada.</b> Não há backtest do caminho pesquisa → resultado para o RS, e o ruído regional vem de só 5 transições eleitorais.</div>
+  <div class="card">
+    <div class="filtros"><button id="rst" class="lnk">redefinir para as pesquisas</button></div>
+    <div class="filtros sl">
+      <label>Zucco no 1º turno: <b id="vZ"></b><input type="range" id="slZ" min="25" max="60" step="0.1"></label>
+      <label>Brizola no 1º turno: <b id="vB"></b><input type="range" id="slB" min="20" max="55" step="0.1"></label>
+      <label>Zucco/(Zucco+Brizola) no 2º turno: <b id="vP"></b><input type="range" id="slP" min="42" max="62" step="0.1"></label>
+    </div>
+    <div class="kpis" id="kpisProj" style="margin:6px 0 10px"></div>
+    <div class="row">
+      <div><h3>1º turno: Zucco − Brizola por região (p.p.)</h3><div class="cv"><canvas id="cReg1"></canvas></div></div>
+      <div><h3>2º turno Zucco × Brizola: % do Zucco por região</h3><div class="cv"><canvas id="cReg2"></canvas></div></div>
+    </div>
+    <details><summary>Ver tabela</summary><div id="tReg"></div></details>
+    <p class="nota">Barra = mediana; faixa = intervalo de 90%. Souza (e Maranata) ficam no centro: no 1º turno, o "centro" da tabela inclui os demais candidatos.</p>
+  </div>
+  </div><aside class="side" id="nota5"></aside></section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="modelos/eleicoes-model.js"></script>
+<script src="modelos/rs-model.js"></script>
+<script>
+const D = {"cand": {"2002": {"1": [{"nome": "Rigotto", "partido": "PMDB", "bloco": "C", "pct": 41.17}, {"nome": "Tarso Genro", "partido": "PT", "bloco": "E", "pct": 37.25}, {"nome": "Antônio Britto", "partido": "PPS", "bloco": "C", "pct": 12.31}, {"nome": "Bernardi", "partido": "PPB", "bloco": "D", "pct": 6.23}, {"nome": "Capitão Medina", "partido": "PL", "bloco": "D", "pct": 1.61}, {"nome": "Caleb de Oliveira", "partido": "PSB", "bloco": "E", "pct": 1.01}], "2": [{"nome": "Rigotto", "partido": "PMDB", "bloco": "C", "pct": 52.67}, {"nome": "Tarso Genro", "partido": "PT", "bloco": "E", "pct": 47.33}]}, "2006": {"1": [{"nome": "Yeda Crusius", "partido": "PSDB", "bloco": "C", "pct": 32.9}, {"nome": "Olívio Dutra", "partido": "PT", "bloco": "E", "pct": 27.39}, {"nome": "Rigotto", "partido": "PMDB", "bloco": "C", "pct": 27.12}, {"nome": "Turra", "partido": "PP", "bloco": "D", "pct": 6.66}, {"nome": "Alceu Collares", "partido": "PDT", "bloco": "E", "pct": 3.71}, {"nome": "Roberto Robaina", "partido": "PSOL", "bloco": "E", "pct": 1.11}], "2": [{"nome": "Yeda Crusius", "partido": "PSDB", "bloco": "C", "pct": 53.94}, {"nome": "Olívio Dutra", "partido": "PT", "bloco": "E", "pct": 46.06}]}, "2010": {"1": [{"nome": "Tarso Genro", "partido": "PT", "bloco": "E", "pct": 54.35}, {"nome": "Fogaça", "partido": "PMDB", "bloco": "C", "pct": 24.74}, {"nome": "Yeda Crusius", "partido": "PSDB", "bloco": "C", "pct": 18.4}, {"nome": "Montserrat Martins", "partido": "PV", "bloco": "E", "pct": 1.49}]}, "2014": {"1": [{"nome": "José Ivo Sartori", "partido": "PMDB", "bloco": "C", "pct": 40.4}, {"nome": "Tarso Genro", "partido": "PT", "bloco": "E", "pct": 32.57}, {"nome": "Ana Amelia Lemos", "partido": "PP", "bloco": "D", "pct": 21.79}, {"nome": "Vieira da Cunha", "partido": "PDT", "bloco": "E", "pct": 4.27}], "2": [{"nome": "José Ivo Sartori", "partido": "PMDB", "bloco": "C", "pct": 61.21}, {"nome": "Tarso Genro", "partido": "PT", "bloco": "E", "pct": 38.79}]}, "2018": {"1": [{"nome": "Eduardo Leite", "partido": "PSDB", "bloco": "C", "pct": 35.9}, {"nome": "José Ivo Sartori", "partido": "MDB", "bloco": "C", "pct": 31.11}, {"nome": "Miguel Rossetto", "partido": "PT", "bloco": "E", "pct": 17.76}, {"nome": "Jairo Jorge", "partido": "PDT", "bloco": "E", "pct": 11.08}, {"nome": "Mateus Bandeira", "partido": "NOVO", "bloco": "D", "pct": 3.36}], "2": [{"nome": "Eduardo Leite", "partido": "PSDB", "bloco": "C", "pct": 53.62}, {"nome": "José Ivo Sartori", "partido": "MDB", "bloco": "C", "pct": 46.38}]}, "2022": {"1": [{"nome": "Onyx Lorenzoni", "partido": "PL", "bloco": "D", "pct": 37.5}, {"nome": "Eduardo Leite", "partido": "PSDB", "bloco": "C", "pct": 26.81}, {"nome": "Edegar Pretto", "partido": "PT", "bloco": "E", "pct": 26.77}, {"nome": "Luis Carlos Heinze", "partido": "PP", "bloco": "D", "pct": 4.28}, {"nome": "Argenta", "partido": "PSC", "bloco": "D", "pct": 2.0}, {"nome": "Vieira da Cunha", "partido": "PDT", "bloco": "E", "pct": 1.6}], "2": [{"nome": "Eduardo Leite", "partido": "PSDB", "bloco": "C", "pct": 57.12}, {"nome": "Onyx Lorenzoni", "partido": "PL", "bloco": "D", "pct": 42.88}]}}, "blocos": {"2002": {"E": 38.52, "C": 53.48, "D": 8.01}, "2006": {"E": 33.29, "C": 60.03, "D": 6.68}, "2010": {"E": 56.6, "C": 43.13, "D": 0.27}, "2014": {"E": 37.64, "C": 40.4, "D": 21.96}, "2018": {"E": 29.63, "C": 67.01, "D": 3.36}, "2022": {"E": 28.8, "C": 26.81, "D": 44.39}}, "unidades": {"2002": {"Centro Ocidental": {"E": 36.5, "C": 52.35, "D": 11.15}, "Centro Oriental": {"E": 37.06, "C": 55.09, "D": 7.85}, "Grande POA (sem capital)": {"E": 37.91, "C": 55.63, "D": 6.46}, "Nordeste (Serra)": {"E": 29.29, "C": 64.18, "D": 6.53}, "Noroeste": {"E": 42.3, "C": 46.58, "D": 11.12}, "Porto Alegre": {"E": 43.58, "C": 50.82, "D": 5.6}, "Sudeste": {"E": 37.24, "C": 53.81, "D": 8.95}, "Sudoeste": {"E": 37.2, "C": 53.39, "D": 9.41}}, "2006": {"Centro Ocidental": {"E": 27.97, "C": 64.07, "D": 7.96}, "Centro Oriental": {"E": 28.33, "C": 65.16, "D": 6.52}, "Grande POA (sem capital)": {"E": 34.26, "C": 61.16, "D": 4.58}, "Nordeste (Serra)": {"E": 22.88, "C": 68.73, "D": 8.38}, "Noroeste": {"E": 33.55, "C": 54.96, "D": 11.49}, "Porto Alegre": {"E": 41.54, "C": 54.02, "D": 4.44}, "Sudeste": {"E": 34.98, "C": 60.64, "D": 4.39}, "Sudoeste": {"E": 34.07, "C": 59.42, "D": 6.51}}, "2010": {"Centro Ocidental": {"E": 55.79, "C": 43.96, "D": 0.26}, "Centro Oriental": {"E": 58.87, "C": 40.96, "D": 0.16}, "Grande POA (sem capital)": {"E": 57.99, "C": 41.7, "D": 0.31}, "Nordeste (Serra)": {"E": 50.33, "C": 49.45, "D": 0.21}, "Noroeste": {"E": 54.06, "C": 45.76, "D": 0.18}, "Porto Alegre": {"E": 55.89, "C": 43.68, "D": 0.43}, "Sudeste": {"E": 59.23, "C": 40.53, "D": 0.24}, "Sudoeste": {"E": 62.76, "C": 36.99, "D": 0.25}}, "2014": {"Centro Ocidental": {"E": 38.5, "C": 37.89, "D": 23.61}, "Centro Oriental": {"E": 35.41, "C": 39.97, "D": 24.62}, "Grande POA (sem capital)": {"E": 38.4, "C": 40.44, "D": 21.16}, "Nordeste (Serra)": {"E": 21.71, "C": 60.29, "D": 18.01}, "Noroeste": {"E": 38.06, "C": 36.3, "D": 25.65}, "Porto Alegre": {"E": 42.37, "C": 40.68, "D": 16.94}, "Sudeste": {"E": 44.64, "C": 32.82, "D": 22.53}, "Sudoeste": {"E": 41.65, "C": 33.0, "D": 25.35}}, "2018": {"Centro Ocidental": {"E": 30.03, "C": 67.24, "D": 2.73}, "Centro Oriental": {"E": 20.92, "C": 76.32, "D": 2.77}, "Grande POA (sem capital)": {"E": 31.45, "C": 64.61, "D": 3.94}, "Nordeste (Serra)": {"E": 15.18, "C": 81.34, "D": 3.49}, "Noroeste": {"E": 28.71, "C": 69.25, "D": 2.04}, "Porto Alegre": {"E": 43.62, "C": 50.33, "D": 6.05}, "Sudeste": {"E": 28.08, "C": 69.8, "D": 2.11}, "Sudoeste": {"E": 32.21, "C": 65.74, "D": 2.05}}, "2022": {"Centro Ocidental": {"E": 31.7, "C": 25.8, "D": 42.5}, "Centro Oriental": {"E": 24.2, "C": 25.23, "D": 50.57}, "Grande POA (sem capital)": {"E": 25.93, "C": 27.86, "D": 46.21}, "Nordeste (Serra)": {"E": 17.15, "C": 24.23, "D": 58.62}, "Noroeste": {"E": 30.89, "C": 21.81, "D": 47.3}, "Porto Alegre": {"E": 35.12, "C": 32.85, "D": 32.03}, "Sudeste": {"E": 38.34, "C": 32.65, "D": 29.01}, "Sudoeste": {"E": 34.39, "C": 24.33, "D": 41.28}}}, "cvi": {"E": {"2002": {"capital": 43.58, "interior": 37.69, "estado": 38.52}, "2006": {"capital": 41.54, "interior": 32.03, "estado": 33.29}, "2010": {"capital": 55.89, "interior": 56.71, "estado": 56.6}, "2014": {"capital": 42.37, "interior": 36.96, "estado": 37.64}, "2018": {"capital": 43.62, "interior": 27.63, "estado": 29.63}, "2022": {"capital": 35.12, "interior": 27.89, "estado": 28.8}}, "C": {"2002": {"capital": 50.82, "interior": 53.91, "estado": 53.48}, "2006": {"capital": 54.02, "interior": 60.94, "estado": 60.03}, "2010": {"capital": 43.68, "interior": 43.05, "estado": 43.13}, "2014": {"capital": 40.68, "interior": 40.36, "estado": 40.4}, "2018": {"capital": 50.33, "interior": 69.39, "estado": 67.01}, "2022": {"capital": 32.85, "interior": 25.94, "estado": 26.81}}, "D": {"2002": {"capital": 5.6, "interior": 8.4, "estado": 8.01}, "2006": {"capital": 4.44, "interior": 7.03, "estado": 6.68}, "2010": {"capital": 0.43, "interior": 0.24, "estado": 0.27}, "2014": {"capital": 16.94, "interior": 22.68, "estado": 21.96}, "2018": {"capital": 6.05, "interior": 2.98, "estado": 3.36}, "2022": {"capital": 32.03, "interior": 46.17, "estado": 44.39}}}, "polls": [{"inst": "Paraná Pesquisas", "instk": "ParanaPesquisas", "data": "2026-07-19", "amostra": 1500, "registro": "RS-09313/2026", "z": 40.81, "b": 35.92, "s": 15.51, "r": 7.76, "zb2": null, "zs2": null, "bs2": null, "zucco": 34.2, "brizola": 30.1, "souza": 13.0}, {"inst": "Quaest", "instk": "Quaest", "data": "2026-07-28", "amostra": 1104, "registro": "RS-04790/2026", "z": 38.6, "b": 42.11, "s": 10.53, "r": 8.77, "zb2": 46.97, "zs2": 61.54, "bs2": 63.64, "zucco": 22.0, "brizola": 24.0, "souza": 6.0}, {"inst": "Real Time Big Data", "instk": "RealTimeBigData", "data": "2026-08-24", "amostra": 1600, "registro": "RS-09640/2026", "z": 34.04, "b": 40.43, "s": 20.21, "r": 5.32, "zb2": 47.67, "zs2": 53.09, "bs2": 57.83, "zucco": 32.0, "brizola": 38.0, "souza": 19.0}, {"inst": "AtlasIntel", "instk": "AtlasIntel", "data": "2026-09-01", "amostra": 1783, "registro": "RS-00652/2026", "z": 46.88, "b": 39.68, "s": 11.01, "r": 2.43, "zb2": 52.49, "zs2": 60.42, "bs2": 56.96, "zucco": 44.3, "brizola": 37.5, "souza": 10.4}, {"inst": "Real Time Big Data", "instk": "RealTimeBigData", "data": "2026-09-09", "amostra": 1600, "registro": "RS-05497/2026", "z": 37.11, "b": 36.08, "s": 22.68, "r": 4.12, "zb2": 50.0, "zs2": 52.94, "bs2": 53.57, "zucco": 36.0, "brizola": 35.0, "souza": 22.0}, {"inst": "Paraná Pesquisas", "instk": "ParanaPesquisas", "data": "2026-09-18", "amostra": 1352, "registro": "RS-00319/2026", "z": 41.6, "b": 35.77, "s": 14.74, "r": 7.89, "zb2": null, "zs2": null, "bs2": null, "zucco": 36.4, "brizola": 31.3, "souza": 12.9}, {"inst": "AtlasIntel", "instk": "AtlasIntel", "data": "2026-09-20", "amostra": 1819, "registro": "RS-00981/2026", "z": 45.17, "b": 39.2, "s": 14.66, "r": 0.98, "zb2": 55.84, "zs2": 52.2, "bs2": 52.93, "zucco": 41.6, "brizola": 36.1, "souza": 13.5}, {"inst": "Quaest", "instk": "Quaest", "data": "2026-09-23", "amostra": 900, "registro": "RS-01390/2026", "z": 43.28, "b": 34.33, "s": 14.93, "r": 7.46, "zb2": 54.05, "zs2": 61.76, "bs2": 55.74, "zucco": 29.0, "brizola": 23.0, "souza": 10.0}, {"inst": "Neokemp", "instk": "Neokemp", "data": "2026-09-24", "amostra": 1008, "registro": "RS-08358/2026", "z": 48.91, "b": 31.37, "s": 17.1, "r": 2.61, "zb2": null, "zs2": null, "bs2": null, "zucco": 44.9, "brizola": 28.8, "souza": 15.7}, {"inst": "Real Time Big Data", "instk": "RealTimeBigData", "data": "2026-09-28", "amostra": 1600, "registro": "RS-05412/2026", "z": 41.24, "b": 36.08, "s": 19.59, "r": 3.09, "zb2": 52.69, "zs2": 52.33, "bs2": 51.16, "zucco": 40.0, "brizola": 35.0, "souza": 19.0}], "modelo": {"par": {"data": "2026-10-01", "mu": [-0.17702352109125374, -0.9403798848355391], "cov": [[0.020200939136813912, 0.009872532496337648], [0.009872532496337648, 0.06396354148147869]], "rbar": 0.038295929614878335, "n": 10, "pares": {"ZB": {"mu": 0.12958360045134804, "sd": 0.10042038550035327, "n": 7}, "ZS": {"mu": 0.17723942203980433, "sd": 0.10078740336300787, "n": 7}, "BS": {"mu": 0.12784667828291954, "sd": 0.10040917619787197, "n": 7}}}, "evolucao": [{"data": "2026-08-27", "par": {"data": "2026-08-27", "mu": [0.14627597365865497, -0.6151432259505142], "cov": [[0.03399011466763441, 0.04297304836279989], [0.04297304836279989, 0.2032608212301072]], "rbar": 0.057636561359652845, "n": 3, "pares": {"ZB": {"mu": -0.09566736317661362, "sd": 0.10022898067012805, "n": 2}, "ZS": {"mu": 0.15518847813118966, "sd": 0.22372475256569185, "n": 2}, "BS": {"mu": 0.33807270867015243, "sd": 0.15744055016345088, "n": 2}}}}, {"data": "2026-09-03", "par": {"data": "2026-09-03", "mu": [-0.050048292928787465, -1.1384130201625406], "cov": [[0.03972148983153206, 0.07149840223929047], [0.07149840223929047, 0.2578768963195447]], "rbar": 0.03674560213253818, "n": 4, "pares": {"ZB": {"mu": 0.02973001005925854, "sd": 0.10002209846506847, "n": 3}, "ZS": {"mu": 0.3272464817467639, "sd": 0.14717154823216025, "n": 3}, "BS": {"mu": 0.30088759850237223, "sd": 0.10228046088479403, "n": 3}}}}, {"data": "2026-09-10", "par": {"data": "2026-09-10", "mu": [-0.039126234137582795, -0.8159363243960516], "cov": [[0.024394658401189515, 0.029715562526009445], [0.029715562526009445, 0.1665295647319178]], "rbar": 0.03898793962943911, "n": 5, "pares": {"ZB": {"mu": 0.01471636382178379, "sd": 0.100005414381819, "n": 4}, "ZS": {"mu": 0.22146750377080537, "sd": 0.1137130367106977, "n": 4}, "BS": {"mu": 0.22120533422695346, "sd": 0.10122829130921147, "n": 4}}}}, {"data": "2026-09-17", "par": {"data": "2026-09-17", "mu": [-0.03912623413758279, -0.8159363243960516], "cov": [[0.024394658401189515, 0.029715562526009452], [0.029715562526009452, 0.16652956473191782]], "rbar": 0.03898793962943911, "n": 5, "pares": {"ZB": {"mu": 0.014716363821783793, "sd": 0.100005414381819, "n": 4}, "ZS": {"mu": 0.22146750377080537, "sd": 0.11371303671069773, "n": 4}, "BS": {"mu": 0.2212053342269535, "sd": 0.10122829130921147, "n": 4}}}}, {"data": "2026-09-24", "par": {"data": "2026-09-24", "mu": [-0.19486097085875298, -1.0207406191699124], "cov": [[0.021242231192600793, 0.009880843302304812], [0.009880843302304812, 0.07017453155459974]], "rbar": 0.04131781015485126, "n": 9, "pares": {"ZB": {"mu": 0.14379010702378442, "sd": 0.10051778106975186, "n": 6}, "ZS": {"mu": 0.2316951582967694, "sd": 0.10984757829683303, "n": 6}, "BS": {"mu": 0.18047598280024843, "sd": 0.10081650213495544, "n": 6}}}}, {"data": "2026-10-01", "par": {"data": "2026-10-01", "mu": [-0.17702352109125374, -0.9403798848355391], "cov": [[0.020200939136813912, 0.009872532496337648], [0.009872532496337648, 0.06396354148147869]], "rbar": 0.038295929614878335, "n": 10, "pares": {"ZB": {"mu": 0.12958360045134804, "sd": 0.10042038550035327, "n": 7}, "ZS": {"mu": 0.17723942203980433, "sd": 0.10078740336300787, "n": 7}, "BS": {"mu": 0.12784667828291954, "sd": 0.10040917619787197, "n": 7}}}}], "unidades": [{"unidade_nome": "Centro Ocidental", "E": 0.3170483317038931, "C": 0.25795918878945123, "D": 0.42499247950665564, "validos": 319128}, {"unidade_nome": "Centro Oriental", "E": 0.24199228166825007, "C": 0.2522820344334431, "D": 0.5057256838983069, "validos": 491557}, {"unidade_nome": "Grande POA (sem capital)", "E": 0.25926914238365995, "C": 0.2786278587551481, "D": 0.46210299886119194, "validos": 1959944}, {"unidade_nome": "Nordeste (Serra)", "E": 0.1714545194551523, "C": 0.24230328070853324, "D": 0.5862421998363144, "validos": 657358}, {"unidade_nome": "Noroeste", "E": 0.30887200814318044, "C": 0.21812265135826978, "D": 0.47300534049854975, "validos": 1227039}, {"unidade_nome": "Porto Alegre", "E": 0.3511804900977845, "C": 0.3284945282165011, "D": 0.3203249816857144, "validos": 799922}, {"unidade_nome": "Sudeste", "E": 0.3833818443578549, "C": 0.32652809727242854, "D": 0.2900900583697166, "validos": 511224}, {"unidade_nome": "Sudoeste", "E": 0.343906064749116, "C": 0.24325151703043402, "D": 0.41284241822045004, "validos": 385457}], "sigma": 0.2881465617790454, "rho": 0.5, "piso2t": 2.5, "sistematico1t": 3.6}, "nomes_unidade": {"Porto Alegre": "Porto Alegre", "Metropolitana (sem POA)": "Grande POA (sem capital)", "Nordeste Rio-grandense": "Nordeste (Serra)", "Noroeste Rio-grandense": "Noroeste", "Centro Oriental Rio-grandense": "Centro Oriental", "Centro Ocidental Rio-grandense": "Centro Ocidental", "Sudeste Rio-grandense": "Sudeste", "Sudoeste Rio-grandense": "Sudoeste"}};
+const ANOS = ["2002","2006","2010","2014","2018","2022"], M = D.modelo, UN = M.unidades.map(u => u.unidade_nome);
+const BNOME = { E:"Esquerda", C:"Centro", D:"Direita" }, BCOR = { E:"--pt", C:"--s7", D:"--anti" };
+const CAND = [{ k:0, nome:"Zucco (PL)", cor:"--anti", rot:"Luciano Zucco" }, { k:1, nome:"Juliana Brizola (PDT)", cor:"--pt", rot:"Juliana Brizola" }, { k:2, nome:"Gabriel Souza (MDB)", cor:"--s7", rot:"Gabriel Souza" }];
+const pct = (x) => (x > 0 && x < 0.001) ? "<0,1%" : f1(100 * x) + "%";
+const logit = (p) => Math.log(p / (1 - p)), inv = (y) => 1 / (1 + Math.exp(-y));
+const state = { bloco:"E", bloco2:"E", ano:"2022", z:null, b:null, p:null };
+const shares0 = (par) => { const e = [1, Math.exp(par.mu[0]), Math.exp(par.mu[1])], t = e[0] + e[1] + e[2]; return e.map(x => 100 * x / t * (1 - par.rbar)); };   // z, b, s em % dos válidos
+const S0 = shares0(M.par), P0 = 100 * inv(M.par.pares.ZB.mu);
+state.z = S0[0]; state.b = S0[1]; state.p = P0;
+const sAtual = () => Math.max(0.5, 100 - state.z - state.b - 100 * M.par.rbar);
+function parSim() {   // par do modelo com os valores dos sliders
+  const z = state.z, b = state.b, s = sAtual(), par = JSON.parse(JSON.stringify(M.par));
+  par.mu = [Math.log(b / z), Math.log(s / z)]; par.pares.ZB.mu = logit(state.p / 100); return par;
+}
+const alterado = () => Math.abs(state.z - S0[0]) > 0.05 || Math.abs(state.b - S0[1]) > 0.05 || Math.abs(state.p - P0) > 0.05;
+
+// ---------- hero ----------
+function hero() {
+  const par = parSim(), r = RSModel.chances(par, { n: 20000 });
+  $("heroTag").hidden = !alterado();
+  const c = (i) => { const p = r.eleito[i], p1 = r.vence_1t[i], p2 = p - p1;
+    return `<div class="cand" style="--c:${css(CAND[i].cor)}"><div class="nome"><i></i>${CAND[i].nome}</div><div class="big">${pct(p)}</div>
+      <div class="rot">chance de ser eleito</div><div class="comp"><span class="t1" style="flex:${Math.max(p1, 0.004)}"></span><span style="flex:${Math.max(p2, 0.004)}"></span></div>
+      <ul><li>Vence já no 1º turno <b>${pct(p1)}</b></li><li>Vence no 2º turno <b>${pct(p2)}</b></li></ul></div>`; };
+  $("heroGrid").innerHTML = c(0) + c(1) + c(2);
+  $("heroFoot").innerHTML = `<span>Eleição decidida no 1º turno: <b>${f1(100 * r.vence_1t.reduce((a, b) => a + b, 0))}%</b></span><span>Vai ao 2º turno: <b>${f1(100 * r.segundo_turno)}%</b></span><span>Final Zucco × Brizola: <b>${f1(100 * r.par_final.ZB)}%</b></span>`;
+  const sens = RSModel.chances({ ...par, pares: { ...par.pares, ZB: { ...par.pares.ZB, mu: par.pares.ZB.mu + 0.04 } } }, { n: 20000 }).eleito[0] - r.eleito[0];
+  state.sens = sens;
+  $("heroNota").innerHTML = `<b>Simulação condicional às pesquisas, não é previsão validada.</b> Soma a chance de vencer no 1º turno (mais de 50% dos válidos) com a de vencer o 2º, simulando os dois turnos juntos.
+    Premissas assumidas: erro sistemático das pesquisas de ${f1(M.sistematico1t)} p.p. no 1º turno (proxy do RMSE nacional medido), piso de ${f1(M.piso2t)} p.p. no 2º e correlação de ${f1(M.rho)} entre os erros dos turnos.
+    +1 p.p. de Zucco/(Zucco+Brizola) no 2º turno mexe na chance do Zucco em ~${f1(100 * Math.abs(sens))} p.p.`;
+  evolChances();
+}
+function evolChances() {
+  const ev = D.modelo.evolucao, pts = ev.map(e => RSModel.chances(e.par, { n: 8000 })), lab = ev.map(e => e.data.slice(8) + "/" + e.data.slice(5, 7));
+  const ds = (i, pos) => ({ label: CAND[i].rot, data: pts.map(p => 100 * p.eleito[i]), borderColor: css(CAND[i].cor), backgroundColor: css(CAND[i].cor), borderWidth: 2, pointRadius: 4, tension: 0, rotPos: pos });
+  chart("cEvoChances", { type: "line", data: { labels: lab, datasets: [ds(0, "cima"), ds(1, "baixo"), { label: "50%", data: lab.map(() => 50), borderColor: css("--muted"), borderDash: [3, 4], borderWidth: 1, pointRadius: 0, aux: true }] },
+    options: { interaction: { mode: "index", intersect: false }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, max: 100, ticks: { color: css("--ink2"), callback: q => q + "%" } }) },
+      plugins: { rotulos: { on: true }, legend: { position: "bottom", labels: { color: css("--ink2"), usePointStyle: true, filter: l => l.text !== "50%" } },
+        tooltip: { callbacks: { title: i => "Pesquisas até " + ev[i[0].dataIndex].data.split("-").reverse().join("/"), label: i => i.dataset.aux ? null : `${i.dataset.label}: ${f1(i.parsed.y)}%` } } } } });
+  tabela("tEvoCh", ["Pesquisas até", "Zucco eleito %", "Brizola eleita %", "Souza eleito %", "Pesquisas usadas"], ev.map((e, i) => [e.data.split("-").reverse().join("/"), 100 * pts[i].eleito[0], 100 * pts[i].eleito[1], 100 * pts[i].eleito[2], e.par.n]));
+}
+
+// ---------- 1. histórico ----------
+function historico() {
+  const mk = (b) => ({ label: BNOME[b], data: ANOS.map(a => D.blocos[a][b]), backgroundColor: css(BCOR[b]), borderColor: css("--surface"), borderWidth: 2, borderRadius: 3 });
+  chart("cBlocos", { type: "bar", data: { labels: ANOS, datasets: ["E", "C", "D"].map(mk) },
+    options: { scales: { x: eixo({ stacked: true, grid: { display: false } }), y: eixo({ stacked: true, max: 100, ticks: { color: css("--ink2"), callback: v => v + "%" } }) },
+      plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${f1(c.parsed.y)}%` } } } } });
+  const sel = $("selAno"); if (!sel.options.length) { sel.innerHTML = ANOS.map(a => `<option value="${a}">${a}</option>`).join(""); sel.value = state.ano; sel.onchange = () => { state.ano = sel.value; candidatos(); }; }
+  candidatos();
+  tabela("tBlocos", ["Eleição", "Esquerda %", "Centro %", "Direita %"], ANOS.map(a => [a, D.blocos[a].E, D.blocos[a].C, D.blocos[a].D]));
+}
+function candidatos() {
+  const c = D.cand[state.ano], linha = (t) => (c[t] || []).map(x => `<tr><td><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${css(BCOR[x.bloco])};margin-right:6px"></i>${x.nome} (${x.partido})</td><td>${f1(x.pct)}%</td></tr>`).join("");
+  $("tCand").innerHTML = `<table class="t"><tr><th>1º turno</th><th>%</th></tr>${linha("1")}${c["2"] ? `<tr><th>2º turno</th><th></th></tr>${linha("2")}` : ""}</table>`;
+}
+
+// ---------- 2. regiões ----------
+function regioesHist() {
+  const b = state.bloco, mix = (a, c, w) => a.map((x, i) => Math.round(x + (c[i] - x) * w)), rgb = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const base = rgb(css("--div-mid")), cor = rgb(css(BCOR[b]));
+  const ord = UN.slice().sort((x, y) => D.unidades["2022"][y][b] - D.unidades["2022"][x][b]);
+  $("heat").innerHTML = `<tr><th></th>${ANOS.map(a => `<th>${a}</th>`).join("")}</tr>` + ord.map(u => `<tr><td style="text-align:left;font-weight:600;min-width:140px">${u}</td>${ANOS.map(a => {
+    const v = D.unidades[a][u][b], c = mix(base, cor, Math.min(1, v / 70)), lum = 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2];
+    return `<td style="background:rgb(${c});color:${lum > 140 ? "#0b0b0b" : "#fff"}" title="${v}%">${f1(v)}</td>`; }).join("")}</tr>`).join("");
+  const o2 = UN.slice().sort((x, y) => D.unidades["2022"][y].D - D.unidades["2022"][x].D), mk = (k) => ({ label: BNOME[k], data: o2.map(u => D.unidades["2022"][u][k]), backgroundColor: css(BCOR[k]), borderColor: css("--surface"), borderWidth: 2 });
+  chart("cUn22", { type: "bar", data: { labels: o2, datasets: ["E", "C", "D"].map(mk) }, options: { indexAxis: "y", scales: { x: eixo({ stacked: true, max: 100, ticks: { color: css("--ink2"), callback: v => v + "%" } }), y: eixo({ stacked: true, grid: { display: false }, ticks: { color: css("--ink2"), font: { size: 10 } } }) },
+    plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${f1(c.parsed.x)}%` } } } } });
+}
+
+// ---------- 3. Porto Alegre × resto do estado ----------
+function capital() {
+  const b = state.bloco2, L = (k, n, cor, dash) => ({ label: n, data: ANOS.map(a => D.cvi[b][a][k]), borderColor: css(cor), backgroundColor: css(cor), borderWidth: 2, pointRadius: 4, borderDash: dash, tension: 0 });
+  chart("cCvi", { type: "line", data: { labels: ANOS, datasets: [L("capital", "Porto Alegre", BCOR[b]), L("interior", "Resto do estado", "--ink2"), L("estado", "Estado", "--muted", [4, 4])] },
+    options: { interaction: { mode: "index", intersect: false }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ ticks: { color: css("--ink2"), callback: v => v + "%" } }) } } });
+  tabela("tCvi", ["Eleição", "Porto Alegre %", "Resto do estado %", "Estado %", "Capital − interior (p.p.)"], ANOS.map(a => { const c = D.cvi[b][a]; return [a, c.capital, c.interior, c.estado, c.capital - c.interior]; }));
+}
+
+// ---------- 4. pesquisas ----------
+const INSTCOR = { Quaest: "--s1", AtlasIntel: "--s2", RealTimeBigData: "--s3", ParanaPesquisas: "--s4", Neokemp: "--s5" };
+function pesquisas() {
+  const insts = [...new Set(D.polls.map(p => p.instk))], mk = (id, f, ymin, ymax, ref) => chart(id, { type: "line",
+    data: { datasets: insts.map(i => ({ label: D.polls.find(p => p.instk === i).inst, data: D.polls.filter(p => p.instk === i && f(p) != null).map(p => ({ x: Date.parse(p.data), y: f(p) })), borderColor: css(INSTCOR[i]), backgroundColor: css(INSTCOR[i]), borderWidth: 2, pointRadius: 4, tension: 0 }))
+      .concat([{ label: "empate", data: [{ x: Date.parse("2026-07-10"), y: ref }, { x: Date.parse("2026-10-02"), y: ref }], borderColor: css("--muted"), borderDash: [3, 4], borderWidth: 1, pointRadius: 0 }]) },
+    options: { parsing: false, interaction: { mode: "nearest", intersect: true }, scales: { x: { type: "linear", min: Date.parse("2026-07-10"), max: Date.parse("2026-10-02"), ...eixo({ grid: { display: false } }), ticks: { color: css("--ink2"), maxTicksLimit: 6, callback: v => new Date(v).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }) } },
+      y: eixo({ min: ymin, max: ymax, ticks: { color: css("--ink2"), callback: v => v + (id === "cPoll2" ? "%" : "") } }) },
+      plugins: { legend: { position: "bottom", labels: { color: css("--ink2"), usePointStyle: true, filter: l => l.text !== "empate" } }, tooltip: { callbacks: { title: i => new Date(i[0].parsed.x).toLocaleDateString("pt-BR"), label: i => `${i.dataset.label}: ${f1(i.parsed.y)}` } } } } });
+  mk("cPoll1", p => p.z - p.b, -22, 32, 0); mk("cPoll2", p => p.zb2, 40, 60, 50);
+  tabela("tPoll", ["Instituto", "Campo até", "Amostra", "Registro TSE", "Zucco %", "Brizola %", "Souza %", "Zucco−Brizola", "2º T Zucco/(Z+B)"], D.polls.slice().reverse().map(p => [p.inst, p.data.split("-").reverse().join("/"), p.amostra, p.registro, p.z, p.b, p.s, p.z - p.b, p.zb2]));
+}
+
+// ---------- 5. projeção por região ----------
+function projecao() {
+  $("vZ").textContent = f1(state.z) + "%"; $("vB").textContent = f1(state.b) + "%"; $("vP").textContent = f1(state.p) + "%";
+  $("slZ").value = state.z; $("slB").value = state.b; $("slP").value = state.p;
+  const par = parSim(), R = RSModel.regioes(par, M.unidades, M.sigma, { n: 4000 }).sort((a, b) => b.margem_zb - a.margem_zb);
+  const s = sAtual(), k = (t, v, sub) => `<div class="kpi"><span>${t}</span><b>${v}</b><small>${sub}</small></div>`;
+  $("kpisProj").innerHTML = k("Zucco", f1(state.z) + "%", "1º turno, % dos válidos") + k("Brizola", f1(state.b) + "%", "1º turno") + k("Souza", f1(s) + "%", `1º turno (+ outros ${f1(100 * M.par.rbar)}%)`) +
+    k("Regiões com Zucco à frente", `${R.filter(x => x.p_zucco_a_frente_1t > 50).length} de ${R.length}`, "1º turno, pela mediana");
+  const cor = (v) => v >= 0 ? css("--anti") : css("--pt");
+  chart("cReg1", { type: "bar", data: { labels: R.map(x => x.unidade), datasets: [
+      { label: "Intervalo 90%", data: R.map(x => [x.margem_p5, x.margem_p95]), backgroundColor: R.map(x => cor(x.margem_zb) + "44"), borderRadius: 3, barThickness: 16, grouped: false, order: 2 },
+      { label: "Mediana", data: R.map(x => x.margem_zb), backgroundColor: R.map(x => cor(x.margem_zb)), borderRadius: 3, barThickness: 7, grouped: false, order: 1 }] },
+    options: { indexAxis: "y", animation: false, scales: { x: eixo({ ticks: { color: css("--ink2"), callback: v => (v > 0 ? "+" : "") + v } }), y: eixo({ grid: { display: false }, ticks: { color: css("--ink2"), autoSkip: false, font: { size: 10 } } }) },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: i => { const x = R[i.dataIndex]; return i.datasetIndex === 0 ? `Intervalo 90%: ${f1(x.margem_p5)} a ${f1(x.margem_p95)} p.p.` : [`Zucco ${f1(x.zucco)}% · Brizola ${f1(x.brizola)}% · Centro ${f1(x.centro)}%`, `Margem ${f1(x.margem_zb)} p.p.`, `P(Zucco à frente) ${f1(x.p_zucco_a_frente_1t)}%`]; } } } } } });
+  const R2 = R.slice().sort((a, b) => b.zb2t - a.zb2t);
+  chart("cReg2", { type: "bar", data: { labels: R2.map(x => x.unidade), datasets: [
+      { label: "Intervalo 90%", data: R2.map(x => [x.zb2t_p5, x.zb2t_p95]), backgroundColor: R2.map(x => cor(x.zb2t - 50) + "44"), borderRadius: 3, barThickness: 16, grouped: false, order: 2 },
+      { label: "Mediana", data: R2.map(x => x.zb2t), backgroundColor: R2.map(x => cor(x.zb2t - 50)), borderRadius: 3, barThickness: 7, grouped: false, order: 1 }] },
+    options: { indexAxis: "y", animation: false, scales: { x: eixo({ min: 20, max: 80, ticks: { color: css("--ink2"), callback: v => v + "%" } }), y: eixo({ grid: { display: false }, ticks: { color: css("--ink2"), autoSkip: false, font: { size: 10 } } }) },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: i => { const x = R2[i.dataIndex]; return i.datasetIndex === 0 ? `Intervalo 90%: ${f1(x.zb2t_p5)} a ${f1(x.zb2t_p95)}%` : [`Zucco ${f1(x.zb2t)}% × Brizola ${f1(100 - x.zb2t)}%`, `P(Zucco vence na região) ${f1(x.p_zucco_vence_2t)}%`]; } } } } } });
+  tabela("tReg", ["Região", "Zucco 1ºT", "Brizola 1ºT", "Centro 1ºT", "Margem (p.p.)", "P(Z à frente) %", "Zucco 2ºT %", "P(Z vence 2ºT) %"], R.map(x => [x.unidade, x.zucco, x.brizola, x.centro, x.margem_zb, x.p_zucco_a_frente_1t, x.zb2t, x.p_zucco_vence_2t]));
+}
+function ligar() {
+  const ev = (id, key) => { $(id).oninput = () => { state[key] = +$(id).value; clearTimeout(ligar.t); ligar.t = setTimeout(() => { projecao(); hero(); notas(); }, 120); $("v" + { z: "Z", b: "B", p: "P" }[key]).textContent = f1(state[key]) + "%"; }; };
+  ev("slZ", "z"); ev("slB", "b"); ev("slP", "p");
+  $("rst").onclick = () => { state.z = S0[0]; state.b = S0[1]; state.p = P0; projecao(); hero(); notas(); };
+  const sg2 = (id, key, fn) => { const el = $(id); el.innerHTML = ["E", "C", "D"].map(b => `<button data-k="${b}" aria-pressed="${state[key] == b}">${BNOME[b]}</button>`).join(""); el.onclick = (e) => { const b = e.target.dataset.k; if (b) { state[key] = b; sg2(id, key, fn); fn(); } }; };
+  sg2("segBloco", "bloco", regioesHist); sg2("segBloco2", "bloco2", capital);
+}
+
+// ---------- notas laterais ----------
+function notas() {
+  const pr = RSModel.chances(parSim(), { n: 10000 }), p = D.polls, ult = {};
+  p.forEach(x => { if (x.zb2 != null) ult[x.instk] = x; });
+  const lst = Object.values(ult).sort((a, b) => b.zb2 - a.zb2).map(x => `${x.inst} <b>${f1(x.zb2)}%</b>`);
+  nota("nota0", [`No 2º turno, as pesquisas dão ao Zucco <b>${f1(P0)}%</b> de Zucco/(Zucco+Brizola). As mais recentes ficam entre ${f1(Math.min(...Object.values(ult).map(x => x.zb2)))}% e ${f1(Math.max(...Object.values(ult).map(x => x.zb2)))}%.`,
+    `Mesmo com incerteza de ${f1(D.modelo.piso2t)} p.p. no 2º turno (piso assumido), ${f1(P0)}% fica acima de 50% na maior parte das simulações.`,
+    `Sem Eduardo Leite na disputa, o <b>centro encolhe</b>: Souza tem ${f1(S0[2])}% dos válidos contra ${f1(D.blocos["2022"].C)}% do centro em 2022.`,
+    `Mexa nos sliders da seção 5: o card responde ao simulador.`]);
+  const b = D.blocos;
+  nota("nota1", [`A direita foi de <b>${f1(b["2018"].D)}%</b> (2018) a <b>${f1(b["2022"].D)}%</b> (2022); o centro, de ${f1(b["2018"].C)}% a ${f1(b["2022"].C)}%.`,
+    `Em 2018 e 2022 o 2º turno foi entre direita e centro: <b>a esquerda não chegou lá</b>.`,
+    `A esquerda teve ${f1(b["2022"].E)}% em 2022, perto do que Brizola tem hoje nas pesquisas.`]);
+  const d22 = D.unidades["2022"], top = (k) => UN.slice().sort((x, y) => d22[y][k] - d22[x][k]);
+  nota("nota2", [`Em 2022, a direita foi mais forte em <b>${top("D")[0]}</b> (${f1(d22[top("D")[0]].D)}%) e mais fraca em ${top("D").slice(-1)[0]} (${f1(d22[top("D").slice(-1)[0]].D)}%).`,
+    `A esquerda foi mais forte em <b>${top("E")[0]}</b> (${f1(d22[top("E")[0]].E)}%).`,
+    `Regiões são mesorregiões do IBGE; a Grande POA aparece sem a capital.`]);
+  const cv = D.cvi.E, gp = (a) => cv[a].capital - cv[a].interior;
+  nota("nota3", [`Esquerda, Porto Alegre menos o resto do estado: <b>${sg(gp("2002"))} p.p.</b> (2002), <b>${sg(gp("2014"))}</b> (2014), <b>${sg(gp("2022"))}</b> (2022).`,
+    `Em 2022, em Porto Alegre, a esquerda teve <b>${f1(d22["Porto Alegre"].E)}%</b> e a direita <b>${f1(d22["Porto Alegre"].D)}%</b>.`,
+    `Mude o bloco acima para ver direita e centro.`]);
+  const zb = p.filter(x => x.zb2 != null).map(x => x.zb2), amp = Math.max(...zb) - Math.min(...zb);
+  nota("nota4", [`Última rodada, Zucco/(Zucco+Brizola) no 2º turno: ${lst.join(" · ")}.`,
+    `A distância entre institutos chega a <b>${f1(amp)} p.p.</b> no 2º turno: house effects grandes e poucas pesquisas por instituto.`,
+    `Não há histórico de pesquisas estaduais para medir o viés; as matérias-fonte não foram conferidas no TSE.`]);
+  nota("nota5", [`O Zucco lidera em <b>${RSModel.regioes(parSim(), M.unidades, M.sigma, { n: 1500 }).filter(x => x.p_zucco_a_frente_1t > 50).length} de 8</b> regiões no 1º turno.`,
+    `Disputadas (chance entre 30% e 70%) no 2º turno: ${RSModel.regioes(parSim(), M.unidades, M.sigma, { n: 1500 }).filter(x => x.p_zucco_vence_2t > 30 && x.p_zucco_vence_2t < 70).map(x => x.unidade).join(", ") || "nenhuma"}.`,
+    `O ruído por região (σ = ${M.sigma.toFixed(2).replace(".", ",")}) vem dos resíduos de 2002 a 2022: só 5 transições.`]);
+}
+
+function tudo() { historico(); regioesHist(); capital(); pesquisas(); projecao(); hero(); notas(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+ligar(); tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>

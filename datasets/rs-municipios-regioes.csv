@@ -1,0 +1,498 @@
+cod_municipio,municipio,ibge_id,nome_ibge,meso,micro
+88986,ACEGUÁ,4300034,Aceguá,Sudoeste Rio-grandense,Campanha Meridional
+84948,ÁGUA SANTA,4300059,Água Santa,Noroeste Rio-grandense,Passo Fundo
+85014,AGUDO,4300109,Agudo,Centro Ocidental Rio-grandense,Restinga Seca
+85030,AJURICABA,4300208,Ajuricaba,Noroeste Rio-grandense,Ijuí
+85057,ALECRIM,4300307,Alecrim,Noroeste Rio-grandense,Santa Rosa
+85073,ALEGRETE,4300406,Alegrete,Sudoeste Rio-grandense,Campanha Ocidental
+85545,ALEGRIA,4300455,Alegria,Noroeste Rio-grandense,Ijuí
+89001,ALMIRANTE TAMANDARÉ DO SUL,4300471,Almirante Tamandaré do Sul,Noroeste Rio-grandense,Carazinho
+85090,ALPESTRE,4300505,Alpestre,Noroeste Rio-grandense,Frederico Westphalen
+84808,ALTO ALEGRE,4300554,Alto Alegre,Noroeste Rio-grandense,Cruz Alta
+86282,ALTO FELIZ,4300570,Alto Feliz,Metropolitana de Porto Alegre,Montenegro
+85111,ALVORADA,4300604,Alvorada,Metropolitana de Porto Alegre,Porto Alegre
+86045,AMARAL FERRADOR,4300638,Amaral Ferrador,Sudeste Rio-grandense,Serras de Sudeste
+86304,AMETISTA DO SUL,4300646,Ametista do Sul,Noroeste Rio-grandense,Frederico Westphalen
+86100,ANDRÉ DA ROCHA,4300661,André da Rocha,Nordeste Rio-grandense,Guaporé
+85138,ANTA GORDA,4300703,Anta Gorda,Nordeste Rio-grandense,Guaporé
+85154,ANTÔNIO PRADO,4300802,Antônio Prado,Nordeste Rio-grandense,Caxias do Sul
+86320,ARAMBARÉ,4300851,Arambaré,Metropolitana de Porto Alegre,Camaquã
+88862,ARARICÁ,4300877,Araricá,Metropolitana de Porto Alegre,Porto Alegre
+85170,ARATIBA,4300901,Aratiba,Noroeste Rio-grandense,Erechim
+85197,ARROIO DO MEIO,4301008,Arroio do Meio,Centro Oriental Rio-grandense,Lajeado-Estrela
+89028,ARROIO DO PADRE,4301073,Arroio do Padre,Sudeste Rio-grandense,Pelotas
+85308,ARROIO DO SAL,4301057,Arroio do Sal,Metropolitana de Porto Alegre,Osório
+85235,ARROIO DO TIGRE,4301206,Arroio do Tigre,Centro Oriental Rio-grandense,Santa Cruz do Sul
+85219,ARROIO DOS RATOS,4301107,Arroio dos Ratos,Metropolitana de Porto Alegre,São Jerônimo
+85251,ARROIO GRANDE,4301305,Arroio Grande,Sudeste Rio-grandense,Jaguarão
+85278,ARVOREZINHA,4301404,Arvorezinha,Nordeste Rio-grandense,Guaporé
+85294,AUGUSTO PESTANA,4301503,Augusto Pestana,Noroeste Rio-grandense,Ijuí
+84735,ÁUREA,4301552,Áurea,Noroeste Rio-grandense,Erechim
+85316,BAGÉ,4301602,Bagé,Sudoeste Rio-grandense,Campanha Meridional
+88927,BALNEÁRIO PINHAL,4301636,Balneário Pinhal,Metropolitana de Porto Alegre,Osório
+86223,BARÃO,4301651,Barão,Metropolitana de Porto Alegre,Montenegro
+85332,BARÃO DE COTEGIPE,4301701,Barão de Cotegipe,Noroeste Rio-grandense,Erechim
+86347,BARÃO DO TRIUNFO,4301750,Barão do Triunfo,Metropolitana de Porto Alegre,São Jerônimo
+86363,BARRA DO GUARITA,4301859,Barra do Guarita,Noroeste Rio-grandense,Três Passos
+88625,BARRA DO QUARAÍ,4301875,Barra do Quaraí,Sudoeste Rio-grandense,Campanha Ocidental
+85375,BARRA DO RIBEIRO,4301909,Barra do Ribeiro,Metropolitana de Porto Alegre,Camaquã
+86380,BARRA DO RIO AZUL,4301925,Barra do Rio Azul,Noroeste Rio-grandense,Erechim
+86401,BARRA FUNDA,4301958,Barra Funda,Noroeste Rio-grandense,Carazinho
+85359,BARRACÃO,4301800,Barracão,Noroeste Rio-grandense,Sananduva
+85391,BARROS CASSAL,4302006,Barros Cassal,Noroeste Rio-grandense,Soledade
+88420,BENJAMIN CONSTANT DO SUL,4302055,Benjamin Constant do Sul,Noroeste Rio-grandense,Erechim
+85413,BENTO GONÇALVES,4302105,Bento Gonçalves,Nordeste Rio-grandense,Caxias do Sul
+86428,BOA VISTA DAS MISSÕES,4302154,Boa Vista das Missões,Noroeste Rio-grandense,Carazinho
+85430,BOA VISTA DO BURICÁ,4302204,Boa Vista do Buricá,Noroeste Rio-grandense,Três Passos
+89044,BOA VISTA DO CADEADO,4302220,Boa Vista do Cadeado,Noroeste Rio-grandense,Cruz Alta
+89060,BOA VISTA DO INCRA,4302238,Boa Vista do Incra,Noroeste Rio-grandense,Cruz Alta
+88161,BOA VISTA DO SUL,4302253,Boa Vista do Sul,Nordeste Rio-grandense,Caxias do Sul
+85456,BOM JESUS,4302303,Bom Jesus,Nordeste Rio-grandense,Vacaria
+98230,BOM PRINCÍPIO,4302352,Bom Princípio,Metropolitana de Porto Alegre,Montenegro
+86444,BOM PROGRESSO,4302378,Bom Progresso,Noroeste Rio-grandense,Três Passos
+85472,BOM RETIRO DO SUL,4302402,Bom Retiro do Sul,Centro Oriental Rio-grandense,Lajeado-Estrela
+84921,BOQUEIRÃO DO LEÃO,4302451,Boqueirão do Leão,Centro Oriental Rio-grandense,Lajeado-Estrela
+85499,BOSSOROCA,4302501,Bossoroca,Noroeste Rio-grandense,Santo Ângelo
+89087,BOZANO,4302584,Bozano,Noroeste Rio-grandense,Ijuí
+85510,BRAGA,4302600,Braga,Noroeste Rio-grandense,Três Passos
+85065,BROCHIER,4302659,Brochier,Metropolitana de Porto Alegre,Montenegro
+85537,BUTIÁ,4302709,Butiá,Metropolitana de Porto Alegre,São Jerônimo
+85553,CAÇAPAVA DO SUL,4302808,Caçapava do Sul,Sudeste Rio-grandense,Serras de Sudeste
+85570,CACEQUI,4302907,Cacequi,Centro Ocidental Rio-grandense,Santa Maria
+85596,CACHOEIRA DO SUL,4303004,Cachoeira do Sul,Centro Oriental Rio-grandense,Cachoeira do Sul
+85618,CACHOEIRINHA,4303103,Cachoeirinha,Metropolitana de Porto Alegre,Porto Alegre
+85634,CACIQUE DOBLE,4303202,Cacique Doble,Noroeste Rio-grandense,Sananduva
+85650,CAIBATÉ,4303301,Caibaté,Noroeste Rio-grandense,Cerro Largo
+85677,CAIÇARA,4303400,Caiçara,Noroeste Rio-grandense,Frederico Westphalen
+85693,CAMAQUÃ,4303509,Camaquã,Metropolitana de Porto Alegre,Camaquã
+85960,CAMARGO,4303558,Camargo,Noroeste Rio-grandense,Passo Fundo
+85715,CAMBARÁ DO SUL,4303608,Cambará do Sul,Nordeste Rio-grandense,Vacaria
+86460,CAMPESTRE DA SERRA,4303673,Campestre da Serra,Nordeste Rio-grandense,Vacaria
+85731,CAMPINA DAS MISSÕES,4303707,Campina das Missões,Noroeste Rio-grandense,Cerro Largo
+85758,CAMPINAS DO SUL,4303806,Campinas do Sul,Noroeste Rio-grandense,Erechim
+85774,CAMPO BOM,4303905,Campo Bom,Metropolitana de Porto Alegre,Porto Alegre
+85790,CAMPO NOVO,4304002,Campo Novo,Noroeste Rio-grandense,Três Passos
+85200,CAMPOS BORGES,4304101,Campos Borges,Noroeste Rio-grandense,Cruz Alta
+85812,CANDELÁRIA,4304200,Candelária,Centro Oriental Rio-grandense,Santa Cruz do Sul
+85839,CÂNDIDO GODÓI,4304309,Cândido Godói,Noroeste Rio-grandense,Santa Rosa
+86487,CANDIOTA,4304358,Candiota,Sudeste Rio-grandense,Serras de Sudeste
+85855,CANELA,4304408,Canela,Metropolitana de Porto Alegre,Gramado-Canela
+85871,CANGUÇU,4304507,Canguçu,Sudeste Rio-grandense,Pelotas
+85898,CANOAS,4304606,Canoas,Metropolitana de Porto Alegre,Porto Alegre
+89109,CANUDOS DO VALE,4304614,Canudos do Vale,Centro Oriental Rio-grandense,Lajeado-Estrela
+89125,CAPÃO BONITO DO SUL,4304622,Capão Bonito do Sul,Nordeste Rio-grandense,Vacaria
+89150,CAPÃO DA CANOA,4304630,Capão da Canoa,Metropolitana de Porto Alegre,Osório
+89141,CAPÃO DO CIPÓ,4304655,Capão do Cipó,Centro Ocidental Rio-grandense,Santiago
+89737,CAPÃO DO LEÃO,4304663,Capão do Leão,Sudeste Rio-grandense,Pelotas
+84891,CAPELA DE SANTANA,4304689,Capela de Santana,Metropolitana de Porto Alegre,Montenegro
+86509,CAPITÃO,4304697,Capitão,Centro Oriental Rio-grandense,Lajeado-Estrela
+88200,CAPIVARI DO SUL,4304671,Capivari do Sul,Metropolitana de Porto Alegre,Osório
+88340,CARAÁ,4304713,Caraá,Metropolitana de Porto Alegre,Osório
+85910,CARAZINHO,4304705,Carazinho,Noroeste Rio-grandense,Carazinho
+85936,CARLOS BARBOSA,4304804,Carlos Barbosa,Nordeste Rio-grandense,Caxias do Sul
+86525,CARLOS GOMES,4304853,Carlos Gomes,Noroeste Rio-grandense,Erechim
+85952,CASCA,4304903,Casca,Noroeste Rio-grandense,Passo Fundo
+85880,CASEIROS,4304952,Caseiros,Noroeste Rio-grandense,Passo Fundo
+85979,CATUÍPE,4305009,Catuípe,Noroeste Rio-grandense,Santo Ângelo
+85995,CAXIAS DO SUL,4305108,Caxias do Sul,Nordeste Rio-grandense,Caxias do Sul
+86541,CENTENÁRIO,4305116,Centenário,Noroeste Rio-grandense,Erechim
+88641,CERRITO,4305124,Cerrito,Sudeste Rio-grandense,Pelotas
+86088,CERRO BRANCO,4305132,Cerro Branco,Centro Oriental Rio-grandense,Cachoeira do Sul
+85227,CERRO GRANDE,4305157,Cerro Grande,Noroeste Rio-grandense,Carazinho
+85944,CERRO GRANDE DO SUL,4305173,Cerro Grande do Sul,Metropolitana de Porto Alegre,Camaquã
+86010,CERRO LARGO,4305207,Cerro Largo,Noroeste Rio-grandense,Cerro Largo
+86037,CHAPADA,4305306,Chapada,Noroeste Rio-grandense,Carazinho
+86932,CHARQUEADAS,4305355,Charqueadas,Metropolitana de Porto Alegre,São Jerônimo
+86568,CHARRUA,4305371,Charrua,Noroeste Rio-grandense,Passo Fundo
+86053,CHIAPETTA,4305405,Chiapetta,Noroeste Rio-grandense,Ijuí
+88846,CHUÍ,4305439,Chuí,Sudeste Rio-grandense,Litoral Lagunar
+88269,CHUVISCA,4305447,Chuvisca,Metropolitana de Porto Alegre,Camaquã
+85804,CIDREIRA,4305454,Cidreira,Metropolitana de Porto Alegre,Osório
+86070,CIRÍACO,4305504,Ciríaco,Noroeste Rio-grandense,Passo Fundo
+86584,COLINAS,4305587,Colinas,Centro Oriental Rio-grandense,Lajeado-Estrela
+86096,COLORADO,4305603,Colorado,Noroeste Rio-grandense,Não-Me-Toque
+86118,CONDOR,4305702,Condor,Noroeste Rio-grandense,Ijuí
+86134,CONSTANTINA,4305801,Constantina,Noroeste Rio-grandense,Frederico Westphalen
+89168,COQUEIRO BAIXO,4305835,Coqueiro Baixo,Centro Oriental Rio-grandense,Lajeado-Estrela
+86606,COQUEIROS DO SUL,4305850,Coqueiros do Sul,Noroeste Rio-grandense,Carazinho
+86622,CORONEL BARROS,4305871,Coronel Barros,Noroeste Rio-grandense,Ijuí
+86150,CORONEL BICACO,4305900,Coronel Bicaco,Noroeste Rio-grandense,Ijuí
+89184,CORONEL PILAR,4305934,Coronel Pilar,Nordeste Rio-grandense,Caxias do Sul
+89770,COTIPORÃ,4305959,Cotiporã,Nordeste Rio-grandense,Caxias do Sul
+86649,COXILHA,4305975,Coxilha,Noroeste Rio-grandense,Passo Fundo
+86177,CRISSIUMAL,4306007,Crissiumal,Noroeste Rio-grandense,Três Passos
+85464,CRISTAL,4306056,Cristal,Sudeste Rio-grandense,Pelotas
+88528,CRISTAL DO SUL,4306072,Cristal do Sul,Noroeste Rio-grandense,Frederico Westphalen
+86193,CRUZ ALTA,4306106,Cruz Alta,Noroeste Rio-grandense,Cruz Alta
+89206,CRUZALTENSE,4306130,Cruzaltense,Noroeste Rio-grandense,Erechim
+86215,CRUZEIRO DO SUL,4306205,Cruzeiro do Sul,Centro Oriental Rio-grandense,Lajeado-Estrela
+86231,DAVID CANABARRO,4306304,David Canabarro,Noroeste Rio-grandense,Passo Fundo
+86665,DERRUBADAS,4306320,Derrubadas,Noroeste Rio-grandense,Três Passos
+85049,DEZESSEIS DE NOVEMBRO,4306353,Dezesseis de Novembro,Noroeste Rio-grandense,Santo Ângelo
+88188,DILERMANDO DE AGUIAR,4306379,Dilermando de Aguiar,Centro Ocidental Rio-grandense,Santa Maria
+86258,DOIS IRMÃOS,4306403,Dois Irmãos,Metropolitana de Porto Alegre,Gramado-Canela
+86681,DOIS IRMÃOS DAS MISSÕES,4306429,Dois Irmãos das Missões,Noroeste Rio-grandense,Frederico Westphalen
+84824,DOIS LAJEADOS,4306452,Dois Lajeados,Nordeste Rio-grandense,Guaporé
+86274,DOM FELICIANO,4306502,Dom Feliciano,Metropolitana de Porto Alegre,Camaquã
+86290,DOM PEDRITO,4306601,Dom Pedrito,Sudoeste Rio-grandense,Campanha Meridional
+88463,DOM PEDRO DE ALCÂNTARA,4306551,Dom Pedro de Alcântara,Metropolitana de Porto Alegre,Osório
+86312,DONA FRANCISCA,4306700,Dona Francisca,Centro Ocidental Rio-grandense,Restinga Seca
+84883,DOUTOR MAURÍCIO CARDOSO,4306734,Doutor Maurício Cardoso,Noroeste Rio-grandense,Três Passos
+88307,DOUTOR RICARDO,4306759,Doutor Ricardo,Centro Oriental Rio-grandense,Lajeado-Estrela
+86240,ELDORADO DO SUL,4306767,Eldorado do Sul,Metropolitana de Porto Alegre,Porto Alegre
+86339,ENCANTADO,4306809,Encantado,Centro Oriental Rio-grandense,Lajeado-Estrela
+86355,ENCRUZILHADA DO SUL,4306908,Encruzilhada do Sul,Sudeste Rio-grandense,Serras de Sudeste
+86703,ENGENHO VELHO,4306924,Engenho Velho,Noroeste Rio-grandense,Frederico Westphalen
+85103,ENTRE-IJUÍS,4306932,Entre-Ijuís,Noroeste Rio-grandense,Santo Ângelo
+85928,ENTRE RIOS DO SUL,4306957,Entre Rios do Sul,Noroeste Rio-grandense,Erechim
+85081,EREBANGO,4306973,Erebango,Noroeste Rio-grandense,Erechim
+86371,ERECHIM,4307005,Erechim,Noroeste Rio-grandense,Erechim
+85022,ERNESTINA,4307054,Ernestina,Noroeste Rio-grandense,Passo Fundo
+86410,ERVAL GRANDE,4307203,Erval Grande,Noroeste Rio-grandense,Erechim
+86436,ERVAL SECO,4307302,Erval Seco,Noroeste Rio-grandense,Frederico Westphalen
+86452,ESMERALDA,4307401,Esmeralda,Nordeste Rio-grandense,Vacaria
+88285,ESPERANÇA DO SUL,4307450,Esperança do Sul,Noroeste Rio-grandense,Três Passos
+86479,ESPUMOSO,4307500,Espumoso,Noroeste Rio-grandense,Cruz Alta
+85286,ESTAÇÃO,4307559,Estação,Noroeste Rio-grandense,Erechim
+86495,ESTÂNCIA VELHA,4307609,Estância Velha,Metropolitana de Porto Alegre,Porto Alegre
+86517,ESTEIO,4307708,Esteio,Metropolitana de Porto Alegre,Porto Alegre
+86533,ESTRELA,4307807,Estrela,Centro Oriental Rio-grandense,Lajeado-Estrela
+88404,ESTRELA VELHA,4307815,Estrela Velha,Centro Oriental Rio-grandense,Santa Cruz do Sul
+85448,EUGÊNIO DE CASTRO,4307831,Eugênio de Castro,Noroeste Rio-grandense,Santo Ângelo
+84930,FAGUNDES VARELA,4307864,Fagundes Varela,Nordeste Rio-grandense,Caxias do Sul
+86550,FARROUPILHA,4307906,Farroupilha,Nordeste Rio-grandense,Caxias do Sul
+86576,FAXINAL DO SOTURNO,4308003,Faxinal do Soturno,Centro Ocidental Rio-grandense,Restinga Seca
+86029,FAXINALZINHO,4308052,Faxinalzinho,Noroeste Rio-grandense,Erechim
+88366,FAZENDA VILANOVA,4308078,Fazenda Vilanova,Centro Oriental Rio-grandense,Lajeado-Estrela
+86592,FELIZ,4308102,Feliz,Metropolitana de Porto Alegre,Montenegro
+86614,FLORES DA CUNHA,4308201,Flores da Cunha,Nordeste Rio-grandense,Caxias do Sul
+88242,FLORIANO PEIXOTO,4308250,Floriano Peixoto,Noroeste Rio-grandense,Erechim
+86630,FONTOURA XAVIER,4308300,Fontoura Xavier,Noroeste Rio-grandense,Soledade
+86657,FORMIGUEIRO,4308409,Formigueiro,Centro Ocidental Rio-grandense,Restinga Seca
+89222,FORQUETINHA,4308433,Forquetinha,Centro Oriental Rio-grandense,Lajeado-Estrela
+98272,FORTALEZA DOS VALOS,4308458,Fortaleza dos Valos,Noroeste Rio-grandense,Cruz Alta
+86673,FREDERICO WESTPHALEN,4308508,Frederico Westphalen,Noroeste Rio-grandense,Frederico Westphalen
+86690,GARIBALDI,4308607,Garibaldi,Nordeste Rio-grandense,Caxias do Sul
+86720,GARRUCHOS,4308656,Garruchos,Sudoeste Rio-grandense,Campanha Ocidental
+86711,GAURAMA,4308706,Gaurama,Noroeste Rio-grandense,Erechim
+86738,GENERAL CÂMARA,4308805,General Câmara,Metropolitana de Porto Alegre,São Jerônimo
+86746,GENTIL,4308854,Gentil,Noroeste Rio-grandense,Passo Fundo
+86770,GETÚLIO VARGAS,4308904,Getúlio Vargas,Noroeste Rio-grandense,Erechim
+86797,GIRUÁ,4309001,Giruá,Noroeste Rio-grandense,Santo Ângelo
+85502,GLORINHA,4309050,Glorinha,Metropolitana de Porto Alegre,Porto Alegre
+86819,GRAMADO,4309100,Gramado,Metropolitana de Porto Alegre,Gramado-Canela
+86762,GRAMADO DOS LOUREIROS,4309126,Gramado dos Loureiros,Noroeste Rio-grandense,Frederico Westphalen
+86789,GRAMADO XAVIER,4309159,Gramado Xavier,Centro Oriental Rio-grandense,Santa Cruz do Sul
+86835,GRAVATAÍ,4309209,Gravataí,Metropolitana de Porto Alegre,Porto Alegre
+84867,GUABIJU,4309258,Guabiju,Nordeste Rio-grandense,Guaporé
+86851,GUAÍBA,4309308,Guaíba,Metropolitana de Porto Alegre,Porto Alegre
+86878,GUAPORÉ,4309407,Guaporé,Nordeste Rio-grandense,Guaporé
+86894,GUARANI DAS MISSÕES,4309506,Guarani das Missões,Noroeste Rio-grandense,Cerro Largo
+85189,HARMONIA,4309555,Harmonia,Metropolitana de Porto Alegre,Montenegro
+86398,HERVAL,4307104,Herval,Sudeste Rio-grandense,Jaguarão
+88323,HERVEIRAS,4309571,Herveiras,Centro Oriental Rio-grandense,Santa Cruz do Sul
+86916,HORIZONTINA,4309605,Horizontina,Noroeste Rio-grandense,Três Passos
+86800,HULHA NEGRA,4309654,Hulha Negra,Sudoeste Rio-grandense,Campanha Meridional
+86959,HUMAITÁ,4309704,Humaitá,Noroeste Rio-grandense,Três Passos
+84972,IBARAMA,4309753,Ibarama,Centro Oriental Rio-grandense,Santa Cruz do Sul
+86975,IBIAÇÁ,4309803,Ibiaçá,Noroeste Rio-grandense,Sananduva
+86991,IBIRAIARAS,4309902,Ibiraiaras,Noroeste Rio-grandense,Passo Fundo
+84964,IBIRAPUITÃ,4309951,Ibirapuitã,Noroeste Rio-grandense,Soledade
+87017,IBIRUBÁ,4310009,Ibirubá,Noroeste Rio-grandense,Cruz Alta
+87033,IGREJINHA,4310108,Igrejinha,Metropolitana de Porto Alegre,Gramado-Canela
+87050,IJUÍ,4310207,Ijuí,Noroeste Rio-grandense,Ijuí
+87076,ILÓPOLIS,4310306,Ilópolis,Nordeste Rio-grandense,Guaporé
+85685,IMBÉ,4310330,Imbé,Metropolitana de Porto Alegre,Osório
+85782,IMIGRANTE,4310363,Imigrante,Centro Oriental Rio-grandense,Lajeado-Estrela
+87092,INDEPENDÊNCIA,4310405,Independência,Noroeste Rio-grandense,Santa Rosa
+86827,INHACORÁ,4310413,Inhacorá,Noroeste Rio-grandense,Ijuí
+84999,IPÊ,4310439,Ipê,Nordeste Rio-grandense,Vacaria
+85243,IPIRANGA DO SUL,4310462,Ipiranga do Sul,Noroeste Rio-grandense,Erechim
+87114,IRAÍ,4310504,Iraí,Noroeste Rio-grandense,Frederico Westphalen
+88382,ITAARA,4310538,Itaara,Centro Ocidental Rio-grandense,Santa Maria
+85901,ITACURUBI,4310553,Itacurubi,Centro Ocidental Rio-grandense,Santiago
+86843,ITAPUCA,4310579,Itapuca,Nordeste Rio-grandense,Guaporé
+87130,ITAQUI,4310603,Itaqui,Sudoeste Rio-grandense,Campanha Ocidental
+89249,ITATI,4310652,Itati,Metropolitana de Porto Alegre,Osório
+87157,ITATIBA DO SUL,4310702,Itatiba do Sul,Noroeste Rio-grandense,Erechim
+85626,IVORÁ,4310751,Ivorá,Centro Ocidental Rio-grandense,Restinga Seca
+87173,IVOTI,4310801,Ivoti,Metropolitana de Porto Alegre,Gramado-Canela
+84786,JABOTICABA,4310850,Jaboticaba,Noroeste Rio-grandense,Carazinho
+89265,JACUIZINHO,4310876,Jacuizinho,Noroeste Rio-grandense,Cruz Alta
+87190,JACUTINGA,4310900,Jacutinga,Noroeste Rio-grandense,Erechim
+87211,JAGUARÃO,4311007,Jaguarão,Sudeste Rio-grandense,Jaguarão
+87238,JAGUARI,4311106,Jaguari,Centro Ocidental Rio-grandense,Santa Maria
+84905,JAQUIRANA,4311122,Jaquirana,Nordeste Rio-grandense,Vacaria
+88587,JARI,4311130,Jari,Centro Ocidental Rio-grandense,Santiago
+98299,JÓIA,4311155,Jóia,Noroeste Rio-grandense,Cruz Alta
+87254,JÚLIO DE CASTILHOS,4311205,Júlio de Castilhos,Centro Ocidental Rio-grandense,Santiago
+89281,LAGOA BONITA DO SUL,4311239,Lagoa Bonita do Sul,Centro Oriental Rio-grandense,Santa Cruz do Sul
+86886,LAGOA DOS TRÊS CANTOS,4311270,Lagoa dos Três Cantos,Noroeste Rio-grandense,Não-Me-Toque
+87270,LAGOA VERMELHA,4311304,Lagoa Vermelha,Nordeste Rio-grandense,Vacaria
+85260,LAGOÃO,4311254,Lagoão,Noroeste Rio-grandense,Soledade
+87297,LAJEADO,4311403,Lajeado,Centro Oriental Rio-grandense,Lajeado-Estrela
+86860,LAJEADO DO BUGRE,4311429,Lajeado do Bugre,Noroeste Rio-grandense,Carazinho
+87319,LAVRAS DO SUL,4311502,Lavras do Sul,Sudoeste Rio-grandense,Campanha Meridional
+87335,LIBERATO SALZANO,4311601,Liberato Salzano,Noroeste Rio-grandense,Frederico Westphalen
+86908,LINDOLFO COLLOR,4311627,Lindolfo Collor,Metropolitana de Porto Alegre,Gramado-Canela
+86924,LINHA NOVA,4311643,Linha Nova,Metropolitana de Porto Alegre,Montenegro
+88447,MAÇAMBARÁ,4311718,Maçambará,Sudoeste Rio-grandense,Campanha Ocidental
+87351,MACHADINHO,4311700,Machadinho,Noroeste Rio-grandense,Sananduva
+88943,MAMPITUBA,4311734,Mampituba,Metropolitana de Porto Alegre,Osório
+86940,MANOEL VIANA,4311759,Manoel Viana,Sudoeste Rio-grandense,Campanha Ocidental
+86967,MAQUINÉ,4311775,Maquiné,Metropolitana de Porto Alegre,Osório
+86983,MARATÁ,4311791,Maratá,Metropolitana de Porto Alegre,Montenegro
+87378,MARAU,4311809,Marau,Noroeste Rio-grandense,Passo Fundo
+87394,MARCELINO RAMOS,4311908,Marcelino Ramos,Noroeste Rio-grandense,Erechim
+87009,MARIANA PIMENTEL,4311981,Mariana Pimentel,Metropolitana de Porto Alegre,Porto Alegre
+87416,MARIANO MORO,4312005,Mariano Moro,Noroeste Rio-grandense,Erechim
+88820,MARQUES DE SOUZA,4312054,Marques de Souza,Centro Oriental Rio-grandense,Lajeado-Estrela
+87432,MATA,4312104,Mata,Centro Ocidental Rio-grandense,Santa Maria
+87025,MATO CASTELHANO,4312138,Mato Castelhano,Noroeste Rio-grandense,Passo Fundo
+87041,MATO LEITÃO,4312153,Mato Leitão,Centro Oriental Rio-grandense,Santa Cruz do Sul
+89303,MATO QUEIMADO,4312179,Mato Queimado,Noroeste Rio-grandense,Cerro Largo
+87459,MAXIMILIANO DE ALMEIDA,4312203,Maximiliano de Almeida,Noroeste Rio-grandense,Sananduva
+87068,MINAS DO LEÃO,4312252,Minas do Leão,Metropolitana de Porto Alegre,São Jerônimo
+87475,MIRAGUAÍ,4312302,Miraguaí,Noroeste Rio-grandense,Três Passos
+85820,MONTAURI,4312351,Montauri,Nordeste Rio-grandense,Guaporé
+88803,MONTE ALEGRE DOS CAMPOS,4312377,Monte Alegre dos Campos,Nordeste Rio-grandense,Vacaria
+87084,MONTE BELO DO SUL,4312385,Monte Belo do Sul,Nordeste Rio-grandense,Caxias do Sul
+87491,MONTENEGRO,4312401,Montenegro,Metropolitana de Porto Alegre,Montenegro
+87106,MORMAÇO,4312427,Mormaço,Noroeste Rio-grandense,Soledade
+87122,MORRINHOS DO SUL,4312443,Morrinhos do Sul,Metropolitana de Porto Alegre,Osório
+86185,MORRO REDONDO,4312450,Morro Redondo,Sudeste Rio-grandense,Pelotas
+87149,MORRO REUTER,4312476,Morro Reuter,Metropolitana de Porto Alegre,Gramado-Canela
+87513,MOSTARDAS,4312500,Mostardas,Metropolitana de Porto Alegre,Osório
+87530,MUÇUM,4312609,Muçum,Centro Oriental Rio-grandense,Lajeado-Estrela
+88544,MUITOS CAPÕES,4312617,Muitos Capões,Nordeste Rio-grandense,Vacaria
+87165,MULITERNO,4312625,Muliterno,Noroeste Rio-grandense,Passo Fundo
+87556,NÃO-ME-TOQUE,4312658,Não-Me-Toque,Noroeste Rio-grandense,Não-Me-Toque
+87181,NICOLAU VERGUEIRO,4312674,Nicolau Vergueiro,Noroeste Rio-grandense,Passo Fundo
+87572,NONOAI,4312708,Nonoai,Noroeste Rio-grandense,Frederico Westphalen
+86169,NOVA ALVORADA,4312757,Nova Alvorada,Nordeste Rio-grandense,Guaporé
+87599,NOVA ARAÇÁ,4312807,Nova Araçá,Nordeste Rio-grandense,Guaporé
+87610,NOVA BASSANO,4312906,Nova Bassano,Nordeste Rio-grandense,Guaporé
+87203,NOVA BOA VISTA,4312955,Nova Boa Vista,Noroeste Rio-grandense,Carazinho
+87637,NOVA BRÉSCIA,4313003,Nova Bréscia,Centro Oriental Rio-grandense,Lajeado-Estrela
+88226,NOVA CANDELÁRIA,4313011,Nova Candelária,Noroeste Rio-grandense,Três Passos
+85120,NOVA ESPERANÇA DO SUL,4313037,Nova Esperança do Sul,Centro Ocidental Rio-grandense,Santa Maria
+84816,NOVA HARTZ,4313060,Nova Hartz,Metropolitana de Porto Alegre,Porto Alegre
+87220,NOVA PÁDUA,4313086,Nova Pádua,Nordeste Rio-grandense,Caxias do Sul
+87653,NOVA PALMA,4313102,Nova Palma,Centro Ocidental Rio-grandense,Restinga Seca
+87670,NOVA PETRÓPOLIS,4313201,Nova Petrópolis,Metropolitana de Porto Alegre,Gramado-Canela
+87696,NOVA PRATA,4313300,Nova Prata,Nordeste Rio-grandense,Guaporé
+88560,NOVA RAMADA,4313334,Nova Ramada,Noroeste Rio-grandense,Ijuí
+84751,NOVA ROMA DO SUL,4313359,Nova Roma do Sul,Nordeste Rio-grandense,Caxias do Sul
+87246,NOVA SANTA RITA,4313375,Nova Santa Rita,Metropolitana de Porto Alegre,Porto Alegre
+87262,NOVO BARREIRO,4313490,Novo Barreiro,Noroeste Rio-grandense,Carazinho
+88684,NOVO CABRAIS,4313391,Novo Cabrais,Centro Oriental Rio-grandense,Cachoeira do Sul
+87718,NOVO HAMBURGO,4313409,Novo Hamburgo,Metropolitana de Porto Alegre,Porto Alegre
+87289,NOVO MACHADO,4313425,Novo Machado,Noroeste Rio-grandense,Santa Rosa
+87300,NOVO TIRADENTES,4313441,Novo Tiradentes,Noroeste Rio-grandense,Frederico Westphalen
+89320,NOVO XINGU,4313466,Novo Xingu,Noroeste Rio-grandense,Frederico Westphalen
+87734,OSÓRIO,4313508,Osório,Metropolitana de Porto Alegre,Osório
+87750,PAIM FILHO,4313607,Paim Filho,Noroeste Rio-grandense,Sananduva
+89672,PALMARES DO SUL,4313656,Palmares do Sul,Metropolitana de Porto Alegre,Osório
+87777,PALMEIRA DAS MISSÕES,4313706,Palmeira das Missões,Noroeste Rio-grandense,Carazinho
+87793,PALMITINHO,4313805,Palmitinho,Noroeste Rio-grandense,Frederico Westphalen
+87815,PANAMBI,4313904,Panambi,Noroeste Rio-grandense,Ijuí
+84980,PANTANO GRANDE,4313953,Pantano Grande,Centro Oriental Rio-grandense,Cachoeira do Sul
+87831,PARAÍ,4314001,Paraí,Nordeste Rio-grandense,Guaporé
+85987,PARAÍSO DO SUL,4314027,Paraíso do Sul,Centro Oriental Rio-grandense,Cachoeira do Sul
+87327,PARECI NOVO,4314035,Pareci Novo,Metropolitana de Porto Alegre,Montenegro
+98256,PAROBÉ,4314050,Parobé,Metropolitana de Porto Alegre,Porto Alegre
+88889,PASSA SETE,4314068,Passa Sete,Centro Oriental Rio-grandense,Santa Cruz do Sul
+87343,PASSO DO SOBRADO,4314076,Passo do Sobrado,Centro Oriental Rio-grandense,Cachoeira do Sul
+87858,PASSO FUNDO,4314100,Passo Fundo,Noroeste Rio-grandense,Passo Fundo
+89346,PAULO BENTO,4314134,Paulo Bento,Noroeste Rio-grandense,Erechim
+85146,PAVERAMA,4314159,Paverama,Centro Oriental Rio-grandense,Lajeado-Estrela
+89567,PEDRAS ALTAS,4314175,Pedras Altas,Sudeste Rio-grandense,Serras de Sudeste
+87874,PEDRO OSÓRIO,4314209,Pedro Osório,Sudeste Rio-grandense,Pelotas
+87890,PEJUÇARA,4314308,Pejuçara,Noroeste Rio-grandense,Ijuí
+87912,PELOTAS,4314407,Pelotas,Sudeste Rio-grandense,Pelotas
+87360,PICADA CAFÉ,4314423,Picada Café,Metropolitana de Porto Alegre,Gramado-Canela
+85340,PINHAL,4314456,Pinhal,Noroeste Rio-grandense,Carazinho
+89362,PINHAL DA SERRA,4314464,Pinhal da Serra,Nordeste Rio-grandense,Vacaria
+87386,PINHAL GRANDE,4314472,Pinhal Grande,Centro Ocidental Rio-grandense,Santiago
+87408,PINHEIRINHO DO VALE,4314498,Pinheirinho do Vale,Noroeste Rio-grandense,Frederico Westphalen
+87939,PINHEIRO MACHADO,4314506,Pinheiro Machado,Sudeste Rio-grandense,Serras de Sudeste
+89540,PINTO BANDEIRA,4314548,Pinto Bandeira,Nordeste Rio-grandense,Caxias do Sul
+84778,PIRAPÓ,4314555,Pirapó,Noroeste Rio-grandense,Santo Ângelo
+87955,PIRATINI,4314605,Piratini,Sudeste Rio-grandense,Serras de Sudeste
+87971,PLANALTO,4314704,Planalto,Noroeste Rio-grandense,Frederico Westphalen
+86126,POÇO DAS ANTAS,4314753,Poço das Antas,Metropolitana de Porto Alegre,Montenegro
+87424,PONTÃO,4314779,Pontão,Noroeste Rio-grandense,Passo Fundo
+87440,PONTE PRETA,4314787,Ponte Preta,Noroeste Rio-grandense,Erechim
+87998,PORTÃO,4314803,Portão,Metropolitana de Porto Alegre,Montenegro
+88013,PORTO ALEGRE,4314902,Porto Alegre,Metropolitana de Porto Alegre,Porto Alegre
+88030,PORTO LUCENA,4315008,Porto Lucena,Noroeste Rio-grandense,Santa Rosa
+87467,PORTO MAUÁ,4315057,Porto Mauá,Noroeste Rio-grandense,Santa Rosa
+87483,PORTO VERA CRUZ,4315073,Porto Vera Cruz,Noroeste Rio-grandense,Santa Rosa
+88056,PORTO XAVIER,4315107,Porto Xavier,Noroeste Rio-grandense,Cerro Largo
+85421,POUSO NOVO,4315131,Pouso Novo,Centro Oriental Rio-grandense,Lajeado-Estrela
+87505,PRESIDENTE LUCENA,4315149,Presidente Lucena,Metropolitana de Porto Alegre,Gramado-Canela
+84760,PROGRESSO,4315156,Progresso,Centro Oriental Rio-grandense,Lajeado-Estrela
+85405,PROTÁSIO ALVES,4315172,Protásio Alves,Nordeste Rio-grandense,Guaporé
+88072,PUTINGA,4315206,Putinga,Nordeste Rio-grandense,Guaporé
+88099,QUARAÍ,4315305,Quaraí,Sudoeste Rio-grandense,Campanha Ocidental
+89389,QUATRO IRMÃOS,4315313,Quatro Irmãos,Noroeste Rio-grandense,Erechim
+87521,QUEVEDOS,4315321,Quevedos,Centro Ocidental Rio-grandense,Santiago
+84875,QUINZE DE NOVEMBRO,4315354,Quinze de Novembro,Noroeste Rio-grandense,Cruz Alta
+88110,REDENTORA,4315404,Redentora,Noroeste Rio-grandense,Três Passos
+85766,RELVADO,4315453,Relvado,Centro Oriental Rio-grandense,Lajeado-Estrela
+88137,RESTINGA SÊCA,4315503,Restinga Sêca,Centro Ocidental Rio-grandense,Restinga Seca
+87548,RIO DOS ÍNDIOS,4315552,Rio dos Índios,Noroeste Rio-grandense,Frederico Westphalen
+88153,RIO GRANDE,4315602,Rio Grande,Sudeste Rio-grandense,Litoral Lagunar
+88170,RIO PARDO,4315701,Rio Pardo,Centro Oriental Rio-grandense,Cachoeira do Sul
+85740,RIOZINHO,4315750,Riozinho,Metropolitana de Porto Alegre,Gramado-Canela
+88196,ROCA SALES,4315800,Roca Sales,Centro Oriental Rio-grandense,Lajeado-Estrela
+88218,RODEIO BONITO,4315909,Rodeio Bonito,Noroeste Rio-grandense,Frederico Westphalen
+89400,ROLADOR,4315958,Rolador,Noroeste Rio-grandense,Santo Ângelo
+88234,ROLANTE,4316006,Rolante,Metropolitana de Porto Alegre,Gramado-Canela
+88250,RONDA ALTA,4316105,Ronda Alta,Noroeste Rio-grandense,Passo Fundo
+88277,RONDINHA,4316204,Rondinha,Noroeste Rio-grandense,Frederico Westphalen
+88293,ROQUE GONZALES,4316303,Roque Gonzales,Noroeste Rio-grandense,Cerro Largo
+88315,ROSÁRIO DO SUL,4316402,Rosário do Sul,Sudoeste Rio-grandense,Campanha Central
+87564,SAGRADA FAMÍLIA,4316428,Sagrada Família,Noroeste Rio-grandense,Carazinho
+85561,SALDANHA MARINHO,4316436,Saldanha Marinho,Noroeste Rio-grandense,Cruz Alta
+89753,SALTO DO JACUÍ,4316451,Salto do Jacuí,Noroeste Rio-grandense,Cruz Alta
+87580,SALVADOR DAS MISSÕES,4316477,Salvador das Missões,Noroeste Rio-grandense,Cerro Largo
+88331,SALVADOR DO SUL,4316501,Salvador do Sul,Metropolitana de Porto Alegre,Montenegro
+88358,SANANDUVA,4316600,Sananduva,Noroeste Rio-grandense,Sananduva
+88455,SANT ANA DO LIVRAMENTO,4317103,Sant'Ana do Livramento,Sudoeste Rio-grandense,Campanha Central
+88374,SANTA BÁRBARA DO SUL,4316709,Santa Bárbara do Sul,Noroeste Rio-grandense,Cruz Alta
+89247,SANTA CECÍLIA DO SUL,4316733,Santa Cecília do Sul,Noroeste Rio-grandense,Passo Fundo
+87602,SANTA CLARA DO SUL,4316758,Santa Clara do Sul,Centro Oriental Rio-grandense,Lajeado-Estrela
+88390,SANTA CRUZ DO SUL,4316808,Santa Cruz do Sul,Centro Oriental Rio-grandense,Santa Cruz do Sul
+89443,SANTA MARGARIDA DO SUL,4316972,Santa Margarida do Sul,Sudoeste Rio-grandense,Campanha Central
+88412,SANTA MARIA,4316907,Santa Maria,Centro Ocidental Rio-grandense,Santa Maria
+86207,SANTA MARIA DO HERVAL,4316956,Santa Maria do Herval,Metropolitana de Porto Alegre,Gramado-Canela
+88471,SANTA ROSA,4317202,Santa Rosa,Noroeste Rio-grandense,Santa Rosa
+87629,SANTA TEREZA,4317251,Santa Tereza,Nordeste Rio-grandense,Caxias do Sul
+88498,SANTA VITÓRIA DO PALMAR,4317301,Santa Vitória do Palmar,Sudeste Rio-grandense,Litoral Lagunar
+88439,SANTANA DA BOA VISTA,4317004,Santana da Boa Vista,Sudeste Rio-grandense,Serras de Sudeste
+88510,SANTIAGO,4317400,Santiago,Centro Ocidental Rio-grandense,Santiago
+88536,SANTO ÂNGELO,4317509,Santo Ângelo,Noroeste Rio-grandense,Santo Ângelo
+88552,SANTO ANTÔNIO DA PATRULHA,4317608,Santo Antônio da Patrulha,Metropolitana de Porto Alegre,Osório
+88579,SANTO ANTÔNIO DAS MISSÕES,4317707,Santo Antônio das Missões,Noroeste Rio-grandense,Santo Ângelo
+87645,SANTO ANTÔNIO DO PALMA,4317558,Santo Antônio do Palma,Noroeste Rio-grandense,Passo Fundo
+87661,SANTO ANTÔNIO DO PLANALTO,4317756,Santo Antônio do Planalto,Noroeste Rio-grandense,Carazinho
+88595,SANTO AUGUSTO,4317806,Santo Augusto,Noroeste Rio-grandense,Ijuí
+88617,SANTO CRISTO,4317905,Santo Cristo,Noroeste Rio-grandense,Santa Rosa
+87688,SANTO EXPEDITO DO SUL,4317954,Santo Expedito do Sul,Noroeste Rio-grandense,Sananduva
+88633,SÃO BORJA,4318002,São Borja,Sudoeste Rio-grandense,Campanha Ocidental
+84832,SÃO DOMINGOS DO SUL,4318051,São Domingos do Sul,Noroeste Rio-grandense,Passo Fundo
+88650,SÃO FRANCISCO DE ASSIS,4318101,São Francisco de Assis,Sudoeste Rio-grandense,Campanha Ocidental
+88676,SÃO FRANCISCO DE PAULA,4318200,São Francisco de Paula,Nordeste Rio-grandense,Vacaria
+88692,SÃO GABRIEL,4318309,São Gabriel,Sudoeste Rio-grandense,Campanha Central
+88714,SÃO JERÔNIMO,4318408,São Jerônimo,Metropolitana de Porto Alegre,São Jerônimo
+84859,SÃO JOÃO DA URTIGA,4318424,São João da Urtiga,Noroeste Rio-grandense,Sananduva
+87700,SÃO JOÃO DO POLÊSINE,4318432,São João do Polêsine,Centro Ocidental Rio-grandense,Restinga Seca
+84794,SÃO JORGE,4318440,São Jorge,Nordeste Rio-grandense,Guaporé
+87769,SÃO JOSÉ DAS MISSÕES,4318457,São José das Missões,Noroeste Rio-grandense,Carazinho
+85588,SÃO JOSÉ DO HERVAL,4318465,São José do Herval,Noroeste Rio-grandense,Soledade
+85324,SÃO JOSÉ DO HORTÊNCIO,4318481,São José do Hortêncio,Metropolitana de Porto Alegre,Montenegro
+87742,SÃO JOSÉ DO INHACORÁ,4318499,São José do Inhacorá,Noroeste Rio-grandense,Santa Rosa
+88730,SÃO JOSÉ DO NORTE,4318507,São José do Norte,Sudeste Rio-grandense,Litoral Lagunar
+88757,SÃO JOSÉ DO OURO,4318606,São José do Ouro,Noroeste Rio-grandense,Sananduva
+89460,SÃO JOSÉ DO SUL,4318614,São José do Sul,Metropolitana de Porto Alegre,Montenegro
+87726,SÃO JOSÉ DOS AUSENTES,4318622,São José dos Ausentes,Nordeste Rio-grandense,Vacaria
+88773,SÃO LEOPOLDO,4318705,São Leopoldo,Metropolitana de Porto Alegre,Porto Alegre
+88790,SÃO LOURENÇO DO SUL,4318804,São Lourenço do Sul,Sudeste Rio-grandense,Pelotas
+88811,SÃO LUIZ GONZAGA,4318903,São Luiz Gonzaga,Noroeste Rio-grandense,Santo Ângelo
+88838,SÃO MARCOS,4319000,São Marcos,Nordeste Rio-grandense,Caxias do Sul
+88854,SÃO MARTINHO,4319109,São Martinho,Noroeste Rio-grandense,Três Passos
+87785,SÃO MARTINHO DA SERRA,4319125,São Martinho da Serra,Centro Ocidental Rio-grandense,Santa Maria
+85480,SÃO MIGUEL DAS MISSÕES,4319158,São Miguel das Missões,Noroeste Rio-grandense,Santo Ângelo
+88870,SÃO NICOLAU,4319208,São Nicolau,Noroeste Rio-grandense,Santo Ângelo
+88897,SÃO PAULO DAS MISSÕES,4319307,São Paulo das Missões,Noroeste Rio-grandense,Cerro Largo
+87807,SÃO PEDRO DA SERRA,4319356,São Pedro da Serra,Metropolitana de Porto Alegre,Montenegro
+89486,SÃO PEDRO DAS MISSÕES,4319364,São Pedro das Missões,Noroeste Rio-grandense,Carazinho
+87823,SÃO PEDRO DO BUTIÁ,4319372,São Pedro do Butiá,Noroeste Rio-grandense,Cerro Largo
+88919,SÃO PEDRO DO SUL,4319406,São Pedro do Sul,Centro Ocidental Rio-grandense,Santa Maria
+88935,SÃO SEBASTIÃO DO CAÍ,4319505,São Sebastião do Caí,Metropolitana de Porto Alegre,Montenegro
+88951,SÃO SEPÉ,4319604,São Sepé,Centro Ocidental Rio-grandense,Santa Maria
+88978,SÃO VALENTIM,4319703,São Valentim,Noroeste Rio-grandense,Erechim
+87840,SÃO VALENTIM DO SUL,4319711,São Valentim do Sul,Nordeste Rio-grandense,Guaporé
+87866,SÃO VALÉRIO DO SUL,4319737,São Valério do Sul,Noroeste Rio-grandense,Ijuí
+85383,SÃO VENDELINO,4319752,São Vendelino,Metropolitana de Porto Alegre,Montenegro
+86754,SÃO VICENTE DO SUL,4319802,São Vicente do Sul,Centro Ocidental Rio-grandense,Santa Maria
+88994,SAPIRANGA,4319901,Sapiranga,Metropolitana de Porto Alegre,Porto Alegre
+89010,SAPUCAIA DO SUL,4320008,Sapucaia do Sul,Metropolitana de Porto Alegre,Porto Alegre
+89036,SARANDI,4320107,Sarandi,Noroeste Rio-grandense,Carazinho
+89052,SEBERI,4320206,Seberi,Noroeste Rio-grandense,Frederico Westphalen
+85707,SEDE NOVA,4320230,Sede Nova,Noroeste Rio-grandense,Três Passos
+85529,SEGREDO,4320263,Segredo,Centro Oriental Rio-grandense,Santa Cruz do Sul
+89079,SELBACH,4320305,Selbach,Noroeste Rio-grandense,Não-Me-Toque
+88765,SENADOR SALGADO FILHO,4320321,Senador Salgado Filho,Noroeste Rio-grandense,Santo Ângelo
+87882,SENTINELA DO SUL,4320354,Sentinela do Sul,Metropolitana de Porto Alegre,Camaquã
+89095,SERAFINA CORRÊA,4320404,Serafina Corrêa,Nordeste Rio-grandense,Guaporé
+87904,SÉRIO,4320453,Sério,Centro Oriental Rio-grandense,Lajeado-Estrela
+89117,SERTÃO,4320503,Sertão,Noroeste Rio-grandense,Passo Fundo
+87920,SERTÃO SANTANA,4320552,Sertão Santana,Metropolitana de Porto Alegre,Porto Alegre
+88706,SETE DE SETEMBRO,4320578,Sete de Setembro,Noroeste Rio-grandense,Cerro Largo
+89133,SEVERIANO DE ALMEIDA,4320602,Severiano de Almeida,Noroeste Rio-grandense,Erechim
+84956,SILVEIRA MARTINS,4320651,Silveira Martins,Centro Ocidental Rio-grandense,Restinga Seca
+87947,SINIMBU,4320677,Sinimbu,Centro Oriental Rio-grandense,Santa Cruz do Sul
+89176,SOBRADINHO,4320701,Sobradinho,Centro Oriental Rio-grandense,Santa Cruz do Sul
+89192,SOLEDADE,4320800,Soledade,Noroeste Rio-grandense,Soledade
+88722,TABAÍ,4320859,Tabaí,Centro Oriental Rio-grandense,Lajeado-Estrela
+89214,TAPEJARA,4320909,Tapejara,Noroeste Rio-grandense,Passo Fundo
+89230,TAPERA,4321006,Tapera,Noroeste Rio-grandense,Não-Me-Toque
+89257,TAPES,4321105,Tapes,Metropolitana de Porto Alegre,Camaquã
+89273,TAQUARA,4321204,Taquara,Metropolitana de Porto Alegre,Gramado-Canela
+89290,TAQUARI,4321303,Taquari,Centro Oriental Rio-grandense,Lajeado-Estrela
+85669,TAQUARUÇU DO SUL,4321329,Taquaruçu do Sul,Noroeste Rio-grandense,Frederico Westphalen
+89710,TAVARES,4321352,Tavares,Metropolitana de Porto Alegre,Osório
+89311,TENENTE PORTELA,4321402,Tenente Portela,Noroeste Rio-grandense,Três Passos
+85162,TERRA DE AREIA,4321436,Terra de Areia,Metropolitana de Porto Alegre,Osório
+98213,TEUTÔNIA,4321451,Teutônia,Centro Oriental Rio-grandense,Lajeado-Estrela
+89508,TIO HUGO,4321469,Tio Hugo,Noroeste Rio-grandense,Não-Me-Toque
+87963,TIRADENTES DO SUL,4321477,Tiradentes do Sul,Noroeste Rio-grandense,Três Passos
+88900,TOROPI,4321493,Toropi,Centro Ocidental Rio-grandense,Santa Maria
+89338,TORRES,4321501,Torres,Metropolitana de Porto Alegre,Osório
+89354,TRAMANDAÍ,4321600,Tramandaí,Metropolitana de Porto Alegre,Osório
+87980,TRAVESSEIRO,4321626,Travesseiro,Centro Oriental Rio-grandense,Lajeado-Estrela
+84743,TRÊS ARROIOS,4321634,Três Arroios,Noroeste Rio-grandense,Erechim
+85367,TRÊS CACHOEIRAS,4321667,Três Cachoeiras,Metropolitana de Porto Alegre,Osório
+89370,TRÊS COROAS,4321709,Três Coroas,Metropolitana de Porto Alegre,Gramado-Canela
+89397,TRÊS DE MAIO,4321808,Três de Maio,Noroeste Rio-grandense,Santa Rosa
+88005,TRÊS FORQUILHAS,4321832,Três Forquilhas,Metropolitana de Porto Alegre,Osório
+86142,TRÊS PALMEIRAS,4321857,Três Palmeiras,Noroeste Rio-grandense,Frederico Westphalen
+89419,TRÊS PASSOS,4321907,Três Passos,Noroeste Rio-grandense,Três Passos
+85006,TRINDADE DO SUL,4321956,Trindade do Sul,Noroeste Rio-grandense,Frederico Westphalen
+89435,TRIUNFO,4322004,Triunfo,Metropolitana de Porto Alegre,São Jerônimo
+89451,TUCUNDUVA,4322103,Tucunduva,Noroeste Rio-grandense,Santa Rosa
+84840,TUNAS,4322152,Tunas,Noroeste Rio-grandense,Soledade
+88021,TUPANCI DO SUL,4322186,Tupanci do Sul,Noroeste Rio-grandense,Sananduva
+89478,TUPANCIRETÃ,4322202,Tupanciretã,Centro Ocidental Rio-grandense,Santiago
+85723,TUPANDI,4322251,Tupandi,Metropolitana de Porto Alegre,Montenegro
+89494,TUPARENDI,4322301,Tuparendi,Noroeste Rio-grandense,Santa Rosa
+88501,TURUÇU,4322327,Turuçu,Sudeste Rio-grandense,Pelotas
+88609,UBIRETAMA,4322343,Ubiretama,Noroeste Rio-grandense,Santo Ângelo
+88048,UNIÃO DA SERRA,4322350,União da Serra,Nordeste Rio-grandense,Guaporé
+88480,UNISTALDA,4322376,Unistalda,Centro Ocidental Rio-grandense,Santiago
+89516,URUGUAIANA,4322400,Uruguaiana,Sudoeste Rio-grandense,Campanha Ocidental
+89532,VACARIA,4322509,Vacaria,Nordeste Rio-grandense,Vacaria
+88064,VALE DO SOL,4322533,Vale do Sol,Centro Oriental Rio-grandense,Santa Cruz do Sul
+88080,VALE REAL,4322541,Vale Real,Metropolitana de Porto Alegre,Montenegro
+88668,VALE VERDE,4322525,Vale Verde,Metropolitana de Porto Alegre,São Jerônimo
+84913,VANINI,4322558,Vanini,Noroeste Rio-grandense,Passo Fundo
+89559,VENÂNCIO AIRES,4322608,Venâncio Aires,Centro Oriental Rio-grandense,Santa Cruz do Sul
+89575,VERA CRUZ,4322707,Vera Cruz,Centro Oriental Rio-grandense,Santa Cruz do Sul
+89591,VERANÓPOLIS,4322806,Veranópolis,Nordeste Rio-grandense,Caxias do Sul
+88781,VESPASIANO CORRÊA,4322855,Vespasiano Corrêa,Centro Oriental Rio-grandense,Lajeado-Estrela
+89613,VIADUTOS,4322905,Viadutos,Noroeste Rio-grandense,Erechim
+89630,VIAMÃO,4323002,Viamão,Metropolitana de Porto Alegre,Porto Alegre
+89656,VICENTE DUTRA,4323101,Vicente Dutra,Noroeste Rio-grandense,Frederico Westphalen
+89699,VICTOR GRAEFF,4323200,Victor Graeff,Noroeste Rio-grandense,Não-Me-Toque
+86061,VILA FLORES,4323309,Vila Flores,Nordeste Rio-grandense,Caxias do Sul
+88749,VILA LÂNGARO,4323358,Vila Lângaro,Noroeste Rio-grandense,Passo Fundo
+85642,VILA MARIA,4323408,Vila Maria,Noroeste Rio-grandense,Passo Fundo
+88102,VILA NOVA DO SUL,4323457,Vila Nova do Sul,Centro Ocidental Rio-grandense,Santa Maria
+85600,VISTA ALEGRE,4323507,Vista Alegre,Noroeste Rio-grandense,Frederico Westphalen
+85863,VISTA ALEGRE DO PRATA,4323606,Vista Alegre do Prata,Nordeste Rio-grandense,Guaporé
+85847,VISTA GAÚCHA,4323705,Vista Gaúcha,Noroeste Rio-grandense,Três Passos
+88129,VITÓRIA DAS MISSÕES,4323754,Vitória das Missões,Noroeste Rio-grandense,Santo Ângelo
+89524,WESTFALIA,4323770,Westfália,Centro Oriental Rio-grandense,Lajeado-Estrela
+88145,XANGRI-LÁ,4323804,Xangri-lá,Metropolitana de Porto Alegre,Osório
