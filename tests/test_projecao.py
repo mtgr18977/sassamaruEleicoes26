@@ -26,6 +26,8 @@ def test_regressao_estimativas_das_pesquisas_nas_faixas_esperadas():
     assert .44 < estimar(d, "p1")[0] < .46 and .48 < estimar(d, "p2")[0] < .51
 
 
-def test_projecao_congelada_de_1_10_nao_foi_sobrescrita():
+def test_projecao_do_1o_turno_e_da_data_de_referencia_e_plausivel():
+    from pesquisas import HOJE
     j = json.load(open("modelos/projecao-1turno.json"))
-    assert j["data"] == "2026-10-01" and abs(j["pesquisas"]["L"][1] - 45.2) < 0.05
+    L, F, O = (j["pesquisas"][k][1] for k in "LFO")
+    assert j["data"] == str(HOJE.date()) and 40 < L < 50 and 35 < F < 46 and abs(L + F + O - 100) < 0.5
