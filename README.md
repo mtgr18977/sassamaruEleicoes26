@@ -10,6 +10,7 @@ Simulação estatística da eleição presidencial de 2026 a partir do históric
 ```
 pip install pandas pytest
 python fetch_tse.py --offline          # CSVs de datasets/ a partir de datasets/tse_raw/*.zip (TSE)
+python buscar_pesquisas.py             # (opcional, precisa de rede) candidatas de pesquisas novas em datasets/candidatas.csv
 python atualizar.py                    # pesquisas → Monte Carlo → página → testes (Python e node)
 python atualizar.py --projecao         # também refaz a projeção do 1º turno (SOBRESCREVE a congelada)
 ```
@@ -20,6 +21,7 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 |---|---|
 | `fetch_tse.py` | ETL do TSE (município/zona → município, UF, capitais, nacional) e verificação contra o oficial |
 | `backtest.py`, `nivel2.py` | Baselines (persistência, swing uniforme), backtest e λ regional (não melhora de forma clara o swing uniforme) |
+| `buscar_pesquisas.py` | Busca pesquisas novas em tabelas HTML (Wikipedia) e grava **candidatas** em `datasets/candidatas.csv` (nova/divergente vs. o CSV oficial); não altera `pesquisas-2026.csv`. Conferir na fonte antes de promover a linha |
 | `pesquisas.py` | δ nacional a partir das pesquisas: house effect, recência, viés histórico → `modelos/parametros.json` |
 | `montecarlo.py`, `modelos/eleicoes-model.js` | Monte Carlo por UF e capital (Python e JS, com teste de equivalência) |
 | `projecao.py`, `modelos/projecao-model.js` | Projeção do 1º turno (Lula × Flávio × demais) com base em 2022 |
