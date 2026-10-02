@@ -26,7 +26,7 @@ def test_periodo_e_numero():
     assert periodo("1 out 2026") == ("2026-10-01", "2026-10-01")
     assert periodo("sem data") == (None, None)
     assert numero("45,3%") == 45.3 and numero("—") is None
-    assert instituto("Real Time Big Data") == ("RealTimeBigData", True) and instituto("Xis")[1] is False
+    assert instituto("Real Time Big Data") == ("RealTimeBigData", True) and instituto("RealTime Big Data") == ("RealTimeBigData", True) and instituto("Xis")[1] is False
 
 
 def test_extrair_junta_1o_e_2o_turno_pelo_instituto_e_data():
