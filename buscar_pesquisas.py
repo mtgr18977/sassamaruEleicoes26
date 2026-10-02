@@ -17,6 +17,7 @@ import re
 import ssl
 import sys
 import urllib.request
+from datetime import date
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -26,7 +27,8 @@ CSV_SAIDA = "datasets/candidatas.csv"
 INSTITUTOS = {"datafolha": "Datafolha", "quaest": "Quaest", "atlas": "AtlasIntel", "real time": "RealTimeBigData", "rtbd": "RealTimeBigData"}
 MESES = {m: i for i, m in enumerate(["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"], 1)}
 CANDS = {"lula": "lula", "flavio": "flavio", "caiado": "caiado", "zema": "zema", "renan": "renan", "cury": "cury"}
-NUMERICAS = ["t1_lula", "t1_flavio", "t1_caiado", "t1_zema", "t1_renan", "t1_cury", "t1_outros", "t1_bnin", "t2_lula", "t2_flavio", "t2_bnin"]
+# só candidatos: "outros" e brancos/nulos são somados de formas diferentes pelas fontes e gerariam falsas divergências
+NUMERICAS = ["t1_lula", "t1_flavio", "t1_caiado", "t1_zema", "t1_renan", "t1_cury", "t2_lula", "t2_flavio"]
 
 
 class _Tabelas(HTMLParser):
@@ -34,11 +36,14 @@ class _Tabelas(HTMLParser):
 
     def __init__(self):
         super().__init__()
-        self.tabelas, self._t, self._lin, self._cel, self._span = [], None, None, None, {}
+        self.tabelas, self.anos, self._t, self._lin, self._cel, self._span = [], [], None, None, None, {}
+        self._ano, self._tit = None, None     # ano do último título "2026"/"2025"; texto do título aberto
 
     def handle_starttag(self, tag, a):
         a = dict(a)
-        if tag == "table":
+        if tag in ("h1", "h2", "h3", "h4"):
+            self._tit = ""
+        elif tag == "table":
             self._t, self._span = [], {}
         elif tag == "tr" and self._t is not None:
             self._lin = []
@@ -50,6 +55,8 @@ class _Tabelas(HTMLParser):
     def handle_data(self, d):
         if self._cel is not None:
             self._cel["texto"] += d
+        elif self._tit is not None:
+            self._tit += d
 
     def _preencher_spans(self):
         while len(self._lin) in self._span:
@@ -61,7 +68,11 @@ class _Tabelas(HTMLParser):
                 del self._span[len(self._lin) - 1]
 
     def handle_endtag(self, tag):
-        if tag in ("td", "th") and self._cel is not None:
+        if tag in ("h1", "h2", "h3", "h4") and self._tit is not None:
+            if re.fullmatch(r"(20\d\d)", re.sub(r"\[[^\]]*\]", "", self._tit).strip()):
+                self._ano = int(self._tit.strip()[:4])
+            self._tit = None
+        elif tag in ("td", "th") and self._cel is not None:
             self._preencher_spans()
             txt = re.sub(r"\[[^\]]*\]", "", self._cel["texto"])
             txt = re.sub(r"\s+", " ", txt).strip()
@@ -77,13 +88,14 @@ class _Tabelas(HTMLParser):
             self._lin = None
         elif tag == "table" and self._t is not None:
             self.tabelas.append(self._t)
+            self.anos.append(self._ano)
             self._t = None
 
 
-def tabelas(html):
+def tabelas(html, com_ano=False):
     p = _Tabelas()
     p.feed(html)
-    return p.tabelas
+    return list(zip(p.tabelas, p.anos)) if com_ano else p.tabelas
 
 
 def _sem_acento(s):
@@ -132,22 +144,33 @@ def periodo(s, ano=2026):
     return None, None
 
 
-def extrair(html, url=""):
-    """Linhas candidatas (dict com as colunas do CSV oficial) das tabelas que citam Lula e Flávio."""
+OUTRO_CENARIO = re.compile(r"^(tarcisio|haddad|bolsonaro|michelle|eduardo|ratinho|leite|gomes|hoffmann|camilo)")
+CAMPOS = (("lula", "lula"), ("flavio", "flavio"), ("caiado", "caiado"), ("zema", "zema"), ("renan", "renan"), ("cury", "cury"), ("outros", "outros"), ("bnin", "bnin"))
+
+
+def extrair(html, url="", ano_padrao=2026, ate=None):
+    """Linhas candidatas (dict com as colunas do CSV oficial) das tabelas Lula x Flávio (1º turno com os demais; 2º turno só Lula e Flávio).
+    Ignora: tabelas de outros cenários (Tarcísio, Bolsonaro...), anos diferentes de `ano_padrao`, datas depois de `ate`, linhas sem número
+    (pesquisa agendada, sem resultado), linhas-separadoras de eventos e linhas com número de colunas diferente do cabeçalho.
+    Várias linhas do mesmo instituto e data (cenários): fica a primeira e o `obs` avisa."""
     por_chave = {}
-    for t in tabelas(html):
-        cab = next((i for i, l in enumerate(t) if sum(1 for c in l if "lula" in _sem_acento(c)) and any("flavio" in _sem_acento(c) for c in l)), None)
+    for t, ano in tabelas(html, com_ano=True):
+        if ano is not None and ano != ano_padrao:
+            continue
+        cab = next((i for i, l in enumerate(t) if any("lula" in _sem_acento(c) for c in l) and any("flavio" in _sem_acento(c) for c in l)), None)
         if cab is None:
             continue
         head = [_sem_acento(c) for c in t[cab]]
+        if any(OUTRO_CENARIO.match(h) for h in head):
+            continue
         col = {}
         for i, h in enumerate(head):
             for k, v in CANDS.items():
                 if k in h:
                     col.setdefault(v, i)
-            if re.search(r"instituto|pesquisa|empresa|fonte", h):
+            if re.search(r"instituto|contratante|empresa", h):
                 col.setdefault("inst", i)
-            if re.search(r"data|periodo|campo", h):
+            if re.search(r"data|periodo", h):
                 col.setdefault("data", i)
             if re.search(r"amostra|entrevist", h):
                 col.setdefault("n", i)
@@ -159,24 +182,36 @@ def extrair(html, url=""):
             continue
         turno = 1 if {"caiado", "zema"} & col.keys() else 2
         for lin in t[cab + 1:]:
-            if len(lin) <= max(col.values()):
+            if len(lin) != len(head) or len(set(lin)) <= 2:          # separador de evento (colspan) ou linha desalinhada
                 continue
             nome, _ = instituto(lin[col["inst"]])
-            ini, fim = periodo(lin[col["data"]])
-            if not nome or not fim:
+            ini, fim = periodo(lin[col["data"]], ano_padrao if ano is None else ano)
+            valores = {f"t{turno}_{nm}": numero(lin[col[k]]) for k, nm in CAMPOS if k in col and re.search(r"\d", lin[col[k]])}
+            if not nome or not fim or not valores or (ate and fim > ate):
                 continue
-            r = por_chave.setdefault((nome, fim), dict(instituto=nome, campo_ini=ini, campo_fim=fim))
-            r.setdefault("fonte_url", url)
-            if "n" in col:
-                n = numero(lin[col["n"]].replace(".", "")) if re.search(r"\d", lin[col["n"]]) else None
-                if n:
-                    r.setdefault("amostra", int(n))
-            for k, nome_col in (("lula", "lula"), ("flavio", "flavio"), ("caiado", "caiado"), ("zema", "zema"), ("renan", "renan"), ("cury", "cury"), ("outros", "outros"), ("bnin", "bnin")):
-                if k in col:
-                    v = numero(lin[col[k]])
-                    if v is not None:
-                        r[f"t{turno}_{nome_col}"] = v
-    return list(por_chave.values())
+            if sum(v for k, v in valores.items() if k not in ("t1_bnin", "t2_bnin", "t1_outros")) > 101 * turno:
+                continue                                                # percentuais impossíveis: coluna desalinhada
+            chave = (nome, fim, turno)
+            if chave in por_chave:
+                por_chave[chave]["_linhas"] += 1
+                continue
+            r = dict(instituto=nome, campo_ini=ini, campo_fim=fim, fonte_url=url, _linhas=1, **valores)
+            if "n" in col and re.search(r"\d", lin[col["n"]]):
+                r["amostra"] = int(numero(lin[col["n"]].replace(".", "").replace(" ", "")))
+            por_chave[chave] = r
+    # junta 1º e 2º turno da mesma pesquisa (mesmo instituto e data final)
+    juntas = {}
+    for (nome, fim, turno), r in por_chave.items():
+        j = juntas.setdefault((nome, fim), dict(instituto=nome, campo_ini=r["campo_ini"], campo_fim=fim, fonte_url=url, _linhas=0, _avisos=[]))
+        if "amostra" in j and r.get("amostra") not in (None, j["amostra"]):    # a mesma pesquisa com amostra diferente em outra tabela: fica a do 1º turno
+            j["_avisos"].append(f"amostra difere entre as tabelas da fonte ({j['amostra']} no 1o turno, {r['amostra']} no 2o): conferir")
+        j.update({k: v for k, v in r.items() if k not in ("_linhas", "instituto", "campo_fim", "fonte_url", "campo_ini") and not (k == "amostra" and "amostra" in j)})
+        j["_linhas"] = max(j["_linhas"], r["_linhas"])
+    for j in juntas.values():
+        avisos = j.pop("_avisos") + (["varias linhas na fonte (cenarios?): usada a primeira; conferir qual vale"] if j.pop("_linhas") > 1 else [])
+        if avisos:
+            j["obs"] = "; ".join(avisos)
+    return list(juntas.values())
 
 
 def comparar(candidatas, oficial, todos=False, desde="2026-07-01"):
@@ -187,14 +222,15 @@ def comparar(candidatas, oficial, todos=False, desde="2026-07-01"):
             continue
         if not instituto(c["instituto"])[1] and not todos:
             continue
-        mesmo = [o for o in oficial if o["instituto"] == c["instituto"] and (o["campo_fim"] == c["campo_fim"] or o["campo_ini"] == c["campo_ini"])]
+        mesmo = [o for o in oficial if o["instituto"] == c["instituto"] and abs((date.fromisoformat(o["campo_fim"]) - date.fromisoformat(c["campo_fim"])).days) <= 1]
         if not mesmo:
             saida.append({**c, "status": "nova"})
             continue
         o = mesmo[0]
         difs = [k for k in NUMERICAS if k in c and o.get(k) not in (None, "") and abs(float(o[k]) - c[k]) > 0.51]
         if difs:
-            saida.append({**c, "status": "divergente", "obs": "difere do CSV em " + ", ".join(f"{k}: {o[k]} vs {c[k]:g}" for k in difs)})
+            obs = "difere do CSV em " + ", ".join(f"{k}: {o[k]} vs {c[k]:g}" for k in difs)
+            saida.append({**c, "status": "divergente", "obs": "; ".join(filter(None, [c.get("obs"), obs]))})
     return saida
 
 
@@ -210,6 +246,7 @@ def main(argv=None):
     ap.add_argument("--html", help="arquivo HTML local em vez de baixar")
     ap.add_argument("--todos", action="store_true", help="inclui institutos fora dos quatro do modelo")
     ap.add_argument("--desde", default="2026-07-01")
+    ap.add_argument("--ate", default=str(date.today()), help="ignora datas depois desta (pesquisas agendadas); padrão: hoje")
     ap.add_argument("--oficial", default=CSV_OFICIAL)
     ap.add_argument("--saida", default=CSV_SAIDA)
     a = ap.parse_args(argv)
@@ -221,7 +258,7 @@ def main(argv=None):
     with open(a.oficial, newline="", encoding="utf-8") as f:
         leitor = csv.DictReader(f)
         colunas, oficial = leitor.fieldnames, list(leitor)
-    cands = comparar(extrair(html, a.url if not a.html else a.html), oficial, a.todos, a.desde)
+    cands = comparar(extrair(html, a.url if not a.html else a.html, ate=a.ate), oficial, a.todos, a.desde)
     cands.sort(key=lambda c: (c["campo_fim"], c["instituto"]))
     with open(a.saida, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=[*colunas[:-1], "obs", "fonte_url", "status"], extrasaction="ignore")

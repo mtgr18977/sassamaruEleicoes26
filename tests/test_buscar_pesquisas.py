@@ -59,3 +59,48 @@ def test_main_nao_altera_o_csv_oficial(tmp_path):
     assert open("datasets/pesquisas-2026.csv", "rb").read() == antes
     linhas = list(csv.DictReader(open(saida, encoding="utf-8")))
     assert {l["status"] for l in linhas} <= {"nova", "divergente"} and all(l["fonte_url"] for l in linhas)
+
+
+HTML2 = """
+<h2>Primeiro turno</h2><h3>2026</h3><h4>Outubro</h4>
+<table>
+<tr><th>Contratante / Pesquisa</th><th>Data(s) de pesquisa</th><th>Tamanho da amostra</th><th>Lula PT</th><th>Flávio PL</th><th>Caiado PSD</th><th>Zema NOVO</th></tr>
+<tr><td>Datafolha</td><td>3 Out</td><td>4 006</td><td>Resultado da pesquisa</td><td>Resultado da pesquisa</td><td>Resultado da pesquisa</td><td>Resultado da pesquisa</td></tr>
+<tr><td>Quaest</td><td>1 Out – 2 Out</td><td>2 000</td><td>40%</td><td>35%</td><td>3%</td><td>2%</td></tr>
+<tr><td>Quaest</td><td>1 Out – 2 Out</td><td>2 000</td><td>39%</td><td>30%</td><td>3%</td><td>2%</td></tr>
+<tr><td>30 Set</td><td>30 Set</td><td>30 Set</td><td>Evento X</td><td>Evento X</td><td>Evento X</td><td>Evento X</td></tr>
+<tr><td>Quaest</td><td>1 Out – 2 Out</td><td>999</td><td>40%</td></tr>
+</table>
+<h3>2025</h3>
+<table>
+<tr><th>Instituto</th><th>Data(s)</th><th>Lula</th><th>Flávio</th><th>Caiado</th></tr>
+<tr><td>Quaest</td><td>10 Out</td><td>30%</td><td>20%</td><td>2%</td></tr>
+</table>
+<table>
+<tr><th>Instituto</th><th>Data(s)</th><th>Lula</th><th>Flávio Bolsonaro</th><th>Tarcísio Rep</th><th>Caiado</th></tr>
+<tr><td>Quaest</td><td>2 Out</td><td>40%</td><td>30%</td><td>10%</td><td>3%</td></tr>
+</table>
+"""
+
+
+def test_regras_da_pagina_real_ano_agendada_separador_cenarios_e_outros_cenarios():
+    r = extrair(HTML2, ate="2026-10-02")
+    assert [(x["instituto"], x["campo_fim"]) for x in r] == [("Quaest", "2026-10-02")]   # ano 2025, agendada, separador, linha curta e tabela com Tarcísio ficam de fora
+    assert r[0]["t1_lula"] == 40 and "cenarios" in r[0]["obs"]                          # primeira linha vence e avisa
+    assert extrair(HTML2, ate="2026-10-01") == []                                         # data depois de `ate`: ignorada
+    assert [x["campo_fim"] for x in extrair(HTML2, ano_padrao=2025)] == ["2025-10-10"]
+
+
+def test_comparar_tolera_um_dia_e_ignora_diferenca_so_em_outros_e_brancos():
+    o = [dict(instituto="Quaest", campo_ini="2026-10-01", campo_fim="2026-10-03", t1_lula="40", t1_flavio="35", t1_outros="0", t1_bnin="9")]
+    c = dict(instituto="Quaest", campo_ini="2026-10-01", campo_fim="2026-10-02", t1_lula=40.0, t1_flavio=35.0, t1_outros=3.0, t1_bnin=20.0)
+    assert comparar([c], o) == []
+
+
+def test_amostra_diferente_entre_1o_e_2o_turno_fica_a_do_1o_e_avisa():
+    h = ("<h3>2026</h3><table><tr><th>Instituto</th><th>Data(s)</th><th>Amostra</th><th>Lula</th><th>Flávio</th><th>Caiado</th></tr>"
+         "<tr><td>Datafolha</td><td>28 Set – 1 Out</td><td>2 506</td><td>42%</td><td>38%</td><td>3%</td></tr></table>"
+         "<table><tr><th>Instituto</th><th>Data(s)</th><th>Amostra</th><th>Lula</th><th>Flávio</th></tr>"
+         "<tr><td>Datafolha</td><td>28 Set – 1 Out</td><td>2 002</td><td>48%</td><td>45%</td></tr></table>")
+    r = extrair(h)[0]
+    assert r["amostra"] == 2506 and (r["t1_lula"], r["t2_lula"]) == (42, 48) and "amostra difere" in r["obs"]
