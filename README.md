@@ -4,14 +4,14 @@ Simulação estatística da eleição presidencial de 2026 a partir do históric
 
 - **Abas:** `index.html` (Presidente 2026) e `rs.html` (Governo do RS 2026), com estilos e utilidades comuns em `assets/`.
 - **Dashboard:** `index.html` ("Eleições Dashboard 2026": card com a chance de Lula e de Flávio serem eleitos, tema claro/escuro, notas laterais, histórico do Lula, regiões, capitais, pesquisa × resultado, 2026 e simulador). `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
-- **Projeção congelada do 1º turno (1/10/2026):** tag `projecao-1turno-2026-10-01`. Compare com o resultado real com `python avaliar_projecao.py resultado.csv`.
+- **Projeção do 1º turno:** refeita a cada rodada de pesquisas (`modelos/projecao-1turno*`). A versão de 1/10/2026 está na tag `projecao-1turno-2026-10-01`. Compare com o resultado real com `python avaliar_projecao.py resultado.csv`.
 
 ## Como rodar
 ```
 pip install pandas pytest
 python fetch_tse.py --offline          # CSVs de datasets/ a partir de datasets/tse_raw/*.zip (TSE)
-python atualizar.py                    # pesquisas → Monte Carlo → página → testes (Python e node)
-python atualizar.py --projecao         # também refaz a projeção do 1º turno (SOBRESCREVE a congelada)
+python buscar_pesquisas.py             # (opcional, precisa de rede) candidatas de pesquisas novas em datasets/candidatas.csv
+python atualizar.py                    # pesquisas → Monte Carlo → projeção do 1º turno → páginas → testes (Python e node)
 ```
 Abra `index.html` direto no navegador (a página precisa de internet só para o Chart.js).
 
@@ -20,6 +20,7 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 |---|---|
 | `fetch_tse.py` | ETL do TSE (município/zona → município, UF, capitais, nacional) e verificação contra o oficial |
 | `backtest.py`, `nivel2.py` | Baselines (persistência, swing uniforme), backtest e λ regional (não melhora de forma clara o swing uniforme) |
+| `buscar_pesquisas.py` | Busca pesquisas novas em tabelas HTML (Wikipedia) e grava **candidatas** em `datasets/candidatas.csv` (nova/divergente vs. o CSV oficial); não altera `pesquisas-2026.csv`. Conferir na fonte antes de promover a linha |
 | `pesquisas.py` | δ nacional a partir das pesquisas: house effect, recência, viés histórico → `modelos/parametros.json` |
 | `montecarlo.py`, `modelos/eleicoes-model.js` | Monte Carlo por UF e capital (Python e JS, com teste de equivalência) |
 | `projecao.py`, `modelos/projecao-model.js` | Projeção do 1º turno (Lula × Flávio × demais) com base em 2022 |

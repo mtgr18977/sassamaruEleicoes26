@@ -222,3 +222,6 @@ datasets/tse_raw/
 
 # Relatórios de institutos (direitos autorais): ficam só localmente
 docs/*.pdf
+
+# pesquisas candidatas, ainda nao conferidas (buscar_pesquisas.py)
+datasets/candidatas.csv

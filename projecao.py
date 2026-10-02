@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from backtest import D, inv, logit
 from nivel2 import REGIAO
-from pesquisas import estimar, preparar, vies_eleicao, vies_rmse, SD_VIES_HIST
+from pesquisas import HOJE, estimar, preparar, vies_eleicao, vies_rmse, SD_VIES_HIST
 
 REGIAO["ZZ"] = "EX"
 N, rng = 20000, np.random.default_rng(2026)
@@ -84,9 +84,9 @@ if __name__ == "__main__":
     u["s0"] = u.votos_pt / (u.votos_pt + u.votos_antipt); u["q0"] = (u.votos_pt + u.votos_antipt) / u.validos
     u["regiao"] = u.uf.map(REGIAO)
     W = (u.validos / u.validos.sum()).to_numpy()
-    bias = vies_eleicao(1)[0] / 100   # viés médio por eleição (vies-pesquisas.csv); a versão congelada de 1/10 usou 3,0 p.p. (média por pesquisa)
+    bias = vies_eleicao(1)[0] / 100   # viés médio por eleição (vies-pesquisas.csv); a versão de 1/10 (tag projecao-1turno-2026-10-01) usou 3,0 p.p. (média por pesquisa)
     print(f"s=Lula/(L+F): {s_nac:.3f} (sd {sd_s:.3f}) | q=L+F: {q_nac:.3f} (sd {sd_q:.3f}) | ruído s (reg,uf) {rs[0]:.2f},{rs[1]:.2f} | q {qs[0]:.2f},{qs[1]:.2f}")
-    out = {"data": "2026-10-01"}
+    out = {"data": str(HOJE.date())}
     for nome, s0 in (("pesquisas", s_nac), ("vies_se_repete", float(inv(logit(s_nac) - 0)) - bias)):
         L, F, O = simular(u, s0, sd_s, q_nac, sd_q, rs, qs)
         r = resumo(L, F, O)

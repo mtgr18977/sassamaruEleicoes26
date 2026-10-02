@@ -21,8 +21,8 @@ def test_evolucao_so_usa_pesquisas_ate_a_data_e_a_ultima_bate_com_o_modelo_atual
     from pesquisas import evolucao, preparar, vies_rmse
     d = preparar()
     assert evolucao(["2026-06-01"]) == []                      # pesquisas insuficientes: pula a data
-    atual = evolucao(["2026-10-01"])[0]
-    s, _, _, _ = estimar(d, "p1s", sd_vies=vies_rmse(1)[0], h_dias=3)
+    atual = evolucao(["2026-10-02"])[0]
+    s, _, _, _ = estimar(d, "p1s", sd_vies=vies_rmse(1)[0], h_dias=2)
     assert abs(atual["s"] - s) < 1e-4
     assert evolucao(["2026-09-24"])[0]["n2"] < atual["n2"]     # menos pesquisas de 2º turno na data anterior
 

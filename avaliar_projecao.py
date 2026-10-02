@@ -1,4 +1,4 @@
-"""Compara a projeção congelada do 1º turno com o resultado real (CSV com uf,lula,flavio,outros em % dos válidos).
+"""Compara a projeção do 1º turno em modelos/ (a mais recente; a de 1/10 está na tag projecao-1turno-2026-10-01) com o resultado real (CSV com uf,lula,flavio,outros em % dos válidos).
 
 Uso: python avaliar_projecao.py resultado-real.csv   (colunas: uf,lula,flavio,outros; pode incluir linha BR = nacional)
 Mede, por cenário: erro nacional, MAE por UF (Lula, Flávio, margem), cobertura do IC 90% da margem e UFs com vencedor errado.

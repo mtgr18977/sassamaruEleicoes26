@@ -40,7 +40,7 @@ out["polls"] = [dict(inst=NOMES_INST[r.instituto], instk=r.instituto, data=str(r
 # --- modelo ---
 par = rm.parametros(d)
 ev = []
-for t in pd.date_range("2026-08-27", "2026-10-01", freq="7D"):
+for t in sorted({*pd.date_range("2026-08-27", "2026-10-02", freq="7D"), pd.Timestamp("2026-10-02")}):
     try:
         p = rm.parametros(d, t)
     except np.linalg.LinAlgError:

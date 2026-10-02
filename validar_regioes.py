@@ -2,7 +2,7 @@
 
 Compara Lula/(Lula+Flávio) por região: modelo (base 2022 + total nacional das pesquisas) × pesquisa.
 Não é independente do total nacional (a Datafolha entra nas pesquisas), mas testa a estrutura regional.
-1º turno usa a projeção congelada de 1/10; 2º turno, o Monte Carlo atual.
+1º turno usa a projeção atual (modelos/projecao-1turno*); 2º turno, o Monte Carlo atual.
 """
 import numpy as np
 import pandas as pd

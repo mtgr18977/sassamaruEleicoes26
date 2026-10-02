@@ -80,7 +80,7 @@ out["projmodel"] = dict(s=round(float(_s), 4), q=round(float(_q), 4), sd_s=round
 import validar_regioes
 out["piso2t"] = SD_PISO_2T_PP
 from pesquisas import evolucao
-out["evolucao"] = evolucao(pd.date_range("2026-08-20", "2026-10-01", freq="7D").strftime("%Y-%m-%d"))
+out["evolucao"] = evolucao(sorted({*pd.date_range("2026-08-20", "2026-10-02", freq="7D").strftime("%Y-%m-%d"), "2026-10-02"}))
 out["valreg"] = validar_regioes.comparar()
 out["modelo"] = json.load(open("modelos/parametros.json"))
 
