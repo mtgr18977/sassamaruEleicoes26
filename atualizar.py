@@ -1,14 +1,15 @@
-"""Regenera tudo a partir dos CSVs: pesquisas -> Monte Carlo -> modelo do RS -> páginas (index.html e rs.html).
+"""Regenera tudo a partir dos CSVs: pesquisas -> Monte Carlo -> modelo do RS -> páginas (index.html, rs.html e bancada.html).
 
-  python atualizar.py   pesquisas.py, montecarlo.py, rs_modelo.py, projecao.py (1º turno), as duas páginas e os testes
+  python atualizar.py   pesquisas.py, montecarlo.py, rs_modelo.py, projecao.py (1º turno), as três páginas e os testes
 
 Antes de rodar com pesquisas novas, atualize HOJE e HORIZONTE em pesquisas.py e HOJE em rs_modelo.py.
+O agregador (agregador.py) usa essas mesmas HOJE.
 A projeção de 1/10 não é mais sobrescrita no repositório: está na tag projecao-1turno-2026-10-01.
 """
 import subprocess
 import sys
 
-passos = ["pesquisas.py", "montecarlo.py", "rs_modelo.py", "projecao.py", "gerar_pagina_lula.py", "gerar_pagina_rs.py"]
+passos = ["pesquisas.py", "montecarlo.py", "rs_modelo.py", "projecao.py", "gerar_pagina_lula.py", "gerar_pagina_rs.py", "gerar_pagina_bancada.py"]
 for p in passos:
     print(f"\n>>> python {p}")
     subprocess.run([sys.executable, p], check=True, stdout=subprocess.DEVNULL if p in ("montecarlo.py", "rs_modelo.py") else None)

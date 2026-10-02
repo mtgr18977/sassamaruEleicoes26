@@ -37,3 +37,11 @@ def test_pacotes_do_site_tem_series_nos_dois_turnos_e_valores_plausiveis():
                 assert len(s["aj"]["m"]) == len(p["datas"]) and 0 < s["hoje"] < 100 and s["pontos"]
     ult = ag.presidente()["turnos"]["2"]["series"]
     assert abs(ult[0]["hoje"] + ult[1]["hoje"] - 100) < 0.05                   # 2º turno fecha em 100
+
+
+def test_data_de_referencia_segue_as_constantes_dos_modelos():
+    import pesquisas
+    import rs_modelo as rm
+    assert ag.presidente()["hoje"] == str(pesquisas.HOJE.date())
+    assert ag.rs()["hoje"] == str(rm.HOJE.date())
+    assert ag.presidente("2026-09-20")["datas"][-1] == "2026-09-20"

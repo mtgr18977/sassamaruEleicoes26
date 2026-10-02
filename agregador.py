@@ -74,10 +74,11 @@ def _pacote(grade, turnos, hoje, nota):
     return dict(datas=[str(g.date()) for g in grade], hoje=str(pd.Timestamp(hoje).date()), turnos=turnos, nota=nota)
 
 
-def presidente(hoje="2026-10-02"):
+def presidente(hoje=None):
     """Lula × Flávio. 1º turno em % dos válidos (válidos = 100 − brancos/nulos/indecisos, ou a própria base 'validos');
     pesquisas sem essa informação ficam fora do 1º turno (ex.: AtlasIntel de 28/9, só Lula e Flávio). 2º turno: Lula/(Lula+Flávio)."""
     import pesquisas
+    hoje = pesquisas.HOJE if hoje is None else hoje      # mesma data de referência do modelo
     d = pesquisas.preparar()
     d = d[d.data <= pd.Timestamp(hoje)].copy()
     val = np.where(d.base == "validos", 100.0, 100 - d.t1_bnin)
@@ -91,10 +92,11 @@ def presidente(hoje="2026-10-02"):
     return _pacote(g, turnos, hoje, "Datafolha, Quaest, AtlasIntel e Real Time Big Data. Ponto = pesquisa (data = meio do campo).")
 
 
-def rs(hoje="2026-10-02"):
+def rs(hoje=None):
     """Governador do RS. 1º turno: % dos válidos (candidatos; exclui brancos, nulos e indecisos). 2º turno: Zucco × Brizola
     (só pesquisas com o par), Zucco/(Zucco+Brizola)."""
     import rs_modelo as rm
+    hoje = rm.HOJE if hoje is None else hoje
     d = rm.preparar()
     d = d[d.data <= pd.Timestamp(hoje)].copy()
     d["n"] = d.amostra

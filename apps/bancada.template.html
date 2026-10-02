@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bancada do RS 2026 · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .hero-grid.tres { grid-template-columns:repeat(3,1fr) } @media (max-width:820px) { .hero-grid.tres { grid-template-columns:1fr } }
+  .ctl { display:flex; flex-wrap:wrap; gap:6px 18px; align-items:center; font-size:.85rem; color:var(--ink2); margin:0 0 8px }
+  .heat td.n { min-width:44px } .bl { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px }
+  table.t td.txt, table.t th.txt { text-align:left } .cv.lista { height:auto }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site"><a href="index.html">Presidente 2026</a><a href="rs.html">Governo do RS 2026</a><a href="bancada.html" aria-current="page">Bancada RS 2026</a></nav>
+  <div class="topo"><div class="semnota"><h1>Bancada legislativa do RS 2026</h1>
+  <p class="sub">Deputados federais (31 cadeiras) e estaduais (55): quem elegeu em 2022, onde estão hoje, partidos, coligações e federações, tendências por região e a previsão do tamanho das bancadas em 2026.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+
+  <div class="sec"><div class="mainc">
+  <section class="card hero" id="hero">
+    <div class="filtros" style="justify-content:space-between;margin:0 0 6px">
+      <div><b style="font-size:1.05rem;color:var(--ink)">Quantas cadeiras cada campo político deve ter em 2026?</b><div class="nota" style="margin:0">Votação de 2022 ajustada pela tendência do governo (pesquisas até 2/10/2026) e pela migração dos eleitos; 6.000 simulações</div></div>
+      <span class="seg" id="segCargo"></span>
+    </div>
+    <div class="hero-grid tres" id="heroGrid"></div>
+    <div class="hero-foot" id="heroFoot"></div>
+    <h3 style="margin:14px 0 4px">Cadeiras por lista: eleitos em 2022, bancada hoje e previsão para 2026</h3>
+    <div class="ctl"><span>Peso da tendência do governo (λ) <span class="seg" id="segLam"></span></span><span>Migração dos eleitos (μ) <span class="seg" id="segMu"></span></span></div>
+    <div class="cv lista" id="boxListas"><canvas id="cListas"></canvas></div>
+    <details><summary>Ver tabela</summary><div id="tListas"></div></details>
+    <p class="nota" id="heroNota"></p>
+  </section>
+  </div><aside class="side" id="nota0"></aside></div>
+
+  <div class="aviso semnota"><b>Como ler:</b> <b>Lista</b> é a unidade que disputa as cadeiras: federação ou partido isolado (coligações em eleições proporcionais acabaram em 2020). Os <b>blocos</b> seguem o resto do site, com PCdoB, Rede e UP à esquerda e o PSD no centro (aproximação: veja a classificação por partido no fim da página). Dados do TSE (2002–2022); a <b>bancada de hoje</b> vem da API da Câmara (federais) e da Wikipédia (estaduais, <b>não conferida com a Assembleia</b>). A previsão é uma simulação condicional ao método, validada só pelo backtest da seção 5.</div>
+
+  <section class="sec"><div class="mainc">
+  <h2>1. Bancada hoje × eleita em 2022</h2>
+  <p class="sub">Partido de cada deputado eleito em 2022 hoje. Troca de partido não muda o mandato, mas muda quem leva o voto em 2026.</p>
+  <div class="card">
+    <div class="cv" style="height:340px"><canvas id="cAtual"></canvas></div>
+    <h3 style="margin:10px 0 4px">Trocas de partido entre eleitos</h3>
+    <div id="tMig"></div>
+    <details><summary>Ver tabela</summary><div id="tAtual"></div></details>
+    <p class="nota" id="notaAtual"></p>
+  </div>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div class="mainc">
+  <h2>2. Histórico 2002–2022</h2>
+  <p class="sub">Cadeiras e votos por bloco, cadeiras por partido e fragmentação (número efetivo de partidos).</p>
+  <div class="card">
+    <div class="row">
+      <div><h3>Cadeiras por bloco</h3><div class="cv"><canvas id="cBlCad"></canvas></div></div>
+      <div><h3>Votos por bloco (% dos válidos)</h3><div class="cv"><canvas id="cBlVot"></canvas></div></div>
+    </div>
+    <h3 style="margin:12px 0 4px">Cadeiras por partido</h3>
+    <div style="overflow-x:auto"><table class="t heat" id="heatCad"></table></div>
+    <div class="row" style="margin-top:12px">
+      <div><h3>Número efetivo de partidos</h3><div class="cv" style="height:260px"><canvas id="cEnp"></canvas></div></div>
+      <div><h3>Votos por partido (% dos válidos)</h3><div style="overflow-x:auto"><table class="t heat" id="heatVot"></table></div></div>
+    </div>
+    <p class="nota">Partidos renomeados ou fundidos aparecem sob o nome mais recente (PMDB→MDB, PFL/DEM→UNIÃO, PR→PL, PRB→REPUBLICANOS, PPS→CIDADANIA etc.). O PSL de 2018 fica separado.</p>
+  </div>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div class="mainc">
+  <h2>3. Partidos, coligações e federações</h2>
+  <p class="sub">Quem concorreu junto em cada eleição e quantas cadeiras a lista levou.</p>
+  <div class="card">
+    <div class="filtros">Eleição <select id="selAno"></select></div>
+    <div style="overflow-x:auto" id="tListasAno"></div>
+    <h3 style="margin:12px 0 4px">Federações registradas para 2026</h3>
+    <div id="tFed"></div>
+    <p class="nota">Até 2018 valiam as coligações proporcionais (o voto somava para a coligação). Em 2022 passaram a valer federações e partidos isolados. Para 2026 as federações são as registradas no TSE segundo A Gazeta (ago/2026): <b>conferir no TSE</b> antes de publicar.</p>
+  </div>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div class="mainc">
+  <h2>4. Tendências por região</h2>
+  <p class="sub">Votação de cada bloco para deputado, por região do estado (mesorregiões do IBGE; Grande POA sem a capital).</p>
+  <div class="card">
+    <div class="filtros">Bloco <span class="seg" id="segBloco"></span></div>
+    <div style="overflow-x:auto"><table class="t heat" id="heatReg"></table></div>
+    <p class="nota">Percentual dos votos válidos (nominais + legenda) do bloco na região. O bloco de cada partido segue a classificação desta aba.</p>
+  </div>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div class="mainc">
+  <h2>5. Como a previsão é feita e quanto ela acertou</h2>
+  <p class="sub">Backtest: prever 2010, 2014, 2018 e 2022 a partir da eleição anterior, com o mesmo método.</p>
+  <div class="card">
+    <p style="margin:0 0 8px"><b>Método.</b> (1) A votação de 2022 por partido vai para os partidos de 2026 (PTB e Patriota→PRD, PSC→PODE, PROS→Solidariedade, PMN→Mobiliza); eleitos que mudaram de partido levam a fração <b>μ</b> da própria votação nominal. (2) Cada partido varia como o seu bloco nas pesquisas do governador contra o 1º turno de 2022, elevado a <b>λ</b>. (3) Votos de partidos viram votos de listas (federações de 2026); com ruído calibrado no backtest, o quociente eleitoral e as maiores médias distribuem as cadeiras, 6.000 vezes.</p>
+    <div class="row">
+      <div><h3>Cadeiras mal alocadas no backtest</h3><div id="tBack"></div><p class="nota" id="notaBack"></p></div>
+      <div><h3>O alocador reproduz as eleições reais?</h3><div id="tVal"></div><p class="nota">Votos reais de cada lista passados pela regra da época (quociente eleitoral e maiores médias): diferença de cadeiras trocadas. A diferença de 1 cadeira em 2018 (federais) vem da cláusula de desempenho individual do candidato, que não entra no modelo.</p></div>
+    </div>
+    <h3 style="margin:12px 0 4px">Sensibilidade da previsão (cadeiras esperadas)</h3>
+    <div class="ctl"><span>Casa <span class="seg" id="segCargo2"></span></span></div>
+    <div style="overflow-x:auto" id="tSens"></div>
+    <details><summary>Classificação dos partidos em blocos e premissas assumidas</summary><div id="tBloco"></div><ul class="nota" id="premissas"></ul></details>
+  </div>
+  </div><aside class="side" id="nota5"></aside></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script>
+const D = __DATA__;
+const CARGO = { DF: { nome: "Câmara dos Deputados", curto: "Deputados federais", n: 31 }, DE: { nome: "Assembleia Legislativa", curto: "Deputados estaduais", n: 55 } };
+const BNOME = D.bloco_nome, BCOR = { E: "--pt", C: "--s7", D: "--anti" }, ANOS = D.historico.DF.anos;
+const state = { cargo: "DF", lam: D.params.lam, mu: D.params.mu, bloco: "E", ano: "2022" };
+const cor = (b) => css(BCOR[b]);
+const fp = (x) => String(Math.round(x * 100) / 100).replace(".", ",");      // 11 -> "11", 0.25 -> "0,25"
+const key = (x) => Number.isInteger(x) ? x.toFixed(1) : String(x);      // 0 -> "0.0", 0.25 -> "0.25": chaves do JSON
+const prev = () => D.previsao[state.cargo][key(state.lam) + "_" + key(state.mu)];
+const dot = (b) => `<i class="bl" style="background:${cor(b)}"></i>`;
+const blocoDe = (p) => D.bloco_de[p] || "D";
+const sgn = (x) => (x > 0 ? "+" : x < 0 ? "−" : "±") + f1(Math.abs(x)).replace(/,0$/, "");
+
+function segN(el, key, vals, fmt, redraw) {
+  el.innerHTML = vals.map(v => `<button data-v="${v}" aria-pressed="${state[key] == v}">${fmt(v)}</button>`).join("");
+  el.onclick = (e) => { const v = e.target.dataset.v; if (v == null) return; state[key] = isNaN(+v) ? v : +v; segN(el, key, vals, fmt, redraw); redraw(); };
+}
+const faixa = { id: "faixa", afterDatasetsDraw(c, _, o) {     // traço p10–p90 sobre as barras de previsão
+  if (!o || !o.on) return; const ctx = c.ctx; ctx.save(); ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1.6;
+  c.data.datasets.forEach((ds, i) => { if (!ds.faixa) return; c.getDatasetMeta(i).data.forEach((b, k) => { const [lo, hi] = ds.faixa[k], x0 = c.scales.x.getPixelForValue(lo), x1 = c.scales.x.getPixelForValue(hi);
+    ctx.beginPath(); ctx.moveTo(x0, b.y); ctx.lineTo(x1, b.y); ctx.moveTo(x0, b.y - 4); ctx.lineTo(x0, b.y + 4); ctx.moveTo(x1, b.y - 4); ctx.lineTo(x1, b.y + 4); ctx.stroke(); }); });
+  ctx.restore(); } };
+Chart.register(faixa);
+
+// ---------- hero ----------
+function hero() {
+  const P = prev(), N = CARGO[state.cargo].n, A = D.atual[state.cargo];
+  const por = (obj) => { const r = { E: 0, C: 0, D: 0 }; Object.entries(obj).forEach(([p, n]) => r[blocoDe(p)] += n); return r; };
+  const e22 = por(A.eleitos_2022), hoje = por(A.atual);
+  $("heroGrid").innerHTML = ["E", "C", "D"].map(b => { const x = P.blocos[b];
+    return `<div class="cand" style="--c:${cor(b)}"><div class="nome"><i></i>${BNOME[b]}</div><div class="big">${Math.round(x.med)}</div>
+      <div class="rot">cadeiras esperadas em 2026 (de ${N})</div><div class="comp"><span style="flex:${Math.max(x.med, .2)}"></span><span style="flex:${Math.max(N - x.med, .2)};background:var(--grid)"></span></div>
+      <ul><li>Faixa de 80% <b>${fp(x.p10)} a ${fp(x.p90)}</b></li><li>Eleitos em 2022 <b>${e22[b]}</b> (${sgn(x.med - e22[b])} p/ 2026)</li><li>Bancada hoje <b>${hoje[b]}</b></li></ul></div>`; }).join("");
+  const top = P.listas[0];
+  $("heroFoot").innerHTML = `<span>Maior lista: <b>${top.lista}</b> (~${Math.round(top.med)} cadeiras)</span><span>Listas com chance de eleger alguém: <b>${P.listas.filter(l => l.p1 >= .5).length}</b></span><span>Casa: <b>${CARGO[state.cargo].nome}</b></span>`;
+  $("heroNota").innerHTML = `<b>Simulação condicional ao método, não é previsão validada.</b> No backtest o método trocou em média <b>${f1(D.backtest.medio[key(D.params.lam)])}</b> cadeiras (de 31 ou 55) em relação ao resultado real, e a faixa de 80% cobriu <b>${Math.round(100 * D.backtest.cobertura[key(D.params.lam)])}%</b> das cadeiras por lista. Premissas assumidas: μ = ${fp(state.mu)} (fração da votação do eleito que o acompanha ao trocar de partido), λ = ${fp(state.lam)}, federações de 2026 como no TSE e sobras abertas a todas as listas (decisão do STF de 2024, <b>conferir</b>).`;
+  listas();
+}
+function listas() {
+  const P = prev(), L = P.listas.filter(l => l.med >= 0.3 || l.eleitos_2022 >= 1 || l.atual >= 1).slice().reverse();
+  $("boxListas").style.height = (L.length * 30 + 90) + "px";
+  const nome = (l) => l.lista + (l.membros.length ? ` (${l.membros.join(" + ")})` : "");
+  chart("cListas", { type: "bar", data: { labels: L.map(l => l.lista), datasets: [
+      { label: "Eleitos em 2022", data: L.map(l => l.eleitos_2022), backgroundColor: css("--line"), borderRadius: 3, barPercentage: .9, categoryPercentage: .85 },
+      { label: "Bancada hoje", data: L.map(l => l.atual), backgroundColor: css("--muted"), borderRadius: 3, barPercentage: .9, categoryPercentage: .85 },
+      { label: "Previsão 2026 (média; traço = faixa de 80%)", data: L.map(l => l.med), faixa: L.map(l => [l.p10, l.p90]), backgroundColor: L.map(l => cor(l.blocos[0])), borderRadius: 3, barPercentage: .9, categoryPercentage: .85 }] },
+    options: { indexAxis: "y", scales: { x: eixo({ min: 0, max: Math.ceil(Math.max(...L.map(l => Math.max(l.p90, l.eleitos_2022, l.atual)))) + 1, ticks: { color: css("--ink2"), precision: 0 } }), y: eixo({ grid: { display: false }, ticks: { color: css("--ink2"), autoSkip: false } }) },
+      plugins: { faixa: { on: true }, tooltip: { callbacks: { title: i => nome(L[i[0].dataIndex]), label: i => { const l = L[i.dataIndex];
+        return i.datasetIndex === 2 ? `Previsão: ${f1(l.med)} (faixa ${l.p10}–${l.p90}; chance de eleger ao menos 1: ${Math.round(100 * l.p1)}%)` : `${i.dataset.label}: ${i.parsed.x}`; } } } } } });
+  tabela("tListas", ["Lista", "Partidos", "Voto 2022 %", "Voto 2026 %", "Eleitos 2022", "Hoje", "Previsão", "Faixa 80%", "Chance de ≥1"],
+    P.listas.filter(l => l.med >= 0.05 || l.eleitos_2022 || l.atual).map(l => [l.lista, l.membros.join(" + ") || "–", l.voto_base, l.voto_2026, String(l.eleitos_2022), String(l.atual), l.med, `${l.p10}–${l.p90}`, `${Math.round(100 * l.p1)}%`]));
+}
+
+// ---------- 1. atual ----------
+function atual() {
+  const A = D.atual[state.cargo], ps = [...new Set([...Object.keys(A.eleitos_2022), ...Object.keys(A.atual)])].sort((a, b) => (A.atual[b] || 0) + (A.eleitos_2022[b] || 0) - (A.atual[a] || 0) - (A.eleitos_2022[a] || 0));
+  const L = ps.slice().reverse();
+  chart("cAtual", { type: "bar", data: { labels: L, datasets: [{ label: "Eleitos em 2022 (partido na eleição)", data: L.map(p => A.eleitos_2022[p] || 0), backgroundColor: css("--line"), borderRadius: 3 }, { label: "Bancada hoje (partido atual)", data: L.map(p => A.atual[p] || 0), backgroundColor: L.map(p => cor(blocoDe(p))), borderRadius: 3 }] },
+    options: { indexAxis: "y", scales: { x: eixo({ min: 0, ticks: { color: css("--ink2"), precision: 0 } }), y: eixo({ grid: { display: false }, ticks: { color: css("--ink2"), autoSkip: false } }) } } });
+  $("tMig").innerHTML = A.migracao.length ? `<table class="t"><tr><th class="txt">De</th><th class="txt">Para</th><th>Eleitos</th></tr>${A.migracao.map(m => `<tr><td class="txt">${dot(blocoDe(m.de))}${m.de}</td><td class="txt">${dot(blocoDe(m.para))}${m.para}</td><td>${m.n}</td></tr>`).join("")}</table>` : "<p class='nota'>Nenhuma troca.</p>";
+  tabela("tAtual", ["Partido", "Bloco", "Eleitos 2022", "Hoje", "Diferença"], ps.map(p => [p, BNOME[blocoDe(p)], String(A.eleitos_2022[p] || 0), String(A.atual[p] || 0), sgn((A.atual[p] || 0) - (A.eleitos_2022[p] || 0))]));
+  $("notaAtual").innerHTML = `<b>${A.trocaram} de ${CARGO[state.cargo].n}</b> eleitos em 2022 estão em partido diferente (sem contar fusões como PTB→PRD). Fonte: ${A.fonte}; acesso em ${A.acesso.split("-").reverse().join("/")}. Conta os eleitos de 2022 no partido de hoje: suplentes que assumiram não entram.`;
+}
+
+// ---------- 2. histórico ----------
+function mapaCalor(id, linhas, anos, vals, fmt, max, cab) {
+  const mix = (a, c, w) => a.map((x, i) => Math.round(x + (c[i] - x) * w)), rgb = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), base = rgb(css("--div-mid")), c0 = rgb(css("--s1"));
+  $(id).innerHTML = `<tr><th></th>${anos.map(a => `<th>${a}</th>`).join("")}</tr>` + linhas.map(p => `<tr><td style="text-align:left;font-weight:600;min-width:120px">${dot(blocoDe(p))}${p}</td>${vals(p).map(v => { const c = mix(base, c0, Math.min(1, v / max)), lum = .299 * c[0] + .587 * c[1] + .114 * c[2];
+    return `<td class="n" style="background:rgb(${c});color:${lum > 140 ? "#0b0b0b" : "#fff"}">${v ? fmt(v) : "·"}</td>`; }).join("")}</tr>`).join("");
+}
+function historico() {
+  const H = D.historico[state.cargo], N = CARGO[state.cargo].n, lab = H.anos.map(String);
+  chart("cBlCad", { type: "bar", data: { labels: lab, datasets: ["E", "C", "D"].map(b => ({ label: BNOME[b], data: H.bloco_cadeiras[b], backgroundColor: cor(b), borderColor: css("--surface"), borderWidth: 2, borderRadius: 3 })) },
+    options: { scales: { x: eixo({ stacked: true, grid: { display: false } }), y: eixo({ stacked: true, max: N, ticks: { color: css("--ink2"), precision: 0 } }) } } });
+  chart("cBlVot", { type: "line", data: { labels: lab, datasets: ["E", "C", "D"].map(b => ({ label: BNOME[b], data: H.bloco_voto[b], borderColor: cor(b), backgroundColor: cor(b), borderWidth: 2, pointRadius: 4, tension: 0 })) },
+    options: { interaction: { mode: "index", intersect: false }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, ticks: { color: css("--ink2"), callback: v => v + "%" } }) }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${f1(c.parsed.y)}%` } } } } });
+  const ps = H.partidos.filter(p => H.cadeiras[p].some(x => x > 0));
+  mapaCalor("heatCad", ps, H.anos, p => H.cadeiras[p], v => v, Math.max(...ps.map(p => Math.max(...H.cadeiras[p]))) * 1.1);
+  const pv = H.partidos.slice(0, 12);
+  mapaCalor("heatVot", pv, H.anos, p => H.voto[p], v => f1(v), 28);
+  chart("cEnp", { type: "line", data: { labels: lab, datasets: [{ label: "Pelos votos", data: H.enp_voto, borderColor: css("--ink2"), backgroundColor: css("--ink2"), borderWidth: 2, pointRadius: 4, tension: 0 }, { label: "Pelas cadeiras", data: H.enp_cadeiras, borderColor: css("--s2"), backgroundColor: css("--s2"), borderWidth: 2, pointRadius: 4, tension: 0 }] },
+    options: { interaction: { mode: "index", intersect: false }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, ticks: { color: css("--ink2") } }) }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${f1(c.parsed.y)}` } } } } });
+}
+
+// ---------- 3. listas ----------
+function listasAno() {
+  const sel = $("selAno"); if (!sel.options.length) { sel.innerHTML = ANOS.map(a => `<option value="${a}">${a}</option>`).join(""); sel.value = state.ano; sel.onchange = () => { state.ano = sel.value; listasAno(); }; }
+  const rows = D.historico[state.cargo].listas[state.ano];
+  $("tListasAno").innerHTML = `<table class="t"><tr><th class="txt">Lista</th><th class="txt">Partidos</th><th>Votos</th><th>% válidos</th><th>Cadeiras</th></tr>` +
+    rows.map(r => `<tr><td class="txt">${r.tipo === "federacao" ? "Federação" : r.tipo === "coligacao" ? (r.nome || "Coligação") : "Partido isolado"}</td><td class="txt">${r.composicao}</td><td>${r.votos.toLocaleString("pt-BR")}</td><td>${f1(r.pct)}</td><td><b>${r.cadeiras}</b></td></tr>`).join("") + "</table>";
+  $("tFed").innerHTML = `<table class="t"><tr><th class="txt">Federação</th><th class="txt">Partidos</th></tr>${Object.entries(D.federacoes).map(([n, m]) => `<tr><td class="txt">${n}</td><td class="txt">${m.join(" + ")}</td></tr>`).join("")}</table>`;
+}
+
+// ---------- 4. regiões ----------
+function regioes() {
+  const R = D.historico[state.cargo].regioes, b = state.bloco, us = Object.keys(R["2022"]).sort((x, y) => R["2022"][y][b] - R["2022"][x][b]);
+  const mix = (a, c, w) => a.map((x, i) => Math.round(x + (c[i] - x) * w)), rgb = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), base = rgb(css("--div-mid")), c0 = rgb(cor(b));
+  $("heatReg").innerHTML = `<tr><th></th>${ANOS.map(a => `<th>${a}</th>`).join("")}</tr>` + us.map(u => `<tr><td style="text-align:left;font-weight:600;min-width:150px">${u}</td>${ANOS.map(a => { const v = R[a][u][b], c = mix(base, c0, Math.min(1, v / 60)), lum = .299 * c[0] + .587 * c[1] + .114 * c[2];
+    return `<td style="background:rgb(${c});color:${lum > 140 ? "#0b0b0b" : "#fff"}">${f1(v)}</td>`; }).join("")}</tr>`).join("");
+}
+
+// ---------- 5. método ----------
+function metodo() {
+  const bt = D.backtest.linhas, anos = [2010, 2014, 2018, 2022], lams = D.params.lams;
+  $("tBack").innerHTML = `<table class="t"><tr><th class="txt">λ</th>${anos.map(a => `<th>${a} DF</th><th>${a} DE</th>`).join("")}<th>Média</th></tr>` + lams.map(l => `<tr><td class="txt">${fp(l)}${l == D.params.lam ? " (padrão)" : l === 0 ? " (só a votação anterior)" : ""}</td>${anos.map(a => ["DF", "DE"].map(c => `<td>${bt.find(x => x.lam === l && x.ano === a && x.cargo === c).trocadas}</td>`).join("")).join("")}<td><b>${f1(D.backtest.medio[key(l)])}</b></td></tr>`).join("") + "</table>";
+  $("notaBack").innerHTML = `Cadeiras que o método colocou na lista errada (cadeiras trocadas = soma dos erros ÷ 2), com a estrutura de listas do ano previsto conhecida. λ = 0 é só a votação da eleição anterior. A tendência do governador melhora pouco o resultado (${f1(D.backtest.medio["0.0"])} → ${f1(D.backtest.medio[key(D.params.lam)])}): os blocos do governador mudam muito entre eleições e votar para governador não é votar para deputado.`;
+  const val = D.validacao;
+  $("tVal").innerHTML = `<table class="t"><tr><th class="txt">Eleição</th><th>Federal</th><th>Estadual</th></tr>${[...new Set(val.map(v => v.ano))].map(a => `<tr><td class="txt">${a}</td><td>${val.find(v => v.ano === a && v.cargo === "DF").trocadas}</td><td>${val.find(v => v.ano === a && v.cargo === "DE").trocadas}</td></tr>`).join("")}</table>`;
+  const s = D.previsao[state.cargo], cen = [["Padrão", `${D.params.lam}_${D.params.mu}`], ["Sem migração (μ = 0)", `${D.params.lam}_0.0`], ["Migração total (μ = 1)", `${D.params.lam}_1.0`], ["Sem tendência do governo (λ = 0)", `0.0_${D.params.mu}`], ["Tendência maior (λ = 0,5)", `0.5_${D.params.mu}`], ["Sobras só com 80% do QE (regra de 2022)", "alt_80"]];
+  const L = s[cen[0][1]].listas.filter(l => l.med >= 0.5);
+  $("tSens").innerHTML = `<table class="t"><tr><th class="txt">Lista</th><th>Hoje</th>${cen.map(c => `<th>${c[0]}</th>`).join("")}</tr>` + L.map(l => `<tr><td class="txt">${l.lista}</td><td>${l.atual}</td>${cen.map(c => `<td>${f1((s[c[1]].listas.find(x => x.lista === l.lista) || { med: 0 }).med)}</td>`).join("")}</tr>`).join("") + "</table>";
+  $("tBloco").innerHTML = `<table class="t"><tr><th class="txt">Bloco</th><th class="txt">Partidos</th></tr>${["E", "C", "D"].map(b => `<tr><td class="txt">${dot(b)}${BNOME[b]}</td><td class="txt">${Object.entries(D.bloco_de).filter(([, x]) => x === b).map(([p]) => p).join(", ")}</td></tr>`).join("")}</table>`;
+  $("premissas").innerHTML = [`<b>Blocos:</b> aproximação por partido (PSD no centro; PCdoB, Rede e UP à esquerda); deputados de um mesmo partido podem divergir.`,
+    `<b>Migração (μ):</b> sem histórico para medir; o cenário padrão é ${fp(D.params.mu)}, e a tabela acima mostra 0 e 1.`,
+    `<b>Ruído:</b> choque comum do bloco (${D.params.sig_b}) e ruído por partido maior nos pequenos, ajustados para a faixa de 80% cobrir ~80% das cadeiras por lista no backtest.`,
+    `<b>Partidos novos</b> (sem votação em 2022) e candidatos individuais (cláusula de 10% do QE) não entram.`,
+    `<b>Sobras de 2026:</b> abertas a todas as listas (decisão do STF de 2024); o cenário "80% do QE" mostra a regra de 2022. <b>Conferir no TSE.</b>`,
+    `<b>Federações de 2026:</b> segundo A Gazeta (ago/2026); conferir no TSE.`].map(x => `<li>${x}</li>`).join("");
+}
+
+function notas() {
+  const P = prev(), H = D.historico[state.cargo], A = D.atual[state.cargo], N = CARGO[state.cargo].n, i0 = H.anos.length - 1;
+  nota("nota0", [`${CARGO[state.cargo].nome}: <b>${Math.round(P.blocos.D.med)}</b> cadeiras para a direita, <b>${Math.round(P.blocos.E.med)}</b> para a esquerda e <b>${Math.round(P.blocos.C.med)}</b> para o centro (de ${N}).`,
+    `Maior lista: <b>${P.listas[0].lista}</b> (faixa ${P.listas[0].p10}–${P.listas[0].p90}).`, `Incerteza grande: mesmo as maiores listas variam alguns assentos para cima ou para baixo.`]);
+  nota("nota1", [`<b>${A.trocaram}</b> de ${N} eleitos trocaram de partido desde 2022.`, A.migracao[0] ? `Maior fluxo: <b>${A.migracao[0].de} → ${A.migracao[0].para}</b> (${A.migracao[0].n}).` : "", `Fontes: ${A.fonte}.`].filter(Boolean));
+  nota("nota2", [`Direita nos votos: <b>${f1(H.bloco_voto.D[0])}%</b> (2002) → <b>${f1(H.bloco_voto.D[i0])}%</b> (2022).`, `Número efetivo de partidos: <b>${f1(H.enp_voto[0])}</b> (2002) → <b>${f1(H.enp_voto[i0])}</b> (2022), pelos votos.`, `Cadeiras de esquerda: <b>${H.bloco_cadeiras.E[0]}</b> → <b>${H.bloco_cadeiras.E[i0]}</b>.`]);
+  nota("nota3", [`Até 2018, cada coligação somava votos; em 2022 as federações juntaram PT/PCdoB/PV, PSDB/Cidadania e PSOL/Rede.`, `Para 2026 há 5 federações, duas novas: União Progressista e Renovação Solidária.`]);
+  const R = H.regioes["2022"], us = Object.keys(R).sort((x, y) => R[y].D - R[x].D);
+  nota("nota4", [`Direita mais forte em 2022: <b>${us[0]}</b> (${f1(R[us[0]].D)}%).`, `Esquerda mais forte: <b>${Object.keys(R).sort((x, y) => R[y].E - R[x].E)[0]}</b>.`, `Troque o bloco acima para ver cada campo.`]);
+  nota("nota5", [`Erro médio do backtest: <b>${f1(D.backtest.medio[key(D.params.lam)])}</b> cadeiras trocadas.`, `Faixa de 80% cobriu <b>${Math.round(100 * D.backtest.cobertura[key(D.params.lam)])}%</b> das cadeiras reais por lista.`, `O alocador reproduz as 12 distribuições de 2002–2022 (±1 cadeira).`]);
+}
+
+function tudo() { hero(); atual(); historico(); listasAno(); regioes(); metodo(); notas(); }
+function ligar() {
+  const redraw = () => { hero(); notas(); }, trocaCargo = () => { tudo(); segCargos(); };
+  const cargoFmt = (c) => c === "DF" ? "Federal · 31" : "Estadual · 55";
+  window.segCargos = () => { segN($("segCargo"), "cargo", ["DF", "DE"], cargoFmt, trocaCargo); segN($("segCargo2"), "cargo", ["DF", "DE"], cargoFmt, trocaCargo); };
+  segCargos();
+  segN($("segLam"), "lam", D.params.lams, v => fp(v), redraw);
+  segN($("segMu"), "mu", D.params.mus, v => fp(v), redraw);
+  segN($("segBloco"), "bloco", ["E", "C", "D"], b => BNOME[b].split(" ")[0], regioes);
+}
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+ligar(); tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>
