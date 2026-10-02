@@ -29,6 +29,7 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `fetch_tse_rs.py`, `regioes_rs.py`, `rs_dados.py` | ETL do governador do RS (zips do TSE já baixados), mapa município → mesorregião do IBGE (rede) e blocos/unidades |
 | `rs_modelo.py`, `modelos/rs-model.js` | Aba do RS: estimativa das pesquisas, chances (1º e 2º turno simulados juntos) e projeção por região, em Python e JS (teste de equivalência) |
 | `gerar_pagina_rs.py` | Gera `rs.html` a partir de `apps/rs.template.html` |
+| `agregador.py` | Agregador de pesquisas (presidente e governador do RS): tendência suavizada com viés de instituto e faixa de 90%; o card aparece logo abaixo dos cards de previsão (`assets/agregador.js`) |
 | `datasets/` | CSVs do TSE e das pesquisas (`pesquisas-2026.csv`, `vies-pesquisas.csv`, `datafolha-regioes-2026-09-22.csv`, `pesquisas-rs-governador-2026.csv`, `tse-governador-rs-municipio.csv`, `rs-municipios-regioes.csv`) |
 
 ## Método em uma linha
