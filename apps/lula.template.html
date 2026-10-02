@@ -28,6 +28,20 @@
     <p class="nota" style="margin:2px 0 0">Reconstrução semanal: para cada data, o modelo usa só as pesquisas já divulgadas até ela (mesma metodologia de hoje, inclusive o viés histórico atual). Poucas pesquisas em agosto: as primeiras semanas têm mais incerteza.</p>
     <p class="nota" id="heroNota"></p>
   </section>
+  <section class="card" id="agregador">
+    <div class="filtros" style="justify-content:space-between;margin:0 0 4px">
+      <div><b style="font-size:1.05rem;color:var(--ink)">Agregador de pesquisas</b><div class="nota" style="margin:0">Tendência suavizada das pesquisas de 2026, com faixa de 90%</div></div>
+      <div class="filtros" style="margin:0">Turno <span class="seg" id="segAggT"></span> <label class="chk"><input type="checkbox" id="aggAj" checked> ajustar viés de instituto</label></div>
+    </div>
+    <div class="agg-kpis" id="aggKpis"></div>
+    <div class="cv agg"><canvas id="cAgg"></canvas></div>
+    <div class="agg-leg" id="aggLeg"></div>
+    <details><summary>Ver tabelas (tendência semanal, viés dos institutos e pesquisas)</summary>
+      <h3 style="margin:8px 0 4px">Tendência (semanal)</h3><div id="tAggTend"></div>
+      <h3 style="margin:10px 0 4px">Viés estimado por instituto</h3><div id="tAggVies"></div>
+      <h3 style="margin:10px 0 4px">Pesquisas usadas</h3><div id="tAggPesq"></div></details>
+    <p class="nota" id="aggNota"></p>
+  </section>
   </div><aside class="side" id="nota0"></aside></div>
   <div class="aviso semnota"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code>: a série da Datafolha foi conferida no relatório oficial (BR-00304/2026); as demais vieram de busca web e não foram conferidas no TSE.</div>
   <div class="kpis semnota" id="kpis"></div>
@@ -135,6 +149,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="assets/site.js"></script>
+<script src="assets/agregador.js"></script>
 <script src="modelos/eleicoes-model.js"></script>
 <script src="modelos/projecao-model.js"></script>
 <script>
@@ -143,7 +158,7 @@ const ANOS = ["2002","2006","2010","2014","2018","2022"], LULA = {2002:1,2006:1,
 const REG = ["N","NE","CO","SE","S"], REGNOME = {N:"Norte",NE:"Nordeste",CO:"Centro-Oeste",SE:"Sudeste",S:"Sul"};
 const INST = ["Datafolha","Quaest","AtlasIntel","RealTimeBigData"], INSTNOME = {RealTimeBigData:"Real Time Big Data"};
 const FATOR = { pesquisas:0, meio:0.5, total:1 }, NOMEVIES = { pesquisas:"Pesquisas", meio:"½ do viés histórico", total:"Viés histórico" };
-const state = { heroCen:"pesquisas", projT:1, cen:"pesquisas", s:51.8, q:87.5, turnoReg:2, turnoHeat:2, turnoCap:2, ano:"2022" };
+const state = { aggT:1, aggAj:true, heroCen:"pesquisas", projT:1, cen:"pesquisas", s:51.8, q:87.5, turnoReg:2, turnoHeat:2, turnoCap:2, ano:"2022" };
 // ---------- KPIs ----------
 function kpis() {
   const g = (a, t) => D.nac.find(x => x.ano == a && x.turno == t);
@@ -398,9 +413,9 @@ function notas() {
     `A distribuição regional do modelo fica a até <b>${f1(dm)} p.p.</b> da Datafolha em todas as regiões (margem 3 a 6).`,
     `Mexa nos sliders: mudar o total nacional redistribui estado a estado.`]);
 }
-function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); valReg(); hero(); notas(); }
+function tudo() { agregador(); kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); valReg(); hero(); notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
-ligarProj(); seg($("segReg"), "turnoReg", regioes); seg($("segHeat"), "turnoHeat", heat); seg($("segCap"), "turnoCap", capitais);
+aggLigar(); ligarProj(); seg($("segReg"), "turnoReg", regioes); seg($("segHeat"), "turnoHeat", heat); seg($("segCap"), "turnoCap", capitais);
 $("semLula").onchange = evolucao; $("semLula2").onchange = vies;
 tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);

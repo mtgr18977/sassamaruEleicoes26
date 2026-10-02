@@ -49,6 +49,8 @@ for t in sorted({*pd.date_range("2026-08-27", "2026-10-02", freq="7D"), pd.Times
         ev.append(dict(data=str(t.date()), par=p))
 out["modelo"] = dict(par=par, evolucao=ev, unidades=rm.unidades().to_dict("records"), sigma=rm.ruido_unidade(), rho=rm.RHO, piso2t=rm.SD_PISO_2T_PP, sistematico1t=rm.SISTEMATICO_1T_PP)
 out["nomes_unidade"] = NOME_UNIDADE
+import agregador
+out["agg"] = agregador.rs()
 html = open("apps/rs.template.html", encoding="utf-8").read().replace("__DATA__", json.dumps(out, ensure_ascii=False))
 open("rs.html", "w", encoding="utf-8").write(html)
 print("rs.html", len(html) // 1024, "KB |", len(ev), "pontos de evolução")

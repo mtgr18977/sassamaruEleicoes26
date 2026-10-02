@@ -29,6 +29,20 @@
     <p class="nota" style="margin:2px 0 0">Reconstrução semanal: para cada data, o modelo usa só as pesquisas já divulgadas até ela. Com 10 pesquisas e poucas por instituto, a incerteza é grande.</p>
     <p class="nota" id="heroNota"></p>
   </section>
+  <section class="card" id="agregador">
+    <div class="filtros" style="justify-content:space-between;margin:0 0 4px">
+      <div><b style="font-size:1.05rem;color:var(--ink)">Agregador de pesquisas</b><div class="nota" style="margin:0">Tendência suavizada das pesquisas de 2026, com faixa de 90%</div></div>
+      <div class="filtros" style="margin:0">Turno <span class="seg" id="segAggT"></span> <label class="chk"><input type="checkbox" id="aggAj" checked> ajustar viés de instituto</label></div>
+    </div>
+    <div class="agg-kpis" id="aggKpis"></div>
+    <div class="cv agg"><canvas id="cAgg"></canvas></div>
+    <div class="agg-leg" id="aggLeg"></div>
+    <details><summary>Ver tabelas (tendência semanal, viés dos institutos e pesquisas)</summary>
+      <h3 style="margin:8px 0 4px">Tendência (semanal)</h3><div id="tAggTend"></div>
+      <h3 style="margin:10px 0 4px">Viés estimado por instituto</h3><div id="tAggVies"></div>
+      <h3 style="margin:10px 0 4px">Pesquisas usadas</h3><div id="tAggPesq"></div></details>
+    <p class="nota" id="aggNota"></p>
+  </section>
   </div><aside class="side" id="nota0"></aside></div>
 
   <div class="aviso semnota"><b>Como ler:</b> blocos por partido: <b>Esquerda</b> (PT, PDT, PSOL, PSB, PV e nanicos), <b>Centro</b> (MDB/PMDB, PSDB, PPS) e <b>Direita</b> (PL, PP, PSC, Novo e demais). Para 2026, Brizola = esquerda, Souza e Maranata = centro e Zucco = direita. Dados do TSE (2002–2022); as pesquisas vieram de matérias (Gazeta do Povo, CartaCapital, Band, Terra Brasil, Studio TV) e <b>não foram conferidas no TSE</b>.</div>
@@ -106,6 +120,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="assets/site.js"></script>
+<script src="assets/agregador.js"></script>
 <script src="modelos/eleicoes-model.js"></script>
 <script src="modelos/rs-model.js"></script>
 <script>
@@ -115,7 +130,7 @@ const BNOME = { E:"Esquerda", C:"Centro", D:"Direita" }, BCOR = { E:"--pt", C:"-
 const CAND = [{ k:0, nome:"Zucco (PL)", cor:"--anti", rot:"Luciano Zucco" }, { k:1, nome:"Juliana Brizola (PDT)", cor:"--pt", rot:"Juliana Brizola" }, { k:2, nome:"Gabriel Souza (MDB)", cor:"--s7", rot:"Gabriel Souza" }];
 const pct = (x) => (x > 0 && x < 0.001) ? "<0,1%" : f1(100 * x) + "%";
 const logit = (p) => Math.log(p / (1 - p)), inv = (y) => 1 / (1 + Math.exp(-y));
-const state = { bloco:"E", bloco2:"E", ano:"2022", z:null, b:null, p:null };
+const state = { aggT:1, aggAj:true, bloco:"E", bloco2:"E", ano:"2022", z:null, b:null, p:null };
 const shares0 = (par) => { const e = [1, Math.exp(par.mu[0]), Math.exp(par.mu[1])], t = e[0] + e[1] + e[2]; return e.map(x => 100 * x / t * (1 - par.rbar)); };   // z, b, s em % dos válidos
 const S0 = shares0(M.par), P0 = 100 * inv(M.par.pares.ZB.mu);
 state.z = S0[0]; state.b = S0[1]; state.p = P0;
@@ -262,9 +277,9 @@ function notas() {
     `O ruído por região (σ = ${M.sigma.toFixed(2).replace(".", ",")}) vem dos resíduos de 2002 a 2022: só 5 transições.`]);
 }
 
-function tudo() { historico(); regioesHist(); capital(); pesquisas(); projecao(); hero(); notas(); }
+function tudo() { agregador(); historico(); regioesHist(); capital(); pesquisas(); projecao(); hero(); notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
-ligar(); tudo();
+aggLigar(); ligar(); tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
 </script>
 </body>
