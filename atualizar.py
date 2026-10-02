@@ -3,6 +3,7 @@
   python atualizar.py   pesquisas.py, montecarlo.py, rs_modelo.py, projecao.py (1º turno), as duas páginas e os testes
 
 Antes de rodar com pesquisas novas, atualize HOJE e HORIZONTE em pesquisas.py e HOJE em rs_modelo.py.
+O agregador (agregador.py) usa essas mesmas HOJE.
 A projeção de 1/10 não é mais sobrescrita no repositório: está na tag projecao-1turno-2026-10-01.
 """
 import subprocess
