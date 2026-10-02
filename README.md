@@ -2,7 +2,7 @@
 
 Simulação estatística da eleição presidencial de 2026 a partir do histórico do TSE (2002–2022) e das pesquisas de 2026. Python faz ETL e ajuste; o JS roda a simulação no navegador. **É um modelo estatístico condicional às pesquisas, não uma pesquisa eleitoral nem uma previsão validada.**
 
-- **Abas:** `index.html` (Presidente 2026) e `rs.html` (Governo do RS 2026), com estilos e utilidades comuns em `assets/`.
+- **Abas:** `index.html` (Presidente 2026), `rs.html` (Governo do RS 2026) e `bancada.html` (Bancada RS 2026: deputados federais e estaduais), com estilos e utilidades comuns em `assets/`.
 - **Dashboard:** `index.html` ("Eleições Dashboard 2026": card com a chance de Lula e de Flávio serem eleitos, tema claro/escuro, notas laterais, histórico do Lula, regiões, capitais, pesquisa × resultado, 2026 e simulador). `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
 - **Projeção do 1º turno:** refeita a cada rodada de pesquisas (`modelos/projecao-1turno*`). A versão de 1/10/2026 está na tag `projecao-1turno-2026-10-01`. Compare com o resultado real com `python avaliar_projecao.py resultado.csv`.
 
@@ -30,7 +30,11 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `rs_modelo.py`, `modelos/rs-model.js` | Aba do RS: estimativa das pesquisas, chances (1º e 2º turno simulados juntos) e projeção por região, em Python e JS (teste de equivalência) |
 | `gerar_pagina_rs.py` | Gera `rs.html` a partir de `apps/rs.template.html` |
 | `agregador.py` | Agregador de pesquisas (presidente e governador do RS): tendência suavizada com viés de instituto e faixa de 90%; o card aparece logo abaixo dos cards de previsão (`assets/agregador.js`) |
-| `datasets/` | CSVs do TSE e das pesquisas (`pesquisas-2026.csv`, `vies-pesquisas.csv`, `datafolha-regioes-2026-09-22.csv`, `pesquisas-rs-governador-2026.csv`, `tse-governador-rs-municipio.csv`, `rs-municipios-regioes.csv`) |
+| `fetch_tse_legislativo.py` | ETL de Deputado Federal e Estadual do RS (2002–2022): votos por partido e região, listas (coligação/federação) e eleitos; baixa só o arquivo do RS de cada zip do TSE (`pip install remotezip`) |
+| `fetch_bancada_atual.py` | Partido atual dos eleitos de 2022: API da Câmara (federais) e Wikipédia (estaduais, **não conferida com a ALRS**) → `datasets/rs-bancada-atual.csv` |
+| `rs_bancada.py` | Aba da bancada: alocador de cadeiras (quociente + maiores médias, validado contra as 12 eleições reais), backtest, previsão de 2026 por Monte Carlo e pacote de dados da página |
+| `gerar_pagina_bancada.py` | Gera `bancada.html` a partir de `apps/bancada.template.html` |
+| `datasets/` | CSVs do TSE e das pesquisas (`pesquisas-2026.csv`, `vies-pesquisas.csv`, `datafolha-regioes-2026-09-22.csv`, `pesquisas-rs-governador-2026.csv`, `tse-governador-rs-municipio.csv`, `rs-municipios-regioes.csv`, `tse-legislativo-rs-*.csv`, `rs-bancada-atual.csv`) |
 
 ## Método em uma linha
 Em logit, `y_UF,2026 = y_UF,2022 + δ`, com δ vindo das pesquisas; choque regional e ruído por UF **medidos** nos resíduos 2002–2022; um deslocamento comum é recalibrado para que o total nacional bata com o sorteado. No 1º turno há dois eixos: Lula/(Lula+Flávio) e o peso de Lula+Flávio.
@@ -54,3 +58,4 @@ Em logit, `y_UF,2026 = y_UF,2022 + δ`, com δ vindo das pesquisas; choque regio
 - **Blocos por partido** (esquerda: PT, PDT, PSOL, PSB, PV e nanicos; centro: MDB/PMDB, PSDB, PPS; direita: PL, PP, PSC, Novo e demais) são um pressuposto. Zucco = direita, Brizola = esquerda, Souza e Maranata = centro. A direita quase não existia em 2010 (0,3%), o que torna instáveis razões em log que a envolvem.
 - **Ruído regional de 5 transições** (2002–2022), com 8 unidades (mesorregiões, a Grande POA sem a capital e Porto Alegre à parte); sem correlação espacial.
 - **Sem Eduardo Leite** (limitado por mandato) o centro encolhe de 26,8% (2022) para ~17% nas pesquisas: a base 2022 do centro não se aplica diretamente.
+- **Bancada do RS (aba `bancada.html`):** o método (votação de 2022 → tendência dos blocos no governador → federações de 2026 → Monte Carlo → quociente eleitoral e maiores médias) trocou em média 6,6 cadeiras (de 31 ou 55) nos backtests de 2010–2022, contra 7,1 sem a tendência: a tendência do governador ajuda pouco. A faixa de 80% cobriu ~82% das cadeiras por lista no backtest, mas ele só tem 4 transições. **Assumidos:** migração dos eleitos (μ = 0,5 da votação nominal acompanha quem troca de partido; sem histórico para medir), sobras abertas a todas as listas em 2026 (decisão do STF de 2024), federações de 2026 (A Gazeta, ago/2026) e blocos por partido (PSD no centro). **Fora do modelo:** partidos novos, cláusula de 10% do QE por candidato e suplentes. A bancada estadual de hoje vem da Wikipédia (colaborativa) e não foi conferida com a Assembleia; a federal vem da API da Câmara. Conferir federações e regra das sobras no TSE antes de publicar.
