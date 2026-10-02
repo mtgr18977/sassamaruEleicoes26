@@ -82,6 +82,9 @@ out["piso2t"] = SD_PISO_2T_PP
 from pesquisas import evolucao
 out["evolucao"] = evolucao(sorted({*pd.date_range("2026-08-20", "2026-10-02", freq="7D").strftime("%Y-%m-%d"), "2026-10-02"}))
 out["valreg"] = validar_regioes.comparar()
+import agregador
+from pesquisas import HOJE
+out["agregador"] = agregador.presidente(HOJE)
 out["modelo"] = json.load(open("modelos/parametros.json"))
 
 html = open("apps/lula.template.html", encoding="utf-8").read().replace("__DATA__", json.dumps(out, ensure_ascii=False))

@@ -31,6 +31,17 @@
   </section>
   </div><aside class="side" id="nota0"></aside></div>
 
+  <section class="sec"><div class="mainc">
+  <h2>Agregador de pesquisas: governador do RS</h2>
+  <p class="sub">Tendência de Zucco, Juliana Brizola e Gabriel Souza nas pesquisas de 2026 (poucas por instituto: o intervalo é largo).</p>
+  <div class="card">
+    <div class="cv med"><canvas id="cAgg"></canvas></div>
+    <details><summary>Ver tabela</summary><div id="tAgg"></div></details>
+    <p class="nota">Linha = tendência; faixa = intervalo de 90%; pontos = cada pesquisa como publicada, em % dos candidatos citados (sem brancos, nulos e indecisos). A tendência pondera pela amostra, suaviza no tempo (núcleo gaussiano) e desconta o house effect de cada instituto; a faixa soma o erro amostral, a incerteza dos institutos e um piso de 1 p.p. assumido. Não é previsão.</p>
+  </div>
+  </div><aside class="side" id="notaAgg"></aside></section>
+
+
   <div class="aviso semnota"><b>Como ler:</b> blocos por partido: <b>Esquerda</b> (PT, PDT, PSOL, PSB, PV e nanicos), <b>Centro</b> (MDB/PMDB, PSDB, PPS) e <b>Direita</b> (PL, PP, PSC, Novo e demais). Para 2026, Brizola = esquerda, Souza e Maranata = centro e Zucco = direita. Dados do TSE (2002–2022); as pesquisas vieram de matérias (Gazeta do Povo, CartaCapital, Band, Terra Brasil, Studio TV) e <b>não foram conferidas no TSE</b>.</div>
 
   <section class="sec"><div class="mainc">
@@ -262,7 +273,12 @@ function notas() {
     `O ruído por região (σ = ${M.sigma.toFixed(2).replace(".", ",")}) vem dos resíduos de 2002 a 2022: só 5 transições.`]);
 }
 
-function tudo() { historico(); regioesHist(); capital(); pesquisas(); projecao(); hero(); notas(); }
+function agg() {
+  agregador("cAgg", "tAgg", D.agregador, { "Luciano Zucco (PL)": "--anti", "Juliana Brizola (PDT)": "--pt", "Gabriel Souza (MDB)": "--s7", "Demais": "--muted" }, 60);
+  const g = (n) => D.agregador.series[n].at(-1);
+  nota("notaAgg", [`Zucco: <b>${f1(g("Luciano Zucco (PL)").m)}%</b> (${f1(g("Luciano Zucco (PL)").lo)}–${f1(g("Luciano Zucco (PL)").hi)}).`, `Brizola: <b>${f1(g("Juliana Brizola (PDT)").m)}%</b> (${f1(g("Juliana Brizola (PDT)").lo)}–${f1(g("Juliana Brizola (PDT)").hi)}).`, `Souza: <b>${f1(g("Gabriel Souza (MDB)").m)}%</b> (${f1(g("Gabriel Souza (MDB)").lo)}–${f1(g("Gabriel Souza (MDB)").hi)}).`]);
+}
+function tudo() { agg(); historico(); regioesHist(); capital(); pesquisas(); projecao(); hero(); notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 ligar(); tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);

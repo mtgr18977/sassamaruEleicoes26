@@ -29,6 +29,17 @@
     <p class="nota" id="heroNota"></p>
   </section>
   </div><aside class="side" id="nota0"></aside></div>
+
+  <section class="sec"><div class="mainc">
+  <h2>Agregador de pesquisas: 1º turno</h2>
+  <p class="sub">Tendência de Lula, Flávio Bolsonaro e dos demais candidatos nas pesquisas Datafolha, Quaest, AtlasIntel e Real Time Big Data.</p>
+  <div class="card">
+    <div class="cv med"><canvas id="cAgg"></canvas></div>
+    <details><summary>Ver tabela</summary><div id="tAgg"></div></details>
+    <p class="nota">Linha = tendência; faixa = intervalo de 90%; pontos = cada pesquisa como publicada, em % dos candidatos citados (sem brancos, nulos e indecisos). A tendência pondera pela amostra, suaviza no tempo (núcleo gaussiano) e desconta o house effect de cada instituto; a faixa soma o erro amostral, a incerteza dos institutos e um piso de 1 p.p. assumido. Não é previsão.</p>
+  </div>
+  </div><aside class="side" id="notaAgg"></aside></section>
+
   <div class="aviso semnota"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code>: a série da Datafolha foi conferida no relatório oficial (BR-00304/2026); as demais vieram de busca web e não foram conferidas no TSE.</div>
   <div class="kpis semnota" id="kpis"></div>
 
@@ -398,7 +409,12 @@ function notas() {
     `A distribuição regional do modelo fica a até <b>${f1(dm)} p.p.</b> da Datafolha em todas as regiões (margem 3 a 6).`,
     `Mexa nos sliders: mudar o total nacional redistribui estado a estado.`]);
 }
-function tudo() { kpis(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); valReg(); hero(); notas(); }
+function agg() {
+  agregador("cAgg", "tAgg", D.agregador, { "Lula (PT)": "--pt", "Flávio Bolsonaro (PL)": "--anti", "Demais candidatos": "--muted" }, 60);
+  const g = (n) => D.agregador.series[n].at(-1);
+  nota("notaAgg", [`Lula: <b>${f1(g("Lula (PT)").m)}%</b> (${f1(g("Lula (PT)").lo)}–${f1(g("Lula (PT)").hi)}).`, `Flávio: <b>${f1(g("Flávio Bolsonaro (PL)").m)}%</b> (${f1(g("Flávio Bolsonaro (PL)").lo)}–${f1(g("Flávio Bolsonaro (PL)").hi)}).`, `Os intervalos de Lula e Flávio ${g("Lula (PT)").lo > g("Flávio Bolsonaro (PL)").hi ? "não se sobrepõem" : "se sobrepõem"}.`]);
+}
+function tudo() { kpis(); agg(); evolucao(); regioes(); heat(); capitais(); vies(); pesq26(); aplicarPreset(); valReg(); hero(); notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 ligarProj(); seg($("segReg"), "turnoReg", regioes); seg($("segHeat"), "turnoHeat", heat); seg($("segCap"), "turnoCap", capitais);
 $("semLula").onchange = evolucao; $("semLula2").onchange = vies;

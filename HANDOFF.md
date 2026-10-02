@@ -11,6 +11,7 @@ Data: 2/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 | Monte Carlo (`montecarlo.py`, JS) | UF e capitais; teste node compara JS com Python |
 | Projeção 1º turno (`projecao.py`, JS) | Refeita em 2/10 com o Datafolha de 28/9–1/10: Lula 45,5 / Flávio 42,0 / demais 12,4; P(2º turno) 90%. A de 1/10 (45,2 / 42,1 / 12,6) está na tag `projecao-1turno-2026-10-01` |
 | Aba RS (`rs.html`) | Governador: histórico TSE 2002–2022 por bloco/região, 10 pesquisas de 2026, chances e projeção por região (Zucco 90% · Brizola 10% com as pesquisas até 2/10 (sem pesquisa nova do RS desde 29/9); premissas assumidas, ver README) |
+| Agregador (`agregador.py`) | tendência por candidato (presidente 1º turno e governador RS) com intervalo de 90%, logo após os cards de chances; regressão local com house effect, piso de 1 p.p. assumido |
 | Dashboard | `index.html` (Netlify serve a raiz), simulador interativo, mapa em tiles; `apps/eleicoes.html` |
 | Testes | `python -m pytest -q tests`; `node tests/eleicoes-model.test.js`; `node tests/projecao-model.test.js`; `python atualizar.py` roda tudo |
 

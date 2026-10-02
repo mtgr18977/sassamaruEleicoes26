@@ -39,3 +39,27 @@ function alternarTema() { temaEscolhido = TEMAS[(TEMAS.indexOf(temaEscolhido) + 
 
 function nota(id, itens) { $(id).innerHTML = `<h4>Em resumo</h4><ul>${itens.map(i => `<li>${i}</li>`).join("")}</ul>`; }
 const sg = (x) => (x > 0 ? "+" : "−") + f1(Math.abs(x));
+
+// ---------- agregador de pesquisas (tendência + intervalo de 90% por candidato) ----------
+// A = {series:{nome:[{data,m,lo,hi}]}, pontos:{nome:[{data,inst,v}]}}; cores = {nome: "--var"}
+const dia = (s) => Date.parse(s) / 864e5, dm = (x) => { const d = new Date(x * 864e5); return String(d.getUTCDate()).padStart(2, "0") + "/" + String(d.getUTCMonth() + 1).padStart(2, "0"); };
+function agregador(canvas, tab, A, cores, ymax) {
+  const nomes = Object.keys(A.series), ds = [];
+  nomes.forEach(n => {
+    const c = css(cores[n]), s = A.series[n], xy = (k) => s.map(r => ({ x: dia(r.data), y: r[k] }));
+    ds.push({ label: n + " (mín.)", data: xy("lo"), borderWidth: 0, pointRadius: 0, fill: false, aux: true, order: 3 });
+    ds.push({ label: n + " (intervalo)", data: xy("hi"), borderWidth: 0, pointRadius: 0, backgroundColor: c + "30", fill: "-1", aux: true, order: 3 });
+    ds.push({ label: n, data: xy("m"), borderColor: c, backgroundColor: c, borderWidth: 2.5, pointRadius: 0, tension: 0.25, order: 1 });
+    ds.push({ label: n + " (pesquisas)", data: A.pontos[n].map(p => ({ x: dia(p.data), y: p.v, inst: p.inst })), type: "scatter", showLine: false, pointRadius: 3, pointHoverRadius: 5,
+      borderColor: c, backgroundColor: c + "99", aux: true, order: 2 });
+  });
+  const x0 = dia(A.series[nomes[0]][0].data), x1 = dia(A.series[nomes[0]].at(-1).data);
+  chart(canvas, { type: "line", data: { datasets: ds }, options: { parsing: false, interaction: { mode: "x", intersect: false },
+    scales: { x: eixo({ type: "linear", min: x0, max: x1, grid: { display: false }, ticks: { color: css("--ink2"), maxTicksLimit: 8, callback: v => dm(v) } }),
+      y: eixo({ min: 0, max: ymax, ticks: { color: css("--ink2"), callback: v => v + "%" } }) },
+    plugins: { rotulos: { on: false }, legend: { position: "bottom", labels: { color: css("--ink2"), boxWidth: 18, boxHeight: 3, filter: l => !/\((mín\.|intervalo|pesquisas)\)$/.test(l.text) } },
+      tooltip: { filter: i => !i.dataset.aux, callbacks: { title: i => dm(i[0].parsed.x) + "/2026",
+        label: i => { const r = A.series[i.dataset.label].find(q => dia(q.data) === i.parsed.x); return r ? `${i.dataset.label}: ${f1(r.m)}% (${f1(r.lo)}–${f1(r.hi)})` : null; } } } } } });
+  const u = nomes.map(n => { const r = A.series[n].at(-1); return [n, r.m, r.lo, r.hi, A.pontos[n].length]; });
+  tabela(tab, ["Candidato", "Tendência %", "Mínimo 90% %", "Máximo 90% %", "Pesquisas"], u.map(l => [l[0], l[1], l[2], l[3], String(l[4])]));
+}
