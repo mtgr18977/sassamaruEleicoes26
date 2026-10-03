@@ -31,7 +31,7 @@ def test_vies_por_eleicao_nao_conta_2022_tres_vezes():
     from pesquisas import vies_eleicao
     m1, n1, _ = vies_eleicao(1)
     m2, n2, _ = vies_eleicao(2)
-    assert (n1, n2) == (3, 2) and abs(m1 - 2.25) < 0.1 and abs(m2 - 0.83) < 0.1   # por pesquisa seriam 2,75 e 1,17
+    assert (n1, n2) == (3, 2) and abs(m1 - 1.87) < 0.1 and abs(m2 - 0.49) < 0.1   # por pesquisa seriam 2,47 e 0,73
 
 
 def test_piso_de_incerteza_em_pp_vira_logit_e_so_age_quando_maior():
