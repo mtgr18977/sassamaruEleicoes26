@@ -14,7 +14,7 @@ from pesquisas import SD_PISO_2T_PP
 from rs_dados import blocos_por_unidade, carregar
 
 CSV = "datasets/pesquisas-rs-governador-2026.csv"
-SISTEMATICO_1T_PP = 3.6   # ASSUMIDO: erro sistemático das pesquisas (p.p. por candidato); proxy = RMSE medido nas pesquisas nacionais finais do 1º turno (sem histórico estadual)
+SISTEMATICO_1T_PP = 3.2   # ASSUMIDO: erro sistemático das pesquisas (p.p. por candidato); proxy = RMSE medido nas pesquisas nacionais finais do 1º turno (sem histórico estadual; ver vies_rmse(1) em pesquisas.py)
 HOJE = pd.Timestamp("2026-10-02")
 TAU_DIAS, DEFF, RHO = 14.0, 1.5, 0.5
 logit = lambda p: np.log(p / (1 - p))

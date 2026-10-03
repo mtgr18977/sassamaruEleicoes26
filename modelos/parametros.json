@@ -2,7 +2,7 @@
  "data_referencia": "2026-10-02",
  "turno1": {
   "p_pesquisas": 0.4551,
-  "sd_logit": 0.1487,
+  "sd_logit": 0.1343,
   "delta": -0.1173,
   "p_2022": 0.484307,
   "house_effects_logit": {
@@ -12,8 +12,8 @@
    "RealTimeBigData": -0.048
   },
   "n_pesquisas": 24,
-  "sd_vies_hist": 0.0357,
-  "n_vies": 6
+  "sd_vies_hist": 0.032,
+  "n_vies": 8
  },
  "turno2": {
   "p_pesquisas": 0.4988,
@@ -27,8 +27,8 @@
    "RealTimeBigData": -0.0381
   },
   "n_pesquisas": 19,
-  "sd_vies_hist": 0.0146,
-  "n_vies": 4
+  "sd_vies_hist": 0.0121,
+  "n_vies": 6
  },
  "mc": {
   "turno1": {
