@@ -30,5 +30,24 @@ def comparar():
     return saida
 
 
+def comparar_ufs(csv="datafolha-ufs-2026-10-02.csv"):
+    """Mesma ideia de comparar(), mas por UF (recorte de estado da Datafolha, sem precisar agregar/ponderar)."""
+    df = pd.read_csv(D + csv)
+    df["datafolha"] = 100 * df.lula / (df.lula + df.flavio)
+    p1 = pd.read_csv("modelos/projecao-1turno-uf-pesquisas.csv").set_index("uf")
+    p2 = pd.read_csv("modelos/previsao-uf-turno2.csv").set_index("uf")
+    saida = []
+    for turno, p, col in ((1, p1, None), (2, p2, "mediana")):
+        for r in df[df.turno == turno].itertuples():
+            if r.recorte not in p.index:
+                continue
+            g = p.loc[r.recorte]
+            modelo = 100 * g.lula / (g.lula + g.flavio) if turno == 1 else g[col]
+            saida.append(dict(turno=turno, uf=r.recorte, modelo=round(modelo, 1), datafolha=round(r.datafolha, 1), dif=round(modelo - r.datafolha, 1), me=int(r.margem_erro_pp)))
+    return saida
+
+
 if __name__ == "__main__":
     print(pd.DataFrame(comparar()).to_string(index=False))
+    print()
+    print(pd.DataFrame(comparar_ufs()).to_string(index=False))
