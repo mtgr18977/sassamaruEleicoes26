@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentação · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .doc h2 { margin-top:36px } .doc h3 { margin-top:18px; font-size:1rem }
+  .doc ul, .doc ol { margin:6px 0; padding-left:22px } .doc li { margin:3px 0 }
+  .doc code { background:var(--grid); border-radius:4px; padding:1px 5px; font-size:.88em }
+  .doc .fonte { font-size:.82rem; color:var(--muted) }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site"><a href="index.html">Presidente 2026</a><a href="rs.html">Governo do RS 2026</a><a href="bancada.html">Bancada RS 2026</a><a href="documentacao.html" aria-current="page">Documentação</a></nav>
+  <div class="topo"><div><h1>Documentação</h1>
+  <p class="sub">De onde vêm os dados, como o modelo estatístico funciona e onde ele se aplica (e onde não se aplica) neste site.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+
+  <div class="doc" style="max-width:860px; margin:0 auto">
+  <div class="aviso"><b>Isto não é uma pesquisa eleitoral nem uma previsão validada.</b> É um modelo estatístico que parte do resultado da última eleição por município/UF e o desloca de acordo com as pesquisas de 2026, com incerteza medida (quando há histórico para medir) ou assumida (quando não há, e isso é dito explicitamente). Só a parte "dado o total, como ele se distribui pelas unidades" tem backtest contra eleições passadas; o caminho "pesquisa → resultado" não tem.</div>
+
+  <h2>1. De onde vêm os dados</h2>
+
+  <h3>1.1 Histórico do TSE (2002–2022)</h3>
+  <p>Os resultados oficiais vêm dos dados abertos do TSE (<code>votacao_candidato_munzona</code>), baixados por eleição e processados por município e zona. Para presidente, soma-se por município/UF/capital/nacional e cada candidato é classificado em um de três blocos: <b>PT</b> (Lula, Dilma ou Haddad, segundo o ano), <b>anti-PT</b> (o adversário do PT no 2º turno daquele ano: Serra, Alckmin, Aécio ou Bolsonaro) e <b>outros</b>. Para governador do RS e para a bancada legislativa do RS, soma-se por município/região e candidato ou lista, e os partidos são agrupados nos mesmos três blocos ideológicos: <b>esquerda</b>, <b>centro</b> e <b>direita</b> (a composição de cada bloco é detalhada nas seções 3 e 4).</p>
+  <p>O ETL (<code>fetch_tse.py</code> para presidente, <code>fetch_tse_rs.py</code> para governador, <code>fetch_tse_legislativo.py</code> para deputado federal/estadual) corrige problemas comuns dos arquivos do TSE: dupla contagem entre os arquivos <code>_BR</code> e <code>_BRASIL</code> do mesmo zip, código de município sem zero à esquerda e nomes de coluna que mudam de ano para ano (resolvidos por uma lista de aliases conhecidos). O resultado agregado por UF para presidente é conferido contra os totais oficiais do TSE eleição por eleição (12/12 batendo). Para a bancada, o alocador de cadeiras (quociente eleitoral + maiores médias) reproduz as 12 distribuições reais de 2002–2022, com exceção de 1 cadeira em 2010 e 1 em 2018 no Dep. Federal, por regras de candidato específicas que não entram no modelo.</p>
+
+  <h3>1.2 Pesquisas de 2026</h3>
+  <p>Para presidente, as pesquisas usadas são de Datafolha, Quaest, AtlasIntel e Real Time Big Data (<code>datasets/pesquisas-2026.csv</code>). Para o governador do RS, de Quaest, AtlasIntel, Real Time Big Data, Paraná Pesquisas e Neokemp, extraídas de matérias (Gazeta do Povo, CartaCapital, Band, Terra Brasil, Studio TV) porque não há um repositório único e estruturado de pesquisas estaduais (<code>datasets/pesquisas-rs-governador-2026.csv</code>). A bancada legislativa não tem pesquisa própria: ela usa a tendência das pesquisas do governador como proxy (ver seção 4).</p>
+  <div class="aviso"><b>Nem toda pesquisa foi conferida no registro oficial do TSE.</b> Só a série da Datafolha para presidente até 22–23/9 foi conferida contra o relatório oficial (registro BR-00304/2026, que fica só local no repositório por direitos autorais); a leva de 28/9–1/10 entrou de notícia, sem o PDF do TSE em mãos. As demais pesquisas — Quaest, AtlasIntel, Real Time Big Data, as pesquisas históricas (2002, 2018, 2022) e todas as pesquisas do RS — também vêm de busca web e notícias. Já houve caso de uma matéria atribuir a um instituto errado uma pesquisa que era de outro; por isso cada linha do CSV guarda o número de registro no TSE e a fonte, para dar para conferir depois. Uma nota técnica específica sobre isso está prevista mas ainda não foi escrita.</div>
+
+  <h2>2. Como o modelo funciona — Presidente 2026</h2>
+
+  <h3>2.1 Ideia central</h3>
+  <p>O ponto de partida é o resultado de cada UF em 2022. Em escala logit (<code>log(p/(1−p))</code>, que trata variações percentuais de forma mais realista que a escala linear perto de 0% e 100%), soma-se um deslocamento nacional estimado a partir das pesquisas de 2026, mais um choque regional e um ruído por UF — os dois últimos <b>medidos</b> nos resíduos de transições eleitorais passadas (2006 a 2022), não escolhidos à mão. Um ajuste final recalibra o deslocamento para que a média nacional ponderada bata exatamente com o total sorteado nas pesquisas.</p>
+
+  <h3>2.2 O que vem das pesquisas (δ nacional)</h3>
+  <p>Cada pesquisa entra com peso proporcional ao tamanho da amostra (ajustado por um efeito de desenho) e a um decaimento exponencial pela distância até a data de referência (meia-vida de 14 dias: pesquisa de duas semanas atrás pesa a metade). Um ajuste (WLS) estima ao mesmo tempo o nível médio de hoje, uma tendência linear no tempo e o <b>house effect</b> de cada instituto (o quanto cada um tende a divergir dos demais, somando zero entre eles). A incerteza final soma quatro fontes:</p>
+  <ul>
+    <li>a incerteza estatística do próprio ajuste;</li>
+    <li>a incerteza de "qual seria o nível médio com outro conjunto de institutos" (variância dos house effects);</li>
+    <li>a incerteza da tendência projetada da data das últimas pesquisas até o dia da eleição (cresce com o prazo: maior para o 2º turno que para o 1º);</li>
+    <li>um viés histórico das pesquisas, medido pelo erro (RMSE) das pesquisas finais contra o resultado real em eleições passadas (2018 e 2022) — e, quando esse erro medido é menor que um piso assumido de 2,5 p.p. no 2º turno, prevalece o piso, porque o erro medido é de pesquisas <i>finais</i>, feitas dias antes da eleição, e a incerteza tende a ser maior quanto mais cedo.</li>
+  </ul>
+  <p class="fonte">O nível absoluto das pesquisas (se elas erram sistematicamente a favor de um lado) não é estimável só com as pesquisas de hoje; por isso a página mostra três cenários para o viés histórico — sem correção (padrão), metade do viés medido, e o viés medido inteiro — em vez de aplicar uma correção automática.</p>
+
+  <h3>2.3 Choque regional e ruído por UF (medidos, não assumidos)</h3>
+  <p>Comparando cada par de eleições consecutivas (2002→2006, …, 2018→2022), calcula-se o quanto cada UF se moveu em relação ao swing nacional daquele período. A parte desse resíduo que se repete dentro da mesma região geográfica (Norte, Nordeste, Centro-Oeste, Sudeste, Sul) é o <b>choque regional</b>; o que resta, específico de cada UF, é o <b>ruído por UF</b>. As capitais recebem o mesmo tratamento, com um ajuste adicional: o hiato entre a capital e o resto do estado, que também tem um componente comum a todas as capitais e um idiossincrático de cada uma.</p>
+
+  <h3>2.4 Simulação de Monte Carlo</h3>
+  <p>Com δ nacional (e sua incerteza) e os dois ruídos medidos, o modelo sorteia 20 mil cenários: um total nacional, um choque por região e um ruído por UF, tudo em logit. Em cada cenário, as 27 UFs são reajustadas por um deslocamento comum (via busca binária) até que a média ponderada pelos votos válidos de cada UF bata exatamente com o total nacional sorteado — ou seja, o choque regional e o ruído de UF mudam a <i>distribuição</i> do voto entre estados, não o total do país. As capitais são derivadas do estado simulado mais o hiato capital-estado.</p>
+
+  <h3>2.5 Projeção do 1º turno (Lula × Flávio × demais)</h3>
+  <p>Para o 1º turno especificamente, o modelo usa dois eixos independentes em logit: <code>s = Lula/(Lula+Flávio)</code> (o eixo lulismo×bolsonarismo) e <code>q = (Lula+Flávio)/válidos</code> (o peso dos dois blocos principais frente à terceira via). Cada eixo tem seu próprio total nacional (das pesquisas) e seu próprio choque regional/ruído de UF. A combinação dos dois dá o share de Lula, de Flávio (bloco anti-PT de 2022) e dos demais candidatos em cada UF, e a partir disso a chance de o 1º turno já decidir a eleição ou de ir para o 2º turno.</p>
+  <p class="fonte">Diferente das primeiras semanas do projeto, essa projeção <b>não fica mais congelada</b>: ela é refeita a cada rodada de pesquisas nova (<code>python atualizar.py</code>). A versão calculada em 1/10/2026 (Lula 45,2% · Flávio 42,1% · demais 12,6%; 91% de chance de 2º turno) continua preservada só como referência histórica, na tag <code>projecao-1turno-2026-10-01</code> do repositório, para comparar com o resultado real depois da eleição.</p>
+
+  <h3>2.6 Chance de ser eleito (o card do topo)</h3>
+  <p>É a soma de duas probabilidades simuladas juntas: vencer já no 1º turno (mais de 50% dos válidos) e, não vencendo, vencer o 2º turno simulado a partir das pesquisas de 2º turno. Como os dois turnos não são simulados de forma totalmente independente na realidade, assume-se uma correlação entre os erros dos dois turnos (0,5 por padrão; a página também mostra a faixa de 0 a 1). Essa correlação importa: com o 2º turno em empate técnico, 1 p.p. de diferença no eixo Lula/(Lula+Flávio) muda a chance de Lula em cerca de 15 p.p. — a página recalcula esse número a cada atualização.</p>
+
+  <h2>3. Como o modelo funciona — Governador do RS</h2>
+  <p>A ideia geral é a mesma do modelo nacional (base histórica + deslocamento das pesquisas + choque regional/ruído medidos + Monte Carlo). A diferença é não haver um 2º lugar fixo como o bloco "anti-PT": há três candidatos competitivos (Zucco/PL, Brizola/PDT, Souza/MDB) e o 2º turno pode ser formado por qualquer par entre eles, então o modelo precisa estimar os três confrontos possíveis.</p>
+
+  <h3>3.1 Estimando o 1º turno</h3>
+  <p>As pesquisas entram como duas razões em log — <code>log(Brizola/Zucco)</code> e <code>log(Souza/Zucco)</code> — ponderadas por amostra e recência (mesmo decaimento de 14 dias do modelo nacional). A incerteza vem da própria dispersão entre as pesquisas (poucas por instituto, com house effects grandes) mais um erro sistemático assumido de 3,6 p.p. por candidato, cuja referência é o RMSE nacional medido no 1º turno presidencial — porque não existe uma série histórica de pesquisas estaduais do RS para medir isso diretamente. "Outros" (Maranata e os nanicos) entram como uma fatia fixa, a média observada nas pesquisas.</p>
+
+  <h3>3.2 Estimando o 2º turno (qualquer par)</h3>
+  <p>Para cada par possível (Zucco×Brizola, Zucco×Souza, Brizola×Souza), ajusta-se um logit simples a partir das pesquisas que trazem aquele confronto, com o mesmo piso de incerteza de 2,5 p.p. usado no 2º turno presidencial (também um valor assumido, pela falta de histórico estadual).</p>
+
+  <h3>3.3 Chances de ser eleito e distribuição regional</h3>
+  <p>O 1º e o 2º turno são simulados juntos, com uma correlação assumida (0,5) entre o resultado do 1º turno e o do 2º turno envolvendo os mesmos dois candidatos — a mesma lógica da seção 2.6, adaptada para três candidatos. Regionalmente, o RS é dividido em 8 unidades (mesorregiões do IBGE, com a Grande Porto Alegre sem a capital e Porto Alegre separada), e o ruído regional é medido nos resíduos do swing uniforme entre eleições de 2002 a 2022 — mas há só 5 transições eleitorais para medir isso, bem menos que as usadas no modelo nacional.</p>
+
+  <div class="aviso"><b>Premissas específicas do RS, mais frágeis que as do modelo nacional:</b>
+  <ul>
+    <li>Os blocos por partido (esquerda/centro/direita) são uma escolha de classificação, não um fato medido; a direita quase não existia como força em 2010 (0,3% dos válidos), o que torna instável qualquer razão em log que a envolva naquele período.</li>
+    <li>Sem Eduardo Leite na disputa (limitado por mandato), o bloco de centro encolheu de 26,8% em 2022 para cerca de 17% nas pesquisas de 2026: a base de 2022 do centro não se aplica diretamente a 2026.</li>
+    <li>O erro sistemático das pesquisas e o piso de incerteza do 2º turno são os mesmos valores assumidos no modelo nacional, usados como proxy — não há como medir o viés específico das pesquisas do RS sem uma série histórica própria.</li>
+  </ul>
+  </div>
+
+  <h2>4. Como o modelo funciona — Bancada estadual e federal do RS</h2>
+  <p>A aba <code>bancada.html</code> projeta o tamanho das bancadas de Deputado Federal (31 cadeiras pelo RS) e Deputado Estadual (55 cadeiras) para 2026. É o modelo mais indireto do site, porque não existe pesquisa de intenção de voto por partido ou por lista — a projeção parte da votação de 2022 e usa como proxy a tendência medida nas pesquisas do governador. Três passos:</p>
+  <ol>
+    <li><b>Base 2022 nos partidos de 2026.</b> A votação por partido de 2022 (nominal + legenda) é levada aos partidos de 2026 considerando fusões e renomeações (ex.: PTB/Patriota → PRD). Quando um deputado eleito em 2022 trocou de partido depois, uma fração <code>μ</code> da sua própria votação nominal acompanha a troca — <code>μ</code> é <b>assumido</b> (padrão 0,5; a página mostra os cenários 0, ½ e 1), porque não há histórico para medir quanto do eleitorado de um deputado migra com ele.</li>
+    <li><b>Ajuste pela tendência do governador.</b> Cada partido é multiplicado pela variação do seu bloco ideológico (Esquerda/Centro/Direita) nas pesquisas do governador frente ao 1º turno de 2022, elevada a um expoente <code>λ</code> calibrado por backtest nas eleições de 2010 a 2022 (padrão 0,25; cenários 0, ¼ e ½). O backtest mostra que essa tendência ajuda pouco: o modelo erra em média 6,6 cadeiras trocadas por eleição (de 31 ou 55) contra 7,1 sem nenhum ajuste pela tendência.</li>
+    <li><b>Votos de partido → votos de lista → cadeiras.</b> Os votos por partido são agregados nas federações registradas para 2026 (coligações proporcionais não existem mais desde a reforma eleitoral), com um ruído calibrado nos resíduos do próprio backtest (maior para partidos pequenos), simulado por Monte Carlo. A alocação de cadeiras usa a regra eleitoral real: quociente eleitoral + sobras por maiores médias.</li>
+  </ol>
+  <p>No backtest de 2010–2022, a faixa de 80% de confiança do modelo cobriu cerca de 82% das cadeiras reais por lista — mas com só 4 transições eleitorais para testar, essa cobertura é uma estimativa imprecisa.</p>
+  <div class="aviso"><b>Premissas da bancada, mais numerosas que as das outras duas abas:</b>
+  <ul>
+    <li><b>Migração do eleitorado (μ) e força da tendência do governador (λ)</b> não têm como ser medidos diretamente — são calibrados/assumidos e mostrados em cenários.</li>
+    <li><b>Regra das sobras:</b> para 2026, qualquer lista pode disputar sobras (decisão do STF de 2024); nas eleições passadas a regra era mais restritiva. Isso é assumido, não uma repetição do passado.</li>
+    <li><b>Federações de 2026</b> (Brasil da Esperança, PSOL Rede, PSDB Cidadania, União Progressista, Renovação Solidária) vêm de uma matéria (A Gazeta, ago/2026) e devem ser conferidas no registro do TSE antes de publicar.</li>
+    <li><b>Bancada atual</b> (quem está no cargo hoje, para medir quem trocou de partido): a federal vem da API de Dados Abertos da Câmara; a estadual vem da Wikipédia (colaborativa) e <b>não foi conferida com a Assembleia Legislativa do RS</b>.</li>
+    <li><b>Fora do modelo:</b> partidos novos sem histórico, a cláusula de desempenho de 10% do quociente eleitoral por candidato individual, e suplentes.</li>
+  </ul>
+  </div>
+
+  <h2>5. O que este site <u>não</u> cobre</h2>
+  <div class="aviso">As três abas cobrem o Executivo federal (Presidente), o Executivo estadual do RS (Governador) e o Legislativo estadual/federal pelo RS (Deputado Estadual e Deputado Federal). <b>Não há modelo para Senador</b> (o RS também vota para o Senado em 2026) nem para qualquer outro estado além do RS — nem dados coletados, nem modelo construído para isso. Eleições municipais (prefeito, vereador) não ocorrem em 2026 e também não são cobertas.</div>
+
+  <h2>6. Limites a ter em mente ao ler os números</h2>
+  <ul>
+    <li><b>Sem validação ponta a ponta.</b> O backtest de cada aba mede só a distribuição entre unidades a partir de um total/tendência já conhecido; o caminho completo "pesquisa → resultado" nunca foi testado contra uma eleição real por este modelo.</li>
+    <li><b>Pouco histórico.</b> De 4 a 5 transições eleitorais para medir choques regionais ou calibrar a bancada; o viés histórico das pesquisas é medido com 2 a 3 eleições, com erro-padrão da própria estimativa quase do tamanho do efeito.</li>
+    <li><b>Falácia ecológica.</b> O resultado agregado por UF, região ou partido não é o comportamento de nenhum eleitor individual.</li>
+    <li><b>A oferta eleitoral muda a cada eleição.</b> 2018 e as eleições de Dilma não têm Lula na disputa; o "bloco anti-PT", os blocos ideológicos do RS e as federações de partidos trocam de cara a cada ciclo.</li>
+    <li><b>Parâmetros assumidos, não medidos</b> (identificados como tal no texto acima): o piso de incerteza no 2º turno, a correlação entre os erros dos dois turnos, o viés assumido para a terceira via, o erro sistemático das pesquisas do RS, a migração μ e a tendência λ da bancada, a regra das sobras de 2026.</li>
+    <li><b>Abstenção e comparecimento</b> ficam fixos nos valores da última eleição.</li>
+    <li><b>Regras do TSE sobre divulgação de projeções e pesquisas</b> devem ser verificadas antes de qualquer publicação externa destes números.</li>
+  </ul>
+
+  <h2>7. Código-fonte e reprodutibilidade</h2>
+  <p>Todo o ETL, o ajuste das pesquisas e a simulação são Python (pandas/numpy); as simulações de Monte Carlo do presidente e do governador também existem em JavaScript equivalente, que é o que roda no navegador nestas páginas, com testes automatizados comparando as duas implementações. O código é aberto, sob licença MIT, em <a href="https://github.com/mtgr18977/sassamaruEleicoes26" target="_blank" rel="noopener">github.com/mtgr18977/sassamaruEleicoes26</a>.</p>
+
+  </div>
+</main>
+<script>const state = {}; function tudo() {}</script>
+<script src="assets/site.js"></script>
+<script>aplicarTema(temaEscolhido); document.getElementById("tema").onclick = alternarTema;</script>
+</body>
+</html>
