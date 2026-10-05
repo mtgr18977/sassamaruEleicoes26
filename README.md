@@ -2,7 +2,7 @@
 
 Simulação estatística da eleição presidencial de 2026 a partir do histórico do TSE (2002–2022) e das pesquisas de 2026. Python faz ETL e ajuste; o JS roda a simulação no navegador. **É um modelo estatístico condicional às pesquisas, não uma pesquisa eleitoral nem uma previsão validada.**
 
-- **Abas:** `index.html` (Presidente 2026), `rs.html` (Governo do RS 2026) e `bancada.html` (Bancada RS 2026: deputados federais e estaduais), com estilos e utilidades comuns em `assets/`.
+- **Abas:** `index.html` (Presidente 2026), `analise.html` (Análise do 1º turno de 2026), `rs.html` (Governo do RS 2026) e `bancada.html` (Bancada RS 2026: deputados federais e estaduais), com estilos e utilidades comuns em `assets/`.
 - **Dashboard:** `index.html` ("Eleições Dashboard 2026": card com a chance de Lula e de Flávio serem eleitos, tema claro/escuro, notas laterais, histórico do Lula, regiões, capitais, pesquisa × resultado, 2026 e simulador). `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
 - **Projeção do 1º turno:** refeita a cada rodada de pesquisas (`modelos/projecao-1turno*`). A versão de 1/10/2026 está na tag `projecao-1turno-2026-10-01`. Compare com o resultado real com `python avaliar_projecao.py resultado.csv`.
 
@@ -24,6 +24,7 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `pesquisas.py` | δ nacional a partir das pesquisas: house effect, recência, viés histórico → `modelos/parametros.json` |
 | `montecarlo.py`, `modelos/eleicoes-model.js` | Monte Carlo por UF e capital (Python e JS, com teste de equivalência) |
 | `projecao.py`, `modelos/projecao-model.js` | Projeção do 1º turno (Lula × Flávio × demais) com base em 2022 |
+| `gerar_pagina_analise.py` | Gera `analise.html` a partir de `apps/analise.template.html` e `datasets/resultado-2026-turno1.csv` (resultado **preliminar** do 1º turno, com a fonte de cada linha; só UFs com número publicado): 2022 × 2026, pesquisas e modelo × resultado, mapa do post de Marco Faganello, aritmética do 2º turno |
 | `gerar_pagina_lula.py` | Gera `index.html` (dados embutidos) a partir de `apps/lula.template.html` |
 | `validar_regioes.py` | Compara a distribuição regional do modelo com o cruzamento por região da Datafolha (22–23/9) |
 | `fetch_tse_rs.py`, `regioes_rs.py`, `rs_dados.py` | ETL do governador do RS (zips do TSE já baixados), mapa município → mesorregião do IBGE (rede) e blocos/unidades |
