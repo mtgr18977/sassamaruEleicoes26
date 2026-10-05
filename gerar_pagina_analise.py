@@ -44,6 +44,7 @@ for r in res[res.uf != "BR"].itertuples():
     ufs.append(dict(uf=r.uf, L22=round(a.pct_pt_validos, 1), F22=round(a.pct_antipt_validos, 1),
                     L26=None if pd.isna(r.lula) else float(r.lula), F26=None if pd.isna(r.flavio) else float(r.flavio), obs=r.obs))
 out["ufs"] = ufs
+out["fag"] = pd.read_csv(D + "analise-faganello-2026.csv").to_dict("records")
 x22 = u22[~u22.index.isin(["ZZ", "VT"])]
 out["ufs22"] = dict(f=int((x22.votos_antipt > x22.votos_pt).sum()), total=len(x22))
 
