@@ -16,6 +16,13 @@ Data: 2/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 | Dashboard | `index.html` (Netlify serve a raiz), simulador interativo, mapa em tiles; `apps/eleicoes.html` |
 | Testes | `python -m pytest -q tests`; `node tests/eleicoes-model.test.js`; `node tests/projecao-model.test.js`; `python atualizar.py` roda tudo |
 
+## 1º turno realizado (4/10/2026) — atualização de 5/10
+- Resultado (válidos, **preliminar, não conferido no TSE**): Flávio 47,03% (56.104.503) × Lula 45,16% (53.879.538); demais 7,81% (derivado). Wikipedia e O Tempo coincidem; o blog ao vivo da InfoMoney (47,50 × 44,61) foi descartado como parcial. Em `datasets/resultado-2026-turno1.csv` (BR + UFs com fonte; `obs` registra as dúvidas). O `votacao_candidato_munzona_2026.zip` do TSE estava só com cabeçalho em 5/10.
+- Nova aba **Análise** (`analise.html`). O modelo errou o destino dos demais (projetado 12,4%, real 7,8%), não o Lula (45,5 × 45,16); as 4 últimas pesquisas deram a Lula 2,8–4,4 p.p. a mais na parcela Lula/(Lula+Flávio).
+- Do post de Faganello (x.com/marcofaganello/status/2106989694500372912) só o 1º tweet e o mapa foram lidos (a thread de 7 tweets e o cruzamento com Censo/PIB **não**). Não incluí o resultado de 2026 em `vies-pesquisas.csv` ainda (mudaria o viés/RMSE do modelo): decidir junto com a recalibração do 2º turno.
+- Fontes divergem na contagem de estados (Wikipedia 14 + DF; Gazeta 15 + DF; TSE 2022 do repositório: 12 + DF). TO (Flávio 50,4%) é fonte única.
+- Pendente: baixar o TSE oficial quando publicado, preencher todas as UFs, refazer o cruzamento por município (Censo/PIB), projeção do 2º turno com pesquisas pós-1º turno.
+
 ## Decisões
 - Bloco **Anti-PT** (Flávio em 2026); 2022 é a base por UF; município como base de dados, UF/capital como saída.
 - Eleições sem Lula (2010, 2014 Dilma; 2018 Haddad) aparecem como contexto na página.

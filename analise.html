@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análise do 1º turno · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .an { max-width:960px; margin:0 auto } .an h2 { margin-top:34px } .an p { margin:8px 0 }
+  .an .fonte { font-size:.82rem; color:var(--muted) } .an .ok { color:var(--s3); font-weight:600 } .an .ruim { color:var(--pt); font-weight:600 }
+  .post { border:1px solid var(--line); border-radius:12px; background:var(--surface); padding:12px 14px; margin:12px 0; font-size:.9rem }
+  .post b.autor { color:var(--ink) } .post q { display:block; margin:6px 0; color:var(--ink2); quotes:none }
+  .kpi.l { border-top:4px solid var(--pt) } .kpi.f { border-top:4px solid var(--anti) } .kpi.o { border-top:4px solid var(--muted) }
+  .dlt.up { color:var(--s3) } .dlt.dn { color:var(--pt) } .vazio { color:var(--muted) }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site"><a href="index.html">Presidente 2026</a><a href="analise.html" aria-current="page">Análise</a><a href="rs.html">Governo do RS 2026</a><a href="bancada.html">Bancada RS 2026</a><a href="documentacao.html">Documentação</a></nav>
+  <div class="topo"><div><h1>Análise do 1º turno (4/10/2026)</h1>
+  <p class="sub">O que mudou em relação a 2022, o que as pesquisas e o modelo disseram, onde Lula perdeu votos e o que o resultado pede do 2º turno (25/10).</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+
+  <div class="an">
+  <div class="aviso"><b>Dados preliminares e não conferidos no TSE.</b> O resultado nacional vem de duas páginas de imprensa/enciclopédia que coincidem (Wikipedia e O Tempo); os números por UF vêm de matérias e resumos de busca e só aparecem quando há fonte (célula vazia = não localizei). O arquivo de votação por município do TSE ainda estava vazio quando esta página foi feita. Base: votos válidos.</div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <h2>1. O quadro geral: 2022 × 2026</h2>
+  <p id="geralTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cGeral"></canvas></div>
+  <div id="tGeral"></div>
+  <p class="fonte">Variação <b>líquida</b> entre duas eleições, não migração individual de eleitores: com dados agregados não dá para dizer quem trocou de candidato. "Flávio" é o bloco anti-PT (Bolsonaro em 2022). Válidos de 2026 derivados dos votos e do percentual divulgados.</p>
+
+  <h2>2. Pesquisas e modelo × resultado</h2>
+  <p id="pesqTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cPesq"></canvas></div>
+  <div id="tPesq"></div>
+  <h3 style="margin:18px 0 4px">A projeção do modelo (2/10)</h3>
+  <div id="tProj"></div>
+  <p class="fonte" id="pesqNota"></p>
+
+  <h2>3. Onde Lula perdeu votos</h2>
+  <div class="post"><b class="autor">Marco Faganello (FGV CEPESP)</b> · <a href="https://x.com/marcofaganello/status/2106989694500372912" target="_blank" rel="noopener">post no X, 5/10/2026</a>
+    <q>"Onde Lula perdeu votos entre o 1º turno de 2022 e o de 2026, e em que tipo de município? Cruzei o resultado das 5.570 cidades com dados do Censo 2022 e do PIB municipal. Dados do TSE ainda preliminares (05/10). Os principais achados, em 7 tweets."</q>
+    O post abre uma thread de 7 tweets com um mapa da variação do voto em Lula por município, em p.p. dos válidos (5.561 municípios com ≥ 95% das seções totalizadas; IBGE, Censo 2022).</div>
+  <p><b>O que o mapa mostra</b> (leitura visual, sem valores): a perda é quase generalizada, com poucos municípios em azul (ganho). Os tons mais fortes de vermelho (queda de 10 p.p. ou mais) aparecem no Centro-Oeste e em Goiás, no Tocantins e entre Tocantins e Maranhão, no sul do Amazonas e em Rondônia, e no interior do Rio Grande do Sul. O litoral e o interior do Nordeste têm tons mais claros, e há ganhos pontuais no Amapá e no norte do Pará.</p>
+  <p class="fonte">Os outros seis tweets da thread (cruzamento com Censo e PIB, por tipo de município) não foram acessíveis para esta página, então <b>não reproduzo os achados deles</b>. Os dados de município do TSE ainda não estão no repositório; quando estiverem, dá para refazer esse cruzamento aqui.</p>
+  <h3 style="margin:18px 0 4px">Estados com número publicado</h3>
+  <div class="cv" style="height:300px"><canvas id="cUF"></canvas></div>
+  <div id="tUF"></div>
+  <p id="ufTxt"></p>
+
+  <h2>4. A aritmética do 2º turno</h2>
+  <p id="aritTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cArit"></canvas></div>
+  <div id="tArit"></div>
+  <p class="fonte">Conta de mesa, <b>não é previsão</b>: supõe o mesmo eleitorado e que os votos dos demais candidatos vão todos para um dos dois, ignorando abstenção, brancos e nulos. O modelo da aba Presidente ainda usa pesquisas até 2/10 (anteriores ao 1º turno) e vai ser recalibrado quando houver pesquisa de 2º turno.</p>
+
+  <h2>5. Limites desta análise</h2>
+  <ul class="fonte" style="font-size:.88rem">
+    <li>Dados preliminares: números por UF e nacional podem mudar com a totalização final do TSE.</li>
+    <li>As fontes divergem em detalhes: o blog ao vivo da InfoMoney mostrava Flávio 47,50% e Lula 44,61% (provável parcial); Wikipedia e O Tempo trazem 47,03% e 45,16%. Também divergem na contagem de estados (Flávio em 14 + DF segundo a Wikipedia, 15 + DF segundo a Gazeta do Povo, que parece contar 13 em 2022; o TSE de 2022 no repositório dá 12 + DF).</li>
+    <li>Pesquisas e modelo estão na base de válidos do repositório; as pesquisas "total" foram convertidas para a parcela Lula/(Lula+Flávio).</li>
+    <li>Interpretações (voto útil, polarização) são hipóteses compatíveis com os números, não resultados de pesquisa de saída.</li>
+  </ul>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script>
+const D = {"r26": {"L": 45.16, "F": 47.03, "O": 7.81, "vL": 53879538, "vF": 56104503, "validos": 119295137, "fonte": "Wikipedia (en) e O Tempo (mapa dos votos), via WebFetch em 5/10/2026", "obs": "% nos validos. Parcial/preliminar: nao conferido no TSE. O blog ao vivo da InfoMoney mostrava 47,50 x 44,61 (provavelmente parcial de apuracao) e foi descartado. Outros = 100 - Lula - Flavio = 7,81 (derivado)"}, "r22": {"L": 48.43, "F": 43.2, "O": 8.37, "vL": 57259504, "vF": 51072345, "vO": 9897870, "validos": 118229719, "L2": 50.9}, "proj": {"pesquisas": {"L": [40.0, 45.5, 51.0], "F": [36.7, 42.0, 47.5], "O": [9.6, 12.4, 15.7], "margem": [-7.1, 3.5, 13.9]}, "vies_se_repete": {"L": [38.0, 43.5, 49.0], "F": [38.6, 44.0, 49.5], "O": [9.6, 12.4, 15.8], "margem": [-11.0, -0.5, 10.0]}}, "proj_data": "2026-10-02", "pesq": [{"inst": "Quaest", "campo": "2026-09-27", "base": "total", "L": 39.0, "F": 34.0, "s": 53.4}, {"inst": "AtlasIntel", "campo": "2026-09-28", "base": "total", "L": 45.3, "F": 42.2, "s": 51.8}, {"inst": "RealTimeBigData", "campo": "2026-09-30", "base": "validos", "L": 46.0, "F": 41.0, "s": 52.9}, {"inst": "Datafolha", "campo": "2026-10-01", "base": "total", "L": 42.0, "F": 38.0, "s": 52.5}], "real_s": 48.99, "vies_hist": 2.25, "ufs": [{"uf": "BA", "L22": 69.7, "F22": 24.3, "L26": 66.17, "F26": null, "obs": "Gazeta do Povo traz 66,1; nao conferido no TSE"}, {"uf": "PI", "L22": 74.3, "F22": 19.9, "L26": 71.0, "F26": null, "obs": "Arredondado na fonte ('de 74,2% para 71%'); nao conferido no TSE"}, {"uf": "MG", "L22": 48.3, "F22": 43.6, "L26": null, "F26": 48.24, "obs": "Gazeta do Povo: Flavio abre 592,3 mil votos de vantagem (99,85% das urnas do estado); nao conferido no TSE"}, {"uf": "RJ", "L22": 40.7, "F22": 51.1, "L26": null, "F26": 53.01, "obs": "Nao conferido no TSE"}, {"uf": "PR", "L22": 36.0, "F22": 55.3, "L26": null, "F26": 59.91, "obs": "Nao conferido no TSE"}, {"uf": "SC", "L22": 29.5, "F22": 62.2, "L26": null, "F26": 66.65, "obs": "Atribuicao a Flavio inferida do texto resumido; nao conferido no TSE"}, {"uf": "RS", "L22": 42.3, "F22": 48.9, "L26": null, "F26": 55.54, "obs": "Atribuicao a Flavio inferida do texto resumido; nao conferido no TSE"}, {"uf": "TO", "L22": 50.4, "F22": 44.0, "L26": 43.42, "F26": 50.4, "obs": "Fonte unica e resumida; 50,4 e igual ao % de Lula em 2022 (50,40), conferir antes de citar; nao conferido no TSE"}], "ufs22": {"f": 13, "total": 27}};
+const state = {}, p1 = (x) => f1(x), pp = (x) => (x > 0 ? "+" : x < 0 ? "−" : "") + f1(Math.abs(x)), mi = (x) => (x / 1e6).toFixed(2).replace(".", ",");
+const pc = (x) => x.toLocaleString("pt-BR"), dl = (x) => `<span class="dlt ${x > 0 ? "up" : "dn"}">${pp(x)}</span>`;
+const f2 = (x) => x.toFixed(2).replace(".", ",");
+const a = D.r26, b = D.r22, corL = () => css("--pt"), corF = () => css("--anti"), corO = () => css("--muted");
+
+function kpis() {
+  const dif = a.vF - a.vL;
+  $("kpis").innerHTML = `<div class="kpi f"><span>Flávio Bolsonaro</span><b>${f2(a.F)}%</b><small>${pc(a.vF)} votos</small></div>
+    <div class="kpi l"><span>Lula</span><b>${f2(a.L)}%</b><small>${pc(a.vL)} votos</small></div>
+    <div class="kpi o"><span>Demais candidatos</span><b>${f2(a.O)}%</b><small>derivado: 100 − Lula − Flávio</small></div>
+    <div class="kpi"><span>Diferença</span><b>${f2(a.F - a.L)} p.p.</b><small>${pc(dif)} votos a favor de Flávio</small></div>`;
+}
+
+function geral() {
+  const dL = a.L - b.L, dF = a.F - b.F, dO = a.O - b.O, vO26 = a.validos - a.vL - a.vF;
+  $("geralTxt").innerHTML = `Lula caiu <b>${f2(Math.abs(dL))} p.p.</b> em relação ao 1º turno de 2022 (${f2(b.L)}% → ${f2(a.L)}%), perdendo cerca de <b>${mi(b.vL - a.vL)} milhão</b> de votos. O bloco anti-PT subiu <b>${f2(dF)} p.p.</b> (${f2(b.F)}% → ${f2(a.F)}%) e ganhou cerca de <b>${mi(a.vF - b.vF)} milhão</b>. Os demais candidatos encolheram ${f2(Math.abs(dO))} p.p. Em 2022 Lula liderava por ${f2(b.L - b.F)} p.p.; em 2026 ficou ${f2(a.F - a.L)} p.p. atrás: uma virada de <b>${f2((b.L - b.F) + (a.F - a.L))} p.p.</b> na margem.`;
+  chart("cGeral", { type: "bar", data: { labels: ["Lula", "Flávio / bloco anti-PT", "Demais"], datasets: [
+    { label: "1º turno 2022", data: [b.L, b.F, b.O], backgroundColor: css("--grid"), borderColor: css("--line"), borderWidth: 1 },
+    { label: "1º turno 2026", data: [a.L, a.F, a.O], backgroundColor: [corL(), corF(), corO()] }] },
+    options: { plugins: { rotulos: { on: true } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ title: { display: true, text: "% dos votos válidos", color: css("--ink2") } }) } } });
+  const vO22 = b.vO;
+  tabela("tGeral", ["", "2022 (%)", "2026 (%)", "Variação (p.p.)", "2022 (votos)", "2026 (votos)", "Variação (votos)"], [
+    ["Lula", f2(b.L), f2(a.L), pp(dL), pc(b.vL), pc(a.vL), pc(a.vL - b.vL)],
+    ["Flávio / anti-PT", f2(b.F), f2(a.F), pp(dF), pc(b.vF), pc(a.vF), pc(a.vF - b.vF)],
+    ["Demais (aprox. em 2026)", f2(b.O), f2(a.O), pp(dO), pc(vO22), "≈ " + pc(vO26), "≈ " + pc(vO26 - vO22)],
+    ["Válidos", "100", "100", "", pc(b.validos), "≈ " + pc(a.validos), "≈ " + pc(a.validos - b.validos)]]);
+}
+
+function pesq() {
+  const est = a.L / (a.L + a.F) * 100, real = D.real_s;
+  const erros = D.pesq.map(x => x.s - real), media = erros.reduce((s, x) => s + x, 0) / erros.length;
+  $("pesqTxt").innerHTML = `Na parcela <b>Lula/(Lula+Flávio)</b>, o resultado foi <b>${f2(real)}%</b> para Lula. Os quatro institutos que fecharam a campanha estavam entre ${f1(Math.min(...D.pesq.map(x => x.s)))}% e ${f1(Math.max(...D.pesq.map(x => x.s)))}%: <b>todos acima do resultado</b>, em média ${f1(media)} p.p. O erro tem o mesmo sinal do histórico do repositório, em que as pesquisas finais de 2018 e 2022 deram ao PT em média ${f1(D.vies_hist)} p.p. a mais no 1º turno (poucas eleições; é ordem de grandeza).`;
+  chart("cPesq", { type: "bar", data: { labels: D.pesq.map(x => x.inst === "RealTimeBigData" ? "Real Time Big Data" : x.inst).concat(["Resultado"]), datasets: [
+    { label: "Lula / (Lula + Flávio), %", data: D.pesq.map(x => x.s).concat([real]), backgroundColor: D.pesq.map(() => css("--s4")).concat([corL()]) }] },
+    options: { plugins: { legend: { display: false }, rotulos: { on: true } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 44, max: 56, title: { display: true, text: "% de Lula na disputa a dois", color: css("--ink2") } }) } } });
+  tabela("tPesq", ["Instituto (última pesquisa)", "Campo até", "Base", "Lula", "Flávio", "Lula/(L+F)", "Erro (p.p.)"],
+    D.pesq.map(x => [x.inst === "RealTimeBigData" ? "Real Time Big Data" : x.inst, x.campo, x.base === "validos" ? "válidos" : "total", f1(x.L), f1(x.F), f1(x.s), pp(x.s - real)]));
+  const cen = (k, nome) => { const p = D.proj[k]; const dentro = (v, [lo, , hi]) => v >= lo && v <= hi ? `<span class="ok">dentro</span>` : `<span class="ruim">fora</span>`;
+    const m = a.L - a.F;
+    return [nome, `${f1(p.L[1])} (${f1(p.L[0])}–${f1(p.L[2])}) ${dentro(a.L, p.L)}`, `${f1(p.F[1])} (${f1(p.F[0])}–${f1(p.F[2])}) ${dentro(a.F, p.F)}`,
+      `${f1(p.O[1])} (${f1(p.O[0])}–${f1(p.O[2])}) ${dentro(a.O, p.O)}`, `${pp(p.margem[1])} (${pp(p.margem[0])} a ${pp(p.margem[2])}) ${dentro(m, p.margem)}`]; };
+  $("tProj").innerHTML = `<table class="t"><tr><th>Cenário (mediana e faixa de 90%)</th><th>Lula</th><th>Flávio</th><th>Demais</th><th>Margem Lula−Flávio</th></tr>` +
+    [cen("pesquisas", "Pesquisas (sem correção de viés)"), cen("vies_se_repete", "Viés histórico se repete")].map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("") +
+    `<tr><td><b>Resultado</b></td><td><b>${f2(a.L)}</b></td><td><b>${f2(a.F)}</b></td><td><b>${f2(a.O)}</b></td><td><b>${pp(a.L - a.F)}</b></td></tr></table>`;
+  $("pesqNota").innerHTML = `Projeção de ${D.proj_data}, % dos válidos. Duas leituras: (1) <b>Lula quase acertado</b> (${f1(D.proj.pesquisas.L[1])} projetado × ${f2(a.L)} real), (2) o erro foi de <b>destino dos demais</b>: o modelo dava ${f1(D.proj.pesquisas.O[1])}% aos outros candidatos e eles tiveram ${f2(a.O)}%, com Flávio recebendo o excedente (${f1(D.proj.pesquisas.F[1])} projetado × ${f2(a.F)} real). Os demais ficaram <b>fora</b> da faixa de 90% nos dois cenários, e Flávio no limite superior do cenário sem correção. Compatível com voto útil na polarização no fim da campanha, mas isso é hipótese: as pesquisas não medem quem trocou de voto.`;
+}
+
+function ufs() {
+  const com = D.ufs.filter(u => u.F26 != null);
+  chart("cUF", { type: "bar", data: { labels: com.map(u => u.uf), datasets: [{ label: "Variação do bloco anti-PT / Flávio, p.p. (2026 − 2022)", data: com.map(u => +(u.F26 - u.F22).toFixed(1)), backgroundColor: corF() }] },
+    options: { plugins: { legend: { display: false }, rotulos: { on: true } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ title: { display: true, text: "p.p. dos válidos", color: css("--ink2") } }) } } });
+  tabela("tUF", ["UF", "Lula 2022", "Lula 2026", "Δ Lula (p.p.)", "Anti-PT/Flávio 2022", "Flávio 2026", "Δ Flávio (p.p.)"],
+    D.ufs.map(u => [u.uf, f1(u.L22), u.L26 == null ? "–" : f1(u.L26), u.L26 == null ? "–" : pp(u.L26 - u.L22), f1(u.F22), u.F26 == null ? "–" : f1(u.F26), u.F26 == null ? "–" : pp(u.F26 - u.F22)]));
+  const ord = com.slice().sort((x, y) => (x.F26 - x.F22) - (y.F26 - y.F22)), dmin = ord[0], dmax = ord[ord.length - 1];
+  const mg = D.ufs.find(u => u.uf === "MG"), to = D.ufs.find(u => u.uf === "TO");
+  $("ufTxt").innerHTML = `Cada linha usa só o número que consegui com fonte (marcador "–" = não localizei). <b>Minas Gerais</b> e <b>Tocantins</b> viraram: Lula vencera os dois em 2022 (MG ${f1(mg.L22)} × ${f1(mg.F22)}; TO ${f1(to.L22)} × ${f1(to.F22)}) e agora Flávio lidera, em MG por cerca de 592 mil votos segundo a Gazeta do Povo. O 2022 do repositório tem Bolsonaro em ${D.ufs22.f - 1} estados + DF; com MG e TO, são ${D.ufs22.f + 1} + DF (Wikipedia: 14 + DF; a Gazeta do Povo fala em 15 + DF, divergência que não consegui resolver). No Nordeste, Lula segue na frente nos nove estados com margens menores (Piauí 74,3% → ~71%; Bahia ${f1(D.ufs.find(u => u.uf === "BA").L22)}% → ${f1(D.ufs.find(u => u.uf === "BA").L26)}%). O bloco de Flávio avança entre ${f1(dmin.F26 - dmin.F22)} p.p. (${dmin.uf}) e ${f1(dmax.F26 - dmax.F22)} p.p. (${dmax.uf}) nos estados em que há número. <span class="vazio">TO (50,4% de Flávio) vem de fonte única e coincide com o 50,4% de Lula em 2022: conferir.</span>`;
+}
+
+function arit() {
+  const need = (50 - a.L) / a.O * 100, needF = (50 - a.F) / a.O * 100, t22 = (b.L2 - b.L) / b.O * 100;
+  $("aritTxt").innerHTML = `Para passar de 50% dos válidos, Lula precisa que <b>${f1(need)}%</b> dos votos hoje dados aos demais candidatos (${f2(a.O)}% do total) migrem para ele; Flávio precisa de <b>${f1(needF)}%</b>. Como comparação histórica, em 2022 Lula saiu de ${f2(b.L)}% no 1º turno para ${f2(b.L2)}% no 2º, o equivalente a cerca de <b>${f1(t22)}%</b> do bolo dos demais daquele ano (conta aproximada: ignora mudança de comparecimento). Lula teria de captar uma fatia ${f1(need / t22)}× a de 2022; e, mesmo levando todos os demais, chegaria a ${f2(a.L + a.O)}%, margem curta para qualquer abstenção diferencial.`;
+  const xs = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], lula = xs.map(x => a.L + a.O * x / 100);
+  chart("cArit", { type: "line", data: { labels: xs.map(x => x + "%"), datasets: [
+    { label: "Lula no 2º turno (%)", data: lula, borderColor: corL(), backgroundColor: corL(), borderWidth: 2, pointRadius: 3, tension: 0 },
+    { label: "Flávio no 2º turno (%)", data: lula.map(v => 100 - v), borderColor: corF(), backgroundColor: corF(), borderWidth: 2, pointRadius: 3, tension: 0 },
+    { label: "50%", data: xs.map(() => 50), borderColor: css("--ink2"), borderDash: [5, 4], borderWidth: 1, pointRadius: 0, aux: true }] },
+    options: { scales: { x: eixo({ title: { display: true, text: "Parcela dos demais (7,8% do total) que vai para Lula", color: css("--ink2") }, grid: { display: false } }), y: eixo({ min: 40, max: 60 }) } } });
+  tabela("tArit", ["Fatia dos demais → Lula", "Lula (%)", "Flávio (%)", "Quem passa de 50%"], [0, 25, 50, 62, 75, 100].map(x => { const v = a.L + a.O * x / 100; return [x + "%", f2(v), f2(100 - v), v > 50 ? "Lula" : v < 50 ? "Flávio" : "empate"]; }));
+}
+
+function tudo() { kpis(); geral(); pesq(); ufs(); arit(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>
