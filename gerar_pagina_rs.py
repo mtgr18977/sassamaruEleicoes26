@@ -53,6 +53,6 @@ out["modelo"] = dict(par=par, evolucao=ev, unidades=rm.unidades().to_dict("recor
 out["nomes_unidade"] = NOME_UNIDADE
 import agregador
 out["agg"] = agregador.rs()
-html = open("apps/rs.template.html", encoding="utf-8").read().replace("__NAV__", nav.html("rs.html")).replace("__DATA__", json.dumps(out, ensure_ascii=False))
+html = nav.moldura(open("apps/rs.template.html", encoding="utf-8").read(), "rs.html").replace("__DATA__", json.dumps(out, ensure_ascii=False))
 open("rs.html", "w", encoding="utf-8").write(html)
 print("rs.html", len(html) // 1024, "KB |", len(ev), "pontos de evolução")

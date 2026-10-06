@@ -19,7 +19,7 @@ norm = lambda s: "".join(c for c in unicodedata.normalize("NFD", s.upper()) if u
 
 
 def pagina(tpl, saida, dados):
-    html = open(f"apps/{tpl}", encoding="utf-8").read().replace("__NAV__", nav.html(saida)).replace("__DATA__", json.dumps(dados, ensure_ascii=False))
+    html = nav.moldura(open(f"apps/{tpl}", encoding="utf-8").read(), saida).replace("__DATA__", json.dumps(dados, ensure_ascii=False))
     open(saida, "w", encoding="utf-8").write(html)
     print(saida, len(html) // 1024, "KB")
 

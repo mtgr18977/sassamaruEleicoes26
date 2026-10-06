@@ -25,6 +25,6 @@ out = dict(
                  pre_t1=round(100 * par["turno2"]["p_pesquisas"], 2), pre_t1_data=par["data_referencia"], demais_meio=round(L + (100 - L - F) / 2, 2), demais_todos=round(L + (100 - L - F), 2)),
     pesq=pesq, vies2=round(vies_eleicao(2)[0], 2), vies1=round(vies_eleicao(1)[0], 2), piso=SD_PISO_2T_PP,
 )
-html = open("apps/segundo-turno.template.html", encoding="utf-8").read().replace("__NAV__", nav.html("segundo-turno.html")).replace("__DATA__", json.dumps(out, ensure_ascii=False))
+html = nav.moldura(open("apps/segundo-turno.template.html", encoding="utf-8").read(), "segundo-turno.html").replace("__DATA__", json.dumps(out, ensure_ascii=False))
 open("segundo-turno.html", "w", encoding="utf-8").write(html)
 print("segundo-turno.html", len(html) // 1024, "KB")
