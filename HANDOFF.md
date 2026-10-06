@@ -23,6 +23,14 @@ Data: 2/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 - Fontes divergem na contagem de estados (Wikipedia 14 + DF; Gazeta 15 + DF; TSE 2022 do repositório: 12 + DF). TO (Flávio 50,4%) é fonte única.
 - Pendente: baixar o TSE oficial quando publicado, preencher todas as UFs, refazer o cruzamento por município (Censo/PIB), projeção do 2º turno com pesquisas pós-1º turno.
 
+## RS e 2º turno (6/10/2026)
+- Governador: Zucco (PL) eleito no 1º turno, 58,05% (3.516.048) × Brizola 31,65% × Souza 8,43% (O Tempo, 100% das seções; Agência Brasil trazia 57,88/31,88 a 91,53%, parcial). O modelo dava 43,0% a Zucco (faixa 37,6–48,6; 1,9% de chance de ganhar no 1º turno): erro de +15,0 p.p., 4,2× o erro sistemático assumido (3,6). Souza caiu de ~16,8 (modelo) para 8,4.
+- Bancada (contagem minha a partir das listas CNN/Gazeta; **não conferida no TSE/ALRS**): federal PL 8, PT 5, PP 4, MDB 3…; estadual PL 12, PT 9, PP 7, MDB 5, PSD 5…. Modelo: 10 de 12 listas dentro da faixa de 80% (federal), 5,1 cadeiras trocadas (federal) e 10,4 (estadual) contra 6,6 no backtest. Teste pós-fato com o governador real quase não melhora (PL segue previsto em ~5): o desvio é do mecanismo (λ), não só da entrada — hipótese a investigar.
+- Dados em `datasets/resultado-2026-rs-*.csv` (governador, bancada, cidades, mais votados), cada linha com a fonte. Cidades vêm de resumo automático de uma página do O Tempo (Pelotas com 47,1 nas duas colunas: conferir).
+- Nova aba **2º turno** (`segundo-turno.html`, 1ª do menu): simulador de cenários (sem pesquisa pós-1º turno registrada). Pesquisas citadas em buscas como "de 3/10" (Datafolha, Quaest, Atlas, Gerp) são anteriores ao 1º turno e vieram de resumo de busca; **não** entraram.
+- Mapas de calor por estado (`assets/mapa.js`, mesma grade do dashboard) na aba Análise (2022 completo; mudança do bloco de Flávio só onde há número com fonte, cinza no resto) e na aba 2º turno (2022 × cenário). Textos das abas Análise, Análise do governo, Análise da bancada e 2º turno estão em primeira pessoa (voz do autor do site); manter assim nas próximas edições dessas abas.
+- Pendentes: TSE oficial; erro de 2026 em `vies-pesquisas.csv` e recalibração do SISTEMATICO_1T_PP do RS; mapa regional do RS e do Brasil em 2026; PR de viés (#17) ainda aberto.
+
 ## Decisões
 - Bloco **Anti-PT** (Flávio em 2026); 2022 é a base por UF; município como base de dados, UF/capital como saída.
 - Eleições sem Lula (2010, 2014 Dilma; 2018 Haddad) aparecem como contexto na página.

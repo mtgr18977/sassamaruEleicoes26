@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análise da bancada do RS · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site"><a href="segundo-turno.html">2º turno</a><a href="index.html">Presidente 2026</a><a href="analise.html">Análise</a><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html" aria-current="page">Análise da bancada RS</a><a href="documentacao.html">Documentação</a></nav>
+  <div class="topo"><div><h1>Análise: bancada do RS, 1º turno (4/10/2026)</h1>
+  <p class="sub">Aqui eu mostro quem ganhou e quem perdeu cadeiras na Câmara (31) e na Assembleia (55), o que o meu modelo previu e o que o resultado diz sobre a "onda" do PL.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="an">
+  <div class="aviso"><b>Os dados são preliminares e eu não os conferi no TSE nem na Assembleia.</b> As cadeiras por partido são contagem minha, a partir das listas de eleitos da CNN Brasil e da Gazeta do Povo (federal) e da CNN Brasil, batida com uma busca web (estadual); nos dois casos a soma fecha 31 e 55. Os blocos e as federações são os do meu modelo (PSD no Centro). Fontes em <code>datasets/resultado-2026-rs-bancada.csv</code>.</div>
+  <div class="kpis" id="kpis"></div>
+
+  <h2>1. Quem ganhou e quem perdeu</h2>
+  <div class="filtros">Casa <span class="seg" id="segCargo"></span></div>
+  <p id="geralTxt"></p>
+  <div class="cv" style="height:520px"><canvas id="cLista"></canvas></div>
+  <div id="tLista"></div>
+  <p class="fonte">Eu trabalho com as listas de 2026: federações (Brasil da Esperança = PT + PCdoB + PV; União Progressista = PP + União; PSDB Cidadania; PSOL Rede; Renovação Solidária = PRD + Solidariedade) ou o partido isolado. "Eleitos 2022" = cadeiras da lista agrupadas com a estrutura de 2026; "Bancada hoje" = partido atual dos eleitos de 2022.</p>
+
+  <h2>2. O modelo × o resultado</h2>
+  <p id="modTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cBlocos"></canvas></div>
+  <div id="tBlocos"></div>
+  <h3 style="margin:18px 0 4px">O erro veio da entrada ou do mecanismo?</h3>
+  <p id="postTxt"></p>
+  <div id="tPost"></div>
+  <p class="fonte">É um teste pós-fato: refiz a mesma previsão (λ = tendência do governador; μ = 0,5), mas com os blocos reais do governador (Esquerda 31,65%, Centro 10,11%, Direita 58,24%) no lugar da estimativa das pesquisas (36,2 / 19,3 / 44,5). Não vale como previsão fora da amostra, porque usa um resultado que só existe depois da eleição.</p>
+
+  <h2>3. Os mais votados</h2>
+  <div id="tTop"></div>
+  <p id="topTxt"></p>
+
+  <h2>4. A aritmética da maioria</h2>
+  <p id="maiTxt"></p>
+  <div class="cv" style="height:260px"><canvas id="cMai"></canvas></div>
+  <p class="fonte">Os blocos que eu uso: Esquerda (PT, PCdoB, PDT, PSOL, PSB, PV…), Centro (MDB, PSD, PSDB, Cidadania) e Direita (PL, PP, União, Republicanos, Podemos, Novo e demais). Não são coalizões nem base de governo: partidos de um bloco votam separados, e a Assembleia e a Câmara têm dinâmicas próprias.</p>
+
+  <h2>5. Limites desta análise</h2>
+  <ul class="fonte" style="font-size:.88rem">
+    <li>Minha contagem é preliminar e vem de listas de imprensa. Uma busca web trouxe PT = 4 deputados federais, mas as duas listas de 31 nomes somam 5 e fecham o total; fiquei com as listas.</li>
+    <li>Eu não tenho votos por partido, nem suplentes, nem eleitos por município, então comparo cadeiras, não votação. Quando o TSE publicar o arquivo, refaço isso com votos.</li>
+    <li>A bancada estadual "de hoje" vem da Wikipédia e eu não a conferi com a Assembleia; a federal vem da API da Câmara.</li>
+    <li>O meu modelo não tem mecanismo de puxador de voto nem de partido novo: o que ele não explica no PL eu trato como "tendência não capturada", uma hipótese a testar, não uma conclusão.</li>
+  </ul>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = {"cadeiras": {"DF": 31, "DE": 55}, "bloco_nome": {"E": "Esquerda", "C": "Centro", "D": "Direita e demais"}, "federacoes": {"Brasil da Esperança": ["PT", "PCdoB", "PV"], "PSOL Rede": ["PSOL", "REDE"], "PSDB Cidadania": ["PSDB", "CIDADANIA"], "União Progressista": ["UNIÃO", "PP"], "Renovação Solidária": ["PRD", "SOLIDARIEDADE"]}, "top": [{"cargo": "DF", "nome": "Mauricio Marcon", "partido": "PL", "votos": 379834, "votos22": 140634}, {"cargo": "DF", "nome": "Fernanda Melchionna", "partido": "PSOL", "votos": 280262, "votos22": 199894}, {"cargo": "DF", "nome": "Giovani Cherini", "partido": "PL", "votos": 234171, "votos22": null}, {"cargo": "DF", "nome": "Rony Gabriel", "partido": "PODE", "votos": 223643, "votos22": null}, {"cargo": "DF", "nome": "Alceu Moreira", "partido": "MDB", "votos": 217208, "votos22": null}, {"cargo": "DE", "nome": "Adri Cherini", "partido": "PL", "votos": 129492, "votos22": null}, {"cargo": "DE", "nome": "Delegado Zucco", "partido": "REPUBLICANOS", "votos": 128599, "votos22": null}, {"cargo": "DE", "nome": "Luciana Genro", "partido": "PSOL", "votos": 127601, "votos22": null}], "DF": {"listas": [{"lista": "Brasil da Esperança", "membros": ["PCdoB", "PT", "PV"], "blocos": ["E"], "eleitos_2022": 7, "atual": 7, "med": 6.92, "mediana": 7, "p10": 5, "p90": 9, "real": 6}, {"lista": "PL", "membros": [], "blocos": ["D"], "eleitos_2022": 4, "atual": 7, "med": 5.01, "mediana": 5, "p10": 3, "p90": 7, "real": 8}, {"lista": "União Progressista", "membros": ["PP", "UNIÃO"], "blocos": ["D"], "eleitos_2022": 4, "atual": 5, "med": 4.37, "mediana": 4, "p10": 3, "p90": 6, "real": 5}, {"lista": "MDB", "membros": [], "blocos": ["C"], "eleitos_2022": 3, "atual": 2, "med": 2.48, "mediana": 2, "p10": 1, "p90": 4, "real": 3}, {"lista": "REPUBLICANOS", "membros": [], "blocos": ["D"], "eleitos_2022": 3, "atual": 2, "med": 2.06, "mediana": 2, "p10": 1, "p90": 3, "real": 2}, {"lista": "PSD", "membros": [], "blocos": ["C"], "eleitos_2022": 1, "atual": 3, "med": 1.75, "mediana": 2, "p10": 1, "p90": 3, "real": 2}, {"lista": "PSDB Cidadania", "membros": ["CIDADANIA", "PSDB"], "blocos": ["C"], "eleitos_2022": 3, "atual": 1, "med": 1.68, "mediana": 2, "p10": 1, "p90": 3, "real": 0}, {"lista": "PDT", "membros": [], "blocos": ["E"], "eleitos_2022": 2, "atual": 2, "med": 1.62, "mediana": 1, "p10": 1, "p90": 3, "real": 1}, {"lista": "PSOL Rede", "membros": ["PSOL", "REDE"], "blocos": ["E"], "eleitos_2022": 1, "atual": 1, "med": 1.54, "mediana": 1, "p10": 1, "p90": 3, "real": 1}, {"lista": "NOVO", "membros": [], "blocos": ["D"], "eleitos_2022": 1, "atual": 1, "med": 1.37, "mediana": 1, "p10": 0, "p90": 2, "real": 1}, {"lista": "PODE", "membros": [], "blocos": ["D"], "eleitos_2022": 1, "atual": 0, "med": 1.26, "mediana": 1, "p10": 0, "p90": 2, "real": 2}, {"lista": "PSB", "membros": [], "blocos": ["E"], "eleitos_2022": 1, "atual": 0, "med": 0.56, "mediana": 0, "p10": 0, "p90": 1, "real": 0}, {"lista": "Renovação Solidária", "membros": ["PRD", "SOLIDARIEDADE"], "blocos": ["D"], "eleitos_2022": 0, "atual": 0, "med": 0.36, "mediana": 0, "p10": 0, "p90": 1, "real": 0}], "blocos": {"E": {"real": 8, "e22": 11, "atual": 10, "med": 10.65, "p10": 8.0, "p90": 14.0}, "C": {"real": 5, "e22": 7, "atual": 6, "med": 5.91, "p10": 4.0, "p90": 8.0}, "D": {"real": 18, "e22": 13, "atual": 15, "med": 14.44, "p10": 11.0, "p90": 18.0}}, "real_partidos": {"PL": 8, "PT": 5, "PP": 4, "MDB": 3, "PSD": 2, "PODE": 2, "REPUBLICANOS": 2, "PSOL": 1, "PCdoB": 1, "NOVO": 1, "PDT": 1, "UNIÃO": 1}, "e22_partidos": {"CIDADANIA": 1, "MDB": 3, "NOVO": 1, "PCdoB": 1, "PDT": 2, "PL": 4, "PODE": 1, "PP": 3, "PSB": 1, "PSD": 1, "PSDB": 2, "PSOL": 1, "PT": 6, "REPUBLICANOS": 3, "UNIÃO": 1}, "atual_partidos": {"MDB": 2, "NOVO": 1, "PCdoB": 1, "PDT": 2, "PL": 7, "PP": 4, "PSD": 3, "PSDB": 1, "PSOL": 1, "PT": 6, "REPUBLICANOS": 2, "UNIÃO": 1}, "trocadas": 5.1}, "DE": {"listas": [{"lista": "Brasil da Esperança", "membros": ["PCdoB", "PT", "PV"], "blocos": ["E"], "eleitos_2022": 12, "atual": 11, "med": 11.43, "mediana": 11, "p10": 8, "p90": 15, "real": 10}, {"lista": "União Progressista", "membros": ["PP", "UNIÃO"], "blocos": ["D"], "eleitos_2022": 10, "atual": 8, "med": 9.22, "mediana": 9, "p10": 6, "p90": 12, "real": 8}, {"lista": "MDB", "membros": [], "blocos": ["C"], "eleitos_2022": 6, "atual": 6, "med": 5.26, "mediana": 5, "p10": 3, "p90": 8, "real": 5}, {"lista": "REPUBLICANOS", "membros": [], "blocos": ["D"], "eleitos_2022": 5, "atual": 6, "med": 5.07, "mediana": 5, "p10": 3, "p90": 8, "real": 4}, {"lista": "PDT", "membros": [], "blocos": ["E"], "eleitos_2022": 4, "atual": 5, "med": 4.53, "mediana": 4, "p10": 3, "p90": 7, "real": 4}, {"lista": "PL", "membros": [], "blocos": ["D"], "eleitos_2022": 5, "atual": 5, "med": 4.39, "mediana": 4, "p10": 2, "p90": 7, "real": 12}, {"lista": "PSDB Cidadania", "membros": ["CIDADANIA", "PSDB"], "blocos": ["C"], "eleitos_2022": 5, "atual": 0, "med": 3.85, "mediana": 4, "p10": 2, "p90": 6, "real": 1}, {"lista": "PSOL Rede", "membros": ["PSOL", "REDE"], "blocos": ["E"], "eleitos_2022": 2, "atual": 2, "med": 2.65, "mediana": 2, "p10": 1, "p90": 5, "real": 3}, {"lista": "PSD", "membros": [], "blocos": ["C"], "eleitos_2022": 1, "atual": 8, "med": 2.58, "mediana": 2, "p10": 1, "p90": 4, "real": 5}, {"lista": "PODE", "membros": [], "blocos": ["D"], "eleitos_2022": 2, "atual": 2, "med": 2.43, "mediana": 2, "p10": 1, "p90": 4, "real": 2}, {"lista": "PSB", "membros": [], "blocos": ["E"], "eleitos_2022": 1, "atual": 1, "med": 1.39, "mediana": 1, "p10": 0, "p90": 3, "real": 0}, {"lista": "NOVO", "membros": [], "blocos": ["D"], "eleitos_2022": 1, "atual": 1, "med": 1.1, "mediana": 1, "p10": 0, "p90": 2, "real": 1}, {"lista": "Renovação Solidária", "membros": ["PRD", "SOLIDARIEDADE"], "blocos": ["D"], "eleitos_2022": 1, "atual": 0, "med": 1.06, "mediana": 1, "p10": 0, "p90": 2, "real": 0}], "blocos": {"E": {"real": 17, "e22": 19, "atual": 19, "med": 20.0, "p10": 15.0, "p90": 25.0}, "C": {"real": 11, "e22": 12, "atual": 14, "med": 11.69, "p10": 8.0, "p90": 16.0}, "D": {"real": 27, "e22": 24, "atual": 22, "med": 23.31, "p10": 18.0, "p90": 29.0}}, "real_partidos": {"PL": 12, "PT": 9, "PP": 7, "MDB": 5, "PSD": 5, "REPUBLICANOS": 4, "PDT": 4, "PSOL": 3, "PODE": 2, "UNIÃO": 1, "NOVO": 1, "PCdoB": 1, "PSDB": 1}, "e22_partidos": {"MDB": 6, "NOVO": 1, "PCdoB": 1, "PDT": 4, "PL": 5, "PODE": 2, "PP": 7, "PSB": 1, "PSD": 1, "PSDB": 5, "PSOL": 2, "PT": 11, "PTB": 1, "REPUBLICANOS": 5, "UNIÃO": 3}, "atual_partidos": {"MDB": 6, "NOVO": 1, "PDT": 5, "PL": 5, "PODE": 2, "PP": 7, "PSB": 1, "PSD": 8, "PSOL": 2, "PT": 11, "REPUBLICANOS": 6, "UNIÃO": 1}, "trocadas": 10.4}, "gov_blocos": {"pesquisas": {"E": 36.16, "C": 19.32, "D": 44.52}, "real": {"E": 31.65, "C": 10.11, "D": 58.24}}, "posthoc": {"DF": {"0.0": {"trocadas": 4.6, "blocos": {"E": {"med": 9.95, "p10": 7.0, "p90": 13.0}, "C": {"med": 6.57, "p10": 4.0, "p90": 9.0}, "D": {"med": 14.48, "p10": 11.0, "p90": 18.0}}, "pl": {"med": 4.99, "p10": 3, "p90": 7, "real": 8}}, "0.25": {"trocadas": 4.8, "blocos": {"E": {"med": 10.15, "p10": 7.0, "p90": 13.0}, "C": {"med": 5.33, "p10": 3.0, "p90": 8.0}, "D": {"med": 15.52, "p10": 12.0, "p90": 19.0}}, "pl": {"med": 5.33, "p10": 4, "p90": 7, "real": 8}}, "0.5": {"trocadas": 4.9, "blocos": {"E": {"med": 10.28, "p10": 7.0, "p90": 13.0}, "C": {"med": 4.24, "p10": 2.0, "p90": 6.0}, "D": {"med": 16.48, "p10": 13.0, "p90": 20.0}}, "pl": {"med": 5.64, "p10": 4, "p90": 8, "real": 8}}}, "DE": {"0.0": {"trocadas": 10.3, "blocos": {"E": {"med": 18.85, "p10": 14.0, "p90": 24.0}, "C": {"med": 12.81, "p10": 9.0, "p90": 17.0}, "D": {"med": 23.34, "p10": 18.0, "p90": 29.0}}, "pl": {"med": 4.38, "p10": 2, "p90": 7, "real": 12}}, "0.25": {"trocadas": 10.6, "blocos": {"E": {"med": 19.29, "p10": 14.0, "p90": 24.0}, "C": {"med": 10.66, "p10": 7.0, "p90": 15.0}, "D": {"med": 25.05, "p10": 20.0, "p90": 30.0}}, "pl": {"med": 4.7, "p10": 3, "p90": 7, "real": 12}}, "0.5": {"trocadas": 11.5, "blocos": {"E": {"med": 19.59, "p10": 15.0, "p90": 25.0}, "C": {"med": 8.78, "p10": 6.0, "p90": 12.0}, "D": {"med": 26.64, "p10": 21.0, "p90": 32.0}}, "pl": {"med": 4.99, "p10": 3, "p90": 7, "real": 12}}}}, "backtest_med": 6.6};
+state.cargo = "DF";
+const NOMECARGO = { DF: "Câmara dos Deputados (31 cadeiras)", DE: "Assembleia Legislativa (55 cadeiras)" };
+const cur = () => D[state.cargo], tot = () => D.cadeiras[state.cargo];
+const nomeLista = (l) => l.lista;
+
+function kpis() {
+  const f = D.DF.blocos, e = D.DE.blocos, pl = (c) => D[c].listas.find(l => l.lista === "PL");
+  $("kpis").innerHTML = `<div class="kpi f"><span>PL na Câmara</span><b>${pl("DF").real}</b><small>de 31 · eram ${pl("DF").eleitos_2022} eleitos em 2022</small></div>
+    <div class="kpi f"><span>PL na Assembleia</span><b>${pl("DE").real}</b><small>de 55 · eram ${pl("DE").eleitos_2022} eleitos em 2022</small></div>
+    <div class="kpi"><span>Direita na Câmara</span><b>${f.D.real}</b><small>de 31 (maioria: 16) · eram ${f.D.e22} em 2022</small></div>
+    <div class="kpi"><span>Direita na Assembleia</span><b>${e.D.real}</b><small>de 55 (maioria: 28) · eram ${e.D.e22} em 2022</small></div>`;
+}
+function lista() {
+  const c = cur(), L = c.listas.slice().sort((a, b) => b.real - a.real || b.med - a.med);
+  const ganha = L.filter(l => l.real > l.eleitos_2022).sort((a, b) => (b.real - b.eleitos_2022) - (a.real - a.eleitos_2022)), perde = L.filter(l => l.real < l.eleitos_2022).sort((a, b) => (a.real - a.eleitos_2022) - (b.real - b.eleitos_2022));
+  const s = (l) => `${l.lista} (${l.eleitos_2022} → ${l.real})`;
+  $("geralTxt").innerHTML = `${NOMECARGO[state.cargo]}. Pelo que eu contei, <b>ganharam:</b> ${ganha.map(s).join("; ") || "nenhuma lista"}. <b>Perderam:</b> ${perde.map(s).join("; ") || "nenhuma lista"}. As demais ficaram como em 2022.`;
+  chart("cLista", { type: "bar", data: { labels: L.map(nomeLista), datasets: [
+    { label: "Eleitos em 2022", data: L.map(l => l.eleitos_2022), backgroundColor: css("--line"), borderRadius: 3 },
+    { label: "Bancada hoje", data: L.map(l => l.atual), backgroundColor: css("--muted"), borderRadius: 3 },
+    { label: "Previsão (mediana, até 2/10)", data: L.map(l => l.mediana), backgroundColor: css("--s4"), borderRadius: 3 },
+    { label: "Eleitos em 2026", data: L.map(l => l.real), backgroundColor: L.map(l => cor(BCOR[l.blocos[0]])), borderRadius: 3 }] },
+    options: { indexAxis: "y", scales: { x: eixo({ min: 0, ticks: { color: css("--ink2"), precision: 0 } }), y: eixo({ grid: { display: false }, ticks: { color: css("--ink2"), autoSkip: false } }) } } });
+  tab("tLista", ["Lista", "Eleitos 2022", "Bancada hoje", "Previsão (faixa 80%)", "Eleitos 2026", "Δ vs 2022", "Faixa 80%"],
+    L.map(l => [l.lista + (l.membros.length ? ` (${l.membros.join("+")})` : ""), l.eleitos_2022, l.atual, `${l.mediana} (${l.p10}–${l.p90})`, l.real, l.real - l.eleitos_2022 > 0 ? "+" + (l.real - l.eleitos_2022) : String(l.real - l.eleitos_2022), dentro(l.real, l.p10, l.p90)]));
+}
+function modelo() {
+  const c = cur(), L = c.listas.filter(l => l.med >= 0.5 || l.real > 0), fora = L.filter(l => l.real < l.p10 || l.real > l.p90), n = L.length;
+  $("modTxt").innerHTML = `${NOMECARGO[state.cargo]}: o resultado ficou dentro da faixa de 80% do modelo em <b>${n - fora.length} de ${n}</b> listas (eu calibrei a faixa para cobrir ~80%, e no backtest de 2010–2022 ela cobriu 82%). Fora: ${fora.map(l => `<b>${l.lista}</b> (previsto ${l.mediana}, faixa ${l.p10}–${l.p90}; eleitos ${l.real})`).join("; ") || "nenhuma"}. A diferença total foi de <b>${f1(c.trocadas)} cadeiras trocadas</b> (metade da soma dos desvios por lista), contra ${f1(D.backtest_med)} em média no backtest (2010–2022). Nos <b>blocos</b>, o resultado ficou dentro da faixa em ${["E", "C", "D"].filter(b => c.blocos[b].real >= c.blocos[b].p10 && c.blocos[b].real <= c.blocos[b].p90).length} de 3.`;
+  const B = c.blocos, ks = ["E", "C", "D"];
+  chart("cBlocos", { type: "bar", data: { labels: ks.map(b => BNOME[b]), datasets: [
+    { label: "Eleitos em 2022", data: ks.map(b => B[b].e22), backgroundColor: css("--line") },
+    { label: "Bancada hoje", data: ks.map(b => B[b].atual), backgroundColor: css("--muted") },
+    { label: "Previsão (média)", data: ks.map(b => B[b].med), backgroundColor: css("--s4") },
+    { label: "Eleitos em 2026", data: ks.map(b => B[b].real), backgroundColor: ks.map(b => cor(BCOR[b])) }] },
+    options: { plugins: { rotulos: { on: true } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ title: { display: true, text: "cadeiras", color: css("--ink2") } }) } } });
+  tab("tBlocos", ["Bloco", "Eleitos 2022", "Bancada hoje", "Previsão (faixa 80%)", "Eleitos 2026", "Faixa 80%"],
+    ks.map(b => [BNOME[b], B[b].e22, B[b].atual, `${f1(B[b].med)} (${f1(B[b].p10)}–${f1(B[b].p90)})`, B[b].real, dentro(B[b].real, B[b].p10, B[b].p90)]));
+}
+function post() {
+  const g = D.gov_blocos, c = state.cargo, P = D.posthoc[c];
+  const pl = P["0.25"].pl, base = cur().listas.find(l => l.lista === "PL");
+  $("postTxt").innerHTML = `As pesquisas que eu usei diziam que a Direita teria ${f1(g.pesquisas.D)}% no governo; teve ${f1(g.real.D)}%. Quando refaço a previsão com o resultado real, o erro das cadeiras quase não muda (${f1(cur().trocadas)} → ${f1(P["0.25"].trocadas)} cadeiras trocadas com λ = 0,25), e o PL, que fez <b>${pl.real}</b>, continua previsto em ${f1(pl.med)} (${pl.p10}–${pl.p90}); com ${f1(base.med)} antes. Ou seja: <b>saber o resultado do governador não resolve</b>. Eu acho que o desvio está no mecanismo (a votação de 2022 se desloca por uma tendência estadual e o PL entra como partido, sem o efeito de candidatos puxadores e de nacionalização que o resultado sugere), e não só na entrada. Como é uma só eleição, vejo isso como indício para investigar, não como conclusão.`;
+  tab("tPost", ["λ (peso da tendência do governador)", "Cadeiras trocadas", "PL previsto (mediana, faixa)", "PL eleito", "Direita prevista (média)", "Direita eleita"],
+    ["0.0", "0.25", "0.5"].map(k => [k.replace(".", ","), f1(P[k].trocadas), `${P[k].pl.med.toFixed(1).replace(".", ",")} (${P[k].pl.p10}–${P[k].pl.p90})`, P[k].pl.real, f1(P[k].blocos.D.med), cur().blocos.D.real]));
+}
+function maisVotados() {
+  tab("tTop", ["Casa", "Candidato", "Partido", "Votos 2026", "Votos 2022", "Variação"], D.top.map(t => [t.cargo === "DF" ? "Câmara" : "Assembleia", t.nome, t.partido, pc(t.votos), t.votos22 == null ? "–" : pc(t.votos22), t.votos22 == null ? "–" : `${pp(100 * (t.votos / t.votos22 - 1))}%`]));
+  const m = D.top.find(t => t.nome.includes("Marcon")), me = D.top.find(t => t.nome.includes("Melchionna"));
+  $("topTxt").innerHTML = `O deputado federal mais votado, Maurício Marcon (PL), foi de ${pc(m.votos22)} para <b>${pc(m.votos)}</b> votos (${f1(m.votos / m.votos22)}×); Fernanda Melchionna (PSOL) foi de ${pc(me.votos22)} para ${pc(me.votos)} (${f1(me.votos / me.votos22)}×) e é a segunda mais votada, com a única vaga do PSOL. Os votos de 2022 vêm da API da Câmara (<code>rs-bancada-atual.csv</code>). Nomes e votos de 2026: CNN Brasil e Gazeta do Povo, que eu não conferi no TSE.`;
+}
+function maioria() {
+  const f = D.DF.blocos, e = D.DE.blocos, mf = 16, me = 28;
+  $("maiTxt").innerHTML = `Pela minha conta, na <b>Câmara</b> (maioria = ${mf} de 31) a Direita tem <b>${f.D.real}</b> (${pp(f.D.real - f.D.e22)} vs 2022, quando tinha ${f.D.e22}): maioria sozinha. Na <b>Assembleia</b> (maioria = ${me} de 55) a Direita tem <b>${e.D.real}</b> (${pp(e.D.real - e.D.e22)} vs ${e.D.e22} em 2022), <b>${me - e.D.real} cadeira(s) a menos</b> que a maioria, e o Centro (${e.C.real}) é o fiel da balança: a Esquerda (${e.E.real}) somada ao Centro chega a ${e.E.real + e.C.real}, ${e.E.real + e.C.real >= me ? "maioria possível" : "sem maioria"} só com todos os partidos de centro e de esquerda juntos.`;
+  chart("cMai", { type: "bar", data: { labels: ["Câmara (31)", "Assembleia (55)"], datasets: ["E", "C", "D"].map(b => ({ label: BNOME[b], data: [D.DF.blocos[b].real, D.DE.blocos[b].real], backgroundColor: cor(BCOR[b]), borderColor: css("--surface"), borderWidth: 2 })) },
+    options: { indexAxis: "y", plugins: { rotulos: { on: false } }, scales: { x: eixo({ stacked: true, min: 0, ticks: { color: css("--ink2"), precision: 0 } }), y: eixo({ stacked: true, grid: { display: false } }) } } });
+}
+function tudo() { kpis(); lista(); modelo(); post(); maisVotados(); maioria(); }
+function segCargo() { const el = $("segCargo"); el.innerHTML = ["DF", "DE"].map(c => `<button data-c="${c}" aria-pressed="${state.cargo == c}">${c === "DF" ? "Federal" : "Estadual"}</button>`).join(""); el.onclick = (e) => { const c = e.target.dataset.c; if (!c) return; state.cargo = c; segCargo(); tudo(); }; }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+segCargo(); tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>
