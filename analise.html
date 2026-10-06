@@ -9,22 +9,25 @@
 
 </head>
 <body>
-<main>
-  <nav class="tabs" aria-label="Seções do site"><a href="segundo-turno.html">2º turno</a><a href="index.html">Presidente 2026</a><a href="analise.html" aria-current="page">Análise</a><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a><a href="analise-senado.html">Análise do Senado</a><a href="documentacao.html">Documentação</a></nav>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<main id="conteudo">
+  <header class="mast"><a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><rect x="2" y="11" width="6" height="11" rx="1.6" fill="var(--anti)"/><rect x="9" y="3" width="6" height="19" rx="1.6" fill="var(--pt)"/><rect x="16" y="8" width="6" height="14" rx="1.6" fill="var(--s4)"/></svg><span><b>Eleições 2026</b><small>Dados, modelos e análises do Brasil e do RS</small></span></a><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></header><nav class="tabs" aria-label="Seções do site"><span class="g"><span class="grp">Presidente</span><span class="gl"><a href="index.html">Presidente 2026</a><a href="segundo-turno.html">2º turno</a><a href="analise.html" aria-current="page">Análise</a></span></span><span class="g"><span class="grp">Rio Grande do Sul</span><span class="gl"><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a></span></span><span class="g"><span class="grp">Senado</span><span class="gl"><a href="analise-senado.html">Análise do Senado</a></span></span><span class="g"><span class="grp">Sobre</span><span class="gl"><a href="documentacao.html">Documentação</a></span></span></nav>
   <div class="topo"><div><h1>Análise do 1º turno (4/10/2026)</h1>
-  <p class="sub">Aqui eu junto o que mudou em relação a 2022, o quanto as pesquisas e o meu modelo erraram, onde Lula perdeu votos e o que o resultado pede do 2º turno (25/10).</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <p class="sub">Aqui eu junto o que mudou em relação a 2022, o quanto as pesquisas e o meu modelo erraram, onde Lula perdeu votos e o que o resultado pede do 2º turno (25/10).</p></div></div>
 
   <div class="an">
   <div class="aviso"><b>Os dados ainda são preliminares e eu não os conferi no TSE.</b> O resultado nacional vem de duas páginas (Wikipedia e O Tempo) que coincidem; os números por UF vêm de matérias e resumos de busca, e eu só mostro o que tem fonte (célula vazia = não encontrei). Quando escrevi esta página, o arquivo de votação por município do TSE ainda estava vazio. Base: votos válidos.</div>
 
   <div class="kpis" id="kpis"></div>
 
+  <section class="sec"><div>
   <h2>1. O quadro geral: 2022 × 2026</h2>
   <p id="geralTxt"></p>
   <div class="cv" style="height:300px"><canvas id="cGeral"></canvas></div>
   <div id="tGeral"></div>
   <p class="fonte">Isto é variação <b>líquida</b> entre duas eleições, não migração de eleitores: com dados agregados eu não consigo dizer quem trocou de candidato. Uso "Flávio" para o bloco anti-PT (Bolsonaro em 2022). Calculei os válidos de 2026 a partir dos votos e do percentual divulgados.</p>
-
+  </div><aside class="side" id="nota1"></aside></section>
+  <section class="sec"><div>
   <h2>2. Pesquisas e modelo × resultado</h2>
   <p id="pesqTxt"></p>
   <div class="cv" style="height:300px"><canvas id="cPesq"></canvas></div>
@@ -32,7 +35,8 @@
   <h3 style="margin:18px 0 4px">A projeção do modelo (2/10)</h3>
   <div id="tProj"></div>
   <p class="fonte" id="pesqNota"></p>
-
+  </div><aside class="side" id="nota2"></aside></section>
+  <section class="sec"><div>
   <h2>3. Onde Lula perdeu votos, e por quê (o que se sabe)</h2>
   <div class="post"><b class="autor">Marco Faganello (FGV CEPESP)</b> · <a href="https://x.com/marcofaganello/status/2106989694500372912" target="_blank" rel="noopener">post no X, 5/10/2026</a>
     <q>"Onde Lula perdeu votos entre o 1º turno de 2022 e o de 2026, e em que tipo de município? Cruzei o resultado das 5.570 cidades com dados do Censo 2022 e do PIB municipal. Dados do TSE ainda preliminares (05/10). Os principais achados, em 7 tweets."</q>
@@ -60,13 +64,15 @@
   <div class="cv" style="height:300px"><canvas id="cUF"></canvas></div>
   <div id="tUF"></div>
   <p id="ufTxt"></p>
-
+  </div><aside class="side" id="nota3"></aside></section>
+  <section class="sec"><div>
   <h2>4. A aritmética do 2º turno</h2>
   <p id="aritTxt"></p>
   <div class="cv" style="height:300px"><canvas id="cArit"></canvas></div>
   <div id="tArit"></div>
   <p class="fonte">É conta de mesa, <b>não é previsão</b>: eu suponho o mesmo eleitorado e que os votos dos demais candidatos vão todos para um dos dois, ignorando abstenção, brancos e nulos. O meu modelo da aba Presidente ainda usa pesquisas até 2/10 (anteriores ao 1º turno), e só vou recalibrá-lo quando houver pesquisa de 2º turno.</p>
-
+  </div><aside class="side" id="nota4"></aside></section>
+  <section class="sec"><div>
   <h2>5. Limites desta análise</h2>
   <ul class="fonte" style="font-size:.88rem">
     <li>A análise por município é do Marco Faganello, com dados preliminares do TSE de 5/10: são associações entre municípios e não explicam como cada eleitor votou. Eu só conferi o que dava para recalcular com o TSE de 2022 que tenho no repositório.</li>
@@ -75,8 +81,10 @@
     <li>Pesquisas e modelo estão na base de válidos; eu converti as pesquisas "total" para a parcela Lula/(Lula+Flávio).</li>
     <li>O que eu digo sobre voto útil e polarização são hipóteses compatíveis com os números, não resultado de pesquisa de saída.</li>
   </ul>
+  </div></section>
   </div>
 </main>
+<footer class="rodape"><div class="rodape-in"><p><b>Isto não é pesquisa eleitoral nem previsão validada.</b> É um modelo estatístico condicionado às pesquisas e ao histórico do TSE; pesquisas e resultados de 2026 nem sempre foram conferidos na fonte oficial, e cada página diz o que foi e o que não foi.</p><p>Fontes: TSE (resultados e dados abertos), API de Dados Abertos do Senado e da Câmara, institutos de pesquisa e imprensa, conforme a <a href="documentacao.html">documentação</a>. Código aberto (MIT) em <a href="https://github.com/mtgr18977/sassamaruEleicoes26" target="_blank" rel="noopener">GitHub</a>. Página gerada em 06/10/2026.</p></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="assets/site.js"></script>
 <script src="assets/mapa.js"></script>
@@ -173,7 +181,25 @@ function arit() {
   tabela("tArit", ["Fatia dos demais → Lula", "Lula (%)", "Flávio (%)", "Quem passa de 50%"], [0, 25, 50, 62, 75, 100].map(x => { const v = a.L + a.O * x / 100; return [x + "%", f2(v), f2(100 - v), v > 50 ? "Lula" : v < 50 ? "Flávio" : "empate"]; }));
 }
 
-function tudo() { kpis(); geral(); pesq(); thread(); mapas(); ufs(); arit(); }
+// ---------- notas laterais ----------
+function notas() {
+  const real = D.real_s, erros = D.pesq.map(x => x.s - real), g = (r) => D.fag.find(x => x.rotulo === r).valor;
+  const need = (50 - a.L) / a.O * 100, needF = (50 - a.F) / a.O * 100, t22 = (b.L2 - b.L) / b.O * 100;
+  nota("nota1", [`Lula: <b>${f2(b.L)}% → ${f2(a.L)}%</b> (${pp(a.L - b.L)} p.p.) entre 2022 e 2026.`,
+    `Bloco anti-PT (Flávio): <b>${f2(b.F)}% → ${f2(a.F)}%</b> (${pp(a.F - b.F)} p.p.).`,
+    `A margem virou: Lula +${f2(b.L - b.F)} p.p. em 2022, Flávio +${f2(a.F - a.L)} em 2026.`,
+    `Dados <b>preliminares</b>, em % dos votos válidos.`]);
+  nota("nota2", [`As ${D.pesq.length} últimas pesquisas deram a Lula <b>${f1(Math.min(...erros))} a ${f1(Math.max(...erros))} p.p.</b> a mais na disputa a dois.`,
+    `O meu modelo acertou Lula (${f1(D.proj.pesquisas.L[1])}% projetado × ${f2(a.L)}%) e errou os demais (${f1(D.proj.pesquisas.O[1])}% × ${f2(a.O)}%).`,
+    `Voto útil no fim da campanha é hipótese minha: as pesquisas não medem quem trocou de voto.`]);
+  nota("nota3", [`Perda por município: <b>${pp(g("Municipios ate 5 mil habitantes"))} p.p.</b> até 5 mil habitantes e ${pp(g("Municipios acima de 500 mil habitantes"))} acima de 500 mil.`,
+    `Nordeste: Lula manteve os votos (${f1(g("Lula NE 2022"))} → ${f1(g("Lula NE 2026"))} mi); o déficit no resto do país foi de ${f1(g("Deficit de Lula no resto do pais 2022"))} para ${f1(g("Deficit de Lula no resto do pais 2026"))} mi.`,
+    `Análise de Marco Faganello (FGV CEPESP): é <b>associação entre municípios</b>, não migração de eleitores.`]);
+  nota("nota4", [`Para passar de 50%, Lula precisa de <b>${f1(need)}%</b> dos votos dos demais candidatos; Flávio, de ${f1(needF)}%.`,
+    `Em 2022 Lula levou o equivalente a ${f1(t22)}% do bolo dos demais no 2º turno.`,
+    `É conta de mesa, <b>não previsão</b>: ignora abstenção, brancos e nulos.`]);
+}
+function tudo() { kpis(); geral(); pesq(); thread(); mapas(); ufs(); arit();  notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);

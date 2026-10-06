@@ -13,19 +13,22 @@
 </style>
 </head>
 <body>
-<main>
-  <nav class="tabs" aria-label="Seções do site"><a href="segundo-turno.html" aria-current="page">2º turno</a><a href="index.html">Presidente 2026</a><a href="analise.html">Análise</a><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a><a href="analise-senado.html">Análise do Senado</a><a href="documentacao.html">Documentação</a></nav>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<main id="conteudo">
+  <header class="mast"><a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><rect x="2" y="11" width="6" height="11" rx="1.6" fill="var(--anti)"/><rect x="9" y="3" width="6" height="19" rx="1.6" fill="var(--pt)"/><rect x="16" y="8" width="6" height="14" rx="1.6" fill="var(--s4)"/></svg><span><b>Eleições 2026</b><small>Dados, modelos e análises do Brasil e do RS</small></span></a><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></header><nav class="tabs" aria-label="Seções do site"><span class="g"><span class="grp">Presidente</span><span class="gl"><a href="index.html">Presidente 2026</a><a href="segundo-turno.html" aria-current="page">2º turno</a><a href="analise.html">Análise</a></span></span><span class="g"><span class="grp">Rio Grande do Sul</span><span class="gl"><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a></span></span><span class="g"><span class="grp">Senado</span><span class="gl"><a href="analise-senado.html">Análise do Senado</a></span></span><span class="g"><span class="grp">Sobre</span><span class="gl"><a href="documentacao.html">Documentação</a></span></span></nav>
   <div class="topo"><div><h1>2º turno (25/10/2026): Lula × Flávio Bolsonaro</h1>
-  <p class="sub">Aqui eu mostro onde a disputa está depois do 1º turno e o que cada cenário de votação implica, estado a estado.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <p class="sub">Aqui eu mostro onde a disputa está depois do 1º turno e o que cada cenário de votação implica, estado a estado.</p></div></div>
   <div class="an">
   <div class="aviso" id="aviso"></div>
   <div class="kpis" id="kpis"></div>
 
+  <section class="sec"><div>
   <h2>1. Onde a disputa está</h2>
   <p id="ancTxt"></p>
   <div class="cv" style="height:300px"><canvas id="cAnc"></canvas></div>
   <div id="tAnc"></div>
-
+  </div><aside class="side" id="nota1"></aside></section>
+  <section class="sec"><div>
   <h2>2. Simulador de cenários</h2>
   <p>Escolha a parcela de Lula nos votos válidos do 2º turno (só dois candidatos). Meu modelo parte do 2º turno de 2022 por estado, aplica uma mudança uniforme em logit, choques regionais e ruído por UF (medidos em 2002–2022) e recalibra para o total escolhido. <b>Isto não é previsão</b>: é o que eu consigo dizer sobre o que cada cenário implica.</p>
   <div class="sl2">
@@ -43,14 +46,18 @@
   <div><h3>Estados-chave neste cenário</h3><div id="chaves"></div></div></div>
   <details open><summary>Ver as 27 UFs e o exterior</summary><div id="tUF"></div></details>
   <p class="fonte" id="simNota"></p>
-
+  </div><aside class="side" id="nota2"></aside></section>
+  <section class="sec"><div>
   <h2>3. Pesquisas de 2º turno depois do 1º turno</h2>
   <div id="tPesq"></div>
-
+  </div><aside class="side" id="nota3"></aside></section>
+  <section class="sec"><div>
   <h2>4. O que falta para eu recalibrar</h2>
   <ul id="falta" style="font-size:.9rem"></ul>
+  </div></section>
   </div>
 </main>
+<footer class="rodape"><div class="rodape-in"><p><b>Isto não é pesquisa eleitoral nem previsão validada.</b> É um modelo estatístico condicionado às pesquisas e ao histórico do TSE; pesquisas e resultados de 2026 nem sempre foram conferidos na fonte oficial, e cada página diz o que foi e o que não foi.</p><p>Fontes: TSE (resultados e dados abertos), API de Dados Abertos do Senado e da Câmara, institutos de pesquisa e imprensa, conforme a <a href="documentacao.html">documentação</a>. Código aberto (MIT) em <a href="https://github.com/mtgr18977/sassamaruEleicoes26" target="_blank" rel="noopener">GitHub</a>. Página gerada em 06/10/2026.</p></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="assets/site.js"></script>
 <script src="assets/analise.js"></script>
@@ -88,7 +95,7 @@ function simulador() {
     <div class="kpi"><span>Estados-chave</span><b>${ch.length}</b><small>chance de Lula entre 25% e 75%</small></div>`;
   $("chaves").innerHTML = ch.length ? `<table class="t"><tr><th>UF</th><th>Lula 2022 (2º)</th><th>Cenário (p5–p95)</th><th>Peso</th></tr>` + ch.map(u => `<tr><td>${nomeUF(u.uf)}</td><td>${f1(100 * u.p2022)}</td><td>${f1(100 * u.mediana)} (${f1(100 * u.p5)}–${f1(100 * u.p95)})</td><td>${f1(100 * U.find(x => x.uf === u.uf).validos / W)}%</td></tr>`).join("") + `</table>` : `<p class="nota">Neste cenário não vejo nenhum estado entre 25% e 75%: ou todos estão definidos, ou o total nacional está longe de 50%.</p>`;
   const m22 = {}, m26 = {}; r.ufs.forEach(u => { if (u.uf === "ZZ") return; m22[u.uf] = 100 * (2 * u.p2022 - 1); m26[u.uf] = 100 * (2 * u.mediana - 1); });
-  mapaTiles("mapa22", m22); mapaTiles("mapa26", m26, { destaque: ch.map(u => u.uf) });
+  mapaTiles("mapa22", m22); mapaTiles("mapa26", m26, { destaque: ch.map(u => u.uf) }); notaSim(r, ch);
   const o = r.ufs.slice().sort((a, b) => b.pvit - a.pvit);
   $("tUF").innerHTML = `<table class="t"><tr><th>UF</th><th>Região</th><th>Peso (válidos 2022)</th><th>Lula 2022 (2º)</th><th>Cenário: mediana (p5–p95)</th><th>Chance de Lula na UF</th></tr>` + o.map(u => { const m = U.find(x => x.uf === u.uf); return `<tr class="${u.pvit > .25 && u.pvit < .75 ? "chave" : ""}"><td>${nomeUF(u.uf)}</td><td>${m.regiao}</td><td>${f1(100 * m.validos / W)}%</td><td>${f1(100 * u.p2022)}</td><td>${f1(100 * u.mediana)} (${f1(100 * u.p5)}–${f1(100 * u.p95)})</td><td>${f1(100 * u.pvit)}%</td></tr>`; }).join("") + `</table>`;
   $("simNota").innerHTML = `As linhas destacadas são os estados-chave. A minha premissa é que a mudança é uniforme em logit a partir do 2º turno de 2022, com os choques regionais medidos no passado. O modelo <b>não sabe onde Lula perdeu no 1º turno</b> (Minas Gerais e Tocantins mudaram de lado, o Sul e o Centro-Oeste andaram mais à direita, como mostro na aba Análise), então eu leio os estados do Sudeste e do Centro-Oeste com cautela. Aqui o desvio do total nacional é ${f1(state.sd)} p.p. (no meu modelo é ${f1(D.piso)}, um piso que eu assumi).`;
@@ -115,7 +122,23 @@ function falta() {
     `<b>Resultado oficial por município e UF:</b> o meu modelo precisa saber onde o voto de Lula caiu, e hoje eu só tenho números por UF para uma parte dos estados.`,
     `<b>Um 2º turno costuma mudar a composição do eleitorado</b> (abstenção, voto em branco). Eu uso os votos válidos de 2022 como peso dos estados e não simulo mudança de comparecimento.`].map(t => `<li>${t}</li>`).join("");
 }
-function tudo() { topo(); ancoras(); simulador(); pesqs(); falta(); }
+// ---------- notas laterais ----------
+function notas() {
+  const need = (50 - R.L) / R.O * 100;
+  nota("nota1", [`Na disputa a dois, Lula tem <b>${f2(R.s)}%</b> no 1º turno.`,
+    `Para passar de 50% dos válidos, ele precisa de <b>${f1(need)}%</b> dos votos dos demais candidatos (Flávio, ${f1((50 - R.F) / R.O * 100)}%).`,
+    `Em 2022 Lula foi de ${f2(A.l1_2022)}% para ${f2(A.t2_2022)}% entre os turnos.`]);
+  nota("nota3", [D.pesq.length ? `<b>${D.pesq.length}</b> pesquisa(s) de 2º turno registrada(s) depois do 1º turno.` : `<b>Nenhuma</b> pesquisa de 2º turno depois do 1º turno registrada ainda.`,
+    `Pesquisas anteriores a 4/10 não entram: são de antes do resultado.`,
+    `Só entra pesquisa conferida na fonte (registro no TSE ou relatório do instituto).`]);
+}
+function notaSim(r, ch) {
+  nota("nota2", [`Com Lula em <b>${f1(state.s)}%</b>, a chance de vitória dele é de <b>${f1(100 * r.p_nac_gt50)}%</b>.`,
+    `<b>${ch.length}</b> estado(s)-chave (chance de Lula entre 25% e 75%).`,
+    `Cada 1 p.p. na disputa vale ≈ ${f1(R.validos / 1e8)} mi de votos.`,
+    `É um cenário, <b>não uma previsão</b>: o total nacional é uma escolha sua.`]);
+}
+function tudo() { topo(); ancoras(); simulador(); pesqs(); falta();  notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 $("slS").oninput = () => { state.s = +$("slS").value; clearTimeout(state.t); state.t = setTimeout(simulador, 120); $("vS").textContent = f1(state.s) + "%"; };
 $("slSd").oninput = () => { state.sd = +$("slSd").value; clearTimeout(state.t); state.t = setTimeout(simulador, 120); $("vSd").textContent = f1(state.sd) + " p.p."; };

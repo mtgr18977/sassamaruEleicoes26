@@ -8,20 +8,23 @@
 <link rel="stylesheet" href="assets/analise.css">
 </head>
 <body>
-<main>
-  <nav class="tabs" aria-label="Seções do site"><a href="segundo-turno.html">2º turno</a><a href="index.html">Presidente 2026</a><a href="analise.html">Análise</a><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html" aria-current="page">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a><a href="analise-senado.html">Análise do Senado</a><a href="documentacao.html">Documentação</a></nav>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<main id="conteudo">
+  <header class="mast"><a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><rect x="2" y="11" width="6" height="11" rx="1.6" fill="var(--anti)"/><rect x="9" y="3" width="6" height="19" rx="1.6" fill="var(--pt)"/><rect x="16" y="8" width="6" height="14" rx="1.6" fill="var(--s4)"/></svg><span><b>Eleições 2026</b><small>Dados, modelos e análises do Brasil e do RS</small></span></a><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></header><nav class="tabs" aria-label="Seções do site"><span class="g"><span class="grp">Presidente</span><span class="gl"><a href="index.html">Presidente 2026</a><a href="segundo-turno.html">2º turno</a><a href="analise.html">Análise</a></span></span><span class="g"><span class="grp">Rio Grande do Sul</span><span class="gl"><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html" aria-current="page">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a></span></span><span class="g"><span class="grp">Senado</span><span class="gl"><a href="analise-senado.html">Análise do Senado</a></span></span><span class="g"><span class="grp">Sobre</span><span class="gl"><a href="documentacao.html">Documentação</a></span></span></nav>
   <div class="topo"><div><h1>Análise: governo do RS, 1º turno (4/10/2026)</h1>
-  <p class="sub">Zucco (PL) foi eleito no 1º turno. Aqui eu olho o que mudou desde 2022, o quanto o meu modelo e as pesquisas erraram e como o RS votou em relação ao país.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <p class="sub">Zucco (PL) foi eleito no 1º turno. Aqui eu olho o que mudou desde 2022, o quanto o meu modelo e as pesquisas erraram e como o RS votou em relação ao país.</p></div></div>
   <div class="an">
   <div class="aviso"><b>Os dados são preliminares e eu não os conferi no TSE.</b> O resultado estadual vem de uma página de apuração com 100% das seções (O Tempo), que eu bati com a Wikipedia; as cidades vêm de um resumo automático dessa página. Base: votos válidos. Fontes e detalhes em <code>datasets/resultado-2026-rs-*.csv</code>.</div>
   <div class="kpis" id="kpis"></div>
 
+  <section class="sec"><div>
   <h2>1. O quadro geral: 2022 × 2026</h2>
   <p id="geralTxt"></p>
   <div class="cv" style="height:300px"><canvas id="cGeral"></canvas></div>
   <div id="tGeral"></div>
   <p class="fonte">É uma comparação aproximada: em 2022 os blocos juntam todos os candidatos (Direita = Onyx, Heinze, Argenta e Jobim; Centro = Eduardo Leite; Esquerda = Edegar Pretto, Vieira da Cunha e outros). Em 2026 a Direita é Zucco, a Esquerda é Brizola e o Centro é Souza, Maranata e demais. Eu somei 0,19 de nanicos à Direita de 2026 (derivado).</p>
-
+  </div><aside class="side" id="nota1"></aside></section>
+  <section class="sec"><div>
   <h2>2. Pesquisas e modelo × resultado</h2>
   <p id="pesqTxt"></p>
   <div class="cv" style="height:320px"><canvas id="cPesq"></canvas></div>
@@ -29,7 +32,8 @@
   <h3 style="margin:18px 0 4px">Última pesquisa de cada instituto</h3>
   <div id="tPesq"></div>
   <p class="fonte" id="pesqNota"></p>
-
+  </div><aside class="side" id="nota2"></aside></section>
+  <section class="sec"><div>
   <h2>3. O RS e a eleição nacional</h2>
   <p id="natTxt"></p>
   <div class="cv" style="height:300px"><canvas id="cNat"></canvas></div>
@@ -37,10 +41,12 @@
   <div id="tCid"></div>
   <p id="cidTxt"></p>
   <p class="fonte">É o percentual do líder em cada disputa, tirado de um resumo automático de uma página de apuração. <span class="vazio">Pelotas aparece com 47,1% nas duas colunas, o que me parece coincidência; vou conferir antes de citar.</span> Variação = % do líder em 2026 menos o % do mesmo lado em 2022 (Lula ou Bolsonaro, TSE).</p>
-
+  </div><aside class="side" id="nota3"></aside></section>
+  <section class="sec"><div>
   <h2>4. O que muda no site</h2>
   <p id="siteTxt"></p>
-
+  </div><aside class="side" id="nota4"></aside></section>
+  <section class="sec"><div>
   <h2>5. Limites desta análise</h2>
   <ul class="fonte" style="font-size:.88rem">
     <li>Os dados são preliminares. A Agência Brasil mostrava Zucco com 57,88% e Brizola com 31,88% (91,53% das seções); com 100% das seções o resultado é 58,05% e 31,65%, e é esse que eu uso. O 1,68% de Maranata vem de uma fonte só.</li>
@@ -48,8 +54,10 @@
     <li>"Voto útil" e polarização são hipóteses minhas, compatíveis com os números (Souza caiu de ~16% nas pesquisas para 8,4%), não resultado de pesquisa de saída.</li>
     <li>Eu não tenho série histórica de pesquisas de governador do RS: o erro sistemático do meu modelo (3,6 p.p.) é um proxy tirado do nível nacional, e este resultado mostra que eu o subestimei.</li>
   </ul>
+  </div></section>
   </div>
 </main>
+<footer class="rodape"><div class="rodape-in"><p><b>Isto não é pesquisa eleitoral nem previsão validada.</b> É um modelo estatístico condicionado às pesquisas e ao histórico do TSE; pesquisas e resultados de 2026 nem sempre foram conferidos na fonte oficial, e cada página diz o que foi e o que não foi.</p><p>Fontes: TSE (resultados e dados abertos), API de Dados Abertos do Senado e da Câmara, institutos de pesquisa e imprensa, conforme a <a href="documentacao.html">documentação</a>. Código aberto (MIT) em <a href="https://github.com/mtgr18977/sassamaruEleicoes26" target="_blank" rel="noopener">GitHub</a>. Página gerada em 06/10/2026.</p></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="assets/site.js"></script>
 <script src="assets/analise.js"></script>
@@ -105,7 +113,23 @@ function nat() {
 function site() {
   $("siteTxt").innerHTML = `Como o governador foi eleito no 1º turno, <b>não há 2º turno no RS</b>. Por isso deixo a aba "Governo do RS 2026" como registro do que o meu modelo dizia até 2/10 (chance de 2º turno de ${f1(100 * D.modelo.segundo_turno)}%) e não vou mais atualizá-la. O que o modelo ainda alimenta é a bancada estadual e federal, que usa a tendência do governador como entrada; na aba "Análise da bancada RS" eu mostro o que esse erro significou nas cadeiras.`;
 }
-function tudo() { kpis(); geral(); pesq(); nat(); site(); }
+// ---------- notas laterais ----------
+function notas() {
+  const b = D.blocos22, m = D.modelo, p22 = D.pres22, NAC = D.nac;
+  nota("nota1", [`Zucco <b>${f2(Z.pct)}%</b> × Brizola ${f2(B.pct)}% × Souza ${f2(S.pct)}%: eleito no 1º turno.`,
+    `Direita: ${f2(b.D)}% → <b>${f2(Z.pct + OU.pct)}%</b> (2022 → 2026). Centro: ${f2(b.C)}% → ${f2(S.pct + MA.pct)}%.`,
+    `Dados <b>preliminares</b>, em % dos votos válidos (100% das seções, fonte: O Tempo).`]);
+  nota("nota2", [`O meu modelo dava <b>${f1(m.Z[1])}%</b> a Zucco (faixa de 90%: ${f1(m.Z[0])}–${f1(m.Z[2])}) e ${f1(100 * m.vence_1t[0])}% de chance de ele vencer no 1º turno.`,
+    `Erro: ${pp(Z.pct - m.Z[1])} p.p., ${f1((Z.pct - m.Z[1]) / m.sistematico)}× o erro sistemático que eu assumi (${m.sistematico} p.p.).`,
+    `Souza: ${f1(m.S[1])}% projetado × ${f2(S.pct)}% real.`]);
+  nota("nota3", [`Flávio no RS: <b>${f2(F26.pct)}%</b> (${pp(F26.pct - p22.B)} p.p. sobre Bolsonaro em 2022); no Brasil, ${pp(NAC.B26 - NAC.B22)}.`,
+    `Lula no RS: ${f2(L26.pct)}% (${pp(L26.pct - p22.L)} p.p.).`,
+    `A diferença entre Lula e Brizola é de <b>${pc(L26.votos - B.votos)} votos</b>. Com dados agregados não dá para dizer quem trocou de lado.`]);
+  nota("nota4", [`Não há 2º turno no RS: a aba <b>Governo do RS 2026</b> fica como registro do modelo até 2/10.`,
+    `O modelo dava ${f1(100 * m.segundo_turno)}% de chance de 2º turno.`,
+    `Ele ainda alimenta a bancada estadual e federal, que usa a tendência do governador.`]);
+}
+function tudo() { kpis(); geral(); pesq(); nat(); site();  notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);

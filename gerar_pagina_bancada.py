@@ -17,6 +17,6 @@ def _json(o):
 
 
 out = rs_bancada.construir()
-html = open("apps/bancada.template.html", encoding="utf-8").read().replace("__NAV__", nav.html("bancada.html")).replace("__DATA__", json.dumps(out, ensure_ascii=False, default=_json))
+html = nav.moldura(open("apps/bancada.template.html", encoding="utf-8").read(), "bancada.html").replace("__DATA__", json.dumps(out, ensure_ascii=False, default=_json))
 open("bancada.html", "w", encoding="utf-8").write(html)
 print("bancada.html", len(html) // 1024, "KB")

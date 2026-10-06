@@ -16,13 +16,15 @@
   <div class="aviso"><b>Os dados são preliminares e eu não os conferi no TSE nem na Assembleia.</b> As cadeiras por partido são contagem minha, a partir das listas de eleitos da CNN Brasil e da Gazeta do Povo (federal) e da CNN Brasil, batida com uma busca web (estadual); nos dois casos a soma fecha 31 e 55. Os blocos e as federações são os do meu modelo (PSD no Centro). Fontes em <code>datasets/resultado-2026-rs-bancada.csv</code>.</div>
   <div class="kpis" id="kpis"></div>
 
+  <section class="sec"><div>
   <h2>1. Quem ganhou e quem perdeu</h2>
   <div class="filtros">Casa <span class="seg" id="segCargo"></span></div>
   <p id="geralTxt"></p>
   <div class="cv" style="height:520px"><canvas id="cLista"></canvas></div>
   <div id="tLista"></div>
   <p class="fonte">Eu trabalho com as listas de 2026: federações (Brasil da Esperança = PT + PCdoB + PV; União Progressista = PP + União; PSDB Cidadania; PSOL Rede; Renovação Solidária = PRD + Solidariedade) ou o partido isolado. "Eleitos 2022" = cadeiras da lista agrupadas com a estrutura de 2026; "Bancada hoje" = partido atual dos eleitos de 2022.</p>
-
+  </div><aside class="side" id="nota1"></aside></section>
+  <section class="sec"><div>
   <h2>2. O modelo × o resultado</h2>
   <p id="modTxt"></p>
   <div class="cv" style="height:300px"><canvas id="cBlocos"></canvas></div>
@@ -31,16 +33,19 @@
   <p id="postTxt"></p>
   <div id="tPost"></div>
   <p class="fonte">É um teste pós-fato: refiz a mesma previsão (λ = tendência do governador; μ = 0,5), mas com os blocos reais do governador (Esquerda 31,65%, Centro 10,11%, Direita 58,24%) no lugar da estimativa das pesquisas (36,2 / 19,3 / 44,5). Não vale como previsão fora da amostra, porque usa um resultado que só existe depois da eleição.</p>
-
+  </div><aside class="side" id="nota2"></aside></section>
+  <section class="sec"><div>
   <h2>3. Os mais votados</h2>
   <div id="tTop"></div>
   <p id="topTxt"></p>
-
+  </div><aside class="side" id="nota3"></aside></section>
+  <section class="sec"><div>
   <h2>4. A aritmética da maioria</h2>
   <p id="maiTxt"></p>
   <div class="cv" style="height:260px"><canvas id="cMai"></canvas></div>
   <p class="fonte">Os blocos que eu uso: Esquerda (PT, PCdoB, PDT, PSOL, PSB, PV…), Centro (MDB, PSD, PSDB, Cidadania) e Direita (PL, PP, União, Republicanos, Podemos, Novo e demais). Não são coalizões nem base de governo: partidos de um bloco votam separados, e a Assembleia e a Câmara têm dinâmicas próprias.</p>
-
+  </div><aside class="side" id="nota4"></aside></section>
+  <section class="sec"><div>
   <h2>5. Limites desta análise</h2>
   <ul class="fonte" style="font-size:.88rem">
     <li>Minha contagem é preliminar e vem de listas de imprensa. Uma busca web trouxe PT = 4 deputados federais, mas as duas listas de 31 nomes somam 5 e fecham o total; fiquei com as listas.</li>
@@ -48,6 +53,7 @@
     <li>A bancada estadual "de hoje" vem da Wikipédia e eu não a conferi com a Assembleia; a federal vem da API da Câmara.</li>
     <li>O meu modelo não tem mecanismo de puxador de voto nem de partido novo: o que ele não explica no PL eu trato como "tendência não capturada", uma hipótese a testar, não uma conclusão.</li>
   </ul>
+  </div></section>
   </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -112,7 +118,25 @@ function maioria() {
   chart("cMai", { type: "bar", data: { labels: ["Câmara (31)", "Assembleia (55)"], datasets: ["E", "C", "D"].map(b => ({ label: BNOME[b], data: [D.DF.blocos[b].real, D.DE.blocos[b].real], backgroundColor: cor(BCOR[b]), borderColor: css("--surface"), borderWidth: 2 })) },
     options: { indexAxis: "y", plugins: { rotulos: { on: false } }, scales: { x: eixo({ stacked: true, min: 0, ticks: { color: css("--ink2"), precision: 0 } }), y: eixo({ stacked: true, grid: { display: false } }) } } });
 }
-function tudo() { kpis(); lista(); modelo(); post(); maisVotados(); maioria(); }
+// ---------- notas laterais ----------
+function notas() {
+  const c = cur(), P = D.posthoc[state.cargo]["0.25"], pl = (k) => D[k].listas.find(l => l.lista === "PL"), f = D.DF.blocos, e = D.DE.blocos;
+  const Ls = c.listas.filter(l => l.med >= 0.5 || l.real > 0), fora = Ls.filter(l => l.real < l.p10 || l.real > l.p90);
+  const m = D.top.find(t => t.nome.includes("Marcon")), me = D.top.find(t => t.nome.includes("Melchionna"));
+  nota("nota1", [`PL na Câmara: <b>${pl("DF").eleitos_2022} → ${pl("DF").real}</b> (2022 → 2026); na Assembleia: <b>${pl("DE").eleitos_2022} → ${pl("DE").real}</b>.`,
+    `Direita na Câmara: ${f.D.e22} → ${f.D.real} de 31.`,
+    `Contagem minha, a partir de listas de imprensa: <b>não conferida</b> no TSE nem na Assembleia.`]);
+  nota("nota2", [`${NOMECARGO[state.cargo]}: <b>${Ls.length - fora.length} de ${Ls.length}</b> listas dentro da faixa de 80% do modelo.`,
+    `Cadeiras trocadas: <b>${f1(c.trocadas)}</b> (no backtest de 2010–2022, ${f1(D.backtest_med)}).`,
+    `Com o governador real o erro quase não muda (${f1(c.trocadas)} → ${f1(P.trocadas)}): o desvio parece estar no mecanismo, não só na entrada.`]);
+  nota("nota3", [`${m.nome} (PL): ${pc(m.votos22)} → <b>${pc(m.votos)}</b> votos, o deputado federal mais votado.`,
+    `${me.nome} (PSOL): ${pc(me.votos22)} → ${pc(me.votos)}, com a única vaga do PSOL.`,
+    `Votos de 2026 conforme a imprensa; não conferidos no TSE.`]);
+  nota("nota4", [`Direita na Câmara: <b>${f.D.real}</b> de 31 (maioria: 16).`,
+    `Na Assembleia: <b>${e.D.real}</b> de 55 (maioria: 28)${e.D.real >= 28 ? "" : `, ${28 - e.D.real} a menos; o Centro (${e.C.real}) decide`}.`,
+    `Os blocos são classificação minha, não coalizões de governo.`]);
+}
+function tudo() { kpis(); lista(); modelo(); post(); maisVotados(); maioria();  notas(); }
 function segCargo() { const el = $("segCargo"); el.innerHTML = ["DF", "DE"].map(c => `<button data-c="${c}" aria-pressed="${state.cargo == c}">${c === "DF" ? "Federal" : "Estadual"}</button>`).join(""); el.onclick = (e) => { const c = e.target.dataset.c; if (!c) return; state.cargo = c; segCargo(); tudo(); }; }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 segCargo(); tudo();

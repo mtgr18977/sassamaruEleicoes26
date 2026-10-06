@@ -1,8 +1,7 @@
-  .an { max-width:960px; margin:0 auto } .an h2 { margin-top:34px } .an p { margin:8px 0 }
+  .an h2 { margin-top:34px } .an p { margin:8px 0 }
   .an .fonte { font-size:.82rem; color:var(--muted) } .an .ok { color:var(--s3); font-weight:600 } .an .ruim { color:var(--pt); font-weight:600 }
   .post { border:1px solid var(--line); border-radius:12px; background:var(--surface); padding:12px 14px; margin:12px 0; font-size:.9rem }
   .post b.autor { color:var(--ink) } .post q { display:block; margin:6px 0; color:var(--ink2); quotes:none }
   .kpi.l { border-top:4px solid var(--pt) } .kpi.f { border-top:4px solid var(--anti) } .kpi.o { border-top:4px solid var(--muted) }
   .dlt.up { color:var(--s3) } .dlt.dn { color:var(--pt) } .vazio { color:var(--muted) }
-  .an .row3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px } @media (max-width:820px) { .an .row3 { grid-template-columns:1fr } }
-  .tabs { overflow-x:auto; white-space:nowrap }
+  .an .row3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px } @media (max-width:820px) { .an .row3 { grid-template-columns:minmax(0,1fr) } }

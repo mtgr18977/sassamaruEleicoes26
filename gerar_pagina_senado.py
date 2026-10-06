@@ -7,7 +7,7 @@ import senado
 
 def main():
     dados = senado.construir()
-    html = open("apps/analise-senado.template.html", encoding="utf-8").read().replace("__NAV__", nav.html("analise-senado.html")).replace("__DATA__", json.dumps(dados, ensure_ascii=False))
+    html = nav.moldura(open("apps/analise-senado.template.html", encoding="utf-8").read(), "analise-senado.html").replace("__DATA__", json.dumps(dados, ensure_ascii=False))
     open("analise-senado.html", "w", encoding="utf-8").write(html)
     print("analise-senado.html", len(html) // 1024, "KB")
 

@@ -16,11 +16,10 @@
 </style>
 </head>
 <body>
-<a class="pular" href="#conteudo">Pular para o conteúdo</a>
-<main id="conteudo">
-  <header class="mast"><a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><rect x="2" y="11" width="6" height="11" rx="1.6" fill="var(--anti)"/><rect x="9" y="3" width="6" height="19" rx="1.6" fill="var(--pt)"/><rect x="16" y="8" width="6" height="14" rx="1.6" fill="var(--s4)"/></svg><span><b>Eleições 2026</b><small>Dados, modelos e análises do Brasil e do RS</small></span></a><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></header><nav class="tabs" aria-label="Seções do site"><span class="g"><span class="grp">Presidente</span><span class="gl"><a href="index.html">Presidente 2026</a><a href="segundo-turno.html">2º turno</a><a href="analise.html">Análise</a></span></span><span class="g"><span class="grp">Rio Grande do Sul</span><span class="gl"><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a></span></span><span class="g"><span class="grp">Senado</span><span class="gl"><a href="analise-senado.html">Análise do Senado</a></span></span><span class="g"><span class="grp">Sobre</span><span class="gl"><a href="documentacao.html" aria-current="page">Documentação</a></span></span></nav>
+<main>
+  <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
   <div class="topo"><div><h1>Documentação</h1>
-  <p class="sub">De onde vêm os dados, como cada modelo funciona, o que cada aba mostra e onde o site não se aplica. Atualizada em 6/10/2026, depois do 1º turno.</p></div></div>
+  <p class="sub">De onde vêm os dados, como cada modelo funciona, o que cada aba mostra e onde o site não se aplica. Atualizada em 6/10/2026, depois do 1º turno.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
 
   <div class="sec docsec"><div class="doc">
   <div class="aviso"><b>Isto não é uma pesquisa eleitoral nem uma previsão validada.</b> São modelos estatísticos que partem do resultado da última eleição (por município, UF ou partido) e o deslocam de acordo com as pesquisas de 2026, com incerteza medida (quando há histórico para medir) ou assumida (quando não há, e isso é dito explicitamente). Só a parte "dado o total, como ele se distribui pelas unidades" tem backtest contra eleições passadas; o caminho "pesquisa → resultado" não tem. Desde o 1º turno (4/10/2026) o site também compara os modelos com o resultado (as abas de análise).</div>
@@ -199,7 +198,6 @@
     <a href="#governador">6. Governador do RS</a><a href="#bancada">7. Bancada do RS</a><a href="#senado">8. Senado</a><a href="#analises">9. Abas de análise</a><a href="#naocobre">10. O que não cobre</a><a href="#limites">11. Limites</a><a href="#codigo">12. Código e atualização</a></aside>
   </div>
 </main>
-<footer class="rodape"><div class="rodape-in"><p><b>Isto não é pesquisa eleitoral nem previsão validada.</b> É um modelo estatístico condicionado às pesquisas e ao histórico do TSE; pesquisas e resultados de 2026 nem sempre foram conferidos na fonte oficial, e cada página diz o que foi e o que não foi.</p><p>Fontes: TSE (resultados e dados abertos), API de Dados Abertos do Senado e da Câmara, institutos de pesquisa e imprensa, conforme a <a href="documentacao.html">documentação</a>. Código aberto (MIT) em <a href="https://github.com/mtgr18977/sassamaruEleicoes26" target="_blank" rel="noopener">GitHub</a>. Página gerada em 06/10/2026.</p></div></footer>
 <script>const state = {}; function tudo() {}</script>
 <script src="assets/site.js"></script>
 <script>aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;</script>

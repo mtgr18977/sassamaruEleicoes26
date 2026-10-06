@@ -51,6 +51,6 @@ out["fag"] = pd.read_csv(D + "analise-faganello-2026.csv").to_dict("records")
 x22 = u22[~u22.index.isin(["ZZ", "VT"])]
 out["ufs22"] = dict(f=int((x22.votos_antipt > x22.votos_pt).sum()), total=len(x22))
 
-html = open("apps/analise.template.html", encoding="utf-8").read().replace("__NAV__", nav.html("analise.html")).replace("__DATA__", json.dumps(out, ensure_ascii=False))
+html = nav.moldura(open("apps/analise.template.html", encoding="utf-8").read(), "analise.html").replace("__DATA__", json.dumps(out, ensure_ascii=False))
 open("analise.html", "w", encoding="utf-8").write(html)
 print("analise.html", len(html) // 1024, "KB")

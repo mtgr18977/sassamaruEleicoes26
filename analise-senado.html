@@ -8,20 +8,23 @@
 <link rel="stylesheet" href="assets/analise.css">
 </head>
 <body>
-<main>
-  <nav class="tabs" aria-label="Seções do site"><a href="segundo-turno.html">2º turno</a><a href="index.html">Presidente 2026</a><a href="analise.html">Análise</a><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a><a href="analise-senado.html" aria-current="page">Análise do Senado</a><a href="documentacao.html">Documentação</a></nav>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<main id="conteudo">
+  <header class="mast"><a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><rect x="2" y="11" width="6" height="11" rx="1.6" fill="var(--anti)"/><rect x="9" y="3" width="6" height="19" rx="1.6" fill="var(--pt)"/><rect x="16" y="8" width="6" height="14" rx="1.6" fill="var(--s4)"/></svg><span><b>Eleições 2026</b><small>Dados, modelos e análises do Brasil e do RS</small></span></a><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></header><nav class="tabs" aria-label="Seções do site"><span class="g"><span class="grp">Presidente</span><span class="gl"><a href="index.html">Presidente 2026</a><a href="segundo-turno.html">2º turno</a><a href="analise.html">Análise</a></span></span><span class="g"><span class="grp">Rio Grande do Sul</span><span class="gl"><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a></span></span><span class="g"><span class="grp">Senado</span><span class="gl"><a href="analise-senado.html" aria-current="page">Análise do Senado</a></span></span><span class="g"><span class="grp">Sobre</span><span class="gl"><a href="documentacao.html">Documentação</a></span></span></nav>
   <div class="topo"><div><h1>Análise: Senado, 1º turno (4/10/2026)</h1>
-  <p class="sub">Aqui eu mostro quem ganhou e quem perdeu as 54 cadeiras do Senado em disputa (2 por UF), o que uma referência simples esperava e como fica o Senado que toma posse em 2027.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <p class="sub">Aqui eu mostro quem ganhou e quem perdeu as 54 cadeiras do Senado em disputa (2 por UF), o que uma referência simples esperava e como fica o Senado que toma posse em 2027.</p></div></div>
   <div class="an">
   <div class="aviso"><b>Aqui os dados são oficiais, mas de 5/10 e sujeitos a recurso.</b> Os eleitos e os votos vêm do arquivo "votação por candidato, município e zona" do TSE (gerado em 5/10/2026, 1º turno; 54 eleitos, 2 por UF); os ocupantes de hoje, da API de dados abertos do Senado (acesso em <span id="acesso"></span>). As listas de imprensa que eu consultei primeiro divergiam entre si (Piauí, Roraima, Tocantins, o partido de Van Hattem), por isso eu só uso o TSE. Os blocos são os do resto do site (PSD e MDB no Centro). <b>O meu modelo do Senado é pequeno</b> (2 parâmetros por eleição, seção 4) e não é uma previsão validada: a seção 3 compara o resultado com duas réguas ingênuas e a seção 4 testa o modelo.</div>
   <div class="kpis" id="kpis"></div>
 
+  <section class="sec"><div>
   <h2>1. Quem ganhou e quem perdeu</h2>
   <p id="geralTxt"></p>
   <div class="cv" style="height:520px"><canvas id="cLista"></canvas></div>
   <div id="tLista"></div>
   <p class="fonte">Eu agrupo os partidos de 2018 pela linhagem até 2026 (DEM e PSL → União; PR → PL; PRB → Republicanos; PPS → Cidadania; PHS e PSC → Podemos; PTB, PRP e Patriota → PRD; PROS → Solidariedade). "Eleitos 2018" é o partido na eleição; "Ocupantes hoje" é o partido atual de quem ocupa essas 54 cadeiras (inclui 8 suplentes em exercício), que mudou bastante nesses 8 anos; "Δ" compara 2026 com os ocupantes de hoje. No Senado não há federação nem coligação proporcional: eu conto por partido.</p>
-
+  </div><aside class="side" id="nota1"></aside></section>
+  <section class="sec"><div>
   <h2>2. Cadeira a cadeira, por UF</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start">
     <div><h3>Cadeiras da Direita eleitas (letras = bloco de cada eleito)</h3><div class="tiles" id="mapaSen"></div>
@@ -30,13 +33,15 @@
   </div>
   <div id="tUF"></div>
   <p class="fonte">"% dos votos" é a fatia nominal do candidato; como cada eleitor tem dois votos, as fatias de uma UF somam 100% dos votos, não dos eleitores. "Margem" é a distância do 2º eleito para o 1º que ficou de fora. "D hoje → 2026" são as cadeiras da Direita entre os ocupantes de hoje e os eleitos.</p>
-
+  </div><aside class="side" id="nota2"></aside></section>
+  <section class="sec"><div>
   <h2>3. A referência × o resultado</h2>
   <p id="refTxt"></p>
   <div class="cv" style="height:260px"><canvas id="cRef"></canvas></div>
   <div id="tRef"></div>
   <p class="fonte">As duas referências são ingênuas e eu as declaro como tal. "Manter o ocupante de hoje": cada UF mantém as cadeiras da Direita que tem hoje. "Seguir a presidencial de 2022": a UF em que a soma de Bolsonaro supera a de Lula no 1º turno de 2022 dá as 2 cadeiras à Direita, e a outra, 0. "Cadeiras trocadas" é metade da soma dos desvios por UF (a mesma conta da aba da bancada do RS). Não é uma validação de modelo: ela diz onde um modelo teria que ser melhor, e uma só eleição não basta para calibrar.</p>
-
+  </div><aside class="side" id="nota3"></aside></section>
+  <section class="sec"><div>
   <h2>4. Um modelo para o Senado: a presidencial explica a vaga?</h2>
   <p id="modTxt"></p>
   <div class="cv" style="height:330px"><canvas id="cMod"></canvas></div>
@@ -48,7 +53,8 @@
   <h3 style="margin:18px 0 4px">2026, UF a UF (sabendo o total nacional)</h3>
   <div id="tSurp"></div>
   <p class="fonte">O modelo: P(vaga da Direita na UF) = σ(α + β · logit(x)), com x = anti-PT/(anti-PT + PT) no 1º turno da presidencial da UF no mesmo dia da eleição (2014: Dilma; 2018: Haddad; 2022: Lula). Ajusto α e β por eleição (máxima verossimilhança, binomial, 27 UFs). Em 2026 eu uso como x a projeção presidencial do meu modelo (1 − mediana de Lula/(Lula + Flávio) por UF, de 2/10), porque a presidencial por UF de 2026 ainda não saiu do TSE; essa projeção é praticamente o desenho de 2022 deslocado (correlação de 0,998 com 2022), então ela não traz informação de 2026 por UF. "Direita" usa os blocos fixos do site: em 2014, por exemplo, PSDB e MDB contam como Centro, e isso baixa a Direita daquele ano. "Trocadas" = metade da soma dos desvios entre cadeiras esperadas e eleitas por UF. "α calibrado" é pós-fato: escolhe o α que dá o total real de cadeiras da Direita e mede só a distribuição entre as UFs. "Régua por ranking" dá as vagas da Direita às UFs de maior x até somar o mesmo total real.</p>
-
+  </div><aside class="side" id="nota4"></aside></section>
+  <section class="sec"><div>
   <h2>5. As mais apertadas e os mais votados</h2>
   <h3 style="margin:4px 0">As cinco cadeiras decididas por menos votos</h3>
   <div id="tApert"></div>
@@ -56,13 +62,15 @@
   <h3 style="margin:18px 0 4px">Os dez mais votados</h3>
   <div id="tTop"></div>
   <p id="reelTxt"></p>
-
+  </div><aside class="side" id="nota5"></aside></section>
+  <section class="sec"><div>
   <h2>6. A aritmética do Senado de 2027</h2>
   <p id="maiTxt"></p>
   <div class="cv" style="height:240px"><canvas id="cMai"></canvas></div>
   <div id="tMai"></div>
   <p class="fonte">Eu somo as 27 cadeiras de 2022 (partido de hoje, pela API do Senado) com os 54 eleitos de 2026, sem trocas de partido nem suplentes até a posse (1/2/2027). Os blocos que eu uso: Esquerda (PT, PSB, PDT, PSOL, Rede…), Centro (MDB, PSD, PSDB, Cidadania) e Direita (PL, PP, União, Republicanos, Podemos, Novo e demais). Não são coalizões nem base de governo: o PP, o União e o Republicanos têm ministérios em governos de lados diferentes, e o PSD e o MDB votam de forma mista. Os limites são constitucionais: 41 é a maioria absoluta; 49 (3/5) é o piso de uma emenda à Constituição (que também precisa da Câmara); 54 (2/3) é o piso de uma condenação em julgamento de crime de responsabilidade.</p>
-
+  </div><aside class="side" id="nota6"></aside></section>
+  <section class="sec"><div>
   <h2>7. Limites desta análise</h2>
   <ul class="fonte" style="font-size:.88rem">
     <li>O resultado é do 1º turno e do arquivo de 5/10 do TSE; o diploma só vem depois, e candidaturas e votos podem mudar por decisão judicial (há 24 candidatos com votos "anulados sub judice" no arquivo, nenhum eleito; eu os tirei das margens e das porcentagens, e o mais votado deles é Gladson Camelí, PP, no Acre, com 145.244 votos).</li>
@@ -71,8 +79,10 @@
     <li>Os blocos são uma simplificação minha. Se o PSD (e parte do MDB) fosse contado como Direita, ou o Republicanos como Centro, a aritmética da seção 6 muda; a tabela mostra a Direita sozinha e as somas com o Centro.</li>
     <li>"Ocupantes hoje" inclui suplentes em exercício e o partido que cada um tem hoje; eu não segui as trocas partidárias ao longo do mandato.</li>
   </ul>
+  </div></section>
   </div>
 </main>
+<footer class="rodape"><div class="rodape-in"><p><b>Isto não é pesquisa eleitoral nem previsão validada.</b> É um modelo estatístico condicionado às pesquisas e ao histórico do TSE; pesquisas e resultados de 2026 nem sempre foram conferidos na fonte oficial, e cada página diz o que foi e o que não foi.</p><p>Fontes: TSE (resultados e dados abertos), API de Dados Abertos do Senado e da Câmara, institutos de pesquisa e imprensa, conforme a <a href="documentacao.html">documentação</a>. Código aberto (MIT) em <a href="https://github.com/mtgr18977/sassamaruEleicoes26" target="_blank" rel="noopener">GitHub</a>. Página gerada em 06/10/2026.</p></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="assets/site.js"></script>
 <script src="assets/analise.js"></script>
@@ -161,7 +171,33 @@ function modelo() {
   const S = M.ufs.slice().sort((a, b) => a.res - b.res), sel = [...S.slice(0, 4), ...S.slice(-4)];
   tab("tSurp", ["UF", "x (anti-PT, projeção)", "Chance da Direita por vaga", "Esperado (de n)", "Eleitos da Direita", "Resíduo"], sel.map(u => [u.uf, f1(100 * u.x) + "%", f1(100 * u.pD) + "%", `${f2(u.esperado)} de ${u.n}`, u.D, pp(u.res)]));
 }
-function tudo() { kpis(); lista(); ufs(); ref(); modelo(); apert(); tops(); maioria(); }
+// ---------- notas laterais ----------
+function notas() {
+  const M = D.modelo, A = M.ajustes, B = M.backtest, b26 = B[B.length - 1], R = D.ref, ks = Object.keys(R), r = D.reel, nb = D.nb;
+  const d2 = D.ufs.filter(u => u.d26 === 2).length, ap = D.ufs.slice().sort((x, y) => x.margem - y.margem)[0], menos2 = D.ufs.filter(u => u.margem_pp < 2).length;
+  const dir = nb.D.fica + nb.D.eleitos, cen = nb.C.fica + nb.C.eleitos, esq = nb.E.fica + nb.E.eleitos;
+  const queda = D.listas.map(l => ({ l: l.lista, d: l.real - l.atual })).sort((x, y) => x.d - y.d)[0];
+  nota("nota1", [`PL: <b>${pl().e18} → ${pl().atual} → ${pl().real}</b> (eleitos em 2018, ocupantes hoje, eleitos em 2026).`,
+    `Maior queda: <b>${queda.l}</b> (${queda.d} cadeiras sobre os ocupantes de hoje).`,
+    `Direita: ${D.blocos.D.atual} → <b>${D.blocos.D.real}</b> das 54 cadeiras.`,
+    `Dados <b>oficiais do TSE</b> (5/10), sujeitos a recurso.`]);
+  nota("nota2", [`A Direita levou as 2 vagas em <b>${d2}</b> das 27 UFs.`,
+    `Cadeira mais apertada: <b>${ap.uf}</b>, ${pc(ap.margem)} votos de diferença.`,
+    `Cada eleitor tem 2 votos: as porcentagens somam 100% dos votos, não dos eleitores.`]);
+  nota("nota3", [`Manter o ocupante de hoje previa ${R[ks[0]].direita} cadeiras da Direita; foram <b>${D.blocos.D.real}</b>.`,
+    `Seguir a presidencial de 2022 na UF previa ${R[ks[1]].direita}.`,
+    `São réguas, não um modelo: o da seção 4 tem de superá-las.`]);
+  nota("nota4", [`Peso da presidencial no Senado (β): ${f2(A[0].beta)} em 2014 → <b>${f2(A[2].beta)}</b> em 2022.`,
+    `Os parâmetros de 2022 esperavam ${f1(b26.esperado)} cadeiras da Direita em 2026; saíram <b>${b26.real}</b>.`,
+    `Sabendo o total, a distribuição entre as UFs erra ${f1(b26.trocadas_cal)} cadeiras.`]);
+  nota("nota5", [`<b>${menos2}</b> das 27 UFs foram decididas por menos de 2 p.p. dos votos.`,
+    `${r.reeleitos} dos ${r.concorreram} ocupantes que concorreram foram reeleitos.`,
+    `${D.mais.filter(m => !m.eleito).length} dos 10 mais votados do país não foram eleitos (2 vagas por UF).`]);
+  nota("nota6", [`Direita em 2027: <b>${dir}</b> de 81 (3/5 = ${L.tres_quintos}; 2/3 = ${L.dois_tercos}).`,
+    `Esquerda + Centro: ${esq + cen}.`,
+    `PL: ${D.novo.PL.fica} das 27 cadeiras de 2022 + <b>${D.novo.PL.eleitos}</b> eleitas em 2026.`]);
+}
+function tudo() { kpis(); lista(); ufs(); ref(); modelo(); apert(); tops(); maioria();  notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
