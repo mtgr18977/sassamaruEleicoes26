@@ -7,7 +7,7 @@ Data: 2/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 |---|---|
 | ETL (`fetch_tse.py`) | rodado com dados reais do TSE; 12/12 OK contra o oficial; corrigidas dupla contagem (`_BR`+`_BRASIL`) e `cod_municipio` sem zero |
 | Backtest (`backtest.py`, `nivel2.py`) | swing uniforme (δ real) erra ~6,2 p.p. por UF no 1º turno vs 9,95 da persistência; λ regional não melhora de forma clara |
-| Pesquisas (`pesquisas.py`) | δ com house effect, recência, viés histórico (RMSE 3,6 p.p. 1º / 1,5 p.p. 2º; correção opcional por eleição: +2,3 / +0,8 p.p.), incerteza da tendência e piso assumido de 2,5 p.p. no 2º turno |
+| Pesquisas (`pesquisas.py`) | δ com house effect, recência, viés histórico (RMSE 3,2 p.p. 1º / 1,2 p.p. 2º; correção opcional por eleição: +1,9 / +0,5 p.p., agora com Paraná Pesquisas e CNT/MDA 2022 além de Datafolha/Quaest/AtlasIntel — ver README), incerteza da tendência e piso assumido de 2,5 p.p. no 2º turno |
 | Monte Carlo (`montecarlo.py`, JS) | UF e capitais; teste node compara JS com Python |
 | Projeção 1º turno (`projecao.py`, JS) | Refeita em 2/10 com o Datafolha de 28/9–1/10: Lula 45,5 / Flávio 42,0 / demais 12,4; P(2º turno) 90%. A de 1/10 (45,2 / 42,1 / 12,6) está na tag `projecao-1turno-2026-10-01` |
 | Aba RS (`rs.html`) | Governador: histórico TSE 2002–2022 por bloco/região, 10 pesquisas de 2026, chances e projeção por região (Zucco 90% · Brizola 10% com as pesquisas até 2/10 (sem pesquisa nova do RS desde 29/9); premissas assumidas, ver README) |

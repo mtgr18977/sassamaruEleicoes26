@@ -21,7 +21,7 @@ def test_pesquisas_do_rs_somam_100_e_o_modelo_fecha():
     sh = np.exp([0, *par["mu"]]); sh = 100 * sh / sh.sum() * (1 - par["rbar"])
     assert 41 < sh[0] < 46 and 34 < sh[1] < 38.5                   # faixas de regressão; atualizar se as pesquisas mudarem muito
     r = rm.chances(par, n=20000)
-    assert abs(sum(r["eleito"]) - 1) < 1e-9 and 0.8 < r["eleito"][0] < 0.95
+    assert abs(sum(r["eleito"]) - 1) < 5e-4 and 0.8 < r["eleito"][0] < 0.95   # eleito vem de 3 valores arredondados a 4 casas (rm.chances)
 
 
 def test_ruido_regional_medido_e_plausivel_e_a_calibracao_bate_com_os_totais():
