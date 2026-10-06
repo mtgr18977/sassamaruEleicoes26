@@ -1,0 +1,26 @@
+grupo,rotulo,valor,unidade,tweet,obs
+perfil,"Agro > 50% da economia local",-8.8,"p.p. de Lula (queda tipica)",2106989714016285005,"Tweet 2: mediana/queda tipica nao definida na fonte"
+perfil,"Agro < 5% da economia local",-3.9,"p.p. de Lula (queda tipica)",2106989714016285005,
+perfil,"Municipios ate 5 mil habitantes",-7.2,"p.p. de Lula",2106989721792520474,"Tweet 5 (Resumo 1/3)"
+perfil,"Municipios acima de 500 mil habitantes",-1.1,"p.p. de Lula",2106989721792520474,
+abstencao,"Abstencao 2022 e 2026 (% do eleitorado apto)",20.8,"%",2106989715748475190,"Segundo o autor, estavel; o TSE 2022 do repositorio da 20,9% e o blog da InfoMoney 21,41% em 2026 (parcial): conferir"
+abstencao,"Lula sobre aptos, 2022 -> 2026",-2.6,"p.p.",2106989715748475190,"Recalculado aqui: -2,66 (57.259.504/156.454.011 -> 53.879.538/158.745.502)"
+abstencao,"PL sobre aptos, 2022 -> 2026",2.7,"p.p.",2106989715748475190,"Recalculado aqui: +2,70"
+metodo,"Municipios na regressao",5528,"n",2106989718957437087,"Efeito fixo de UF; controles do Censo 2022 e do voto de Lula em 2022"
+metodo,"Peso do agro no PIB (por desvio-padrao)",-0.61,"p.p.",2106989718957437087,"Associacao, nao causa. % evangelicos: efeito nulo; capitais perderam menos"
+volume,"Parcela da queda nacional de Lula no Sudeste",51,"% da queda nacional (Resumo 2/3; o Adendo 1 fala em 53% dos votos perdidos)",2106989723470147857,
+volume,"Parcela da queda nacional em cidades > 100 mil hab.",48,"%",2106989723470147857,
+volume,"Lula, votos perdidos 2022 -> 2026",3.4,"milhoes",2106992694467940710,"Recalculado aqui: 3,38"
+volume,"... no Sudeste",53,"% da perda",2106992694467940710,
+volume,"... no Sul",29,"% da perda",2106992694467940710,
+volume,"... no Centro-Oeste",11,"% da perda",2106992694467940710,
+volume,"PL, votos ganhos 2022 -> 2026",5.0,"milhoes",2106992694467940710,"Recalculado aqui: 5,03"
+volume,"... no Nordeste",32,"% do ganho",2106992694467940710,
+volume,"Lula no Nordeste, votos perdidos",0.259,"milhoes",2106992694467940710,
+nordeste,"Lula NE 2022",21.7,"milhoes",2106992891813888490,"TSE 2022 do repositorio: 21,75"
+nordeste,"Lula NE 2026",21.5,"milhoes",2106992891813888490,
+nordeste,"PL NE, ganho",1.6,"milhoes",2106992891813888490,
+nordeste,"Margem de Lula no NE 2022",13.0,"milhoes",2106992891813888490,"TSE 2022 do repositorio: 12,97"
+nordeste,"Margem de Lula no NE 2026",11.1,"milhoes",2106992891813888490,
+nordeste,"Deficit de Lula no resto do pais 2022",6.8,"milhoes",2106992891813888490,"TSE 2022 do repositorio: 6,79"
+nordeste,"Deficit de Lula no resto do pais 2026",13.3,"milhoes",2106992891813888490,"13,3 - 11,1 = 2,2 mi = vantagem nacional de Flavio (2,22 mi)"

@@ -1,0 +1,82 @@
+uf,nome,partido,mandato_fim,titular,fonte,acesso
+AC,Alan Rick,REPUBLICANOS,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AC,Marcio Bittar,PL,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AC,Sérgio Petecão,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AL,Dra. Eudócia,PSDB,2027-01-31,1º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AL,Renan Calheiros,MDB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AL,Renan Filho,MDB,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AM,Eduardo Braga,MDB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AM,Omar Aziz,PSD,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AM,Plínio Valério,PSDB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AP,Davi Alcolumbre,UNIÃO,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AP,Lucas Barreto,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+AP,Randolfe Rodrigues,PT,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+BA,Angelo Coronel,REPUBLICANOS,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+BA,Jaques Wagner,PT,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+BA,Otto Alencar,PSD,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+CE,Camilo Santana,PT,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+CE,Cid Gomes,PSB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+CE,Sargento Reginauro,PSDB,2027-01-31,1º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+DF,Damares Alves,REPUBLICANOS,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+DF,Izalci Lucas,PL,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+DF,Leila Barros,PDT,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+ES,Fabiano Contarato,PT,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+ES,Magno Malta,PL,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+ES,Marcos do Val,AVANTE,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+GO,Jorge Kajuru,PSB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+GO,Vanderlan Cardoso,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+GO,Wilder Morais,PL,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MA,Eliziane Gama,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MA,Lourdinha Pereira,PSB,2031-01-31,2º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MA,Weverton,PDT,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MG,Carlos Viana,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MG,Cleitinho,REPUBLICANOS,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MG,Renzo Braz,PP,2027-01-31,1º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MS,Nelsinho Trad,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MS,Soraya Thronicke,PSB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MS,Tereza Cristina,PP,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MT,Carlos Fávaro,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MT,Jayme Campos,UNIÃO,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+MT,Wellington Fagundes,PL,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PA,Beto Faro,PT,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PA,Jader Barbalho,MDB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PA,Zequinha Marinho,PODE,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PB,Daniella Ribeiro,PP,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PB,Efraim Filho,PL,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PB,Veneziano Vital do Rêgo,MDB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PE,Fernando Dueire,PSD,2027-01-31,1º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PE,Humberto Costa,PT,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PE,Teresa Leitão,PT,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PI,Ciro Nogueira,PP,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PI,Jussara Lima,PSD,2031-01-31,1º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PI,Marcelo Castro,MDB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PR,Flávio Arns,PSB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PR,Oriovisto Guimarães,PSDB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+PR,Sergio Moro,PL,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RJ,Carlos Portinho,PL,2027-01-31,1º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RJ,Flávio Bolsonaro,PL,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RJ,Romário,S/Partido,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RN,Rogerio Marinho,PL,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RN,Styvenson Valentim,PODE,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RN,Zenaide Maia,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RO,Confúcio Moura,MDB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RO,Jaime Bagattoli,PL,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RO,Marcos Rogério,PL,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RR,Chico Rodrigues,PSB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RR,Dr. Hiran,PP,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RR,Roberta Acioly,REPUBLICANOS,2027-01-31,1º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RS,Hamilton Mourão,REPUBLICANOS,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RS,Luis Carlos Heinze,PP,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+RS,Paulo Paim,PT,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+SC,Esperidião Amin,PP,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+SC,Ivete da Silveira,MDB,2027-01-31,1º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+SC,Jorge Seif,PL,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+SE,Alessandro Vieira,MDB,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+SE,Laércio Oliveira,PP,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+SE,Rogério Carvalho,PT,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+SP,Astronauta Marcos Pontes,PL,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+SP,Giordano,PODE,2027-01-31,1º Suplente,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+SP,Mara Gabrilli,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+TO,Eduardo Gomes,PL,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+TO,Irajá,PSD,2027-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06
+TO,Professora Dorinha Seabra,UNIÃO,2031-01-31,Titular,API de dados abertos do Senado (/senador/lista/atual),2026-10-06

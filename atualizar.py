@@ -1,4 +1,4 @@
-"""Regenera tudo a partir dos CSVs: pesquisas -> Monte Carlo -> modelo do RS -> páginas (index.html, rs.html e bancada.html).
+"""Regenera tudo a partir dos CSVs: pesquisas -> Monte Carlo -> modelo do RS -> páginas (index.html, analise*.html, segundo-turno.html, rs.html, bancada.html e analise-senado.html).
 
   python atualizar.py   pesquisas.py, montecarlo.py, rs_modelo.py, projecao.py (1º turno), as três páginas e os testes
 
@@ -9,7 +9,7 @@ A projeção de 1/10 não é mais sobrescrita no repositório: está na tag proj
 import subprocess
 import sys
 
-passos = ["pesquisas.py", "montecarlo.py", "rs_modelo.py", "projecao.py", "gerar_pagina_lula.py", "gerar_pagina_rs.py", "gerar_pagina_bancada.py"]
+passos = ["pesquisas.py", "montecarlo.py", "rs_modelo.py", "projecao.py", "gerar_pagina_lula.py", "gerar_pagina_analise.py", "gerar_pagina_segundo_turno.py", "gerar_pagina_rs.py", "gerar_pagina_bancada.py", "gerar_paginas_analise_rs.py", "gerar_pagina_senado.py"]
 for p in passos:
     print(f"\n>>> python {p}")
     subprocess.run([sys.executable, p], check=True, stdout=subprocess.DEVNULL if p in ("montecarlo.py", "rs_modelo.py") else None)

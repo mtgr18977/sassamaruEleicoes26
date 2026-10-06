@@ -1,0 +1,9 @@
+cargo,nome,partido,votos,votos_2022,fonte,obs
+DF,Mauricio Marcon,PL,379834,140634,"CNN Brasil e Gazeta do Povo; votos de 2022 de datasets/rs-bancada-atual.csv (API da Camara)","Nao conferido no TSE"
+DF,Fernanda Melchionna,PSOL,280262,199894,"idem",
+DF,Giovani Cherini,PL,234171,,"idem","2022: nao cruzado"
+DF,Rony Gabriel,PODE,223643,,"idem",
+DF,Alceu Moreira,MDB,217208,,"idem",
+DE,Adri Cherini,PL,129492,,"CNN Brasil e busca web (os 3 primeiros coincidem)","Nao conferido no TSE/ALRS"
+DE,Delegado Zucco,REPUBLICANOS,128599,,"idem","Nome na lista da CNN; nao confundir com o governador eleito (Luciano Zucco, PL)"
+DE,Luciana Genro,PSOL,127601,,"idem",

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2º turno · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+<style>
+  .sl2 { display:flex; flex-wrap:wrap; gap:14px 24px; align-items:center; margin:8px 0 } .sl2 label { display:flex; flex-direction:column; min-width:260px; font-size:.85rem; color:var(--ink2) } .sl2 b { color:var(--ink) }
+  .sl2 input[type=range] { width:100% } .bt { border:1px solid var(--line); background:var(--surface); color:var(--ink2); border-radius:8px; padding:4px 10px; cursor:pointer; font:inherit; font-size:.8rem } .bt:hover { color:var(--ink) }
+  tr.chave td { background:color-mix(in srgb, var(--s4) 16%, transparent) }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
+  <div class="topo"><div><h1>2º turno (25/10/2026): Lula × Flávio Bolsonaro</h1>
+  <p class="sub">Aqui eu mostro onde a disputa está depois do 1º turno e o que cada cenário de votação implica, estado a estado.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="an">
+  <div class="aviso" id="aviso"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <h2>1. Onde a disputa está</h2>
+  <p id="ancTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cAnc"></canvas></div>
+  <div id="tAnc"></div>
+
+  <h2>2. Simulador de cenários</h2>
+  <p>Escolha a parcela de Lula nos votos válidos do 2º turno (só dois candidatos). Meu modelo parte do 2º turno de 2022 por estado, aplica uma mudança uniforme em logit, choques regionais e ruído por UF (medidos em 2002–2022) e recalibra para o total escolhido. <b>Isto não é previsão</b>: é o que eu consigo dizer sobre o que cada cenário implica.</p>
+  <div class="sl2">
+    <label>Lula nos válidos do 2º turno: <b id="vS"></b><input id="slS" type="range" min="44" max="56" step="0.1"></label>
+    <label>Incerteza do total nacional (desvio-padrão): <b id="vSd"></b><input id="slSd" type="range" min="1" max="4" step="0.5"></label>
+  </div>
+  <div class="filtros" id="btAnc"></div>
+  <div class="kpis" id="kSim"></div>
+  <div class="row">
+    <div><h3>2º turno de 2022 (resultado) · Lula − Bolsonaro</h3><div class="tiles" id="mapa22"></div></div>
+    <div><h3>Este cenário (mediana) · Lula − Flávio</h3><div class="tiles" id="mapa26"></div></div>
+  </div>
+  <p class="nota" style="margin:4px 0 10px">Cada quadrado é um estado, posicionado como no mapa. Vermelho: Lula na frente; azul: o adversário; escala até ±40 p.p. Mexa no controle acima e o mapa da direita muda junto. O contorno preto marca o que eu chamo de estados-chave.</p>
+  <div class="row"><div><h3>Chance de Lula vencer, por cenário</h3><div class="cv" style="height:280px"><canvas id="cCurva"></canvas></div></div>
+  <div><h3>Estados-chave neste cenário</h3><div id="chaves"></div></div></div>
+  <details open><summary>Ver as 27 UFs e o exterior</summary><div id="tUF"></div></details>
+  <p class="fonte" id="simNota"></p>
+
+  <h2>3. Pesquisas de 2º turno depois do 1º turno</h2>
+  <div id="tPesq"></div>
+
+  <h2>4. O que falta para eu recalibrar</h2>
+  <ul id="falta" style="font-size:.9rem"></ul>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script src="assets/mapa.js"></script>
+<script src="modelos/eleicoes-model.js"></script>
+<script>
+const D = __DATA__, R = D.r26, A = D.ancoras, U = D.par.mc.turno2.unidades, W = U.reduce((s, u) => s + u.validos, 0);
+state.s = D.pesq.length ? D.pesq.reduce((s, x) => s + x.s, 0) / D.pesq.length : R.s; state.sd = D.piso;
+const nomeUF = (u) => (u === "ZZ" ? "Exterior" : u);
+const sdLogit = () => state.sd / 25;     // p ≈ 0,5: d(logit) = d(p) / 0,25
+const sim = (s, n = 6000, sd = sdLogit()) => EleicoesModel.simular(D.par, 2, { p: s / 100, sd, n, seed: 2026 });
+const ANC = [["1º turno 2026: Lula/(Lula+Flávio)", R.s], ["Demais candidatos divididos meio a meio", A.demais_meio], ["Pesquisas até 2/10 (modelo, 2º turno)", A.pre_t1], ["2º turno de 2022", A.t2_2022], ["Lula leva todos os demais", A.demais_todos]];
+
+function topo() {
+  $("aviso").innerHTML = D.pesq.length ? `<b>Cenários, não previsão.</b> Registrei ${D.pesq.length} pesquisa(s) de 2º turno depois do 1º turno; o simulador parte da média simples.` : `<b>Eu ainda não registrei nenhuma pesquisa de 2º turno feita depois do 1º turno</b> (<code>datasets/pesquisas-2turno-pos-1t-2026.csv</code> está vazio). Por isso esta aba é um simulador de cenários: o meu modelo da aba Presidente ainda usa pesquisas até 2/10, anteriores ao resultado, e eu não o recalibrei. O resultado do 1º turno é preliminar e eu não o conferi no TSE.`;
+  $("kpis").innerHTML = `<div class="kpi f"><span>Flávio Bolsonaro, 1º turno</span><b>${f2(R.F)}%</b><small>${pc(R.vF)} votos</small></div>
+    <div class="kpi l"><span>Lula, 1º turno</span><b>${f2(R.L)}%</b><small>${pc(R.vL)} votos</small></div>
+    <div class="kpi o"><span>Demais candidatos</span><b>${f2(R.O)}%</b><small>é o que está em disputa</small></div>
+    <div class="kpi"><span>Cada 1 p.p. no 2º turno</span><b>≈ ${f1(R.validos / 1e8 * 1)} mi</b><small>de votos (válidos de 2026 ≈ ${mi(R.validos)} mi)</small></div>`;
+}
+function ancoras() {
+  const need = (50 - R.L) / R.O * 100;
+  $("ancTxt").innerHTML = `No 1º turno, Lula teve ${f2(R.L)}% dos válidos e Flávio ${f2(R.F)}%; na disputa a dois, ${f2(R.s)}% para Lula. Para passar de 50% nos válidos, Lula precisa de <b>${f1(need)}%</b> dos votos que foram para outros candidatos (Flávio precisa de ${f1((50 - R.F) / R.O * 100)}%). Em 2022 Lula foi de ${f2(A.l1_2022)}% no 1º turno para ${f2(A.t2_2022)}% no 2º (<b>+${f2(A.t2_2022 - A.l1_2022)} p.p.</b>). Agora, pela minha conta, ele precisa de <b>+${f2(50 - R.L)} p.p.</b> (${f2(R.L)}% → 50%), cerca de ${f1((50 - R.L) / (A.t2_2022 - A.l1_2022))} vez(es) o ganho de 2022.`;
+  const L = ANC.map(a => ({ n: a[0], v: a[1] })); if (D.pesq.length) L.push({ n: "Média simples das pesquisas pós-1º turno", v: state.s });
+  chart("cAnc", { type: "bar", data: { labels: L.map(x => x.n), datasets: [{ data: L.map(x => x.v), backgroundColor: cor("--pt") }] },
+    options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: eixo({ min: 44, max: 56, title: { display: true, text: "% de Lula nos válidos (maioria = 50%)", color: css("--ink2") } }), y: eixo({ grid: { display: false } }) } } });
+  tabela("tAnc", ["Ponto de referência", "Lula (%)", "Distância de 50% (p.p.)"], L.map(x => [x.n, f2(x.v), pp(x.v - 50)]));
+}
+function simulador() {
+  $("slS").value = state.s; $("vS").textContent = f1(state.s) + "%"; $("slSd").value = state.sd; $("vSd").textContent = f1(state.sd) + " p.p.";
+  const r = sim(state.s), ch = r.ufs.filter(u => u.pvit > 0.25 && u.pvit < 0.75).sort((a, b) => Math.abs(a.pvit - .5) - Math.abs(b.pvit - .5));
+  $("kSim").innerHTML = `<div class="kpi l"><span>Chance de Lula vencer</span><b>${f1(100 * r.p_nac_gt50)}%</b><small>% dos válidos > 50%</small></div>
+    <div class="kpi f"><span>Chance de Flávio vencer</span><b>${f1(100 * (1 - r.p_nac_gt50))}%</b><small>com o desvio escolhido</small></div>
+    <div class="kpi"><span>Margem mediana</span><b>${pp(r.margem_mediana_pp)} p.p.</b><small>Lula − Flávio, ≈ ${mi(Math.abs(r.margem_mediana_pp) / 100 * R.validos)} mi de votos</small></div>
+    <div class="kpi"><span>Estados-chave</span><b>${ch.length}</b><small>chance de Lula entre 25% e 75%</small></div>`;
+  $("chaves").innerHTML = ch.length ? `<table class="t"><tr><th>UF</th><th>Lula 2022 (2º)</th><th>Cenário (p5–p95)</th><th>Peso</th></tr>` + ch.map(u => `<tr><td>${nomeUF(u.uf)}</td><td>${f1(100 * u.p2022)}</td><td>${f1(100 * u.mediana)} (${f1(100 * u.p5)}–${f1(100 * u.p95)})</td><td>${f1(100 * U.find(x => x.uf === u.uf).validos / W)}%</td></tr>`).join("") + `</table>` : `<p class="nota">Neste cenário não vejo nenhum estado entre 25% e 75%: ou todos estão definidos, ou o total nacional está longe de 50%.</p>`;
+  const m22 = {}, m26 = {}; r.ufs.forEach(u => { if (u.uf === "ZZ") return; m22[u.uf] = 100 * (2 * u.p2022 - 1); m26[u.uf] = 100 * (2 * u.mediana - 1); });
+  mapaTiles("mapa22", m22); mapaTiles("mapa26", m26, { destaque: ch.map(u => u.uf) });
+  const o = r.ufs.slice().sort((a, b) => b.pvit - a.pvit);
+  $("tUF").innerHTML = `<table class="t"><tr><th>UF</th><th>Região</th><th>Peso (válidos 2022)</th><th>Lula 2022 (2º)</th><th>Cenário: mediana (p5–p95)</th><th>Chance de Lula na UF</th></tr>` + o.map(u => { const m = U.find(x => x.uf === u.uf); return `<tr class="${u.pvit > .25 && u.pvit < .75 ? "chave" : ""}"><td>${nomeUF(u.uf)}</td><td>${m.regiao}</td><td>${f1(100 * m.validos / W)}%</td><td>${f1(100 * u.p2022)}</td><td>${f1(100 * u.mediana)} (${f1(100 * u.p5)}–${f1(100 * u.p95)})</td><td>${f1(100 * u.pvit)}%</td></tr>`; }).join("") + `</table>`;
+  $("simNota").innerHTML = `As linhas destacadas são os estados-chave. A minha premissa é que a mudança é uniforme em logit a partir do 2º turno de 2022, com os choques regionais medidos no passado. O modelo <b>não sabe onde Lula perdeu no 1º turno</b> (Minas Gerais e Tocantins mudaram de lado, o Sul e o Centro-Oeste andaram mais à direita, como mostro na aba Análise), então eu leio os estados do Sudeste e do Centro-Oeste com cautela. Aqui o desvio do total nacional é ${f1(state.sd)} p.p. (no meu modelo é ${f1(D.piso)}, um piso que eu assumi).`;
+  curva();
+}
+function curva() {
+  const xs = []; for (let s = 44; s <= 56.01; s += 0.5) xs.push(+s.toFixed(1));
+  const ys = xs.map(s => 100 * sim(s, 1500).p_nac_gt50);
+  chart("cCurva", { type: "line", data: { labels: xs.map(x => f1(x)), datasets: [{ label: "Chance de Lula vencer (%)", data: ys, borderColor: cor("--pt"), backgroundColor: cor("--pt"), borderWidth: 2, pointRadius: 0, tension: .2 }, { label: "Cenário atual", data: xs.map(x => Math.abs(x - state.s) < .26 ? 100 * sim(state.s, 1500).p_nac_gt50 : null), borderColor: cor("--ink"), backgroundColor: cor("--ink"), pointRadius: 6, showLine: false }] },
+    options: { scales: { x: eixo({ title: { display: true, text: "Lula nos válidos do 2º turno (%)", color: css("--ink2") }, ticks: { color: css("--ink2"), maxTicksLimit: 8 } }), y: eixo({ min: 0, max: 100, title: { display: true, text: "chance de vencer (%)", color: css("--ink2") } }) } } });
+}
+function botoes() {
+  $("btAnc").innerHTML = "Partir de: " + ANC.map((a, i) => `<button class="bt" data-i="${i}">${a[0].replace(/^(.{34}).+$/, "$1…")} (${f1(a[1])})</button>`).join("");
+  $("btAnc").onclick = (e) => { const i = e.target.dataset.i; if (i == null) return; state.s = ANC[i][1]; simulador(); };
+}
+function pesqs() {
+  $("tPesq").innerHTML = D.pesq.length ? "" : `<p>Eu não registrei nenhuma pesquisa ainda. Para acrescentar, ponho uma linha em <code>datasets/pesquisas-2turno-pos-1t-2026.csv</code> por pesquisa (instituto, datas de campo, base, Lula, Flávio, registro no TSE), <b>conferida na fonte</b>, e rodo <code>python atualizar.py</code>. A página passa a mostrar a tabela e a usar a média simples como ponto de partida.`;
+  if (D.pesq.length) tabela("tPesq", ["Instituto", "Campo até", "Base", "Lula", "Flávio", "Lula/(L+F)", "Registro"], D.pesq.map(x => [x.inst, x.campo, x.base, f1(x.L), f1(x.F), f2(x.s), x.registro || "–"]));
+}
+function falta() {
+  $("falta").innerHTML = [
+    `<b>Pesquisas de 2º turno depois de 4/10</b> (seção 3): é a partir delas que o meu modelo estima o nível, com efeito de instituto e recência.`,
+    `<b>O erro do 1º turno entra no viés histórico:</b> as pesquisas finais deram a Lula 2,8 a 4,4 p.p. a mais na disputa a dois (média ≈ 3,5). O viés médio que eu uso hoje é de +${f1(D.vies1)} p.p. no 1º turno e +${f1(D.vies2)} p.p. no 2º (poucas eleições). Ainda não pus isso em <code>datasets/vies-pesquisas.csv</code>, porque mudaria as projeções sem validação.`,
+    `<b>Resultado oficial por município e UF:</b> o meu modelo precisa saber onde o voto de Lula caiu, e hoje eu só tenho números por UF para uma parte dos estados.`,
+    `<b>Um 2º turno costuma mudar a composição do eleitorado</b> (abstenção, voto em branco). Eu uso os votos válidos de 2022 como peso dos estados e não simulo mudança de comparecimento.`].map(t => `<li>${t}</li>`).join("");
+}
+function tudo() { topo(); ancoras(); simulador(); pesqs(); falta(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+$("slS").oninput = () => { state.s = +$("slS").value; clearTimeout(state.t); state.t = setTimeout(simulador, 120); $("vS").textContent = f1(state.s) + "%"; };
+$("slSd").oninput = () => { state.sd = +$("slSd").value; clearTimeout(state.t); state.t = setTimeout(simulador, 120); $("vSd").textContent = f1(state.sd) + " p.p."; };
+botoes(); tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>

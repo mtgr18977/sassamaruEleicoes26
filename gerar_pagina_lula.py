@@ -1,6 +1,8 @@
 """Gera index.html (raiz, servida pelo Netlify) (autocontida, dados embutidos) a partir dos CSVs.
 Lula = 2002, 2006, 2022. Eleições sem Lula na urna (2010/2014 Dilma, 2018 Haddad) ficam como pontos de contexto."""
 import json
+
+import nav
 import numpy as np
 import pandas as pd
 from nivel2 import REGIAO
@@ -86,6 +88,6 @@ out["modelo"] = json.load(open("modelos/parametros.json"))
 import agregador
 out["agg"] = agregador.presidente()
 
-html = open("apps/lula.template.html", encoding="utf-8").read().replace("__DATA__", json.dumps(out, ensure_ascii=False))
+html = open("apps/lula.template.html", encoding="utf-8").read().replace("__NAV__", nav.html("index.html")).replace("__DATA__", json.dumps(out, ensure_ascii=False))
 open("index.html", "w", encoding="utf-8").write(html)
 print("index.html", len(html) // 1024, "KB")
