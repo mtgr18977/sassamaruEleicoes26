@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análise do governo do RS · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site"><a href="segundo-turno.html">2º turno</a><a href="index.html">Presidente 2026</a><a href="analise.html">Análise</a><a href="rs.html">Governo do RS 2026</a><a href="analise-governo.html" aria-current="page">Análise do governo RS</a><a href="bancada.html">Bancada RS 2026</a><a href="analise-bancada.html">Análise da bancada RS</a><a href="documentacao.html">Documentação</a></nav>
+  <div class="topo"><div><h1>Análise: governo do RS, 1º turno (4/10/2026)</h1>
+  <p class="sub">Zucco (PL) foi eleito no 1º turno. O que mudou desde 2022, o quanto o modelo e as pesquisas erraram e como o RS votou em relação ao país.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="an">
+  <div class="aviso"><b>Dados preliminares e não conferidos no TSE.</b> Resultado estadual de uma página de apuração com 100% das seções (O Tempo), batido com a Wikipedia; as cidades vêm de um resumo automático dessa página. Base: votos válidos. Detalhes e fontes em <code>datasets/resultado-2026-rs-*.csv</code>.</div>
+  <div class="kpis" id="kpis"></div>
+
+  <h2>1. O quadro geral: 2022 × 2026</h2>
+  <p id="geralTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cGeral"></canvas></div>
+  <div id="tGeral"></div>
+  <p class="fonte">Comparação aproximada: em 2022 os blocos juntam todos os candidatos (Direita = Onyx, Heinze, Argenta e Jobim; Centro = Eduardo Leite; Esquerda = Edegar Pretto, Vieira da Cunha e outros). Em 2026 a Direita é Zucco, a Esquerda é Brizola e o Centro é Souza, Maranata e demais. Direita 2026 = Zucco + 0,19 de nanicos (derivado).</p>
+
+  <h2>2. Pesquisas e modelo × resultado</h2>
+  <p id="pesqTxt"></p>
+  <div class="cv" style="height:320px"><canvas id="cPesq"></canvas></div>
+  <div id="tModelo"></div>
+  <h3 style="margin:18px 0 4px">Última pesquisa de cada instituto</h3>
+  <div id="tPesq"></div>
+  <p class="fonte" id="pesqNota"></p>
+
+  <h2>3. O RS e a eleição nacional</h2>
+  <p id="natTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cNat"></canvas></div>
+  <h3 style="margin:18px 0 4px">Maiores cidades (líder em cada disputa)</h3>
+  <div id="tCid"></div>
+  <p id="cidTxt"></p>
+  <p class="fonte">Percentual do líder em cada disputa, de resumo automático de uma página de apuração. <span class="vazio">Pelotas aparece com 47,1% nas duas colunas, o que parece coincidência: conferir antes de citar.</span> Variação = % do líder em 2026 menos o % do mesmo lado em 2022 (Lula ou Bolsonaro, TSE).</p>
+
+  <h2>4. O que muda no site</h2>
+  <p id="siteTxt"></p>
+
+  <h2>5. Limites desta análise</h2>
+  <ul class="fonte" style="font-size:.88rem">
+    <li>Dados preliminares. A Agência Brasil mostrava Zucco com 57,88% e Brizola com 31,88% (91,53% das seções); o final de 100% é 58,05% e 31,65%. Maranata (1,68%) vem de uma fonte só.</li>
+    <li>Não há dados de 2026 por mesorregião nem por município fora das dez cidades acima, então esta página não refaz o mapa regional da aba do governador.</li>
+    <li>"Voto útil" e polarização são hipóteses compatíveis com os números (Souza caiu de ~16% nas pesquisas para 8,4%), não resultados de pesquisa de saída.</li>
+    <li>O RS não tem série histórica de pesquisas de governador: o erro sistemático do modelo (3,6 p.p.) é um proxy tirado do nível nacional, e este resultado mostra que foi pequeno demais.</li>
+  </ul>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = {"cand": [{"nome": "Luciano Zucco", "partido": "PL", "votos": 3516048, "pct": 58.05}, {"nome": "Juliana Brizola", "partido": "PDT", "votos": 1917374, "pct": 31.65}, {"nome": "Gabriel Souza", "partido": "MDB", "votos": 510698, "pct": 8.43}, {"nome": "Marcelo Maranata", "partido": "PSDB", "votos": null, "pct": 1.68}, {"nome": "Outros (derivado)", "partido": "", "votos": null, "pct": 0.19}], "validos": 6056120, "pres26": {"Flavio Bolsonaro": {"votos": 3573783, "pct": 55.64}, "Lula": {"votos": 2294759, "pct": 35.73}}, "nac": {"L22": 48.43, "B22": 43.2, "L26": 45.16, "B26": 47.03}, "blocos22": {"E": 28.8, "D": 44.39, "C": 26.81}, "cand22": [{"nome": "Onyx Lorenzoni", "partido": "PL", "bloco": "D", "pct": 37.5}, {"nome": "Eduardo Leite", "partido": "PSDB", "bloco": "C", "pct": 26.81}, {"nome": "Edegar Pretto", "partido": "PT", "bloco": "E", "pct": 26.77}, {"nome": "Luis Carlos Heinze", "partido": "PP", "bloco": "D", "pct": 4.28}, {"nome": "Argenta", "partido": "PSC", "bloco": "D", "pct": 2.0}], "pres22": {"L": 42.28, "B": 48.89}, "cidades": [{"municipio": "Porto Alegre", "lg": "Juliana Brizola (PDT)", "pg": 45.8, "lp": "Lula (PT)", "pp": 48.6, "base22": 49.8, "d": -1.2, "L22": 49.8, "B22": 39.1, "obs": "Percentual do LIDER em cada disputa; resumo automatico de pagina grande, nao conferido no TSE"}, {"municipio": "Caxias do Sul", "lg": "Zucco (PL)", "pg": 67.4, "lp": "Flavio Bolsonaro (PL)", "pp": 62.7, "base22": 57.5, "d": 5.2, "L22": 31.8, "B22": 57.5, "obs": ""}, {"municipio": "Canoas", "lg": "Zucco (PL)", "pg": 55.7, "lp": "Flavio Bolsonaro (PL)", "pp": 51.3, "base22": 46.8, "d": 4.5, "L22": 42.9, "B22": 46.8, "obs": ""}, {"municipio": "Pelotas", "lg": "Zucco (PL)", "pg": 47.1, "lp": "Lula (PT)", "pp": 47.1, "base22": 51.8, "d": -4.7, "L22": 51.8, "B22": 36.4, "obs": "47,1 nas duas colunas parece coincidencia: conferir antes de citar"}, {"municipio": "Santa Maria", "lg": "Zucco (PL)", "pg": 52.1, "lp": "Flavio Bolsonaro (PL)", "pp": 49.5, "base22": 45.1, "d": 4.4, "L22": 45.4, "B22": 45.1, "obs": ""}, {"municipio": "Gravatai", "lg": "Zucco (PL)", "pg": 59.6, "lp": "Flavio Bolsonaro (PL)", "pp": 55.9, "base22": 51.7, "d": 4.2, "L22": 38.2, "B22": 51.7, "obs": ""}, {"municipio": "Viamao", "lg": "Zucco (PL)", "pg": 48.2, "lp": "Lula (PT)", "pp": 46.3, "base22": 51.7, "d": -5.4, "L22": 51.7, "B22": 39.4, "obs": ""}, {"municipio": "Novo Hamburgo", "lg": "Zucco (PL)", "pg": 68.1, "lp": "Flavio Bolsonaro (PL)", "pp": 63.9, "base22": 60.9, "d": 3.0, "L22": 30.7, "B22": 60.9, "obs": ""}, {"municipio": "Sao Leopoldo", "lg": "Zucco (PL)", "pg": 57.5, "lp": "Flavio Bolsonaro (PL)", "pp": 52.8, "base22": 48.7, "d": 4.1, "L22": 43.2, "B22": 48.7, "obs": ""}, {"municipio": "Rio Grande", "lg": "Juliana Brizola (PDT)", "pg": 52.0, "lp": "Lula (PT)", "pp": 56.2, "base22": 60.7, "d": -4.5, "L22": 60.7, "B22": 29.6, "obs": "Zucco venceu em 475 dos 497 municipios; Brizola em 22 (Rio Grande e a 6a maior votacao dela, 2,52% dos votos dela)"}], "modelo": {"data": "2026-10-02", "Z": [37.64, 43.05, 48.57], "B": [30.94, 36.01, 41.35], "S": [11.96, 16.78, 23.08], "O": 3.83, "eleito": [0.9027, 0.0966, 0.0007], "vence_1t": [0.018775, 2.5e-05, 0.0], "segundo_turno": 0.9812, "sistematico": 3.6}, "pesq": [{"inst": "ParanaPesquisas", "campo": "2026-09-18", "Z": 41.6, "B": 35.77, "S": 14.74, "O": 7.89}, {"inst": "AtlasIntel", "campo": "2026-09-20", "Z": 45.17, "B": 39.2, "S": 14.66, "O": 0.98}, {"inst": "Quaest", "campo": "2026-09-23", "Z": 43.28, "B": 34.33, "S": 14.93, "O": 7.46}, {"inst": "Neokemp", "campo": "2026-09-24", "Z": 48.91, "B": 31.37, "S": 17.1, "O": 2.61}, {"inst": "RealTimeBigData", "campo": "2026-09-28", "Z": 41.24, "B": 36.08, "S": 19.59, "O": 3.09}]};
+const by = (n) => D.cand.find(c => c.nome.includes(n)), Z = by("Zucco"), B = by("Brizola"), S = by("Souza"), MA = by("Maranata"), OU = by("Outros");
+const outros26 = MA.pct + OU.pct, apoio = (x) => x.votos;
+const L26 = D.pres26["Lula"], F26 = D.pres26["Flavio Bolsonaro"];
+
+function kpis() {
+  $("kpis").innerHTML = `<div class="kpi f"><span>Luciano Zucco (PL)</span><b>${f2(Z.pct)}%</b><small>${pc(Z.votos)} votos · eleito no 1º turno</small></div>
+    <div class="kpi l"><span>Juliana Brizola (PDT)</span><b>${f2(B.pct)}%</b><small>${pc(B.votos)} votos</small></div>
+    <div class="kpi o"><span>Gabriel Souza (MDB)</span><b>${f2(S.pct)}%</b><small>${pc(S.votos)} votos</small></div>
+    <div class="kpi"><span>Zucco − Brizola</span><b>${f2(Z.pct - B.pct)} p.p.</b><small>${pc(Z.votos - B.votos)} votos · Zucco ganhou em 475 dos 497 municípios</small></div>`;
+}
+function geral() {
+  const b = D.blocos22, dD = Z.pct + OU.pct - b.D, dE = B.pct - b.E, c26 = S.pct + MA.pct, dC = c26 - b.C;
+  $("geralTxt").innerHTML = `A <b>Direita</b> passou de ${f2(b.D)}% (Onyx, Heinze e outros, 2022) para ${f2(Z.pct + OU.pct)}%: <b>${pp(dD)} p.p.</b>, só com Zucco acima de 58%. A <b>Esquerda</b> ficou quase parada (${f2(b.E)}% → ${f2(B.pct)}%, ${pp(dE)} p.p.). Quem pagou a conta foi o <b>Centro</b>: ${f2(b.C)}% → ${f2(c26)}% (${pp(dC)} p.p.). Em 2022 o Centro era Eduardo Leite (PSDB), quase sozinho com ${f2(b.C)}%, e o 2º turno foi Onyx × Leite; em 2026 a polarização Direita × Esquerda deixou o Centro com um décimo dos votos, e não houve 2º turno.`;
+  chart("cGeral", { type: "bar", data: { labels: ["Direita", "Esquerda", "Centro e demais"], datasets: [
+    { label: "Blocos 2022", data: [b.D, b.E, b.C], backgroundColor: css("--grid"), borderColor: css("--line"), borderWidth: 1 },
+    { label: "2026 (Zucco · Brizola · Souza e demais)", data: [Z.pct + OU.pct, B.pct, c26], backgroundColor: [cor("--anti"), cor("--pt"), cor("--s7")] }] },
+    options: { plugins: { rotulos: { on: true } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ title: { display: true, text: "% dos votos válidos", color: css("--ink2") } }) } } });
+  tabela("tGeral", ["Candidato 2026", "Partido", "Votos", "% válidos"], D.cand.map(c => [c.nome, c.partido || "–", c.votos == null ? "–" : pc(c.votos), f2(c.pct)]).concat([["Válidos (O Tempo)", "", pc(D.validos), "100"]]));
+}
+function pesq() {
+  const m = D.modelo, p = D.pesq, zr = Z.pct, br = B.pct, sr = S.pct;
+  const ez = zr - m.Z[1], es = sr - m.S[1], eb = br - m.B[1];
+  $("pesqTxt").innerHTML = `O modelo dava <b>${f1(m.Z[1])}%</b> a Zucco (faixa de 90%: ${f1(m.Z[0])}–${f1(m.Z[2])}), só <b>${f1(100 * m.vence_1t[0])}%</b> de chance de ele ganhar no 1º turno e ${f1(100 * m.eleito[0])}% de ser eleito (quase tudo via 2º turno contra Brizola). Zucco teve <b>${f2(zr)}%</b>: ${f1(ez)} p.p. acima do centro e ${f1(zr - m.Z[2])} p.p. <b>acima do limite superior</b>. Souza ficou ${f1(Math.abs(es))} p.p. abaixo do previsto (${f1(m.S[1])}% → ${f2(sr)}%, fora da faixa) e Brizola ${f1(Math.abs(eb))} p.p. abaixo (dentro da faixa). Todas as cinco últimas pesquisas ficaram <b>abaixo</b> de Zucco, entre ${f1(Math.min(...p.map(x => zr - x.Z)))} e ${f1(Math.max(...p.map(x => zr - x.Z)))} p.p.`;
+  chart("cPesq", { type: "bar", data: { labels: ["Zucco (PL)", "Brizola (PDT)", "Souza (MDB)"], datasets: [
+    { label: "Modelo (mediana, pesquisas até 2/10)", data: [m.Z[1], m.B[1], m.S[1]], backgroundColor: css("--s4") },
+    { label: "Resultado", data: [zr, br, sr], backgroundColor: [cor("--anti"), cor("--pt"), cor("--s7")] }] },
+    options: { plugins: { rotulos: { on: true } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ title: { display: true, text: "% dos votos válidos", color: css("--ink2") } }) } } });
+  const lin = (n, k, r) => [n, `${f1(m[k][1])} (${f1(m[k][0])}–${f1(m[k][2])})`, f2(r), pp(r - m[k][1]), dentro(r, m[k][0], m[k][2])];
+  $("tModelo").innerHTML = `<table class="t"><tr><th>Candidato</th><th>Modelo, mediana (faixa 90%)</th><th>Resultado</th><th>Erro (p.p.)</th><th>Faixa de 90%</th></tr>` +
+    [lin("Zucco", "Z", zr), lin("Brizola", "B", br), lin("Souza", "S", sr)].map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("") + `</table>`;
+  const nome = (x) => ({ ParanaPesquisas: "Paraná Pesquisas", RealTimeBigData: "Real Time Big Data" }[x] || x);
+  tabela("tPesq", ["Instituto", "Campo até", "Zucco", "Brizola", "Souza", "Erro Zucco (p.p.)", "Erro Brizola", "Erro Souza"],
+    p.map(x => [nome(x.inst), x.campo, f1(x.Z), f1(x.B), f1(x.S), pp(x.Z - zr), pp(x.B - br), pp(x.S - sr)]));
+  $("pesqNota").innerHTML = `Pesquisas convertidas para a parcela dos candidatos listados (mesma base do modelo). O erro sistemático assumido pelo modelo era de ${m.sistematico} p.p. por candidato; o erro da mediana foi de ${f1(ez)} p.p. em Zucco, ${f1(ez / m.sistematico)} vezes isso. Não dá para separar o que foi erro de pesquisa do que foi mudança de voto no fim da campanha (Souza perdeu quase metade do que tinha nas pesquisas), nem o efeito da onda nacional: a comparação com o presidente está na próxima seção.`;
+}
+function nat() {
+  const p22 = D.pres22, dF = F26.pct - p22.B, dL = L26.pct - p22.L, NAC = D.nac;
+  $("natTxt").innerHTML = `No RS, Flávio teve <b>${f2(F26.pct)}%</b> (Bolsonaro tinha ${f2(p22.B)}%, <b>${pp(dF)} p.p.</b>) e Lula <b>${f2(L26.pct)}%</b> (${f2(p22.L)}%, <b>${pp(dL)} p.p.</b>): o deslocamento à direita no estado foi cerca de ${f1(dF / (NAC.B26 - NAC.B22))}× o nacional (+${f2(NAC.B26 - NAC.B22)} para a direita, ${pp(NAC.L26 - NAC.L22)} para Lula). Em votos, Zucco teve ${pc(Z.votos)} contra ${pc(F26.votos)} de Flávio (${f1(100 * Z.votos / F26.votos)}%), e Brizola ${pc(B.votos)} contra ${pc(L26.votos)} de Lula (${f1(100 * B.votos / L26.votos)}%): a diferença entre Lula e Brizola é de <b>${pc(L26.votos - B.votos)} votos</b>. Isso é só contagem: com dados agregados não dá para dizer que esses eleitores trocaram de lado, votaram em branco ou em outro candidato.`;
+  chart("cNat", { type: "bar", data: { labels: ["Lula no RS", "Direita no RS (Bolsonaro/Flávio)", "Lula no Brasil", "Direita no Brasil"], datasets: [
+    { label: "1º turno 2022", data: [p22.L, p22.B, NAC.L22, NAC.B22], backgroundColor: css("--grid"), borderColor: css("--line"), borderWidth: 1 },
+    { label: "1º turno 2026", data: [L26.pct, F26.pct, NAC.L26, NAC.B26], backgroundColor: [cor("--pt"), cor("--anti"), cor("--pt"), cor("--anti")] }] },
+    options: { plugins: { rotulos: { on: true } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ title: { display: true, text: "% dos votos válidos", color: css("--ink2") } }) } } });
+  tabela("tCid", ["Município", "Governador: líder", "%", "Presidente: líder", "%", "Mesmo lado em 2022 (%)", "Variação (p.p.)"],
+    D.cidades.map(c => [c.municipio, c.lg, f1(c.pg), c.lp, f1(c.pp), f1(c.base22), pp(c.d)]));
+  const lula = D.cidades.filter(c => c.lp.startsWith("Lula")), flav = D.cidades.filter(c => !c.lp.startsWith("Lula"));
+  $("cidTxt").innerHTML = `Nas ${flav.length} cidades em que Flávio lidera, a direita cresceu de ${f1(Math.min(...flav.map(c => c.d)))} a ${f1(Math.max(...flav.map(c => c.d)))} p.p. sobre Bolsonaro. Lula lidera em ${lula.length} (${lula.map(c => c.municipio).join(", ")}), e nelas a variação do voto em Lula foi de ${pp(Math.min(...lula.map(c => c.d)))} a ${pp(Math.max(...lula.map(c => c.d)))} p.p. (Rio Grande, com Lula em 56,2%, foi onde Brizola também venceu: 52,0% contra 38,6% de Zucco). Brizola ganhou em apenas 22 dos 497 municípios.`;
+}
+function site() {
+  $("siteTxt").innerHTML = `Como o governador foi eleito no 1º turno, <b>não há 2º turno no RS</b>: a aba "Governo do RS 2026" fica como registro do que o modelo dizia até 2/10 (chance de 2º turno ${f1(100 * D.modelo.segundo_turno)}%) e não é mais atualizada. O que o modelo ainda alimenta é a bancada estadual e federal, que usa a tendência do governador como entrada; veja a aba "Análise: bancada RS" para o que esse erro significou nas cadeiras.`;
+}
+function tudo() { kpis(); geral(); pesq(); nat(); site(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>

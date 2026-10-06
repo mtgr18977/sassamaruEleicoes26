@@ -4,6 +4,8 @@ Entradas: datasets/resultado-2026-turno1.csv (resultado preliminar, com a fonte 
 pesquisas-2026.csv e modelos/projecao-1turno.json (projeção de 2/10). Só mostra número com fonte; célula vazia = não localizei."""
 import json
 
+import nav
+
 import pandas as pd
 
 from pesquisas import vies_eleicao
@@ -48,6 +50,6 @@ out["fag"] = pd.read_csv(D + "analise-faganello-2026.csv").to_dict("records")
 x22 = u22[~u22.index.isin(["ZZ", "VT"])]
 out["ufs22"] = dict(f=int((x22.votos_antipt > x22.votos_pt).sum()), total=len(x22))
 
-html = open("apps/analise.template.html", encoding="utf-8").read().replace("__DATA__", json.dumps(out, ensure_ascii=False))
+html = open("apps/analise.template.html", encoding="utf-8").read().replace("__NAV__", nav.html("analise.html")).replace("__DATA__", json.dumps(out, ensure_ascii=False))
 open("analise.html", "w", encoding="utf-8").write(html)
 print("analise.html", len(html) // 1024, "KB")

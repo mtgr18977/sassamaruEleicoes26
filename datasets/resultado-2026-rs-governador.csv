@@ -1,0 +1,9 @@
+cargo,candidato,partido,votos,pct,fonte,obs
+GOVERNADOR,Luciano Zucco,PL,3516048,58.05,"O Tempo, mapa dos votos RS (100% das secoes), via WebFetch em 6/10/2026","Eleito no 1o turno. Wikipedia (via busca) traz os mesmos votos. Agencia Brasil (91,53% das secoes) mostrava 57,88: parcial, descartada. Nao conferido no TSE"
+GOVERNADOR,Juliana Brizola,PDT,1917374,31.65,"O Tempo (100% das secoes)","Agencia Brasil (parcial): 31,88"
+GOVERNADOR,Gabriel Souza,MDB,510698,8.43,"O Tempo (100% das secoes)","Agencia Brasil (parcial) e busca: 8,40"
+GOVERNADOR,Marcelo Maranata,PSDB,,1.68,"Resumo de busca web (uma fonte)","Sem votos localizados; nao conferido"
+GOVERNADOR,Outros (derivado),,,0.19,"100 - Zucco - Brizola - Souza - Maranata","Derivado; inclui candidatos nanicos"
+GOVERNADOR_TOTAIS,Validos,,6056120,,"O Tempo (100% das secoes)","Brancos 324.123 (4,84%) e nulos 315.858 (4,72%) segundo a mesma fonte; 6.697.424 votos de 8.516.465 aptos (78,64%)"
+PRESIDENTE_NO_RS,Flavio Bolsonaro,PL,3573783,55.64,"O Tempo (100% das secoes)","Gazeta do Povo (preliminar) trazia 55,54. A fonte tambem cita 6.430.957 validos, mas a conta com o % nao fecha (3.573.783/55,64% = 6,42 mi): nao usar esse total"
+PRESIDENTE_NO_RS,Lula,PT,2294759,35.73,"O Tempo (100% das secoes)","idem"
