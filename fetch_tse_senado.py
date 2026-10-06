@@ -31,7 +31,11 @@ def agregar_zip(caminho, ano):
             for ch in pd.read_csv(f, sep=";", encoding="latin1", usecols=lambda c: c in COLS, chunksize=400_000, dtype=str):
                 s = ch[(ch.DS_CARGO == "Senador") & (ch.NR_TURNO == "1")]
                 if len(s):
-                    saida.append(s.assign(QT_VOTOS_NOMINAIS=s.QT_VOTOS_NOMINAIS.astype(int), QT_VOTOS_NOMINAIS_VALIDOS=s.QT_VOTOS_NOMINAIS_VALIDOS.astype(int)))
+                    s = s.assign(QT_VOTOS_NOMINAIS=s.QT_VOTOS_NOMINAIS.astype(int))
+                    for c, v in (("QT_VOTOS_NOMINAIS_VALIDOS", s.QT_VOTOS_NOMINAIS), ("SG_FEDERACAO", "#NULO#")):    # 2014 e 2018 não têm uma das duas colunas
+                        if c not in s:
+                            s[c] = v
+                    saida.append(s.assign(QT_VOTOS_NOMINAIS_VALIDOS=s.QT_VOTOS_NOMINAIS_VALIDOS.astype(int)))
         print(uf, end=" ", flush=True)
     d = pd.concat(saida)
     chave = ["SG_UF", "SQ_CANDIDATO"]

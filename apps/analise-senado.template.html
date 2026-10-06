@@ -13,7 +13,7 @@
   <div class="topo"><div><h1>Análise: Senado, 1º turno (4/10/2026)</h1>
   <p class="sub">Aqui eu mostro quem ganhou e quem perdeu as 54 cadeiras do Senado em disputa (2 por UF), o que uma referência simples esperava e como fica o Senado que toma posse em 2027.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
   <div class="an">
-  <div class="aviso"><b>Aqui os dados são oficiais, mas de 5/10 e sujeitos a recurso.</b> Os eleitos e os votos vêm do arquivo "votação por candidato, município e zona" do TSE (gerado em 5/10/2026, 1º turno; 54 eleitos, 2 por UF); os ocupantes de hoje, da API de dados abertos do Senado (acesso em <span id="acesso"></span>). As listas de imprensa que eu consultei primeiro divergiam entre si (Piauí, Roraima, Tocantins, o partido de Van Hattem), por isso eu só uso o TSE. Os blocos são os do resto do site (PSD e MDB no Centro). <b>Eu não tenho um modelo do Senado:</b> a seção 3 compara o resultado com duas referências ingênuas, não com uma previsão.</div>
+  <div class="aviso"><b>Aqui os dados são oficiais, mas de 5/10 e sujeitos a recurso.</b> Os eleitos e os votos vêm do arquivo "votação por candidato, município e zona" do TSE (gerado em 5/10/2026, 1º turno; 54 eleitos, 2 por UF); os ocupantes de hoje, da API de dados abertos do Senado (acesso em <span id="acesso"></span>). As listas de imprensa que eu consultei primeiro divergiam entre si (Piauí, Roraima, Tocantins, o partido de Van Hattem), por isso eu só uso o TSE. Os blocos são os do resto do site (PSD e MDB no Centro). <b>O meu modelo do Senado é pequeno</b> (2 parâmetros por eleição, seção 4) e não é uma previsão validada: a seção 3 compara o resultado com duas réguas ingênuas e a seção 4 testa o modelo.</div>
   <div class="kpis" id="kpis"></div>
 
   <h2>1. Quem ganhou e quem perdeu</h2>
@@ -37,7 +37,19 @@
   <div id="tRef"></div>
   <p class="fonte">As duas referências são ingênuas e eu as declaro como tal. "Manter o ocupante de hoje": cada UF mantém as cadeiras da Direita que tem hoje. "Seguir a presidencial de 2022": a UF em que a soma de Bolsonaro supera a de Lula no 1º turno de 2022 dá as 2 cadeiras à Direita, e a outra, 0. "Cadeiras trocadas" é metade da soma dos desvios por UF (a mesma conta da aba da bancada do RS). Não é uma validação de modelo: ela diz onde um modelo teria que ser melhor, e uma só eleição não basta para calibrar.</p>
 
-  <h2>4. As mais apertadas e os mais votados</h2>
+  <h2>4. Um modelo para o Senado: a presidencial explica a vaga?</h2>
+  <p id="modTxt"></p>
+  <div class="cv" style="height:330px"><canvas id="cMod"></canvas></div>
+  <h3 style="margin:14px 0 4px">O voto no Senado se nacionalizou</h3>
+  <div id="tAj"></div>
+  <h3 style="margin:18px 0 4px">Teste: parâmetros da eleição anterior × total nacional conhecido</h3>
+  <div id="tBt"></div>
+  <p id="btTxt"></p>
+  <h3 style="margin:18px 0 4px">2026, UF a UF (sabendo o total nacional)</h3>
+  <div id="tSurp"></div>
+  <p class="fonte">O modelo: P(vaga da Direita na UF) = σ(α + β · logit(x)), com x = anti-PT/(anti-PT + PT) no 1º turno da presidencial da UF no mesmo dia da eleição (2014: Dilma; 2018: Haddad; 2022: Lula). Ajusto α e β por eleição (máxima verossimilhança, binomial, 27 UFs). Em 2026 eu uso como x a projeção presidencial do meu modelo (1 − mediana de Lula/(Lula + Flávio) por UF, de 2/10), porque a presidencial por UF de 2026 ainda não saiu do TSE; essa projeção é praticamente o desenho de 2022 deslocado (correlação de 0,998 com 2022), então ela não traz informação de 2026 por UF. "Direita" usa os blocos fixos do site: em 2014, por exemplo, PSDB e MDB contam como Centro, e isso baixa a Direita daquele ano. "Trocadas" = metade da soma dos desvios entre cadeiras esperadas e eleitas por UF. "α calibrado" é pós-fato: escolhe o α que dá o total real de cadeiras da Direita e mede só a distribuição entre as UFs. "Régua por ranking" dá as vagas da Direita às UFs de maior x até somar o mesmo total real.</p>
+
+  <h2>5. As mais apertadas e os mais votados</h2>
   <h3 style="margin:4px 0">As cinco cadeiras decididas por menos votos</h3>
   <div id="tApert"></div>
   <p id="apertTxt"></p>
@@ -45,18 +57,18 @@
   <div id="tTop"></div>
   <p id="reelTxt"></p>
 
-  <h2>5. A aritmética do Senado de 2027</h2>
+  <h2>6. A aritmética do Senado de 2027</h2>
   <p id="maiTxt"></p>
   <div class="cv" style="height:240px"><canvas id="cMai"></canvas></div>
   <div id="tMai"></div>
   <p class="fonte">Eu somo as 27 cadeiras de 2022 (partido de hoje, pela API do Senado) com os 54 eleitos de 2026, sem trocas de partido nem suplentes até a posse (1/2/2027). Os blocos que eu uso: Esquerda (PT, PSB, PDT, PSOL, Rede…), Centro (MDB, PSD, PSDB, Cidadania) e Direita (PL, PP, União, Republicanos, Podemos, Novo e demais). Não são coalizões nem base de governo: o PP, o União e o Republicanos têm ministérios em governos de lados diferentes, e o PSD e o MDB votam de forma mista. Os limites são constitucionais: 41 é a maioria absoluta; 49 (3/5) é o piso de uma emenda à Constituição (que também precisa da Câmara); 54 (2/3) é o piso de uma condenação em julgamento de crime de responsabilidade.</p>
 
-  <h2>6. Limites desta análise</h2>
+  <h2>7. Limites desta análise</h2>
   <ul class="fonte" style="font-size:.88rem">
     <li>O resultado é do 1º turno e do arquivo de 5/10 do TSE; o diploma só vem depois, e candidaturas e votos podem mudar por decisão judicial (há 24 candidatos com votos "anulados sub judice" no arquivo, nenhum eleito; eu os tirei das margens e das porcentagens, e o mais votado deles é Gladson Camelí, PP, no Acre, com 145.244 votos).</li>
-    <li>Não tenho modelo do Senado: o que eu chamo de "esperado" são duas réguas ingênuas. A presidencial de 2026 por UF ainda não saiu em arquivo do TSE (o <code>BR</code> veio só com o cabeçalho), por isso não cruzei o Senado com o voto de Flávio e de Lula.</li>
+    <li>O modelo da seção 4 tem 2 parâmetros e 27 UFs por eleição, 3 eleições para testar e nenhum teste fora da amostra com a presidencial real de 2026. O nível nacional (α) eu não sei prever; só a distribuição entre as UFs, dado o total. A presidencial de 2026 por UF ainda não saiu em arquivo do TSE (o <code>BR</code> veio só com o cabeçalho), por isso não cruzei o Senado com o voto de Flávio e de Lula.</li>
     <li>A reeleição eu conto casando o nome do parlamentar com o nome de urna em 2026 (9 apelidos conferidos à mão, em <code>senado.py</code>); quem aparece como "não concorreu ao Senado" pode ter concorrido a outro cargo, aposentado ou usado um nome que eu não casei.</li>
-    <li>Os blocos são uma simplificação minha. Se o PSD (e parte do MDB) fosse contado como Direita, ou o Republicanos como Centro, a aritmética da seção 5 muda; a tabela mostra a Direita sozinha e as somas com o Centro.</li>
+    <li>Os blocos são uma simplificação minha. Se o PSD (e parte do MDB) fosse contado como Direita, ou o Republicanos como Centro, a aritmética da seção 6 muda; a tabela mostra a Direita sozinha e as somas com o Centro.</li>
     <li>"Ocupantes hoje" inclui suplentes em exercício e o partido que cada um tem hoje; eu não segui as trocas partidárias ao longo do mandato.</li>
   </ul>
   </div>
@@ -107,7 +119,7 @@ function ufs() {
 }
 function ref() {
   const R = D.ref, ks = Object.keys(R), real = D.blocos.D.real, k0 = ks[0], k1 = ks[1];
-  $("refTxt").innerHTML = `A régua mais fraca, <b>manter o ocupante de hoje</b>, previa ${R[k0].direita} cadeiras da Direita, contra <b>${real}</b> eleitas (${R[k0].trocadas} cadeiras trocadas, ${R[k0].ufs_certas} de 27 UFs certas). Seguir o <b>bloco que ganhou a presidencial de 2022</b> em cada UF previa ${R[k1].direita}, ${R[k1].direita < real ? "ainda " + (real - R[k1].direita) + " abaixo" : "acima"} do resultado, com ${R[k1].trocadas} cadeiras trocadas e ${R[k1].ufs_certas} de 27 UFs certas. As duas erram no mesmo sentido: <b>subestimam a Direita</b>. Eu não consegui cruzar isso com o voto de Flávio por UF, porque o arquivo da presidencial de 2026 ainda não saiu do TSE (seção 6).`;
+  $("refTxt").innerHTML = `A régua mais fraca, <b>manter o ocupante de hoje</b>, previa ${R[k0].direita} cadeiras da Direita, contra <b>${real}</b> eleitas (${R[k0].trocadas} cadeiras trocadas, ${R[k0].ufs_certas} de 27 UFs certas). Seguir o <b>bloco que ganhou a presidencial de 2022</b> em cada UF previa ${R[k1].direita}, ${R[k1].direita < real ? "ainda " + (real - R[k1].direita) + " abaixo" : "acima"} do resultado, com ${R[k1].trocadas} cadeiras trocadas e ${R[k1].ufs_certas} de 27 UFs certas. As duas erram no mesmo sentido: <b>subestimam a Direita</b>. Eu não consegui cruzar isso com o voto de Flávio por UF, porque o arquivo da presidencial de 2026 ainda não saiu do TSE (seção 7).`;
   chart("cRef", { type: "bar", data: { labels: [...ks, "Resultado 2026"], datasets: [{ label: "Cadeiras da Direita", data: [...ks.map(k => R[k].direita), real], backgroundColor: [css("--line"), css("--muted"), cor(BC.D)], borderRadius: 3 }] },
     options: { indexAxis: "y", plugins: { rotulos: { on: true }, legend: { display: false } }, scales: { x: eixo({ min: 0, max: D.cadeiras, ticks: { color: css("--ink2"), precision: 0 } }), y: eixo({ grid: { display: false } }) } } });
   tab("tRef", ["Referência", "Direita prevista", "Direita eleita", "UFs certas (de 27)", "Cadeiras trocadas"], ks.map(k => [k, R[k].direita, real, R[k].ufs_certas, f1(R[k].trocadas)]));
@@ -133,7 +145,23 @@ function maioria() {
   tab("tMai", ["Cenário (cadeiras em 2027)", "Cadeiras", `Maioria (${L.maioria})`, `3/5 (${L.tres_quintos})`, `2/3 (${L.dois_tercos})`],
     [lin("Direita sozinha", d), lin("Direita + Centro", d + c), lin("Esquerda + Centro", e + c), lin("Esquerda + Centro + sem partido", e + c + sem)]);
 }
-function tudo() { kpis(); lista(); ufs(); ref(); apert(); tops(); maioria(); }
+function modelo() {
+  const M = D.modelo, A = M.ajustes, B = M.backtest, a22 = A.find(x => x.ano === 2022), a14 = A.find(x => x.ano === 2014), b26 = B.find(x => x.ano === 2026);
+  $("modTxt").innerHTML = `Eu ajustei, para cada eleição de 2014, 2018, 2022 e 2026, a chance de a vaga de uma UF ser da Direita em função do voto presidencial anti-PT na UF. Dois achados. <b>1) O Senado se nacionalizou:</b> o peso da presidencial (β) foi de ${f2(a14.beta)} em 2014 para ${f2(A[1].beta)} em 2018, ${f2(a22.beta)} em 2022 e ${f2(A[3].beta)} em 2026 (este com a projeção, não com o voto real), e a correlação por UF foi de ${f2(a14.corr)} para ${f2(A[3].corr)}. <b>2) O nível nacional não se prevê:</b> os parâmetros de 2022 esperavam <b>${f1(b26.esperado)}</b> cadeiras da Direita em 2026 e saíram <b>${b26.real}</b>; os de 2018 esperavam ${f1(B[1].esperado)} em 2022 e saíram ${B[1].real}. Mas, <b>dado o total</b>, a presidencial distribui as vagas entre as UFs razoavelmente: ${f1(b26.trocadas_cal)} cadeiras trocadas em 2026 (de 54).`;
+  const pts = M.ufs.map(u => ({ x: 100 * u.x, y: u.D / u.n, uf: u.uf })), C = M.curvas, xs = M.xs.map(v => 100 * v);
+  const lin = (nome, ys, cr, dash) => ({ type: "line", label: nome, data: ys.map((y, i) => ({ x: xs[i], y })), borderColor: cr, borderWidth: 2, pointRadius: 0, borderDash: dash || [], fill: false });
+  chart("cMod", { type: "scatter", data: { datasets: [
+    { label: "UFs em 2026 (parcela de vagas da Direita)", data: pts, backgroundColor: css("--ink2"), pointRadius: 4 },
+    lin("Modelo 2018 (β " + f2(A[1].beta) + ")", C["2018"], css("--muted"), [4, 4]), lin("Modelo 2022 (β " + f2(a22.beta) + ")", C["2022"], cor(BC.D), [6, 3]), lin("2026, α calibrado ao total real", C["2026_cal"], css("--s4"))] },
+    options: { plugins: { rotulos: { on: false }, tooltip: { callbacks: { label: (c) => c.raw.uf ? `${c.raw.uf}: x=${f1(c.raw.x)}%, Direita ${c.raw.y * 100}% das vagas` : c.dataset.label } } },
+      scales: { x: eixo({ title: { display: true, text: "voto anti-PT entre PT e anti-PT na presidencial da UF (%)", color: css("--ink2") }, min: 25, max: 80 }), y: eixo({ title: { display: true, text: "chance / parcela das vagas da Direita", color: css("--ink2") }, min: 0, max: 1 }) } } });
+  tab("tAj", ["Eleição", "Vagas", "Direita eleita", "α", "β", "Correlação por UF", "x médio"], A.map(a => [String(a.ano), a.vagas, a.direita, f2(a.alfa), f2(a.beta), f2(a.corr), f2(a.x_medio)]));
+  tab("tBt", ["Eleição", "Parâmetros de", "Direita eleita", "Esperado (α de antes)", "Trocadas", "Trocadas com α calibrado", "Régua por ranking"], B.map(b => [`${b.ano} (${b.vagas} vagas)`, String(b.ref), b.real, f1(b.esperado), f1(b.trocadas), f1(b.trocadas_cal), f1(b.trocadas_rank)]));
+  $("btTxt").innerHTML = `Nos três testes o total de cadeiras da Direita é o maior erro: com os parâmetros da eleição anterior, as trocadas vão de ${f1(Math.min(...B.map(b => b.trocadas)))} a ${f1(Math.max(...B.map(b => b.trocadas)))}; com o α calibrado ao total real, caem para ${f1(Math.min(...B.map(b => b.trocadas_cal)))} a ${f1(Math.max(...B.map(b => b.trocadas_cal)))}. Contra a régua por ranking (que também sabe o total) o modelo ganha em ${B.filter(b => b.trocadas_cal < b.trocadas_rank).length} de ${B.length} eleições: <b>não é uma vantagem clara</b>, e três eleições não bastam para dizer qual é melhor. O que eu consigo afirmar é o primeiro achado (a nacionalização); o segundo é uma limitação que o modelo tem de assumir, não resolver.`;
+  const S = M.ufs.slice().sort((a, b) => a.res - b.res), sel = [...S.slice(0, 4), ...S.slice(-4)];
+  tab("tSurp", ["UF", "x (anti-PT, projeção)", "Chance da Direita por vaga", "Esperado (de n)", "Eleitos da Direita", "Resíduo"], sel.map(u => [u.uf, f1(100 * u.x) + "%", f1(100 * u.pD) + "%", `${f2(u.esperado)} de ${u.n}`, u.D, pp(u.res)]));
+}
+function tudo() { kpis(); lista(); ufs(); ref(); modelo(); apert(); tops(); maioria(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);

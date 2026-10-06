@@ -109,7 +109,8 @@ def construir():
     hoje = {k: int((s.bloco == k).sum()) for k in "EDCS"}
     top = b.sort_values("votos_validos", ascending=False).head(10)
     mais = [dict(uf=r.uf, nome=titulo(r.nome), partido=r.partido, votos=int(r.votos_validos), eleito=bool(r.eleito)) for r in top.itertuples()]
-    return dict(cadeiras=54, total=TOTAL, listas=listas, blocos=blocos, ufs=ufs, ref=ref, reel=reel, novo=novo, nb=nb, hoje=hoje, mais=mais,
+    import senado_modelo
+    return dict(modelo=senado_modelo.construir(), cadeiras=54, total=TOTAL, listas=listas, blocos=blocos, ufs=ufs, ref=ref, reel=reel, novo=novo, nb=nb, hoje=hoje, mais=mais,
                 limiares=dict(maioria=MAIORIA, tres_quintos=TRES_QUINTOS, dois_tercos=DOIS_TERCOS), bloco_nome=rb.BNOME,
                 gerado=str(pd.read_csv(D + "senado-atual.csv").acesso.iloc[0]))
 
