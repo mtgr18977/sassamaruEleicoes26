@@ -31,6 +31,12 @@ Data: 2/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 - Mapas de calor por estado (`assets/mapa.js`, mesma grade do dashboard) na aba Análise (2022 completo; mudança do bloco de Flávio só onde há número com fonte, cinza no resto) e na aba 2º turno (2022 × cenário). Textos das abas Análise, Análise do governo, Análise da bancada e 2º turno estão em primeira pessoa (voz do autor do site); manter assim nas próximas edições dessas abas.
 - Pendentes: TSE oficial; erro de 2026 em `vies-pesquisas.csv` e recalibração do SISTEMATICO_1T_PP do RS; mapa regional do RS e do Brasil em 2026; PR de viés (#17) ainda aberto.
 
+## Senado (6/10/2026)
+- Nova aba **Análise do Senado** (`analise-senado.html`), no molde da análise da bancada do RS. Dados **oficiais**: TSE `votacao_candidato_munzona_2026.zip` (gerado 5/10; o arquivo de 5/10 já tinha conteúdo, ao contrário do que o HANDOFF de 5/10 registrava; o `_BR` da presidencial continua só com cabeçalho) e API do Senado. `python fetch_tse_senado.py 2026|2018 <zip>` e `python fetch_tse_senado.py atual`.
+- Resultado (TSE): 54 eleitos, PL 19, MDB 7, PT 6, PP/Novo/União/PSB 3 cada, PSDB/Podemos/Republicanos/PSD 2, PDT e Rede 1; Direita 32, Centro 11, Esquerda 11 (blocos de `rs_bancada.py`). Com as 27 de 2022: Direita 50 de 81 (3/5 = 49). 14 de 32 ocupantes que concorreram foram reeleitos. Cadeira mais apertada: RN (5.765 votos, Samanda de Lula × Zenaide Maia).
+- Listas de imprensa divergiram (Agência Brasil somava 50 na tabela de composição; Piauí, Roraima, Tocantins e o partido de Van Hattem variavam entre fontes): usar só o TSE. Votos "anulados sub judice" (24 candidatos, nenhum eleito; AC: Gladson Camelí, 145 mil) ficam fora das margens (`votos_validos`).
+- **Sem modelo do Senado**: seção 3 compara com duas réguas ingênuas (manter o ocupante; seguir a presidencial de 2022 na UF). Pendente: modelo de verdade e cruzamento com o voto de Flávio/Lula por UF quando o TSE publicar a presidencial de 2026. Reeleição casa nome do parlamentar com nome de urna (9 apelidos à mão em `senado.py`).
+
 ## Decisões
 - Bloco **Anti-PT** (Flávio em 2026); 2022 é a base por UF; município como base de dados, UF/capital como saída.
 - Eleições sem Lula (2010, 2014 Dilma; 2018 Haddad) aparecem como contexto na página.

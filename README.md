@@ -2,7 +2,7 @@
 
 Simulação estatística da eleição presidencial de 2026 a partir do histórico do TSE (2002–2022) e das pesquisas de 2026. Python faz ETL e ajuste; o JS roda a simulação no navegador. **É um modelo estatístico condicional às pesquisas, não uma pesquisa eleitoral nem uma previsão validada.**
 
-- **Abas:** `index.html` (Presidente 2026), `segundo-turno.html` (2º turno: simulador de cenários), `analise.html` (Análise do 1º turno de 2026), `analise-governo.html` e `analise-bancada.html` (análises do RS), `rs.html` (Governo do RS 2026) e `bancada.html` (Bancada RS 2026: deputados federais e estaduais), com estilos e utilidades comuns em `assets/`.
+- **Abas:** `index.html` (Presidente 2026), `segundo-turno.html` (2º turno: simulador de cenários), `analise.html` (Análise do 1º turno de 2026), `analise-governo.html` e `analise-bancada.html` (análises do RS), `analise-senado.html` (análise do Senado), `rs.html` (Governo do RS 2026) e `bancada.html` (Bancada RS 2026: deputados federais e estaduais), com estilos e utilidades comuns em `assets/`.
 - **Dashboard:** `index.html` ("Eleições Dashboard 2026": card com a chance de Lula e de Flávio serem eleitos, tema claro/escuro, notas laterais, histórico do Lula, regiões, capitais, pesquisa × resultado, 2026 e simulador). `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
 - **Projeção do 1º turno:** refeita a cada rodada de pesquisas (`modelos/projecao-1turno*`). A versão de 1/10/2026 está na tag `projecao-1turno-2026-10-01`. Compare com o resultado real com `python avaliar_projecao.py resultado.csv`.
 
@@ -38,6 +38,7 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `fetch_bancada_atual.py` | Partido atual dos eleitos de 2022: API da Câmara (federais) e Wikipédia (estaduais, **não conferida com a ALRS**) → `datasets/rs-bancada-atual.csv` |
 | `rs_bancada.py` | Aba da bancada: alocador de cadeiras (quociente + maiores médias, validado contra as 12 eleições reais), backtest, previsão de 2026 por Monte Carlo e pacote de dados da página |
 | `gerar_pagina_bancada.py` | Gera `bancada.html` a partir de `apps/bancada.template.html` |
+| `fetch_tse_senado.py`, `senado.py`, `gerar_pagina_senado.py` | Senado 2026 (54 cadeiras): ETL dos zips oficiais do TSE (2018 e 2026, só linhas de Senador) e da API de dados abertos do Senado (81 em exercício); `senado.py` calcula listas, blocos, margens, reeleição, referências ingênuas e o Senado de 2027; gera `analise-senado.html`. **Não há modelo do Senado**: a comparação usa duas réguas ingênuas |
 | `datasets/` | CSVs do TSE e das pesquisas (`pesquisas-2026.csv`, `vies-pesquisas.csv`, `datafolha-regioes-2026-09-22.csv`, `pesquisas-rs-governador-2026.csv`, `tse-governador-rs-municipio.csv`, `rs-municipios-regioes.csv`, `tse-legislativo-rs-*.csv`, `rs-bancada-atual.csv`) |
 
 ## Método em uma linha

@@ -4,7 +4,7 @@ from pathlib import Path
 
 ABAS = [("segundo-turno.html", "2º turno"), ("index.html", "Presidente 2026"), ("analise.html", "Análise"), ("rs.html", "Governo do RS 2026"),
         ("analise-governo.html", "Análise do governo RS"), ("bancada.html", "Bancada RS 2026"), ("analise-bancada.html", "Análise da bancada RS"),
-        ("documentacao.html", "Documentação")]
+        ("analise-senado.html", "Análise do Senado"), ("documentacao.html", "Documentação")]
 
 
 def html(pagina: str) -> str:
