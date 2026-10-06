@@ -45,6 +45,7 @@ for r in res[res.uf != "BR"].itertuples():
     a = u22.loc[r.uf]
     ufs.append(dict(uf=r.uf, L22=round(a.pct_pt_validos, 1), F22=round(a.pct_antipt_validos, 1),
                     L26=None if pd.isna(r.lula) else float(r.lula), F26=None if pd.isna(r.flavio) else float(r.flavio), obs=r.obs))
+out["uf22"] = [dict(uf=u, m=round(float(r.pct_pt_validos - r.pct_antipt_validos), 1)) for u, r in u22.iterrows() if u not in ("ZZ", "VT")]
 out["ufs"] = ufs
 out["fag"] = pd.read_csv(D + "analise-faganello-2026.csv").to_dict("records")
 x22 = u22[~u22.index.isin(["ZZ", "VT"])]
