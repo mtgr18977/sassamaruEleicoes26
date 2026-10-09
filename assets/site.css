@@ -59,11 +59,12 @@
   .brand { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink) } .brand svg { flex:none }
   .brand b { display:block; font:700 1.35rem/1.1 var(--serif); letter-spacing:-.01em } .brand small { display:block; color:var(--muted); font-size:.8rem; margin-top:2px }
   .tabs { display:flex; flex-wrap:wrap; gap:0 6px; margin:0 -16px 22px; padding:0 16px; background:var(--bg); border-top:1px solid var(--line); border-bottom:1px solid var(--line); z-index:30 }
-  .tabs .g { display:flex; flex-direction:column; padding-right:14px; margin-right:8px; border-right:1px solid var(--line) } .tabs .g:last-child { border-right:0; margin-right:0 }
+  .tabs .g { display:flex; flex-direction:column; padding-right:10px; margin-right:6px; border-right:1px solid var(--line) } .tabs .g:last-child { border-right:0; margin-right:0 }
   .tabs .grp { padding:7px 10px 0; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); white-space:nowrap } .tabs .gl { display:flex }
-  .tabs a { display:inline-flex; align-items:center; padding:5px 10px 9px; color:var(--ink2); text-decoration:none; border-bottom:3px solid transparent; font-size:.88rem; margin-bottom:-1px; white-space:nowrap }
+  .tabs a { display:inline-flex; align-items:center; padding:5px 9px 9px; color:var(--ink2); text-decoration:none; border-bottom:3px solid transparent; font-size:.88rem; margin-bottom:-1px; white-space:nowrap }
   .tabs a:hover { color:var(--ink); background:var(--grid) } .tabs a[aria-current=page] { color:var(--ink); border-bottom-color:var(--pt); font-weight:600 }
-  @media (min-width:1320px) { .tabs { position:sticky; top:0; flex-wrap:nowrap } .side { top:78px } }
+  @media (min-width:1240px) { .tabs { position:sticky; top:0; flex-wrap:nowrap } }
+  @media (min-width:1320px) { .side { top:78px } }
   .topo { padding:6px 0 4px }
   .aviso { box-shadow:0 1px 0 rgba(0,0,0,.03) } .card, .kpi, .post { box-shadow:0 1px 2px rgba(0,0,0,.04) }
   .kpi span { text-transform:uppercase; letter-spacing:.05em; font-size:.68rem; color:var(--muted) }
@@ -77,7 +78,7 @@
   /* ---- celular e tablet ---- */
   @media (max-width:1200px) { .an .aviso, .an .kpis, .an .semnota { max-width:none } .side { background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--s4); border-radius:0 8px 8px 0; padding:10px 14px; margin:10px 0 4px }
     .an .side { margin:10px 0 4px } .an .sec > div { order:0 } }
-  @media (max-width:900px) { .tabs { position:sticky; top:0; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:thin; gap:0; -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent); mask-image:linear-gradient(90deg,#000 92%,transparent) }
+  @media (max-width:1239px) { .tabs { position:sticky; top:0; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:thin; gap:0; -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent); mask-image:linear-gradient(90deg,#000 92%,transparent) }
     .tabs .g { flex-direction:row; border:0; margin:0; padding:0 } .tabs .grp { display:none } .tabs a { padding:13px 12px } }
   @media (max-width:760px) { table.t { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch } .brand small { display:none } h1 { font-size:1.6rem } h2 { font-size:1.2rem; margin-top:30px }
     .kpi b { font-size:1.35rem } .cand .big { font-size:2.6rem } }
