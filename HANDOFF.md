@@ -76,3 +76,4 @@ Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exc
 
 - **Card do topo** (index): agora só o 2º turno (`chances2t` em `projecao-model.js`, fórmula fechada; sem correlação entre turnos). Lula 22,9% (faixa 14,1–22,9% entre os cenários de viés). Gráfico de evolução usa só s2/sd2 e vai até 9/10. O simulador e o 1º turno seguem congelados em `HOJE_1T`.
 - **RS fora do cálculo do 2º turno:** governador decidido no 1º turno (Zucco). `rs_modelo.HOJE` voltou a 2/10 e fica congelado (a aba `rs.html` é o registro da previsão pré-votação). Só a presidencial anda com `pesquisas.HOJE`.
+- Nova aba **Análise do modelo** (`analise-modelo.html`, `gerar_pagina_modelo.py`): previsão de 2/10 × resultado para presidente (1º turno), governador e bancada do RS (faixas de 90%/80%, erros, pesquisas finais, por UF). Seção 5 guarda a previsão do 2º turno para preencher o resultado em 25/10. Texto em primeira pessoa.
