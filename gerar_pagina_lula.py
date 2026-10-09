@@ -66,7 +66,7 @@ out["pesq26"] = [dict(inst=r.instituto, data=str(r.data.date()),
 out["proj"] = {k: v for k, v in json.load(open("modelos/projecao-1turno.json")).items() if k != "data"}
 # parâmetros do simulador interativo (projecao-model.js)
 import projecao
-from pesquisas import HOJE_1T, estimar, preparar, vies_eleicao, vies_rmse, SD_VIES_HIST, SD_PISO_2T_PP
+from pesquisas import HOJE_1T, P2022, estimar, preparar, vies_eleicao, vies_rmse, SD_VIES_HIST, SD_PISO_2T_PP
 _d, _sv = preparar(), vies_rmse(1)[0]
 _s, _sds, _, _ = estimar(_d, "p1s", hoje=HOJE_1T, sd_vies=_sv)
 _q, _sdq, _, _ = estimar(_d, "q", hoje=HOJE_1T, sd_vies=SD_VIES_HIST)
@@ -81,8 +81,11 @@ out["projmodel"] = dict(s=round(float(_s), 4), q=round(float(_q), 4), sd_s=round
                         vies_medio={t: round(vies_eleicao(t)[0], 2) for t in (1, 2)}, vies_n_eleicoes={t: vies_eleicao(t)[1] for t in (1, 2)})
 import validar_regioes
 out["piso2t"] = SD_PISO_2T_PP
+_r = pd.read_csv(D + "resultado-2026-turno1.csv").query("uf == 'BR'").iloc[0]
+out["r1t_s"] = round(100 * float(_r.lula) / (float(_r.lula) + float(_r.flavio)), 2)   # Lula/(Lula+Flávio) no 1º turno realizado
+out["p2022_2t"] = round(100 * P2022[2], 2)
 from pesquisas import evolucao
-out["evolucao"] = evolucao(sorted({*pd.date_range("2026-08-20", "2026-10-02", freq="7D").strftime("%Y-%m-%d"), "2026-10-02"}))
+out["evolucao"] = evolucao(sorted({*pd.date_range("2026-08-20", "2026-10-09", freq="7D").strftime("%Y-%m-%d"), "2026-10-02", "2026-10-09"}))
 out["valreg"] = validar_regioes.comparar()
 out["modelo"] = json.load(open("modelos/parametros.json"))
 import agregador

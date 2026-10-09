@@ -91,8 +91,8 @@ def evolucao(datas, csv="datasets/pesquisas-2026.csv"):
     for t in map(pd.Timestamp, datas):
         x = d[d.data <= t]
         try:
-            s, sds, _, n1 = estimar(x, "p1s", hoje=t, sd_vies=sv1, h_dias=(pd.Timestamp("2026-10-04") - t).days)
-            q, sdq, _, _ = estimar(x, "q", hoje=t, h_dias=(pd.Timestamp("2026-10-04") - t).days)
+            s, sds, _, n1 = estimar(x, "p1s", hoje=t, sd_vies=sv1, h_dias=max(0, (pd.Timestamp("2026-10-04") - t).days))
+            q, sdq, _, _ = estimar(x, "q", hoje=t, h_dias=max(0, (pd.Timestamp("2026-10-04") - t).days))
             s2, sd2, _, n2 = estimar(x, "p2", hoje=t, sd_vies=sv2, h_dias=(pd.Timestamp("2026-10-25") - t).days, piso_pp=SD_PISO_2T_PP)
         except np.linalg.LinAlgError:
             continue

@@ -1,18 +1,14 @@
-// Chances de ser eleito: invariantes e faixas de referência (calculadas em Python com os mesmos parâmetros, rho 0..1).
+// Chance de Lula vencer o 2º turno (fórmula fechada): invariantes e referência independente (numpy, 2 milhões de sorteios).
 // Rodar: node tests/chances-model.test.js
 const fs = require("fs"), assert = require("assert");
-const { chances } = require("../modelos/projecao-model.js");
+const { chances2t } = require("../modelos/projecao-model.js");
 const D = JSON.parse(fs.readFileSync("index.html", "utf8").match(/const D = (.*?);\nconst ANOS/s)[1]);
-const m = D.projmodel, t2 = D.modelo.turno2;
-const base = { s: m.s, q: m.q, sd_s: m.sd_s, sd_q: m.sd_q, s2: t2.p_pesquisas, sd2: t2.sd_logit, n: 40000 };
-const r = chances({ ...base, rho: 0.5 });
-assert(Math.abs(r.lula + r.flavio + r.outro - 1) < 1e-9, "probabilidades de vitória devem somar 1");
-assert(Math.abs(r.lula_1t + r.flavio_1t + r.segundo_turno - 1) < 1e-9, "1T + 2º turno devem somar 1");
-assert(Math.abs(r.lula_1t + r.lula_2t - r.lula) < 1e-9);
-assert(r.flavio_1t < 0.03 && r.lula_1t > 0.03 && r.lula_1t < 0.15, `1º turno: Lula ${r.lula_1t}, Flávio ${r.flavio_1t}`);
-assert(r.segundo_turno > 0.85 && r.outro < 0.005, `2º turno ${r.segundo_turno}, outro cenário ${r.outro}`);
-const lo = chances({ ...base, rho: 0 }).lula, hi = chances({ ...base, rho: 1 }).lula;
-// referências de 9/10, com o 2º turno refeito após as pesquisas pós-1º turno (numpy independente, 2 milhões de sorteios: ρ=0 0,294 · ρ=.5 0,267 · ρ=1 0,229); em 2/10 eram 0,522 · 0,496 · 0,481; em 1/10, 0,478 · 0,456 · 0,441
-assert(Math.abs(r.lula - 0.267) < 0.02 && Math.abs(lo - 0.294) < 0.02 && Math.abs(hi - 0.229) < 0.02, `Lula eleito: ρ=0 ${lo}, ρ=.5 ${r.lula}, ρ=1 ${hi}`);
-assert(chances({ ...base, s2: base.s2 + 0.02, rho: 0.5 }).lula > r.lula, "mais Lula no 2º turno deve aumentar a chance");
-console.log(`OK  Lula ${(100 * r.lula).toFixed(1)}% (1T ${(100 * r.lula_1t).toFixed(1)}%) | Flávio ${(100 * r.flavio).toFixed(1)}% (1T ${(100 * r.flavio_1t).toFixed(1)}%) | faixa Lula ${(100 * hi).toFixed(0)}–${(100 * lo).toFixed(0)}%`);
+const t2 = D.modelo.turno2, v = D.projmodel.vies_medio[2];
+const r = chances2t({ s2: t2.p_pesquisas, sd2: t2.sd_logit });
+assert(Math.abs(r.lula + r.flavio - 1) < 1e-12, "as chances devem somar 1");
+assert(Math.abs(chances2t({ s2: 0.5, sd2: 0.1 }).lula - 0.5) < 1e-6, "s2 = 50% deve dar 50%");
+assert(Math.abs(chances2t({ s2: 0.4814, sd2: 0.1001 }).lula - 0.2286) < 0.002, "referência numpy: Φ(logit(0,4814)/0,1001) = 0,2286");
+assert(chances2t({ s2: t2.p_pesquisas + 0.01, sd2: t2.sd_logit }).lula > r.lula, "mais Lula no 2º turno deve aumentar a chance");
+assert(chances2t({ s2: t2.p_pesquisas - v / 100, sd2: t2.sd_logit }).lula < r.lula, "descontar o viés a favor do PT deve reduzir a chance de Lula");
+assert(r.lula > 0.1 && r.lula < 0.4, `Lula ${r.lula}: fora da faixa esperada para as pesquisas de 9/10`);
+console.log(`OK  Lula vence o 2º turno ${(100 * r.lula).toFixed(1)}% | Flávio ${(100 * r.flavio).toFixed(1)}% | s2 ${(100 * t2.p_pesquisas).toFixed(1)}% sd ${t2.sd_logit}`);
