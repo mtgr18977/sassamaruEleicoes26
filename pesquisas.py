@@ -11,12 +11,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-HOJE = pd.Timestamp("2026-10-02")   # data de referência: atualizar a cada rodada (e HORIZONTE)
+HOJE = pd.Timestamp("2026-10-09")   # data de referência: atualizar a cada rodada (e HORIZONTE)
 TAU_DIAS = 14.0        # meia-vida do decaimento ≈ TAU·ln2
 DEFF = 1.5             # efeito de desenho: amostra efetiva = n / DEFF
 SD_VIES_HIST = 0.02    # padrão de estimar(); main() usa o RMSE medido por turno (vies_rmse)
 SD_PISO_2T_PP = 2.5   # ASSUMIDO: piso (p.p. de Lula/(Lula+Flávio)) para a incerteza do 2º turno; o erro medido é de pesquisas FINAIS e a 24 dias da eleição tende a ser maior
-HORIZONTE = {1: 2, 2: 23}   # dias de 2/10 até 4/10 e 25/10: a incerteza da tendência cresce com o prazo
+HOJE_1T = pd.Timestamp("2026-10-02")   # projeção do 1º turno (já realizado em 4/10): congelada na data em que foi feita, para a aba Análise comparar com o resultado
+HORIZONTE = {1: 2, 2: 16}   # dias: 1º turno de 2/10 até 4/10; 2º turno de 9/10 até 25/10: a incerteza da tendência cresce com o prazo
 P2022 = {1: 0.484307, 2: 0.509024}  # % PT nos válidos, tse-presidente-nacional.csv
 logit = lambda p: np.log(p / (1 - p))
 
@@ -58,7 +59,8 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
 
 def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, piso_pp=0.0):
     """Retorna (p, sd_logit, house_effects, n_pesquisas)."""
-    d = df.dropna(subset=[col]).copy()
+    d = df.dropna(subset=[col])
+    d = d[d.data <= hoje].copy()                              # só pesquisas até a data de referência
     p = d[col].to_numpy()
     inst = sorted(d.instituto.unique())
     k = len(inst)
@@ -102,10 +104,10 @@ def evolucao(datas, csv="datasets/pesquisas-2026.csv"):
 
 def main(saida="modelos/parametros.json"):
     d = preparar()
-    out = {"data_referencia": str(HOJE.date())}
+    out = {"data_referencia": str(HOJE.date()), "data_referencia_1t": str(HOJE_1T.date())}
     for turno, col in ((1, "p1"), (2, "p2")):
         sv, nv = vies_rmse(turno)
-        p, sd, h, n = estimar(d, col, sd_vies=sv, h_dias=HORIZONTE[turno], piso_pp=SD_PISO_2T_PP if turno == 2 else 0.0)
+        p, sd, h, n = estimar(d, col, hoje=HOJE_1T if turno == 1 else HOJE, sd_vies=sv, h_dias=HORIZONTE[turno], piso_pp=SD_PISO_2T_PP if turno == 2 else 0.0)
         out[f"turno{turno}"] = dict(p_pesquisas=round(p, 4), sd_logit=round(sd, 4),
                                     delta=round(logit(p) - logit(P2022[turno]), 4),
                                     p_2022=P2022[turno], house_effects_logit=h, n_pesquisas=n,

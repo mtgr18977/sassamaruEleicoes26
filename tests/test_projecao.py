@@ -21,13 +21,14 @@ def test_partes_somam_100_e_total_nacional_bate_com_o_sorteado():
 
 
 def test_regressao_estimativas_das_pesquisas_nas_faixas_esperadas():
+    from pesquisas import HOJE_1T
     # trava bugs de código; se as pesquisas do CSV mudarem muito, atualize as faixas
     d = preparar()
-    assert .44 < estimar(d, "p1")[0] < .46 and .48 < estimar(d, "p2")[0] < .51
+    assert .44 < estimar(d, "p1", hoje=HOJE_1T)[0] < .46 and .48 < estimar(d, "p2")[0] < .51
 
 
 def test_projecao_do_1o_turno_e_da_data_de_referencia_e_plausivel():
-    from pesquisas import HOJE
+    from pesquisas import HOJE_1T as HOJE
     j = json.load(open("modelos/projecao-1turno.json"))
     L, F, O = (j["pesquisas"][k][1] for k in "LFO")
     assert j["data"] == str(HOJE.date()) and 40 < L < 50 and 35 < F < 46 and abs(L + F + O - 100) < 0.5

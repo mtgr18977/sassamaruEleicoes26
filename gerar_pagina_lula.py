@@ -66,10 +66,10 @@ out["pesq26"] = [dict(inst=r.instituto, data=str(r.data.date()),
 out["proj"] = {k: v for k, v in json.load(open("modelos/projecao-1turno.json")).items() if k != "data"}
 # parâmetros do simulador interativo (projecao-model.js)
 import projecao
-from pesquisas import estimar, preparar, vies_eleicao, vies_rmse, SD_VIES_HIST, SD_PISO_2T_PP
+from pesquisas import HOJE_1T, estimar, preparar, vies_eleicao, vies_rmse, SD_VIES_HIST, SD_PISO_2T_PP
 _d, _sv = preparar(), vies_rmse(1)[0]
-_s, _sds, _, _ = estimar(_d, "p1s", sd_vies=_sv)
-_q, _sdq, _, _ = estimar(_d, "q", sd_vies=SD_VIES_HIST)
+_s, _sds, _, _ = estimar(_d, "p1s", hoje=HOJE_1T, sd_vies=_sv)
+_q, _sdq, _, _ = estimar(_d, "q", hoje=HOJE_1T, sd_vies=SD_VIES_HIST)
 _u = uf_all = pd.read_csv(D + "tse-presidente-uf.csv")
 _rs = projecao.ruido(_u.assign(num=_u.votos_pt, den=_u.votos_pt + _u.votos_antipt), "num", "den")
 _qs = projecao.ruido(_u.assign(num=_u.votos_pt + _u.votos_antipt), "num", "validos")
