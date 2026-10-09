@@ -15,7 +15,7 @@ from rs_dados import blocos_por_unidade, carregar
 
 CSV = "datasets/pesquisas-rs-governador-2026.csv"
 SISTEMATICO_1T_PP = 3.6   # ASSUMIDO: erro sistemático das pesquisas (p.p. por candidato); proxy = RMSE medido nas pesquisas nacionais finais do 1º turno (sem histórico estadual)
-HOJE = pd.Timestamp("2026-10-09")
+HOJE = pd.Timestamp("2026-10-02")   # CONGELADO: governador do RS decidido no 1º turno (4/10); não atualizar. Só o 2º turno presidencial anda (pesquisas.HOJE)
 TAU_DIAS, DEFF, RHO = 14.0, 1.5, 0.5
 logit = lambda p: np.log(p / (1 - p))
 inv = lambda y: 1 / (1 + np.exp(-y))

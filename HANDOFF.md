@@ -54,7 +54,7 @@ Pesquisas do governador em `datasets/pesquisas-rs-governador-2026.csv` (cada lin
 
 ## Regras de trabalho
 - Não inventar dados: sem fonte, deixar vazio e anotar em `obs`.
-- Projeção **não está mais congelada** (decisão de 2/10: ainda há pesquisas no sábado). A referência de 1/10 fica na tag `projecao-1turno-2026-10-01`; `python atualizar.py` refaz tudo. **Cada rodada: acrescentar as pesquisas ao CSV, atualizar `HOJE`/`HORIZONTE` em `pesquisas.py` e `HOJE` em `rs_modelo.py`.**
+- Projeção **não está mais congelada** (decisão de 2/10: ainda há pesquisas no sábado). A referência de 1/10 fica na tag `projecao-1turno-2026-10-01`; `python atualizar.py` refaz tudo. **Cada rodada: acrescentar as pesquisas ao CSV, atualizar `HOJE`/`HORIZONTE` em `pesquisas.py` (`rs_modelo.HOJE` fica congelado em 2/10, governador decidido).**
 - Bancada: rodar `python fetch_tse_legislativo.py` (zips ou remotezip) e `python fetch_bancada_atual.py` (rede; a Wikipédia limita requisições) para atualizar `datasets/tse-legislativo-rs-*.csv` e `rs-bancada-atual.csv`; `python atualizar.py` refaz `bancada.html`.
 - Pesquisas novas: `python buscar_pesquisas.py` gera candidatas em `datasets/candidatas.csv` (Wikipedia); conferir a fonte antes de passar a linha para `pesquisas-2026.csv`.
 - Não apresentar baseline/backtest como "previsão" sem validação ponta a ponta.
@@ -75,3 +75,4 @@ Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exc
 - 2º turno: Lula/(Lula+Flávio) foi de 49,9% (90%: 45,8–54,0) para **48,1% (44,1–52,3)**; P(Lula>50%) 22,6%. O card "chance de ser eleito" ainda soma a chance de ganhar no 1º turno (8,6%), que já não existe: revisar para só o 2º turno.
 
 - **Card do topo** (index): agora só o 2º turno (`chances2t` em `projecao-model.js`, fórmula fechada; sem correlação entre turnos). Lula 22,9% (faixa 14,1–22,9% entre os cenários de viés). Gráfico de evolução usa só s2/sd2 e vai até 9/10. O simulador e o 1º turno seguem congelados em `HOJE_1T`.
+- **RS fora do cálculo do 2º turno:** governador decidido no 1º turno (Zucco). `rs_modelo.HOJE` voltou a 2/10 e fica congelado (a aba `rs.html` é o registro da previsão pré-votação). Só a presidencial anda com `pesquisas.HOJE`.
