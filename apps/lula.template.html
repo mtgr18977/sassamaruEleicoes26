@@ -11,11 +11,11 @@
   <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
   <div class="topo"><div class="semnota"><h1>Eleições Dashboard 2026</h1>
   <p class="sub">Chances na corrida de 2026, o histórico do Lula (2002–2022) por região e capital, pesquisas contra resultado real e um simulador interativo.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
-  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (resultado preliminar); 2º turno em 25/10. Os cartões e o simulador abaixo ainda usam as pesquisas até 2/10, <b>anteriores ao 1º turno</b>, e serão recalibrados com pesquisas de 2º turno. Veja a aba <a href="analise.html">Análise</a>.</div>
+  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (resultado preliminar); 2º turno em 25/10. As <b>chances do topo agora são só do 2º turno</b>, recalibradas com as pesquisas feitas depois do 1º turno (até 9/10); a projeção e o simulador do 1º turno seguem congelados em 2/10 para comparar com o resultado. Veja a aba <a href="analise.html">Análise</a>.</div>
   <div class="sec"><div class="mainc">
   <section class="card hero" id="hero">
     <div class="filtros" style="justify-content:space-between;margin:0 0 6px">
-      <div><b style="font-size:1.05rem;color:var(--ink)">Quem ganha a eleição? Chances simuladas</b><div class="nota" style="margin:0">Lula × Flávio Bolsonaro, condicionado às pesquisas até 2/10/2026</div></div>
+      <div><b style="font-size:1.05rem;color:var(--ink)">Quem ganha o 2º turno? Chances simuladas</b><div class="nota" style="margin:0">Lula × Flávio Bolsonaro em 25/10, condicionado às pesquisas até 9/10/2026</div></div>
       <span class="seg" id="segHero"></span>
     </div>
     <div class="hero-grid" id="heroGrid"></div>
@@ -115,7 +115,7 @@
     </div>
     <details><summary>Ver tabela</summary><div id="t26"></div></details>
     <p class="nota">Linha tracejada = 50%. Última rodada de cada instituto na tabela. Células vazias = pesquisa sem 2º turno localizado.
-      A estimativa do modelo é a média dos 4 institutos com correção de house effect e recência (<code>pesquisas.py</code>).</p>
+      A estimativa do modelo é a média dos 5 institutos com correção de house effect e recência (<code>pesquisas.py</code>).</p>
   </div>
 
   </div><aside class="side" id="nota5"></aside></section>
@@ -346,37 +346,33 @@ function chavesEstados(f) {
     <div class="bar"><i style="width:${100 * u.pvit}%"></i><u></u></div><div>chance de Lula: <b>${f1(100 * u.pvit)}%</b></div></div>`).join("");
 }
 function evolChances(f) {
-  const v = D.projmodel.vies_medio, ev = D.evolucao;
-  const pts = ev.map(e => ProjecaoModel.chances({ s: e.s - f * v[1] / 100, q: e.q, sd_s: e.sd_s, sd_q: e.sd_q, s2: e.s2 - f * v[2] / 100, sd2: e.sd2, rho: 0.5, n: 8000 }));
+  const v = D.projmodel.vies_medio, ev = D.evolucao.filter(e => e.sd2 != null);
+  const pts = ev.map(e => ProjecaoModel.chances2t({ s2: e.s2 - f * v[2] / 100, sd2: e.sd2 }));
   const lab = ev.map(e => e.data.slice(8) + "/" + e.data.slice(5, 7)), ds = (nome, cor, k, pos) => ({ label: nome, data: pts.map(p => 100 * p[k]), borderColor: css(cor), backgroundColor: css(cor), borderWidth: 2, pointRadius: 4, tension: 0, rotPos: pos });
   chart("cEvoChances", { type: "line", data: { labels: lab, datasets: [ds("Lula (PT)", "--pt", "lula", "baixo"), ds("Flávio Bolsonaro (PL)", "--anti", "flavio", "cima"),
       { label: "50%", data: lab.map(() => 50), borderColor: css("--muted"), borderDash: [3, 4], borderWidth: 1, pointRadius: 0, aux: true }] },
     options: { interaction: { mode: "index", intersect: false }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, max: 100, ticks: { color: css("--ink2"), callback: q => q + "%" } }) },
       plugins: { rotulos: { on: true }, legend: { position: "bottom", labels: { color: css("--ink2"), usePointStyle: true, filter: l => l.text !== "50%" } },
         tooltip: { callbacks: { title: i => "Pesquisas até " + ev[i[0].dataIndex].data.split("-").reverse().join("/"),
-          label: i => i.dataset.aux ? null : `${i.dataset.label}: ${f1(i.parsed.y)}% (1º turno: ${f1(100 * pts[i.dataIndex][i.datasetIndex ? "flavio_1t" : "lula_1t"])}%)` } } } } });
-  tabela("tEvoCh", ["Pesquisas até","Lula eleito %","Flávio eleito %","Lula 1º turno %","Flávio 1º turno %","Pesq. 1º / 2º turno"],
-    ev.map((e, i) => [e.data.split("-").reverse().join("/"), 100 * pts[i].lula, 100 * pts[i].flavio, 100 * pts[i].lula_1t, 100 * pts[i].flavio_1t, `${e.n1} / ${e.n2}`]));
+          label: i => i.dataset.aux ? null : `${i.dataset.label}: ${f1(i.parsed.y)}%` } } } } });
+  tabela("tEvoCh", ["Pesquisas até","Lula vence o 2º turno %","Flávio vence o 2º turno %","Lula/(Lula+Flávio) %","Pesquisas de 2º turno"],
+    ev.map((e, i) => [e.data.split("-").reverse().join("/"), 100 * pts[i].lula, 100 * pts[i].flavio, 100 * (e.s2 - f * v[2] / 100), e.n2]));
 }
 // ---------- chances (card do topo) ----------
 function hero() {
   const m = D.projmodel, v = m.vies_medio, t2 = D.modelo.turno2, f = FATOR[state.heroCen];
-  const base = { s: m.s - f * v[1] / 100, q: m.q, sd_s: m.sd_s, sd_q: m.sd_q, s2: t2.p_pesquisas - f * v[2] / 100, sd2: t2.sd_logit, n: 20000 };
-  const r = ProjecaoModel.chances({ ...base, rho: 0.5 }), a = ProjecaoModel.chances({ ...base, rho: 0 }), b = ProjecaoModel.chances({ ...base, rho: 1 });
-  const c = (cls, nome, cor, p, p1, p2, lo, hi) => `<div class="cand" style="--c:${css(cor)}"><div class="nome"><i></i>${nome}</div>
-    <div class="big">${f1(100 * p)}%</div><div class="rot">chance de ser eleito · faixa ${f1(100 * lo)}–${f1(100 * hi)}% conforme a correlação entre os turnos</div>
-    <div class="comp"><span class="t1" style="flex:${Math.max(p1, 0.004)}"></span><span style="flex:${Math.max(p2, 0.004)}"></span></div>
-    <ul><li>Vence já no 1º turno <b>${f1(100 * p1)}%</b></li><li>Vence no 2º turno <b>${f1(100 * p2)}%</b></li></ul></div>`;
-  const sens = ProjecaoModel.chances({ ...base, s2: base.s2 + 0.01, rho: 0.5 }).lula - r.lula;   // +1 p.p. de Lula no 2º turno
+  const ch = (g) => ProjecaoModel.chances2t({ s2: t2.p_pesquisas - g * v[2] / 100, sd2: t2.sd_logit });
+  const r = ch(f), faixa = [ch(0), ch(0.5), ch(1)].map(x => x.lula), fl = faixa.map(x => 1 - x);
+  const c = (nome, cor, p, lo, hi) => `<div class="cand" style="--c:${css(cor)}"><div class="nome"><i></i>${nome}</div>
+    <div class="big">${f1(100 * p)}%</div><div class="rot">chance de vencer o 2º turno · faixa ${f1(100 * lo)}–${f1(100 * hi)}% entre os cenários de viés</div></div>`;
+  const sens = ProjecaoModel.chances2t({ s2: t2.p_pesquisas - f * v[2] / 100 + 0.01, sd2: t2.sd_logit }).lula - r.lula;   // +1 p.p. de Lula no 2º turno
   state.sens = sens;
-  const fl = [r.flavio, a.flavio, b.flavio];
-  $("heroGrid").innerHTML = c("l", "Lula (PT)", "--pt", r.lula, r.lula_1t, r.lula_2t, Math.min(a.lula, b.lula), Math.max(a.lula, b.lula)) +
-    c("f", "Flávio Bolsonaro (PL)", "--anti", r.flavio, r.flavio_1t, r.flavio_2t, Math.min(...fl), Math.max(...fl));
-  $("heroFoot").innerHTML = `<span>Eleição decidida no 1º turno: <b>${f1(100 * (r.lula_1t + r.flavio_1t))}%</b></span><span>Vai ao 2º turno: <b>${f1(100 * r.segundo_turno)}%</b></span>
-    <span>Final Lula × Flávio: <b>≥ ${f1(100 * (1 - r.outro))}%</b></span>`;
-  $("heroNota").innerHTML = `<b>Simulação condicional às pesquisas, não é previsão validada.</b> O 2º turno está em empate técnico: +1 p.p. de Lula/(Lula+Flávio) nele muda a chance de Lula em cerca de ${f1(100 * sens)} p.p. Soma a chance de vencer no 1º turno (mais de 50% dos válidos) com a de vencer o 2º, simulando os dois turnos juntos.
-    A correlação entre os erros dos turnos é assumida (0,5; a faixa mostra 0 a 1), e a incerteza do 2º turno tem piso assumido de ${f1(D.piso2t)} p.p. ${f === 0 ? `Cenário "Pesquisas": média dos 4 institutos sem corrigir o viés histórico (a incerteza já embute o erro histórico das pesquisas).` : `Cenário "${NOMEVIES[state.heroCen]}": desconta ${f1(f * v[1])} p.p. (1º turno) e ${f1(f * v[2])} p.p. (2º) de Lula/(Lula+Flávio), ${f === 1 ? "o viés médio" : "metade do viés médio"} das pesquisas finais por eleição (${m.vies_n_eleicoes[1]} e ${m.vies_n_eleicoes[2]} eleições). Com tão poucas eleições o viés mal se distingue de zero (erro-padrão ~1,1 e ~0,7 p.p.): trate "Viés histórico" como cenário extremo, não como o mais provável.`}
-    Metodologia e limitações no README.`;
+  $("heroGrid").innerHTML = c("Lula (PT)", "--pt", r.lula, Math.min(...faixa), Math.max(...faixa)) + c("Flávio Bolsonaro (PL)", "--anti", r.flavio, Math.min(...fl), Math.max(...fl));
+  const L = 100 * (t2.p_pesquisas - f * v[2] / 100), sd = t2.sd_logit, lo = 100 / (1 + Math.exp(-(Math.log(L / (100 - L)) - 1.645 * sd))), hi = 100 / (1 + Math.exp(-(Math.log(L / (100 - L)) + 1.645 * sd)));
+  $("heroFoot").innerHTML = `<span>Lula/(Lula+Flávio) estimado: <b>${f1(L)}%</b> (90%: ${f1(lo)}–${f1(hi)}%)</span><span>1º turno realizado: <b>${f1(D.r1t_s)}%</b></span><span>2022 (2º turno): <b>${f1(D.p2022_2t)}%</b></span>`;
+  $("heroNota").innerHTML = `<b>Simulação condicional às pesquisas, não é previsão validada.</b> A chance de Lula é a probabilidade de Lula/(Lula+Flávio) passar de 50% nos votos válidos, dado o que as pesquisas de 2º turno dizem (média dos institutos com efeito de instituto, recência e tendência) e a incerteza delas: tendência até 25/10, erro histórico das pesquisas finais e um piso assumido de ${f1(D.piso2t)} p.p. Como o 2º turno está perto de 50%, +1 p.p. de Lula/(Lula+Flávio) muda a chance de Lula em cerca de ${f1(100 * sens)} p.p.
+    ${f === 0 ? `Cenário "Pesquisas": média dos institutos sem corrigir o viés histórico (a incerteza já embute o erro histórico das pesquisas).` : `Cenário "${NOMEVIES[state.heroCen]}": desconta ${f1(f * v[2])} p.p. de Lula/(Lula+Flávio), ${f === 1 ? "o viés médio" : "metade do viés médio"} das pesquisas finais de 2º turno por eleição (${m.vies_n_eleicoes[2]} eleições). Com tão poucas eleições o viés mal se distingue de zero (erro-padrão ~0,7 p.p.): trate "Viés histórico" como cenário extremo, não como o mais provável.`}
+    A distribuição por estado vem da eleição de 2022 (swing uniforme + choques regionais medidos). Metodologia e limitações no README.`;
   chavesEstados(f); evolChances(f);
   const el = $("segHero"), nomes = NOMEVIES;
   el.innerHTML = Object.entries(nomes).map(([k, n]) => `<button data-k="${k}" aria-pressed="${state.heroCen == k}">${n}</button>`).join("");
@@ -387,7 +383,7 @@ function hero() {
 function notas() {
   const g = (a, t) => D.nac.find(x => x.ano == a && x.turno == t), m = D.projmodel, v = m.vies_medio, t2 = D.modelo.turno2;
   nota("nota0", [`O 2º turno é um <b>empate técnico</b>: Lula/(Lula+Flávio) está em ${f1(100 * t2.p_pesquisas)}%.`,
-    `Por isso <b>1 p.p.</b> a mais para Lula nele muda a chance dele em ~${f1(100 * (state.sens ?? 0))} p.p.`,
+    `Por isso <b>1 p.p.</b> a mais para Lula muda a chance dele de vencer em ~${f1(100 * (state.sens ?? 0))} p.p.`,
     `O cenário padrão é <b>Pesquisas</b>, sem correção de viés. Os cenários de viés são hipóteses, não o caso base.`,
     `A incerteza do 2º turno tem piso assumido de <b>${f1(D.piso2t)} p.p.</b>`]);
   nota("nota1", [`Lula no 2º turno: <b>${f1(g(2002,2).pt)}%</b> (2002), <b>${f1(g(2006,2).pt)}%</b> (2006) e <b>${f1(g(2022,2).pt)}%</b> (2022).`,
@@ -408,7 +404,7 @@ function notas() {
   const lst = Object.values(ult).sort((a, b) => b.s2 - a.s2).map(p => `${INSTNOME[p.inst] || p.inst} <b>${f1(p.s2)}%</b>`);
   nota("nota5", [`Última rodada, Lula/(Lula+Flávio) no 2º turno: ${lst.join(" · ")}.`,
     `Em 50% é empate. Só a <b>Datafolha</b> foi conferida em relatório oficial; as demais não foram conferidas no TSE.`,
-    `A média usa os 4 institutos com correção de house effect e peso por recência.`]);
+    `A média usa os 5 institutos com correção de house effect e peso por recência.`]);
   const dm = Math.max(...D.valreg.map(x => Math.abs(x.dif)));
   nota("nota6", [`No cenário das pesquisas, Lula lidera em ~<b>${f1(D.proj.pesquisas.ufs_lula_a_frente)} de 27</b> estados no 1º turno.`,
     `A distribuição regional do modelo fica a até <b>${f1(dm)} p.p.</b> da Datafolha em todas as regiões (margem 3 a 6).`,

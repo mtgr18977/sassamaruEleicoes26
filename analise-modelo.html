@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análise do modelo · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+<style>
+  .rp { display:grid; grid-template-columns:minmax(96px,170px) minmax(0,1fr) 150px; gap:10px; align-items:center; margin:7px 0; font-size:.88rem }
+  .rp .tr { position:relative; height:24px; background:var(--surface); border:1px solid var(--line); border-radius:6px }
+  .rp .bd { position:absolute; top:4px; bottom:4px; background:var(--s4); opacity:.32; border-radius:4px }
+  .rp .md { position:absolute; top:3px; bottom:3px; width:2px; margin-left:-1px; background:var(--s4) }
+  .rp .re { position:absolute; top:3px; width:16px; height:16px; margin-left:-8px; border-radius:50%; border:2px solid var(--surface); box-shadow:0 0 0 1px var(--ink) }
+  .rp .re.ok { background:var(--s3) } .rp .re.ruim { background:var(--pt) }
+  .rp .vl { text-align:right; font-variant-numeric:tabular-nums; color:var(--ink2); font-size:.82rem }
+  .rp-eixo { display:grid; grid-template-columns:minmax(96px,170px) minmax(0,1fr) 150px; gap:10px; font-size:.74rem; color:var(--muted) } .rp-eixo i { display:flex; justify-content:space-between; font-style:normal }
+  .leg { display:flex; flex-wrap:wrap; gap:14px; font-size:.8rem; color:var(--ink2); margin:6px 0 2px } .leg s { display:inline-block; vertical-align:middle; margin-right:5px; text-decoration:none }
+  .leg .b { width:26px; height:10px; background:var(--s4); opacity:.32; border-radius:3px } .leg .m { width:2px; height:14px; background:var(--s4) } .leg .o { width:12px; height:12px; border-radius:50%; background:var(--s3); box-shadow:0 0 0 1px var(--ink) } .leg .x { width:12px; height:12px; border-radius:50%; background:var(--pt); box-shadow:0 0 0 1px var(--ink) }
+  .titc { margin:18px 0 2px; font-size:.95rem }
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<main id="conteudo">
+  <header class="mast"><a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><rect x="2" y="11" width="6" height="11" rx="1.6" fill="var(--anti)"/><rect x="9" y="3" width="6" height="19" rx="1.6" fill="var(--pt)"/><rect x="16" y="8" width="6" height="14" rx="1.6" fill="var(--s4)"/></svg><span><b>Eleições 2026</b><small>Dados, modelos e análises do Brasil e do RS</small></span></a><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></header><nav class="tabs" aria-label="Seções do site"><span class="g"><span class="grp">Presidente</span><span class="gl"><a href="index.html">Presidente</a><a href="segundo-turno.html">2º turno</a><a href="analise.html">Análise</a></span></span><span class="g"><span class="grp">Rio Grande do Sul</span><span class="gl"><a href="rs.html">Governo RS</a><a href="analise-governo.html">Análise do governo</a><a href="bancada.html">Bancada RS</a><a href="analise-bancada.html">Análise da bancada</a></span></span><span class="g"><span class="grp">Senado</span><span class="gl"><a href="analise-senado.html">Análise do Senado</a></span></span><span class="g"><span class="grp">Modelo</span><span class="gl"><a href="analise-modelo.html" aria-current="page">Previsto × real</a></span></span><span class="g"><span class="grp">Sobre</span><span class="gl"><a href="documentacao.html">Documentação</a></span></span></nav>
+  <div class="topo"><div><h1>Análise do modelo: o que eu previ × o que aconteceu</h1>
+  <p class="sub">Presidente, governador do RS e bancada do RS no 1º turno de 4/10/2026. As previsões são as que eu deixei congeladas em 2/10, antes da votação; os resultados são preliminares.</p></div></div>
+  <div class="an">
+  <div class="aviso"><b>Como ler.</b> Cada previsão tem uma faixa (90% para presidente e governador; 80% para as cadeiras da bancada). Se o resultado cai dentro dela, eu marco como "dentro". Uma faixa de 90% deveria falhar em 1 de cada 10 itens; falhar muito mais do que isso é sinal de que a incerteza do meu modelo está subestimada. <b>Os resultados de 2026 são preliminares e eu não os conferi no TSE</b> (cada aba de análise lista a fonte de cada número).</div>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="sec"><div>
+  <h2>1. Placar geral</h2>
+  <p id="placarTxt"></p>
+  <div class="leg"><span><s class="b"></s>faixa do modelo</span><span><s class="m"></s>previsão central</span><span><s class="o"></s>resultado dentro</span><span><s class="x"></s>resultado fora</span></div>
+  <div id="rpGeral"></div>
+  <div id="tGeral"></div>
+  <p class="fonte">Faixas de 90% (5º a 95º percentil) do Monte Carlo de cada modelo. "Demais" do governador não tem faixa: o modelo trata os demais candidatos como um valor fixo. Os "demais" do presidente são o que sobra depois de Lula e Flávio.</p>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div>
+  <h2>2. Presidente: 1º turno</h2>
+  <p id="presTxt"></p>
+  <h3 class="titc">Dois cenários do meu modelo × resultado</h3>
+  <div id="tPres"></div>
+  <h3 class="titc">As pesquisas finais</h3>
+  <p id="pesqTxt"></p>
+  <div id="tPesq"></div>
+  <h3 class="titc">Probabilidades que o modelo deu ao que aconteceu</h3>
+  <div id="tProb"></div>
+  <h3 class="titc">Por estado</h3>
+  <p id="ufTxt"></p>
+  <div class="cv" style="height:420px"><canvas id="cUF"></canvas></div>
+  <div id="tUF"></div>
+  <p class="fonte">Só entram os estados com percentual publicado na imprensa (e só o candidato que a fonte trouxe). Previsão = cenário "Pesquisas" de 2/10 (mediana por estado). Nada disso foi conferido no TSE.</p>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div>
+  <h2>3. Governador do RS</h2>
+  <p id="govTxt"></p>
+  <div id="rpGov"></div>
+  <div id="tGov"></div>
+  <h3 class="titc">As pesquisas finais</h3>
+  <div id="tGovPesq"></div>
+  <p id="govPesqTxt"></p>
+  <p class="fonte">O erro sistemático do meu modelo (3,6 p.p. por candidato) é um proxy tirado do nível nacional, porque eu não tenho histórico de pesquisas estaduais. Este resultado mostra que ele foi curto demais para o RS.</p>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div>
+  <h2>4. Bancada do RS</h2>
+  <div class="filtros">Casa <span class="seg" id="segCargo"></span></div>
+  <p id="banTxt"></p>
+  <div class="leg"><span><s class="b"></s>faixa de 80%</span><span><s class="m"></s>média prevista</span><span><s class="o"></s>eleitos dentro</span><span><s class="x"></s>eleitos fora</span></div>
+  <div id="rpBan"></div>
+  <div id="tBan"></div>
+  <h3 class="titc">Blocos</h3>
+  <div id="tBlocos"></div>
+  <p class="fonte">As cadeiras são contagem minha a partir de listas da imprensa, não conferida no TSE nem na Assembleia. Eu mostro as listas com previsão média de pelo menos 0,5 cadeira ou com eleito. O teste pós-fato, que refaz a previsão com o governador real, está em <a href="analise-bancada.html">Análise da bancada RS</a>.</p>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div>
+  <h2>5. 2º turno presidencial: ainda sem resultado</h2>
+  <p id="t2Txt"></p>
+  <div id="tT2"></div>
+  <p class="fonte">Quando o 2º turno acontecer (25/10), eu acrescento aqui o resultado ao lado desta previsão, do mesmo jeito que fiz com o 1º turno. A previsão é a de <span id="t2Data"></span>.</p>
+  </div><aside class="side" id="nota5"></aside></section>
+
+  <section class="sec"><div>
+  <h2>6. O que eu levo disso</h2>
+  <ul id="licoes"></ul>
+  <h2>7. Limites desta análise</h2>
+  <ul class="fonte" style="font-size:.88rem">
+    <li>São poucas disputas e um só dia de votação: sete itens com faixa de 90% não bastam para dizer que a calibração está certa ou errada. Servem para ver <i>onde</i> o modelo errou.</li>
+    <li>Resultados preliminares, não conferidos no TSE. O percentual nacional (Flávio 47,03%, Lula 45,16%) coincide entre Wikipédia e O Tempo; os "demais" são derivados.</li>
+    <li>As previsões de 2/10 não usam as pesquisas de véspera de 3/10 (Datafolha, Quaest, AtlasIntel): eu as registrei depois, e a projeção do 1º turno ficou congelada.</li>
+    <li>Isto não é uma previsão validada nem uma avaliação formal (não há pontuação própria como Brier ou log-score; as probabilidades acima são só a leitura direta do que aconteceu).</li>
+  </ul>
+  </div></section>
+  </div>
+</main>
+<footer class="rodape"><div class="rodape-in"><p><b>Isto não é pesquisa eleitoral nem previsão validada.</b> É um modelo estatístico condicionado às pesquisas e ao histórico do TSE; pesquisas e resultados de 2026 nem sempre foram conferidos na fonte oficial, e cada página diz o que foi e o que não foi.</p><p>Fontes: TSE (resultados e dados abertos), API de Dados Abertos do Senado e da Câmara, institutos de pesquisa e imprensa, conforme a <a href="documentacao.html">documentação</a>. Código aberto (MIT) em <a href="https://github.com/mtgr18977/sassamaruEleicoes26" target="_blank" rel="noopener">GitHub</a>. Página gerada em 09/10/2026.</p></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = {"presidente": {"data": "2026-10-02", "real": {"L": 45.16, "F": 47.03, "O": 7.81, "margem": -1.87}, "cen": {"pesquisas": {"L": [40.0, 45.5, 51.0], "F": [36.7, 42.0, 47.5], "O": [9.6, 12.4, 15.7], "margem": [-7.1, 3.5, 13.9]}, "vies_se_repete": {"L": [38.0, 43.5, 49.0], "F": [38.6, 44.0, 49.5], "O": [9.6, 12.4, 15.8], "margem": [-11.0, -0.5, 10.0]}}, "prob": {"segundo_turno": 0.9039, "lula_a_frente": 0.7014, "lula_gt50": 0.0872, "flavio_gt50": 0.0089}, "pesq": [{"inst": "Quaest", "campo": "2026-09-27", "base": "total", "s": 53.4}, {"inst": "AtlasIntel", "campo": "2026-09-28", "base": "total", "s": 51.8}, {"inst": "RealTimeBigData", "campo": "2026-09-30", "base": "validos", "s": 52.9}, {"inst": "Vox Brasil", "campo": "2026-10-01", "base": "total", "s": 49.5}, {"inst": "Datafolha", "campo": "2026-10-03", "base": "total", "s": 51.2}], "real_s": 48.99, "vox": [{"campo": "2026-09-28", "s": 52.1}, {"campo": "2026-10-01", "s": 49.5}], "vies_hist": 2.25, "ufs": [{"uf": "BA", "L_prev": 66.5, "F_prev": 24.2, "L": 66.17, "F": null}, {"uf": "PI", "L_prev": 70.9, "F_prev": 19.9, "L": 71.0, "F": null}, {"uf": "MG", "L_prev": 45.3, "F_prev": 42.4, "L": null, "F": 48.24}, {"uf": "RJ", "L_prev": 38.0, "F_prev": 49.5, "L": null, "F": 53.01}, {"uf": "PR", "L_prev": 33.2, "F_prev": 53.4, "L": null, "F": 59.91}, {"uf": "SC", "L_prev": 27.3, "F_prev": 60.0, "L": null, "F": 66.65}, {"uf": "RS", "L_prev": 39.4, "F_prev": 47.1, "L": 35.73, "F": 55.64}, {"uf": "TO", "L_prev": 47.8, "F_prev": 43.5, "L": 43.42, "F": 50.4}], "mae_uf": 4.64, "n_uf": 10, "t2": {"s": 48.44, "sd": 0.1001, "lula": 0.2665, "data": "2026-10-09"}}, "governo": {"cand": [{"nome": "Luciano Zucco", "partido": "PL", "votos": 3516048, "pct": 58.05}, {"nome": "Juliana Brizola", "partido": "PDT", "votos": 1917374, "pct": 31.65}, {"nome": "Gabriel Souza", "partido": "MDB", "votos": 510698, "pct": 8.43}, {"nome": "Marcelo Maranata", "partido": "PSDB", "votos": null, "pct": 1.68}, {"nome": "Outros (derivado)", "partido": "", "votos": null, "pct": 0.19}], "validos": 6056120, "pres26": {"Flavio Bolsonaro": {"votos": 3573783, "pct": 55.64}, "Lula": {"votos": 2294759, "pct": 35.73}}, "nac": {"L22": 48.43, "B22": 43.2, "L26": 45.16, "B26": 47.03}, "blocos22": {"E": 28.8, "D": 44.39, "C": 26.81}, "cand22": [{"nome": "Onyx Lorenzoni", "partido": "PL", "bloco": "D", "pct": 37.5}, {"nome": "Eduardo Leite", "partido": "PSDB", "bloco": "C", "pct": 26.81}, {"nome": "Edegar Pretto", "partido": "PT", "bloco": "E", "pct": 26.77}, {"nome": "Luis Carlos Heinze", "partido": "PP", "bloco": "D", "pct": 4.28}, {"nome": "Argenta", "partido": "PSC", "bloco": "D", "pct": 2.0}], "pres22": {"L": 42.28, "B": 48.89}, "cidades": [{"municipio": "Porto Alegre", "lg": "Juliana Brizola (PDT)", "pg": 45.8, "lp": "Lula (PT)", "pp": 48.6, "base22": 49.8, "d": -1.2, "L22": 49.8, "B22": 39.1, "obs": "Percentual do LIDER em cada disputa; resumo automatico de pagina grande, nao conferido no TSE"}, {"municipio": "Caxias do Sul", "lg": "Zucco (PL)", "pg": 67.4, "lp": "Flavio Bolsonaro (PL)", "pp": 62.7, "base22": 57.5, "d": 5.2, "L22": 31.8, "B22": 57.5, "obs": ""}, {"municipio": "Canoas", "lg": "Zucco (PL)", "pg": 55.7, "lp": "Flavio Bolsonaro (PL)", "pp": 51.3, "base22": 46.8, "d": 4.5, "L22": 42.9, "B22": 46.8, "obs": ""}, {"municipio": "Pelotas", "lg": "Zucco (PL)", "pg": 47.1, "lp": "Lula (PT)", "pp": 47.1, "base22": 51.8, "d": -4.7, "L22": 51.8, "B22": 36.4, "obs": "47,1 nas duas colunas parece coincidencia: conferir antes de citar"}, {"municipio": "Santa Maria", "lg": "Zucco (PL)", "pg": 52.1, "lp": "Flavio Bolsonaro (PL)", "pp": 49.5, "base22": 45.1, "d": 4.4, "L22": 45.4, "B22": 45.1, "obs": ""}, {"municipio": "Gravatai", "lg": "Zucco (PL)", "pg": 59.6, "lp": "Flavio Bolsonaro (PL)", "pp": 55.9, "base22": 51.7, "d": 4.2, "L22": 38.2, "B22": 51.7, "obs": ""}, {"municipio": "Viamao", "lg": "Zucco (PL)", "pg": 48.2, "lp": "Lula (PT)", "pp": 46.3, "base22": 51.7, "d": -5.4, "L22": 51.7, "B22": 39.4, "obs": ""}, {"municipio": "Novo Hamburgo", "lg": "Zucco (PL)", "pg": 68.1, "lp": "Flavio Bolsonaro (PL)", "pp": 63.9, "base22": 60.9, "d": 3.0, "L22": 30.7, "B22": 60.9, "obs": ""}, {"municipio": "Sao Leopoldo", "lg": "Zucco (PL)", "pg": 57.5, "lp": "Flavio Bolsonaro (PL)", "pp": 52.8, "base22": 48.7, "d": 4.1, "L22": 43.2, "B22": 48.7, "obs": ""}, {"municipio": "Rio Grande", "lg": "Juliana Brizola (PDT)", "pg": 52.0, "lp": "Lula (PT)", "pp": 56.2, "base22": 60.7, "d": -4.5, "L22": 60.7, "B22": 29.6, "obs": "Zucco venceu em 475 dos 497 municipios; Brizola em 22 (Rio Grande e a 6a maior votacao dela, 2,52% dos votos dela)"}], "modelo": {"data": "2026-10-02", "Z": [37.64, 43.05, 48.57], "B": [30.94, 36.01, 41.35], "S": [11.96, 16.78, 23.08], "O": 3.83, "eleito": [0.9027, 0.0966, 0.0007], "vence_1t": [0.018775, 2.5e-05, 0.0], "segundo_turno": 0.9812, "sistematico": 3.6}, "pesq": [{"inst": "ParanaPesquisas", "campo": "2026-09-18", "Z": 41.6, "B": 35.77, "S": 14.74, "O": 7.89}, {"inst": "AtlasIntel", "campo": "2026-09-20", "Z": 45.17, "B": 39.2, "S": 14.66, "O": 0.98}, {"inst": "Quaest", "campo": "2026-09-23", "Z": 43.28, "B": 34.33, "S": 14.93, "O": 7.46}, {"inst": "Neokemp", "campo": "2026-09-24", "Z": 48.91, "B": 31.37, "S": 17.1, "O": 2.61}, {"inst": "RealTimeBigData", "campo": "2026-09-28", "Z": 41.24, "B": 36.08, "S": 19.59, "O": 3.09}]}, "bancada": {"cadeiras": {"DF": 31, "DE": 55}, "bloco_nome": {"E": "Esquerda", "C": "Centro", "D": "Direita e demais"}, "federacoes": {"Brasil da Esperança": ["PT", "PCdoB", "PV"], "PSOL Rede": ["PSOL", "REDE"], "PSDB Cidadania": ["PSDB", "CIDADANIA"], "União Progressista": ["UNIÃO", "PP"], "Renovação Solidária": ["PRD", "SOLIDARIEDADE"]}, "top": [{"cargo": "DF", "nome": "Mauricio Marcon", "partido": "PL", "votos": 379834, "votos22": 140634}, {"cargo": "DF", "nome": "Fernanda Melchionna", "partido": "PSOL", "votos": 280262, "votos22": 199894}, {"cargo": "DF", "nome": "Giovani Cherini", "partido": "PL", "votos": 234171, "votos22": null}, {"cargo": "DF", "nome": "Rony Gabriel", "partido": "PODE", "votos": 223643, "votos22": null}, {"cargo": "DF", "nome": "Alceu Moreira", "partido": "MDB", "votos": 217208, "votos22": null}, {"cargo": "DE", "nome": "Adri Cherini", "partido": "PL", "votos": 129492, "votos22": null}, {"cargo": "DE", "nome": "Delegado Zucco", "partido": "REPUBLICANOS", "votos": 128599, "votos22": null}, {"cargo": "DE", "nome": "Luciana Genro", "partido": "PSOL", "votos": 127601, "votos22": null}], "DF": {"listas": [{"lista": "Brasil da Esperança", "membros": ["PCdoB", "PT", "PV"], "blocos": ["E"], "eleitos_2022": 7, "atual": 7, "med": 6.92, "mediana": 7, "p10": 5, "p90": 9, "real": 6}, {"lista": "PL", "membros": [], "blocos": ["D"], "eleitos_2022": 4, "atual": 7, "med": 5.01, "mediana": 5, "p10": 3, "p90": 7, "real": 8}, {"lista": "União Progressista", "membros": ["PP", "UNIÃO"], "blocos": ["D"], "eleitos_2022": 4, "atual": 5, "med": 4.37, "mediana": 4, "p10": 3, "p90": 6, "real": 5}, {"lista": "MDB", "membros": [], "blocos": ["C"], "eleitos_2022": 3, "atual": 2, "med": 2.48, "mediana": 2, "p10": 1, "p90": 4, "real": 3}, {"lista": "REPUBLICANOS", "membros": [], "blocos": ["D"], "eleitos_2022": 3, "atual": 2, "med": 2.06, "mediana": 2, "p10": 1, "p90": 3, "real": 2}, {"lista": "PSD", "membros": [], "blocos": ["C"], "eleitos_2022": 1, "atual": 3, "med": 1.75, "mediana": 2, "p10": 1, "p90": 3, "real": 2}, {"lista": "PSDB Cidadania", "membros": ["CIDADANIA", "PSDB"], "blocos": ["C"], "eleitos_2022": 3, "atual": 1, "med": 1.68, "mediana": 2, "p10": 1, "p90": 3, "real": 0}, {"lista": "PDT", "membros": [], "blocos": ["E"], "eleitos_2022": 2, "atual": 2, "med": 1.62, "mediana": 1, "p10": 1, "p90": 3, "real": 1}, {"lista": "PSOL Rede", "membros": ["PSOL", "REDE"], "blocos": ["E"], "eleitos_2022": 1, "atual": 1, "med": 1.54, "mediana": 1, "p10": 1, "p90": 3, "real": 1}, {"lista": "NOVO", "membros": [], "blocos": ["D"], "eleitos_2022": 1, "atual": 1, "med": 1.37, "mediana": 1, "p10": 0, "p90": 2, "real": 1}, {"lista": "PODE", "membros": [], "blocos": ["D"], "eleitos_2022": 1, "atual": 0, "med": 1.26, "mediana": 1, "p10": 0, "p90": 2, "real": 2}, {"lista": "PSB", "membros": [], "blocos": ["E"], "eleitos_2022": 1, "atual": 0, "med": 0.56, "mediana": 0, "p10": 0, "p90": 1, "real": 0}, {"lista": "Renovação Solidária", "membros": ["PRD", "SOLIDARIEDADE"], "blocos": ["D"], "eleitos_2022": 0, "atual": 0, "med": 0.36, "mediana": 0, "p10": 0, "p90": 1, "real": 0}], "blocos": {"E": {"real": 8, "e22": 11, "atual": 10, "med": 10.65, "p10": 8.0, "p90": 14.0}, "C": {"real": 5, "e22": 7, "atual": 6, "med": 5.91, "p10": 4.0, "p90": 8.0}, "D": {"real": 18, "e22": 13, "atual": 15, "med": 14.44, "p10": 11.0, "p90": 18.0}}, "real_partidos": {"PL": 8, "PT": 5, "PP": 4, "MDB": 3, "PSD": 2, "PODE": 2, "REPUBLICANOS": 2, "PSOL": 1, "PCdoB": 1, "NOVO": 1, "PDT": 1, "UNIÃO": 1}, "e22_partidos": {"CIDADANIA": 1, "MDB": 3, "NOVO": 1, "PCdoB": 1, "PDT": 2, "PL": 4, "PODE": 1, "PP": 3, "PSB": 1, "PSD": 1, "PSDB": 2, "PSOL": 1, "PT": 6, "REPUBLICANOS": 3, "UNIÃO": 1}, "atual_partidos": {"MDB": 2, "NOVO": 1, "PCdoB": 1, "PDT": 2, "PL": 7, "PP": 4, "PSD": 3, "PSDB": 1, "PSOL": 1, "PT": 6, "REPUBLICANOS": 2, "UNIÃO": 1}, "trocadas": 5.1}, "DE": {"listas": [{"lista": "Brasil da Esperança", "membros": ["PCdoB", "PT", "PV"], "blocos": ["E"], "eleitos_2022": 12, "atual": 11, "med": 11.43, "mediana": 11, "p10": 8, "p90": 15, "real": 10}, {"lista": "União Progressista", "membros": ["PP", "UNIÃO"], "blocos": ["D"], "eleitos_2022": 10, "atual": 8, "med": 9.22, "mediana": 9, "p10": 6, "p90": 12, "real": 8}, {"lista": "MDB", "membros": [], "blocos": ["C"], "eleitos_2022": 6, "atual": 6, "med": 5.26, "mediana": 5, "p10": 3, "p90": 8, "real": 5}, {"lista": "REPUBLICANOS", "membros": [], "blocos": ["D"], "eleitos_2022": 5, "atual": 6, "med": 5.07, "mediana": 5, "p10": 3, "p90": 8, "real": 4}, {"lista": "PDT", "membros": [], "blocos": ["E"], "eleitos_2022": 4, "atual": 5, "med": 4.53, "mediana": 4, "p10": 3, "p90": 7, "real": 4}, {"lista": "PL", "membros": [], "blocos": ["D"], "eleitos_2022": 5, "atual": 5, "med": 4.39, "mediana": 4, "p10": 2, "p90": 7, "real": 12}, {"lista": "PSDB Cidadania", "membros": ["CIDADANIA", "PSDB"], "blocos": ["C"], "eleitos_2022": 5, "atual": 0, "med": 3.85, "mediana": 4, "p10": 2, "p90": 6, "real": 1}, {"lista": "PSOL Rede", "membros": ["PSOL", "REDE"], "blocos": ["E"], "eleitos_2022": 2, "atual": 2, "med": 2.65, "mediana": 2, "p10": 1, "p90": 5, "real": 3}, {"lista": "PSD", "membros": [], "blocos": ["C"], "eleitos_2022": 1, "atual": 8, "med": 2.58, "mediana": 2, "p10": 1, "p90": 4, "real": 5}, {"lista": "PODE", "membros": [], "blocos": ["D"], "eleitos_2022": 2, "atual": 2, "med": 2.43, "mediana": 2, "p10": 1, "p90": 4, "real": 2}, {"lista": "PSB", "membros": [], "blocos": ["E"], "eleitos_2022": 1, "atual": 1, "med": 1.39, "mediana": 1, "p10": 0, "p90": 3, "real": 0}, {"lista": "NOVO", "membros": [], "blocos": ["D"], "eleitos_2022": 1, "atual": 1, "med": 1.1, "mediana": 1, "p10": 0, "p90": 2, "real": 1}, {"lista": "Renovação Solidária", "membros": ["PRD", "SOLIDARIEDADE"], "blocos": ["D"], "eleitos_2022": 1, "atual": 0, "med": 1.06, "mediana": 1, "p10": 0, "p90": 2, "real": 0}], "blocos": {"E": {"real": 17, "e22": 19, "atual": 19, "med": 20.0, "p10": 15.0, "p90": 25.0}, "C": {"real": 11, "e22": 12, "atual": 14, "med": 11.69, "p10": 8.0, "p90": 16.0}, "D": {"real": 27, "e22": 24, "atual": 22, "med": 23.31, "p10": 18.0, "p90": 29.0}}, "real_partidos": {"PL": 12, "PT": 9, "PP": 7, "MDB": 5, "PSD": 5, "REPUBLICANOS": 4, "PDT": 4, "PSOL": 3, "PODE": 2, "UNIÃO": 1, "NOVO": 1, "PCdoB": 1, "PSDB": 1}, "e22_partidos": {"MDB": 6, "NOVO": 1, "PCdoB": 1, "PDT": 4, "PL": 5, "PODE": 2, "PP": 7, "PSB": 1, "PSD": 1, "PSDB": 5, "PSOL": 2, "PT": 11, "PTB": 1, "REPUBLICANOS": 5, "UNIÃO": 3}, "atual_partidos": {"MDB": 6, "NOVO": 1, "PDT": 5, "PL": 5, "PODE": 2, "PP": 7, "PSB": 1, "PSD": 8, "PSOL": 2, "PT": 11, "REPUBLICANOS": 6, "UNIÃO": 1}, "trocadas": 10.4}, "gov_blocos": {"pesquisas": {"E": 36.16, "C": 19.32, "D": 44.52}, "real": {"E": 31.65, "C": 10.11, "D": 58.24}}, "posthoc": {"DF": {"0.0": {"trocadas": 4.6, "blocos": {"E": {"med": 9.95, "p10": 7.0, "p90": 13.0}, "C": {"med": 6.57, "p10": 4.0, "p90": 9.0}, "D": {"med": 14.48, "p10": 11.0, "p90": 18.0}}, "pl": {"med": 4.99, "p10": 3, "p90": 7, "real": 8}}, "0.25": {"trocadas": 4.8, "blocos": {"E": {"med": 10.15, "p10": 7.0, "p90": 13.0}, "C": {"med": 5.33, "p10": 3.0, "p90": 8.0}, "D": {"med": 15.52, "p10": 12.0, "p90": 19.0}}, "pl": {"med": 5.33, "p10": 4, "p90": 7, "real": 8}}, "0.5": {"trocadas": 4.9, "blocos": {"E": {"med": 10.28, "p10": 7.0, "p90": 13.0}, "C": {"med": 4.24, "p10": 2.0, "p90": 6.0}, "D": {"med": 16.48, "p10": 13.0, "p90": 20.0}}, "pl": {"med": 5.64, "p10": 4, "p90": 8, "real": 8}}}, "DE": {"0.0": {"trocadas": 10.3, "blocos": {"E": {"med": 18.85, "p10": 14.0, "p90": 24.0}, "C": {"med": 12.81, "p10": 9.0, "p90": 17.0}, "D": {"med": 23.34, "p10": 18.0, "p90": 29.0}}, "pl": {"med": 4.38, "p10": 2, "p90": 7, "real": 12}}, "0.25": {"trocadas": 10.6, "blocos": {"E": {"med": 19.29, "p10": 14.0, "p90": 24.0}, "C": {"med": 10.66, "p10": 7.0, "p90": 15.0}, "D": {"med": 25.05, "p10": 20.0, "p90": 30.0}}, "pl": {"med": 4.7, "p10": 3, "p90": 7, "real": 12}}, "0.5": {"trocadas": 11.5, "blocos": {"E": {"med": 19.59, "p10": 15.0, "p90": 25.0}, "C": {"med": 8.78, "p10": 6.0, "p90": 12.0}, "D": {"med": 26.64, "p10": 21.0, "p90": 32.0}}, "pl": {"med": 4.99, "p10": 3, "p90": 7, "real": 12}}}}, "backtest_med": 6.6}};
+state.cargo = "DF";
+const P = D.presidente, G = D.governo, B = D.bancada;
+const pct = (x) => f1(100 * x) + "%", pf = (x) => f1(x) + "%";
+const NOMEUF = { AC:"Acre",AL:"Alagoas",AP:"Amapá",AM:"Amazonas",BA:"Bahia",CE:"Ceará",DF:"Distrito Federal",ES:"Espírito Santo",GO:"Goiás",MA:"Maranhão",MT:"Mato Grosso",MS:"Mato Grosso do Sul",MG:"Minas Gerais",PA:"Pará",PB:"Paraíba",PR:"Paraná",PE:"Pernambuco",PI:"Piauí",RJ:"Rio de Janeiro",RN:"Rio Grande do Norte",RS:"Rio Grande do Sul",RO:"Rondônia",RR:"Roraima",SC:"Santa Catarina",SP:"São Paulo",SE:"Sergipe",TO:"Tocantins" };
+
+// itens com faixa de 90%: presidente (cenário Pesquisas) e governador
+function itens() {
+  const c = P.cen.pesquisas, r = P.real, m = G.modelo, k = Object.fromEntries(G.cand.map(x => [x.nome, x.pct]));
+  const gov = [["Zucco (PL)", m.Z, k["Luciano Zucco"]], ["Brizola (PDT)", m.B, k["Juliana Brizola"]], ["Souza (MDB)", m.S, k["Gabriel Souza"]]];
+  return [
+    { disp: "Presidente 1º turno", nome: "Lula (PT)", lo: c.L[0], med: c.L[1], hi: c.L[2], real: r.L },
+    { disp: "Presidente 1º turno", nome: "Flávio Bolsonaro (PL)", lo: c.F[0], med: c.F[1], hi: c.F[2], real: r.F },
+    { disp: "Presidente 1º turno", nome: "Demais candidatos", lo: c.O[0], med: c.O[1], hi: c.O[2], real: r.O },
+    { disp: "Presidente 1º turno", nome: "Margem Lula − Flávio (p.p.)", lo: c.margem[0], med: c.margem[1], hi: c.margem[2], real: r.margem, sinal: true },
+    ...gov.map(g => ({ disp: "Governador RS", nome: g[0], lo: g[1][0], med: g[1][1], hi: g[1][2], real: g[2] }))];
+}
+const dentroI = (i) => i.real >= i.lo && i.real <= i.hi;
+
+// gráfico de faixa (HTML): eixo comum, faixa, previsão central e resultado
+function rp(id, rows, min, max, unid) {
+  const x = (v) => 100 * (Math.min(max, Math.max(min, v)) - min) / (max - min);
+  $(id).innerHTML = rows.map(r => `<div class="rp"><span>${r.nome}</span><div class="tr" title="${r.nome}: previsão ${f1(r.med)} (${f1(r.lo)} a ${f1(r.hi)}); resultado ${f1(r.real)}">
+    <div class="bd" style="left:${x(r.lo)}%;width:${x(r.hi) - x(r.lo)}%"></div><div class="md" style="left:${x(r.med)}%"></div><div class="re ${r.real >= r.lo && r.real <= r.hi ? "ok" : "ruim"}" style="left:${x(r.real)}%"></div></div>
+    <span class="vl">${f1(r.real)}${unid} <small>(prev. ${f1(r.med)})</small></span></div>`).join("") +
+    `<div class="rp-eixo"><span></span><i><span>${f1(min)}${unid}</span><span>${f1((min + max) / 2)}${unid}</span><span>${f1(max)}${unid}</span></i><span></span></div>`;
+}
+
+function kpis() {
+  const I = itens(), ok = I.filter(dentroI).length;
+  const lf = (c) => B[c].listas.filter(l => l.med >= 0.5 || l.real > 0), okL = (c) => lf(c).filter(l => l.real >= l.p10 && l.real <= l.p90).length;
+  $("kpis").innerHTML = `<div class="kpi"><span>Presidente e governador</span><b>${ok} de ${I.length}</b><small>itens dentro da faixa de 90%</small></div>
+    <div class="kpi"><span>Bancada federal</span><b>${okL("DF")} de ${lf("DF").length}</b><small>listas dentro da faixa de 80% · ${f1(B.DF.trocadas)} cadeiras trocadas</small></div>
+    <div class="kpi"><span>Bancada estadual</span><b>${okL("DE")} de ${lf("DE").length}</b><small>listas dentro da faixa de 80% · ${f1(B.DE.trocadas)} cadeiras trocadas</small></div>
+    <div class="kpi f"><span>Maior erro</span><b>${pp(G.cand[0].pct - G.modelo.Z[1])} p.p.</b><small>Zucco: previsto ${f1(G.modelo.Z[1])}%, teve ${f1(G.cand[0].pct)}%</small></div>`;
+}
+
+function geral() {
+  const I = itens(), fora = I.filter(i => !dentroI(i));
+  $("placarTxt").innerHTML = `Dos ${I.length} itens com faixa de 90%, <b>${I.length - fora.length}</b> ficaram dentro e <b>${fora.length}</b> fora${fora.length ? ": " + fora.map(i => `${i.nome} (${i.disp === "Governador RS" ? "RS" : "presidente"})`).join(", ") : ""}. Eu esperava errar em torno de 1 em cada 10. Os dois erros grandes têm o mesmo padrão: <b>quem ficou abaixo do previsto foram os candidatos menores</b> (os "demais" do presidente e Souza no RS). Minha hipótese é voto útil e polarização no fim da campanha; eu não tenho pesquisa de saída para testar.`;
+  const pres = I.filter(i => i.disp.startsWith("Pres") && !i.sinal), gov = I.filter(i => i.disp.startsWith("Gov"));
+  $("rpGeral").innerHTML = `<h3 class="titc">Presidente: % dos votos válidos (cenário "Pesquisas")</h3><div id="rpP"></div><h3 class="titc">Governador do RS: % dos votos válidos</h3><div id="rpG"></div>`;
+  rp("rpP", pres, 0, 60, "%"); rp("rpG", gov, 0, 70, "%");
+  tab("tGeral", ["Disputa", "Item", "Previsão (faixa 90%)", "Resultado", "Erro", "Faixa"],
+    I.map(i => [i.disp, i.nome, `${f1(i.med)} (${f1(i.lo)} a ${f1(i.hi)})`, f1(i.real), pp(i.real - i.med), dentro(i.real, i.lo, i.hi)]));
+}
+
+function presidente() {
+  const r = P.real, c = P.cen;
+  $("presTxt").innerHTML = `Eu previ Lula com <b>${f1(c.pesquisas.L[1])}%</b> e ele teve <b>${f1(r.L)}%</b>: acertei o Lula. Flávio, previsto em ${f1(c.pesquisas.F[1])}%, teve <b>${f1(r.F)}%</b> (${pp(r.F - c.pesquisas.F[1])} p.p.), perto do limite de cima da faixa. O erro grande foi nos demais: previ ${f1(c.pesquisas.O[1])}% e eles tiveram só <b>${f1(r.O)}%</b>, fora da faixa. Ou seja, as pesquisas acertaram o tamanho do Lula, mas o voto dos pequenos migrou quase todo para Flávio. Na margem, eu previ Lula ${pp(c.pesquisas.margem[1])} p.p. à frente; ele ficou ${pp(r.margem)} p.p. (Flávio na frente), dentro de uma faixa larga (${pp(c.pesquisas.margem[0])} a ${pp(c.pesquisas.margem[2])}).`;
+  tab("tPres", ["Item", "Cenário Pesquisas", "Cenário Viés histórico", "Resultado", "Erro (Pesquisas)", "Erro (Viés)"],
+    [["Lula", "L"], ["Flávio", "F"], ["Demais", "O"]].map(([n, k]) => [n, `${f1(c.pesquisas[k][1])} (${f1(c.pesquisas[k][0])}–${f1(c.pesquisas[k][2])})`, `${f1(c.vies_se_repete[k][1])} (${f1(c.vies_se_repete[k][0])}–${f1(c.vies_se_repete[k][2])})`, f1(r[k]), pp(r[k] - c.pesquisas[k][1]), pp(r[k] - c.vies_se_repete[k][1])])
+     .concat([["Margem L − F (p.p.)", `${pp(c.pesquisas.margem[1])} (${pp(c.pesquisas.margem[0])} a ${pp(c.pesquisas.margem[2])})`, `${pp(c.vies_se_repete.margem[1])} (${pp(c.vies_se_repete.margem[0])} a ${pp(c.vies_se_repete.margem[2])})`, pp(r.margem), pp(r.margem - c.pesquisas.margem[1]), pp(r.margem - c.vies_se_repete.margem[1])]]));
+  const E = P.pesq.map(x => x.s - P.real_s), media = E.reduce((a, b) => a + b, 0) / E.length;
+  $("pesqTxt").innerHTML = `Na parcela Lula/(Lula+Flávio), o resultado foi <b>${f2(P.real_s)}%</b>. A última pesquisa de cada instituto deu a Lula entre <b>${pp(Math.min(...E))}</b> e <b>${pp(Math.max(...E))}</b> p.p. a mais (média ${pp(media)}), todas na direção do viés histórico que eu uso (+${f1(P.vies_hist)} p.p. no 1º turno). Para Flávio e para a margem, o cenário "Viés histórico" ficou mais perto do resultado; para Lula, o cenário "Pesquisas".${voxTxt()}`;
+  tab("tPesq", ["Instituto", "Campo até", "Base", "Lula/(Lula+Flávio)", "Resultado", "Erro (p.p.)"], P.pesq.map(x => [x.inst, x.campo, x.base, f1(x.s), f2(P.real_s), pp(x.s - P.real_s)]));
+  tab("tProb", ["Pergunta", "Probabilidade que eu dei", "O que aconteceu"], [
+    ["A disputa vai a 2º turno", pct(P.prob.segundo_turno), `<span class="ok">sim</span>`],
+    ["Lula termina o 1º turno à frente de Flávio", pct(P.prob.lula_a_frente), `<span class="ruim">não</span> (Flávio ${f2(P.real.F - P.real.L)} p.p. à frente)`],
+    ["Lula vence no 1º turno (mais de 50%)", pct(P.prob.lula_gt50), `<span class="ok">não</span>`],
+    ["Flávio vence no 1º turno (mais de 50%)", pct(P.prob.flavio_gt50), `<span class="ok">não</span>`]]);
+}
+function voxTxt() {
+  if (!P.vox.length) return "";
+  const e = P.vox.map(v => `${v.campo.split("-").reverse().slice(0, 2).join("/")}: ${pp(v.s - P.real_s)} p.p.`);
+  return ` A <b>Vox Brasil</b> foi a que mais se aproximou na última rodada (${e[e.length - 1]}), mas a rodada anterior dela errou mais (${e.slice(0, -1).join("; ") || "–"}): uma pesquisa certeira não mostra que o instituto acerta sempre, e com poucas pesquisas eu não consigo separar acerto de sorte.`;
+}
+function porUF() {
+  const U = P.ufs.filter(u => u.L != null || u.F != null), pontos = [];
+  U.forEach(u => { if (u.L != null) pontos.push({ uf: u.uf, c: "Lula", prev: u.L_prev, real: u.L }); if (u.F != null) pontos.push({ uf: u.uf, c: "Flávio", prev: u.F_prev, real: u.F }); });
+  $("ufTxt").innerHTML = `Com ${pontos.length} percentuais estaduais publicados (${U.length} estados), o erro médio absoluto foi de <b>${f1(P.mae_uf)} p.p.</b> Aqui o ponto é: o modelo estima os estados por swing uniforme a partir de 2022, e o erro por estado é maior do que o nacional.`;
+  const ord = pontos.slice().sort((a, b) => (a.real - a.prev) - (b.real - b.prev));
+  chart("cUF", { type: "bar", data: { labels: ord.map(p => `${p.uf} · ${p.c}`), datasets: [{ label: "Erro (resultado − previsão), p.p.", data: ord.map(p => +(p.real - p.prev).toFixed(1)), backgroundColor: ord.map(p => css(p.c === "Lula" ? "--pt" : "--anti")), borderRadius: 3 }] },
+    options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: eixo({ title: { display: true, text: "p.p. (positivo: o candidato foi melhor que o previsto)", color: css("--ink2") } }), y: eixo({ grid: { display: false }, ticks: { color: css("--ink2"), autoSkip: false, font: { size: 10 } } }) } } });
+  tab("tUF", ["Estado", "Candidato", "Previsão", "Resultado", "Erro (p.p.)"], ord.slice().reverse().map(p => [NOMEUF[p.uf] || p.uf, p.c, f1(p.prev), f1(p.real), pp(p.real - p.prev)]));
+}
+
+function governador() {
+  const m = G.modelo, k = Object.fromEntries(G.cand.map(x => [x.nome, x.pct])), z = k["Luciano Zucco"], b = k["Juliana Brizola"], s = k["Gabriel Souza"], o = +(100 - z - b - s).toFixed(2);
+  $("govTxt").innerHTML = `Eu previ Zucco com <b>${f1(m.Z[1])}%</b> (faixa ${f1(m.Z[0])}–${f1(m.Z[2])}) e ele teve <b>${f1(z)}%</b>: <b>${pp(z - m.Z[1])} p.p.</b> acima do previsto e bem fora da faixa. Brizola, previsto em ${f1(m.B[1])}%, ficou perto (${f1(b)}%, dentro da faixa). Souza foi de ${f1(m.S[1])}% previsto para <b>${f1(s)}%</b>, fora da faixa. O modelo dava ${pct(m.vence_1t[0])} de chance de o Zucco vencer já no 1º turno, e ele venceu: o que eu tinha como improvável foi o que aconteceu, e com folga (o 2º turno que eu dava como certo, ${pct(m.segundo_turno)}, não houve).`;
+  const I = itens().filter(i => i.disp.startsWith("Gov")); rp("rpGov", I, 0, 70, "%");
+  tab("tGov", ["Candidato", "Previsão (faixa 90%)", "Resultado", "Erro (p.p.)", "Faixa"], I.map(i => [i.nome, `${f1(i.med)} (${f1(i.lo)}–${f1(i.hi)})`, f1(i.real), pp(i.real - i.med), dentro(i.real, i.lo, i.hi)])
+    .concat([["Demais (Maranata e outros)", `${f1(m.O)} (sem faixa)`, f1(o), pp(o - m.O), `<span class="vazio">–</span>`]]));
+  const n = G.pesq.length, ez = G.pesq.map(x => x.Z - z), es = G.pesq.map(x => x.S - s);
+  tab("tGovPesq", ["Instituto", "Campo até", "Zucco", "Brizola", "Souza", "Erro Zucco", "Erro Souza"], G.pesq.map(x => [x.inst, x.campo, f1(x.Z), f1(x.B), f1(x.S), pp(x.Z - z), pp(x.S - s)]).concat([["Resultado", "4/10", f1(z), f1(b), f1(s), "", ""]]));
+  $("govPesqTxt").innerHTML = `As ${n} pesquisas finais subestimaram Zucco em <b>${f1(Math.min(...ez.map(Math.abs)))} a ${f1(Math.max(...ez.map(Math.abs)))}</b> p.p. e superestimaram Souza em <b>${f1(Math.min(...es))} a ${f1(Math.max(...es))}</b> p.p. Foi um erro comum a todos os institutos, e o meu modelo, que se apoia nas pesquisas, herdou esse erro.`;
+}
+
+function bancada() {
+  const c = state.cargo, C = B[c], L = C.listas.filter(l => l.med >= 0.5 || l.real > 0).sort((a, b) => b.real - a.real || b.med - a.med), fora = L.filter(l => l.real < l.p10 || l.real > l.p90);
+  const total = B.cadeiras[c], nome = c === "DF" ? "Câmara dos Deputados (31 cadeiras)" : "Assembleia Legislativa (55 cadeiras)";
+  $("banTxt").innerHTML = `${nome}. O resultado ficou dentro da faixa de 80% em <b>${L.length - fora.length} de ${L.length}</b> listas${fora.length ? `; fora: ${fora.map(l => `<b>${l.lista}</b> (previ ${f1(l.med)}, elegeu ${l.real})`).join(", ")}` : ""}. Em <b>${f1(C.trocadas)}</b> cadeiras eu errei o partido (de ${total}); no backtest de 2010–2022 o erro médio foi ${f1(B.backtest_med)}.`;
+  const max = Math.max(...L.map(l => Math.max(l.p90, l.real))) + 1;
+  rp("rpBan", L.map(l => ({ nome: l.lista, lo: l.p10, med: l.med, hi: l.p90, real: l.real })), 0, Math.ceil(max), "");
+  tab("tBan", ["Lista", "Eleitos 2022", "Previsão (faixa 80%)", "Eleitos 2026", "Erro", "Faixa"], L.map(l => [l.lista, l.eleitos_2022, `${f1(l.med)} (${l.p10}–${l.p90})`, l.real, pp(l.real - l.med), dentro(l.real, l.p10, l.p90)]));
+  const K = ["E", "C", "D"]; tab("tBlocos", ["Bloco", "Eleitos 2022", "Previsão (faixa 80%)", "Eleitos 2026", "Erro", "Faixa"], K.map(b => [BNOME[b], C.blocos[b].e22, `${f1(C.blocos[b].med)} (${f1(C.blocos[b].p10)}–${f1(C.blocos[b].p90)})`, C.blocos[b].real, pp(C.blocos[b].real - C.blocos[b].med), dentro(C.blocos[b].real, C.blocos[b].p10, C.blocos[b].p90)]));
+}
+
+function segundoTurno() {
+  const t = P.t2;
+  $("t2Data").textContent = t.data.split("-").reverse().join("/");
+  $("t2Txt").innerHTML = `O 2º turno (25/10) ainda não aconteceu, então não há o que comparar. Esta é a previsão que eu fiz agora, para ser avaliada depois: Lula/(Lula+Flávio) em <b>${f1(t.s)}%</b>, com <b>${pct(t.lula)}</b> de chance de Lula vencer e <b>${pct(1 - t.lula)}</b> de Flávio. Ela usa as pesquisas de 2º turno até ${t.data.split("-").reverse().join("/")}, o viés histórico e a base de 2022, como no card da aba Presidente.`;
+  tab("tT2", ["Item", "Previsão", "Resultado (25/10)"], [["Lula/(Lula+Flávio) nos válidos", `${f1(t.s)}%`, `<span class="vazio">a preencher</span>`], ["Chance de Lula vencer", pct(t.lula), `<span class="vazio">a preencher</span>`], ["Chance de Flávio vencer", pct(1 - t.lula), `<span class="vazio">a preencher</span>`]]);
+}
+
+function licoes() {
+  const m = G.modelo, z = G.cand[0].pct, r = P.real, c = P.cen.pesquisas;
+  $("licoes").innerHTML = [
+    `<b>O erro foi dos pequenos, não dos grandes.</b> Em nível nacional, Lula saiu onde eu previ; os "demais" ficaram ${f1(c.O[1] - r.O)} p.p. abaixo. No RS, Souza ficou ${f1(m.S[1] - G.cand[2].pct)} p.p. abaixo. Compatível com voto útil e polarização no fim da campanha (hipótese minha), e o meu modelo, que trata os demais como um bloco com viés fixo, não o captura.`,
+    `<b>As pesquisas finais erraram na mesma direção.</b> No presidente, todas deram a Lula mais do que ele teve na disputa a dois; no RS, todas subestimaram Zucco. Como o modelo parte das pesquisas, ele herdou o erro. Para Flávio e para a margem, o cenário "Viés histórico" ficou mais próximo.`,
+    `<b>A faixa de incerteza do RS estava estreita demais.</b> Zucco ficou ${f1(z - m.Z[2])} p.p. acima do limite de cima da faixa de 90%. O erro sistemático de 3,6 p.p. era um proxy nacional; para o RS eu devia ter usado algo bem maior.`,
+    `<b>Na bancada, o desvio parece estar no mecanismo.</b> Mesmo com o governador real, o erro de cadeiras quase não muda (veja a análise da bancada); o problema não é só a entrada vinda das pesquisas.`,
+    `<b>Para o 2º turno:</b> a previsão usa só Lula × Flávio, onde o erro dos "demais" não existe, mas o erro nacional de ~3 p.p. a favor do Lula nas pesquisas finais pode se repetir. Eu ainda não coloquei o erro de 2026 no viés histórico (mudaria a previsão sem validação); a decisão fica junto com a recalibração do 2º turno.`].map(t => `<li>${t}</li>`).join("");
+}
+
+function notas() {
+  const I = itens(), ok = I.filter(dentroI).length, z = G.cand[0].pct;
+  nota("nota1", [`<b>${ok} de ${I.length}</b> itens com faixa de 90% ficaram dentro.`, `Os dois maiores erros: Zucco (${pp(z - G.modelo.Z[1])} p.p.) e os demais do presidente (${pp(P.real.O - P.cen.pesquisas.O[1])} p.p.).`, `Resultados preliminares, não conferidos no TSE.`]);
+  nota("nota2", [`Lula: previsto ${f1(P.cen.pesquisas.L[1])}%, teve <b>${f1(P.real.L)}%</b>.`, `As pesquisas finais deram a Lula <b>${pp(P.pesq.reduce((a, x) => a + x.s - P.real_s, 0) / P.pesq.length)} p.p.</b> a mais na disputa a dois (em média).`, `Erro médio por estado: <b>${f1(P.mae_uf)} p.p.</b>`]);
+  nota("nota3", [`Zucco: <b>${f1(G.modelo.Z[1])}% → ${f1(z)}%</b> (previsto → real).`, `O modelo dava <b>${pct(G.modelo.vence_1t[0])}</b> de chance de ele vencer no 1º turno.`, `As ${G.pesq.length} pesquisas finais subestimaram Zucco.`]);
+  const ls = (c) => B[c].listas.filter(l => l.med >= 0.5 || l.real > 0), okL = (c) => ls(c).filter(l => l.real >= l.p10 && l.real <= l.p90).length;
+  nota("nota4", [`Federal: <b>${okL("DF")} de ${ls("DF").length}</b> listas dentro da faixa de 80%; ${f1(B.DF.trocadas)} cadeiras trocadas.`, `Estadual: <b>${okL("DE")} de ${ls("DE").length}</b>; ${f1(B.DE.trocadas)} trocadas.`, `No backtest de 2010–2022 foram ${f1(B.backtest_med)}.`]);
+  nota("nota5", [`Previsão atual: Lula <b>${pct(P.t2.lula)}</b>, Flávio <b>${pct(1 - P.t2.lula)}</b>.`, `Resultado em 25/10: a preencher.`]);
+}
+function tudo() { kpis(); geral(); presidente(); porUF(); governador(); bancada(); segundoTurno(); licoes(); notas(); }
+function segCargo() { const el = $("segCargo"); el.innerHTML = ["DF", "DE"].map(c => `<button data-c="${c}" aria-pressed="${state.cargo == c}">${c === "DF" ? "Federal" : "Estadual"}</button>`).join(""); el.onclick = (e) => { const c = e.target.dataset.c; if (!c) return; state.cargo = c; segCargo(); bancada(); }; }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+segCargo(); tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>

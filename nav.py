@@ -8,10 +8,10 @@ import re
 from pathlib import Path
 
 # (arquivo, rótulo, grupo). A ordem é a do menu: Presidente primeiro, 2º turno depois.
-ABAS = [("index.html", "Presidente 2026", "Presidente"), ("segundo-turno.html", "2º turno", "Presidente"), ("analise.html", "Análise", "Presidente"),
-        ("rs.html", "Governo do RS 2026", "Rio Grande do Sul"), ("analise-governo.html", "Análise do governo RS", "Rio Grande do Sul"),
-        ("bancada.html", "Bancada RS 2026", "Rio Grande do Sul"), ("analise-bancada.html", "Análise da bancada RS", "Rio Grande do Sul"),
-        ("analise-senado.html", "Análise do Senado", "Senado"), ("documentacao.html", "Documentação", "Sobre")]
+ABAS = [("index.html", "Presidente", "Presidente"), ("segundo-turno.html", "2º turno", "Presidente"), ("analise.html", "Análise", "Presidente"),
+        ("rs.html", "Governo RS", "Rio Grande do Sul"), ("analise-governo.html", "Análise do governo", "Rio Grande do Sul"),
+        ("bancada.html", "Bancada RS", "Rio Grande do Sul"), ("analise-bancada.html", "Análise da bancada", "Rio Grande do Sul"),
+        ("analise-senado.html", "Análise do Senado", "Senado"), ("analise-modelo.html", "Previsto × real", "Modelo"), ("documentacao.html", "Documentação", "Sobre")]
 GITHUB = "https://github.com/mtgr18977/sassamaruEleicoes26"
 PLACEHOLDER = '<nav class="tabs" aria-label="Seções do site">__NAV__</nav>'
 BOTAO_TEMA = re.compile(r'<button id="tema"[^>]*>\s*</button>')

@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from backtest import D, inv, logit
 from nivel2 import REGIAO
-from pesquisas import HOJE, estimar, preparar, vies_eleicao, vies_rmse, SD_VIES_HIST
+from pesquisas import HOJE_1T as HOJE, estimar, preparar, vies_eleicao, vies_rmse, SD_VIES_HIST
 
 REGIAO["ZZ"] = "EX"
 N, rng = 20000, np.random.default_rng(2026)
@@ -75,8 +75,8 @@ if __name__ == "__main__":
     par = json.load(open("modelos/parametros.json"))
     d = preparar()
     sv, _ = vies_rmse(1)
-    s_nac, sd_s, _, _ = estimar(d, "p1s", sd_vies=sv)
-    q_nac, sd_q, _, _ = estimar(d, "q", sd_vies=SD_VIES_HIST)       # ponytail: viés da terceira via não medido (2 p.p. assumidos)
+    s_nac, sd_s, _, _ = estimar(d, "p1s", hoje=HOJE, sd_vies=sv)
+    q_nac, sd_q, _, _ = estimar(d, "q", hoje=HOJE, sd_vies=SD_VIES_HIST)       # ponytail: viés da terceira via não medido (2 p.p. assumidos)
     uf = pd.read_csv(D + "tse-presidente-uf.csv")
     rs, qs = ruido(uf.assign(num=uf.votos_pt, den=uf.votos_pt + uf.votos_antipt), "num", "den"), \
         ruido(uf.assign(num=uf.votos_pt + uf.votos_antipt), "num", "validos")

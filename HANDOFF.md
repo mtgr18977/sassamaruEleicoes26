@@ -47,14 +47,14 @@ Data: 2/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 ## Decisões
 - Bloco **Anti-PT** (Flávio em 2026); 2022 é a base por UF; município como base de dados, UF/capital como saída.
 - Eleições sem Lula (2010, 2014 Dilma; 2018 Haddad) aparecem como contexto na página.
-- Pesquisas: Datafolha, Quaest, AtlasIntel e Real Time Big Data.
+- Pesquisas: Datafolha, Quaest, AtlasIntel, Real Time Big Data e Vox Brasil (esta desde 9/10).
 
 ## Dados do RS
 Pesquisas do governador em `datasets/pesquisas-rs-governador-2026.csv` (cada linha com registro no TSE e fonte; somam 100%). Para atualizar: acrescentar a linha, rodar `python atualizar.py`. Cuidado com resumos de busca web: conferir a atribuição ao instituto na matéria.
 
 ## Regras de trabalho
 - Não inventar dados: sem fonte, deixar vazio e anotar em `obs`.
-- Projeção **não está mais congelada** (decisão de 2/10: ainda há pesquisas no sábado). A referência de 1/10 fica na tag `projecao-1turno-2026-10-01`; `python atualizar.py` refaz tudo. **Cada rodada: acrescentar as pesquisas ao CSV, atualizar `HOJE`/`HORIZONTE` em `pesquisas.py` e `HOJE` em `rs_modelo.py`.**
+- Projeção **não está mais congelada** (decisão de 2/10: ainda há pesquisas no sábado). A referência de 1/10 fica na tag `projecao-1turno-2026-10-01`; `python atualizar.py` refaz tudo. **Cada rodada: acrescentar as pesquisas ao CSV, atualizar `HOJE`/`HORIZONTE` em `pesquisas.py` (`rs_modelo.HOJE` fica congelado em 2/10, governador decidido).**
 - Bancada: rodar `python fetch_tse_legislativo.py` (zips ou remotezip) e `python fetch_bancada_atual.py` (rede; a Wikipédia limita requisições) para atualizar `datasets/tse-legislativo-rs-*.csv` e `rs-bancada-atual.csv`; `python atualizar.py` refaz `bancada.html`.
 - Pesquisas novas: `python buscar_pesquisas.py` gera candidatas em `datasets/candidatas.csv` (Wikipedia); conferir a fonte antes de passar a linha para `pesquisas-2026.csv`.
 - Não apresentar baseline/backtest como "previsão" sem validação ponta a ponta.
@@ -68,3 +68,13 @@ Pesquisas do governador em `datasets/pesquisas-rs-governador-2026.csv` (cada lin
 
 ## Lacunas conhecidas nas pesquisas 2026
 Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exceto 24–27/9); Datafolha completa (conferida no relatório oficial); RTBD 26–30/9 em base de válidos e sem Renan Santos; Atlas 23–28/9 só Lula e Flávio.
+
+## Atualização de 9/10/2026 (pesquisas de 2º turno pós-1º turno)
+- Entraram Datafolha (6–8/10: Lula 45 × Flávio 49; BR-02949/2026) e AtlasIntel (3–8/10: 45,7 × 51,1; registro não localizado) em `pesquisas-2turno-pos-1t-2026.csv` e em `pesquisas-2026.csv`. Também as de véspera do 1º turno que faltavam: Datafolha 3/10 (47×46, BR-01708/2026), Quaest 2–3/10 (42×44, BR-02197/2026) e AtlasIntel 27/9–2/10 (47,6×47,4 totais; BR-00999/2026). Fontes: matérias (CNN, Brasil de Fato, Metrópoles, Exame); **relatórios oficiais não conferidos**.
+- `HOJE` = 9/10, `HORIZONTE[2]` = 16. Novo `HOJE_1T` = 2/10: a projeção do 1º turno e o simulador do Presidente seguem congelados nessa data. `estimar()` agora ignora pesquisas posteriores a `hoje`.
+- 2º turno: Lula/(Lula+Flávio) foi de 49,9% (90%: 45,8–54,0) para **48,1% (44,1–52,3)**; P(Lula>50%) 22,6%. O card "chance de ser eleito" ainda soma a chance de ganhar no 1º turno (8,6%), que já não existe: revisar para só o 2º turno.
+
+- **Card do topo** (index): agora só o 2º turno (`chances2t` em `projecao-model.js`, fórmula fechada; sem correlação entre turnos). Lula 22,9% (faixa 14,1–22,9% entre os cenários de viés). Gráfico de evolução usa só s2/sd2 e vai até 9/10. O simulador e o 1º turno seguem congelados em `HOJE_1T`.
+- **RS fora do cálculo do 2º turno:** governador decidido no 1º turno (Zucco). `rs_modelo.HOJE` voltou a 2/10 e fica congelado (a aba `rs.html` é o registro da previsão pré-votação). Só a presidencial anda com `pesquisas.HOJE`.
+- Nova aba **Análise do modelo** (`analise-modelo.html`, `gerar_pagina_modelo.py`): previsão de 2/10 × resultado para presidente (1º turno), governador e bancada do RS (faixas de 90%/80%, erros, pesquisas finais, por UF). Seção 5 guarda a previsão do 2º turno para preencher o resultado em 25/10. Texto em primeira pessoa.
+- **Teste de viés por instituto** (`python vies_instituto.py`, não altera o modelo): descontar das pesquisas de 2º turno o erro que cada instituto teve no 1º turno (Vox +0,5; Datafolha +2,2; Atlas +2,8; RTBD +3,9; Quaest +4,4 p.p. em Lula/(Lula+Flávio)) leva a estimativa de 48,4% para 45,7% (chance de Lula 26,6% → 4,2%); com metade do erro, 47,1% (12,0%). Quase tudo é o viés comum (todos erraram para o lado do Lula em 2022 e 2026); a parte específica da Vox muda só 0,1 p.p. Correlação do erro por instituto 2022 × 2026: 0,20 (n=3). O erro do 1º turno mistura a migração dos "demais", que não existe no 2º: o 1× provavelmente exagera.

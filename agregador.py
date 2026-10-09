@@ -89,7 +89,7 @@ def presidente(hoje=None):
     t2 = [_serie(d, g, "lula", "Lula (PT)", "--pt", "l2"), _serie(d, g, "flavio", "Flávio Bolsonaro (PL)", "--anti", "f2")]
     turnos = {"1": dict(titulo="1º turno", unidade="% dos votos válidos", ymin=20, ymax=60, ref=None, series=t1),
               "2": dict(titulo="2º turno", unidade="% dos votos válidos (Lula + Flávio = 100%)", ymin=40, ymax=60, ref=50, series=t2)}
-    return _pacote(g, turnos, hoje, "Datafolha, Quaest, AtlasIntel e Real Time Big Data. Ponto = pesquisa (data = meio do campo).")
+    return _pacote(g, turnos, hoje, "Datafolha, Quaest, AtlasIntel, Real Time Big Data e Vox Brasil. Ponto = pesquisa (data = meio do campo).")
 
 
 def rs(hoje=None):

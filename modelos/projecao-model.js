@@ -51,6 +51,12 @@
     return { lula: lWin / N, flavio: fWin / N, lula_1t: lOut / N, flavio_1t: fOut / N, lula_2t: (lWin - lOut) / N, flavio_2t: (fWin - fOut) / N,
              segundo_turno: run / N, outro: outro / N };
   }
-  const api = { simular, chances };
+  // Chance de Lula vencer o 2º turno (popular, já que o 1º foi realizado): P(s2 > 50%) com logit(s2) ~ N(logit(s2̂), sd2²).
+  // o: {s2, sd2} (s2 = Lula/(Lula+Flávio); sd2 já inclui tendência, viés histórico e o piso assumido). Fórmula fechada (Φ via erfc de Numerical Recipes).
+  const erfc = (x) => { const z = Math.abs(x), t = 1 / (1 + 0.5 * z),
+    r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 + t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277))))))))); return x >= 0 ? r : 2 - r; };
+  const Phi = (x) => 0.5 * erfc(-x / Math.SQRT2);
+  function chances2t(o) { const lula = Phi(logit(o.s2) / o.sd2); return { lula, flavio: 1 - lula }; }
+  const api = { simular, chances, chances2t };
   if (typeof module !== "undefined") module.exports = api; else root.ProjecaoModel = api;
 })(this);

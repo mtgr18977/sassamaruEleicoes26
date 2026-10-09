@@ -1,7 +1,7 @@
 """Camada de pesquisas: estima δ (swing nacional em logit vs. 2022) com house effect e incerteza.
 
 Por turno: logit(p) = nível + tendência linear + efeito do instituto (soma zero), WLS com peso
-amostral × decaimento por recência. Nível = média dos 4 institutos hoje (viés absoluto não é
+amostral × decaimento por recência. Nível = média dos institutos (5, com a Vox Brasil) hoje (viés absoluto não é
 identificável; vai na incerteza via SD_VIES_HIST).
 p(1º turno) = Lula / válidos;  p(2º turno) = Lula / (Lula + Flávio).
 """
@@ -11,12 +11,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-HOJE = pd.Timestamp("2026-10-02")   # data de referência: atualizar a cada rodada (e HORIZONTE)
+HOJE = pd.Timestamp("2026-10-09")   # data de referência: atualizar a cada rodada (e HORIZONTE)
 TAU_DIAS = 14.0        # meia-vida do decaimento ≈ TAU·ln2
 DEFF = 1.5             # efeito de desenho: amostra efetiva = n / DEFF
 SD_VIES_HIST = 0.02    # padrão de estimar(); main() usa o RMSE medido por turno (vies_rmse)
 SD_PISO_2T_PP = 2.5   # ASSUMIDO: piso (p.p. de Lula/(Lula+Flávio)) para a incerteza do 2º turno; o erro medido é de pesquisas FINAIS e a 24 dias da eleição tende a ser maior
-HORIZONTE = {1: 2, 2: 23}   # dias de 2/10 até 4/10 e 25/10: a incerteza da tendência cresce com o prazo
+HOJE_1T = pd.Timestamp("2026-10-02")   # projeção do 1º turno (já realizado em 4/10): congelada na data em que foi feita, para a aba Análise comparar com o resultado
+HORIZONTE = {1: 2, 2: 16}   # dias: 1º turno de 2/10 até 4/10; 2º turno de 9/10 até 25/10: a incerteza da tendência cresce com o prazo
 P2022 = {1: 0.484307, 2: 0.509024}  # % PT nos válidos, tse-presidente-nacional.csv
 logit = lambda p: np.log(p / (1 - p))
 
@@ -43,7 +44,7 @@ def vies_eleicao(turno, csv="datasets/vies-pesquisas.csv", nac="datasets/tse-pre
 
 
 def preparar(csv="datasets/pesquisas-2026.csv"):
-    d = pd.read_csv(csv, parse_dates=["campo_ini", "campo_fim", "divulgacao"])
+    d = pd.read_csv(csv, parse_dates=["campo_ini", "campo_fim", "divulgacao", "registrado_em"])
     d["data"] = d.campo_ini + (d.campo_fim - d.campo_ini) / 2
     d["data"] = d.data.fillna(d.divulgacao)
     d["n"] = d.amostra.fillna(2000)
@@ -58,7 +59,9 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
 
 def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, piso_pp=0.0):
     """Retorna (p, sd_logit, house_effects, n_pesquisas)."""
-    d = df.dropna(subset=[col]).copy()
+    d = df.dropna(subset=[col])
+    d = d[d.data <= hoje]                                     # só pesquisas até a data de referência
+    d = d[d.registrado_em.isna() | (d.registrado_em <= hoje)].copy() if "registrado_em" in d else d.copy()   # e só as que eu já tinha registrado nela (projeção do 1º turno congelada)
     p = d[col].to_numpy()
     inst = sorted(d.instituto.unique())
     k = len(inst)
@@ -89,8 +92,8 @@ def evolucao(datas, csv="datasets/pesquisas-2026.csv"):
     for t in map(pd.Timestamp, datas):
         x = d[d.data <= t]
         try:
-            s, sds, _, n1 = estimar(x, "p1s", hoje=t, sd_vies=sv1, h_dias=(pd.Timestamp("2026-10-04") - t).days)
-            q, sdq, _, _ = estimar(x, "q", hoje=t, h_dias=(pd.Timestamp("2026-10-04") - t).days)
+            s, sds, _, n1 = estimar(x, "p1s", hoje=t, sd_vies=sv1, h_dias=max(0, (pd.Timestamp("2026-10-04") - t).days))
+            q, sdq, _, _ = estimar(x, "q", hoje=t, h_dias=max(0, (pd.Timestamp("2026-10-04") - t).days))
             s2, sd2, _, n2 = estimar(x, "p2", hoje=t, sd_vies=sv2, h_dias=(pd.Timestamp("2026-10-25") - t).days, piso_pp=SD_PISO_2T_PP)
         except np.linalg.LinAlgError:
             continue
@@ -102,10 +105,10 @@ def evolucao(datas, csv="datasets/pesquisas-2026.csv"):
 
 def main(saida="modelos/parametros.json"):
     d = preparar()
-    out = {"data_referencia": str(HOJE.date())}
+    out = {"data_referencia": str(HOJE.date()), "data_referencia_1t": str(HOJE_1T.date())}
     for turno, col in ((1, "p1"), (2, "p2")):
         sv, nv = vies_rmse(turno)
-        p, sd, h, n = estimar(d, col, sd_vies=sv, h_dias=HORIZONTE[turno], piso_pp=SD_PISO_2T_PP if turno == 2 else 0.0)
+        p, sd, h, n = estimar(d, col, hoje=HOJE_1T if turno == 1 else HOJE, sd_vies=sv, h_dias=HORIZONTE[turno], piso_pp=SD_PISO_2T_PP if turno == 2 else 0.0)
         out[f"turno{turno}"] = dict(p_pesquisas=round(p, 4), sd_logit=round(sd, 4),
                                     delta=round(logit(p) - logit(P2022[turno]), 4),
                                     p_2022=P2022[turno], house_effects_logit=h, n_pesquisas=n,

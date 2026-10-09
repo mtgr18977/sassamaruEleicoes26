@@ -24,7 +24,7 @@ from pathlib import Path
 URL_PADRAO = "https://pt.wikipedia.org/wiki/Pesquisas_de_opini%C3%A3o_para_a_elei%C3%A7%C3%A3o_presidencial_no_Brasil_em_2026"
 CSV_OFICIAL = "datasets/pesquisas-2026.csv"
 CSV_SAIDA = "datasets/candidatas.csv"
-INSTITUTOS = {"datafolha": "Datafolha", "quaest": "Quaest", "atlas": "AtlasIntel", "real time": "RealTimeBigData", "rtbd": "RealTimeBigData"}
+INSTITUTOS = {"datafolha": "Datafolha", "quaest": "Quaest", "atlas": "AtlasIntel", "real time": "RealTimeBigData", "rtbd": "RealTimeBigData", "vox": "Vox Brasil"}
 MESES = {m: i for i, m in enumerate(["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"], 1)}
 CANDS = {"lula": "lula", "flavio": "flavio", "caiado": "caiado", "zema": "zema", "renan": "renan", "cury": "cury"}
 # só candidatos: "outros" e brancos/nulos são somados de formas diferentes pelas fontes e gerariam falsas divergências
