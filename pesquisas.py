@@ -1,7 +1,7 @@
 """Camada de pesquisas: estima δ (swing nacional em logit vs. 2022) com house effect e incerteza.
 
 Por turno: logit(p) = nível + tendência linear + efeito do instituto (soma zero), WLS com peso
-amostral × decaimento por recência. Nível = média dos 4 institutos hoje (viés absoluto não é
+amostral × decaimento por recência. Nível = média dos institutos (5, com a Vox Brasil) hoje (viés absoluto não é
 identificável; vai na incerteza via SD_VIES_HIST).
 p(1º turno) = Lula / válidos;  p(2º turno) = Lula / (Lula + Flávio).
 """
@@ -44,7 +44,7 @@ def vies_eleicao(turno, csv="datasets/vies-pesquisas.csv", nac="datasets/tse-pre
 
 
 def preparar(csv="datasets/pesquisas-2026.csv"):
-    d = pd.read_csv(csv, parse_dates=["campo_ini", "campo_fim", "divulgacao"])
+    d = pd.read_csv(csv, parse_dates=["campo_ini", "campo_fim", "divulgacao", "registrado_em"])
     d["data"] = d.campo_ini + (d.campo_fim - d.campo_ini) / 2
     d["data"] = d.data.fillna(d.divulgacao)
     d["n"] = d.amostra.fillna(2000)
@@ -60,7 +60,8 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
 def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, piso_pp=0.0):
     """Retorna (p, sd_logit, house_effects, n_pesquisas)."""
     d = df.dropna(subset=[col])
-    d = d[d.data <= hoje].copy()                              # só pesquisas até a data de referência
+    d = d[d.data <= hoje]                                     # só pesquisas até a data de referência
+    d = d[d.registrado_em.isna() | (d.registrado_em <= hoje)].copy() if "registrado_em" in d else d.copy()   # e só as que eu já tinha registrado nela (projeção do 1º turno congelada)
     p = d[col].to_numpy()
     inst = sorted(d.instituto.unique())
     k = len(inst)

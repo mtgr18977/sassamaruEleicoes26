@@ -156,13 +156,18 @@ function presidente() {
     [["Lula", "L"], ["Flávio", "F"], ["Demais", "O"]].map(([n, k]) => [n, `${f1(c.pesquisas[k][1])} (${f1(c.pesquisas[k][0])}–${f1(c.pesquisas[k][2])})`, `${f1(c.vies_se_repete[k][1])} (${f1(c.vies_se_repete[k][0])}–${f1(c.vies_se_repete[k][2])})`, f1(r[k]), pp(r[k] - c.pesquisas[k][1]), pp(r[k] - c.vies_se_repete[k][1])])
      .concat([["Margem L − F (p.p.)", `${pp(c.pesquisas.margem[1])} (${pp(c.pesquisas.margem[0])} a ${pp(c.pesquisas.margem[2])})`, `${pp(c.vies_se_repete.margem[1])} (${pp(c.vies_se_repete.margem[0])} a ${pp(c.vies_se_repete.margem[2])})`, pp(r.margem), pp(r.margem - c.pesquisas.margem[1]), pp(r.margem - c.vies_se_repete.margem[1])]]));
   const E = P.pesq.map(x => x.s - P.real_s), media = E.reduce((a, b) => a + b, 0) / E.length;
-  $("pesqTxt").innerHTML = `Na parcela Lula/(Lula+Flávio), o resultado foi <b>${f2(P.real_s)}%</b>. A última pesquisa de cada instituto deu a Lula entre <b>${pp(Math.min(...E))}</b> e <b>${pp(Math.max(...E))}</b> p.p. a mais (média ${pp(media)}), todas na direção do viés histórico que eu uso (+${f1(P.vies_hist)} p.p. no 1º turno). Para Flávio e para a margem, o cenário "Viés histórico" ficou mais perto do resultado; para Lula, o cenário "Pesquisas".`;
+  $("pesqTxt").innerHTML = `Na parcela Lula/(Lula+Flávio), o resultado foi <b>${f2(P.real_s)}%</b>. A última pesquisa de cada instituto deu a Lula entre <b>${pp(Math.min(...E))}</b> e <b>${pp(Math.max(...E))}</b> p.p. a mais (média ${pp(media)}), todas na direção do viés histórico que eu uso (+${f1(P.vies_hist)} p.p. no 1º turno). Para Flávio e para a margem, o cenário "Viés histórico" ficou mais perto do resultado; para Lula, o cenário "Pesquisas".${voxTxt()}`;
   tab("tPesq", ["Instituto", "Campo até", "Base", "Lula/(Lula+Flávio)", "Resultado", "Erro (p.p.)"], P.pesq.map(x => [x.inst, x.campo, x.base, f1(x.s), f2(P.real_s), pp(x.s - P.real_s)]));
   tab("tProb", ["Pergunta", "Probabilidade que eu dei", "O que aconteceu"], [
     ["A disputa vai a 2º turno", pct(P.prob.segundo_turno), `<span class="ok">sim</span>`],
     ["Lula termina o 1º turno à frente de Flávio", pct(P.prob.lula_a_frente), `<span class="ruim">não</span> (Flávio ${f2(P.real.F - P.real.L)} p.p. à frente)`],
     ["Lula vence no 1º turno (mais de 50%)", pct(P.prob.lula_gt50), `<span class="ok">não</span>`],
     ["Flávio vence no 1º turno (mais de 50%)", pct(P.prob.flavio_gt50), `<span class="ok">não</span>`]]);
+}
+function voxTxt() {
+  if (!P.vox.length) return "";
+  const e = P.vox.map(v => `${v.campo.split("-").reverse().slice(0, 2).join("/")}: ${pp(v.s - P.real_s)} p.p.`);
+  return ` A <b>Vox Brasil</b> foi a que mais se aproximou na última rodada (${e[e.length - 1]}), mas a rodada anterior dela errou mais (${e.slice(0, -1).join("; ") || "–"}): uma pesquisa certeira não mostra que o instituto acerta sempre, e com poucas pesquisas eu não consigo separar acerto de sorte.`;
 }
 function porUF() {
   const U = P.ufs.filter(u => u.L != null || u.F != null), pontos = [];

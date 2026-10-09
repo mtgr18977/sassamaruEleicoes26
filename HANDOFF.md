@@ -47,7 +47,7 @@ Data: 2/10/2026. Repo: `mtgr18977/sassamaruEleicoes26`. Responda em português, 
 ## Decisões
 - Bloco **Anti-PT** (Flávio em 2026); 2022 é a base por UF; município como base de dados, UF/capital como saída.
 - Eleições sem Lula (2010, 2014 Dilma; 2018 Haddad) aparecem como contexto na página.
-- Pesquisas: Datafolha, Quaest, AtlasIntel e Real Time Big Data.
+- Pesquisas: Datafolha, Quaest, AtlasIntel, Real Time Big Data e Vox Brasil (esta desde 9/10).
 
 ## Dados do RS
 Pesquisas do governador em `datasets/pesquisas-rs-governador-2026.csv` (cada linha com registro no TSE e fonte; somam 100%). Para atualizar: acrescentar a linha, rodar `python atualizar.py`. Cuidado com resumos de busca web: conferir a atribuição ao instituto na matéria.

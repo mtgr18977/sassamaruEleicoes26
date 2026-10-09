@@ -115,7 +115,7 @@
     </div>
     <details><summary>Ver tabela</summary><div id="t26"></div></details>
     <p class="nota">Linha tracejada = 50%. Última rodada de cada instituto na tabela. Células vazias = pesquisa sem 2º turno localizado.
-      A estimativa do modelo é a média dos 4 institutos com correção de house effect e recência (<code>pesquisas.py</code>).</p>
+      A estimativa do modelo é a média dos 5 institutos com correção de house effect e recência (<code>pesquisas.py</code>).</p>
   </div>
 
   </div><aside class="side" id="nota5"></aside></section>
@@ -404,7 +404,7 @@ function notas() {
   const lst = Object.values(ult).sort((a, b) => b.s2 - a.s2).map(p => `${INSTNOME[p.inst] || p.inst} <b>${f1(p.s2)}%</b>`);
   nota("nota5", [`Última rodada, Lula/(Lula+Flávio) no 2º turno: ${lst.join(" · ")}.`,
     `Em 50% é empate. Só a <b>Datafolha</b> foi conferida em relatório oficial; as demais não foram conferidas no TSE.`,
-    `A média usa os 4 institutos com correção de house effect e peso por recência.`]);
+    `A média usa os 5 institutos com correção de house effect e peso por recência.`]);
   const dm = Math.max(...D.valreg.map(x => Math.abs(x.dif)));
   nota("nota6", [`No cenário das pesquisas, Lula lidera em ~<b>${f1(D.proj.pesquisas.ufs_lula_a_frente)} de 27</b> estados no 1º turno.`,
     `A distribuição regional do modelo fica a até <b>${f1(dm)} p.p.</b> da Datafolha em todas as regiões (margem 3 a 6).`,

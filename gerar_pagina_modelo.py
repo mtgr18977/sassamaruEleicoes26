@@ -30,6 +30,7 @@ ult = p.groupby("instituto").tail(1)
 real_s = 100 * float(br.votos_lula) / (float(br.votos_lula) + float(br.votos_flavio))
 presidente["pesq"] = [dict(inst=r.instituto, campo=r.campo_fim, base=r.base, s=round(100 * r.t1_lula / (r.t1_lula + r.t1_flavio), 1)) for r in ult.itertuples()]
 presidente["real_s"] = round(real_s, 2)
+presidente["vox"] = [dict(campo=r.campo_fim, s=round(100 * r.t1_lula / (r.t1_lula + r.t1_flavio), 1)) for r in p[p.instituto == "Vox Brasil"].itertuples()]
 presidente["vies_hist"] = round(vies_eleicao(1)[0], 2)
 
 proj_uf = pd.read_csv("modelos/projecao-1turno-uf-pesquisas.csv").set_index("uf")
