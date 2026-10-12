@@ -26,6 +26,7 @@
   <p id="ancTxt"></p>
   <div class="cv" style="height:300px"><canvas id="cAnc"></canvas></div>
   <div id="tAnc"></div>
+  <p class="fonte">Agregador de Pesquisas da BBC News Brasil com a consultoria Polling Data, atualizado em 9/10: Flávio 47% (intervalo de 95%: 45 a 50), Lula 44% (41 a 46), sem candidato 9%, em votos totais e arredondados. A parcela Lula/(Lula+Flávio) é conta minha (44 ÷ 91), então tem uma incerteza de arredondamento de cerca de ±0,5 p.p. Ele usa Datafolha, PoderData, AtlasIntel e Vox Brasil, pondera por amostra, recência e efeito de instituto, e <b>não corrige um viés geral das pesquisas</b>, como o meu cenário padrão. Uso como referência independente, não como dado do meu modelo.</p>
   </div><aside class="side" id="nota1"></aside></section>
   <section class="sec"><div>
   <h2>2. Simulador de cenários</h2>
@@ -67,7 +68,7 @@ state.s = D.pesq.length ? D.pesq.reduce((s, x) => s + x.s, 0) / D.pesq.length : 
 const nomeUF = (u) => (u === "ZZ" ? "Exterior" : u);
 const sdLogit = () => state.sd / 25;     // p ≈ 0,5: d(logit) = d(p) / 0,25
 const sim = (s, n = 6000, sd = sdLogit()) => EleicoesModel.simular(D.par, 2, { p: s / 100, sd, n, seed: 2026 });
-const ANC = [["1º turno 2026: Lula/(Lula+Flávio)", R.s], ["Demais candidatos divididos meio a meio", A.demais_meio], ["Pesquisas até 2/10 (modelo, 2º turno)", A.pre_t1], ["2º turno de 2022", A.t2_2022], ["Lula leva todos os demais", A.demais_todos]];
+const ANC = [["1º turno 2026: Lula/(Lula+Flávio)", R.s], ["Demais candidatos divididos meio a meio", A.demais_meio], ["Meu modelo, pesquisas até " + A.pre_t1_data.split("-").reverse().slice(0, 2).join("/"), A.pre_t1], ["Agregador da BBC (9/10): 44 × 47 totais", A.bbc], ["2º turno de 2022", A.t2_2022], ["Lula leva todos os demais", A.demais_todos]];
 
 function topo() {
   $("aviso").innerHTML = D.pesq.length ? `<b>Cenários, não previsão.</b> Registrei ${D.pesq.length} pesquisa(s) de 2º turno depois do 1º turno; o simulador parte da média simples.` : `<b>Eu ainda não registrei nenhuma pesquisa de 2º turno feita depois do 1º turno</b> (<code>datasets/pesquisas-2turno-pos-1t-2026.csv</code> está vazio). Por isso esta aba é um simulador de cenários: o meu modelo da aba Presidente ainda usa pesquisas até 2/10, anteriores ao resultado, e eu não o recalibrei. O resultado do 1º turno é preliminar e eu não o conferi no TSE.`;
