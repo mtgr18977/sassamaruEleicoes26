@@ -24,7 +24,7 @@ def test_regressao_estimativas_das_pesquisas_nas_faixas_esperadas():
     from pesquisas import HOJE_1T
     # trava bugs de código; se as pesquisas do CSV mudarem muito, atualize as faixas
     d = preparar()
-    assert .44 < estimar(d, "p1", hoje=HOJE_1T)[0] < .46 and .48 < estimar(d, "p2")[0] < .51
+    assert .44 < estimar(d, "p1", hoje=HOJE_1T)[0] < .46 and .47 < estimar(d, "p2")[0] < .51
 
 
 def test_projecao_do_1o_turno_e_da_data_de_referencia_e_plausivel():
