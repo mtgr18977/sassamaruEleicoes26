@@ -84,3 +84,7 @@ Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exc
 - `pesquisas.HOJE` = 12/10, `HORIZONTE[2]` = 13. `rs_modelo.HOJE` e `HOJE_1T` seguem congelados em 2/10.
 - Aba 2º turno: o **Agregador da BBC News Brasil** (Polling Data, 9/10: Flávio 47 × Lula 44 totais; Lula/(L+F) ≈ 48,35%) entra como ponto de referência, só como comparação independente (não alimenta o modelo). Fonte: bbc.com/portuguese/articles/cm1dlv13yql9o.
 - O ranking do Fala News (Palver, Gerp e Veritá mais precisos; Vox errou 5,8 p.p.) contradiz a Revista Fórum (Vox mais próxima) e não foi conferido: não usado.
+
+## Atualização de 13/10/2026
+- Entrou a Futura Inteligência (7–10/10, divulgada em 13/10; 2º turno Lula 46,6 × Flávio 50, válidos 48,2×51,8; BR-00650/2026; CATI, n=2000; contratante 100% Cidades) em `pesquisas-2026.csv` e `pesquisas-2turno-pos-1t-2026.csv`. Fonte: Exame; relatório oficial não conferido. A Futura de 3/10 (pré-1º turno) não foi incluída: sem fonte conferida.
+- `HOJE` = 13/10, `HORIZONTE[2]` = 12. Lula/(Lula+Flávio) 47,9% → 47,8%; chance de Lula no 2º turno ~20% → 19%. Busca por outras pesquisas de 13/10 (Quaest, RTBD, Paraná, MDA) não encontrou nada.
