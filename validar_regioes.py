@@ -30,6 +30,15 @@ def comparar():
     return saida
 
 
+def estrutura():
+    """Como comparar(), mas descontando em cada turno a diferença média entre modelo e Datafolha (média simples das macro-regiões).
+    Testa só a ESTRUTURA regional: o nível nacional do 2º turno agora vem de pesquisas pós-1º turno e a Datafolha de 22-23/9 é anterior ao 1º turno,
+    então o nível não é comparável (diferença de ~3 p.p. em todas as regiões)."""
+    r = comparar()
+    media = {t: np.mean([x["dif"] for x in r if x["turno"] == t]) for t in (1, 2)}
+    return [dict(x, dif_estrutura=round(x["dif"] - media[x["turno"]], 1)) for x in r]
+
+
 def comparar_ufs(csv="datafolha-ufs-2026-10-02.csv"):
     """Mesma ideia de comparar(), mas por UF (recorte de estado da Datafolha, sem precisar agregar/ponderar)."""
     df = pd.read_csv(D + csv)
@@ -48,6 +57,6 @@ def comparar_ufs(csv="datafolha-ufs-2026-10-02.csv"):
 
 
 if __name__ == "__main__":
-    print(pd.DataFrame(comparar()).to_string(index=False))
+    print(pd.DataFrame(estrutura()).to_string(index=False))
     print()
     print(pd.DataFrame(comparar_ufs()).to_string(index=False))
