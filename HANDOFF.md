@@ -88,3 +88,8 @@ Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exc
 ## Atualização de 13/10/2026
 - Entrou a Futura Inteligência (7–10/10, divulgada em 13/10; 2º turno Lula 46,6 × Flávio 50, válidos 48,2×51,8; BR-00650/2026; CATI, n=2000; contratante 100% Cidades) em `pesquisas-2026.csv` e `pesquisas-2turno-pos-1t-2026.csv`. Fonte: Exame; relatório oficial não conferido. A Futura de 3/10 (pré-1º turno) não foi incluída: sem fonte conferida.
 - `HOJE` = 13/10, `HORIZONTE[2]` = 12. Lula/(Lula+Flávio) 47,9% → 47,8%; chance de Lula no 2º turno ~20% → 19%. Busca por outras pesquisas de 13/10 (Quaest, RTBD, Paraná, MDA) não encontrou nada.
+
+## Atualização de 14/10/2026
+- Entraram PoderData/Aya (10–12/10, div. 13/10; válidos Lula 49 × Flávio 51; BR-01209/2026; telefone, n=3000) e Nexus/BTG (10–12/10, div. 13/10; válidos 48 × 52; BR-07997/2026; telefone, n=2002; contratante BTG Pactual). Totais (46×48 e 45×48) vêm de resumo de busca; relatórios oficiais não conferidos. Os registros de PoderData e Nexus foram achados em matérias (CNN, Poder360, Gazeta do Povo).
+- `HOJE` = 14/10, `HORIZONTE[2]` = 11. Lula/(Lula+Flávio) 47,8% → 48,0%; chance de Lula no 2º turno ~19% → 21,3%.
+- Busca por Atlas, Vox, Gerp, Quaest, Datafolha e Paraná sem pesquisa nova de 13–14/10 (última Atlas: 3–8/10, divulgada em 9/10).
