@@ -17,21 +17,22 @@
   "n_vies": 6
  },
  "turno2": {
-  "p_pesquisas": 0.4801,
+  "p_pesquisas": 0.4768,
   "sd_logit": 0.1002,
-  "delta": -0.1156,
+  "delta": -0.129,
   "p_2022": 0.509024,
   "house_effects_logit": {
-   "AtlasIntel": -0.0182,
-   "Datafolha": 0.0316,
-   "Futura Inteligência": -0.0123,
-   "Nexus/BTG": 0.0042,
-   "PoderData": -0.0078,
-   "Quaest": -0.0074,
-   "RealTimeBigData": -0.0209,
-   "Vox Brasil": 0.0308
+   "AtlasIntel": -0.0048,
+   "Datafolha": 0.0451,
+   "Futura Inteligência": 0.0011,
+   "Gerp": -0.1074,
+   "Nexus/BTG": 0.0177,
+   "PoderData": 0.0056,
+   "Quaest": 0.0061,
+   "RealTimeBigData": -0.0075,
+   "Vox Brasil": 0.0442
   },
-  "n_pesquisas": 31,
+  "n_pesquisas": 32,
   "sd_vies_hist": 0.0146,
   "n_vies": 4
  },

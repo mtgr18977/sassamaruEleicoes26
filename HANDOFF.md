@@ -93,3 +93,8 @@ Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exc
 - Entraram PoderData/Aya (10–12/10, div. 13/10; válidos Lula 49 × Flávio 51; BR-01209/2026; telefone, n=3000) e Nexus/BTG (10–12/10, div. 13/10; válidos 48 × 52; BR-07997/2026; telefone, n=2002; contratante BTG Pactual). Totais (46×48 e 45×48) vêm de resumo de busca; relatórios oficiais não conferidos. Os registros de PoderData e Nexus foram achados em matérias (CNN, Poder360, Gazeta do Povo).
 - `HOJE` = 14/10, `HORIZONTE[2]` = 11. Lula/(Lula+Flávio) 47,8% → 48,0%; chance de Lula no 2º turno ~19% → 21,3%.
 - Busca por Atlas, Vox, Gerp, Quaest, Datafolha e Paraná sem pesquisa nova de 13–14/10 (última Atlas: 3–8/10, divulgada em 9/10).
+
+## Atualização de 14/10/2026 (Gerp)
+- Entrou a Gerp (campo 8, 9 e 12/10, div. 13/10; válidos Lula 45 × Flávio 55; totais 44 × 53; BR-07877/2026; CATI, n=2400; contratante: o próprio instituto). Fonte: Exame; relatório não conferido. Lula/(Lula+Flávio) 48,0% → 47,7%; chance de Lula no 2º turno 21,3% → 17,7%.
+- A Gerp do 1º turno (30/9–2/10, 46 × 44, BR-00509/2026) **não** está no CSV: o erro dela em Lula/(Lula+Flávio) foi ≈ −0,1 p.p. (resultado 48,99%), o menor entre os institutos; em 2022 a última Gerp errou ≈ −2,9 p.p. na parcela de Lula. Uma eleição boa e uma ruim: não dá para dizer que ela é a mais precisa.
+- `validar_regioes.py`: novo `estrutura()` (diferença modelo × Datafolha de 22–23/9 descontada da média do turno). O teste do 2º turno comparava o nível de hoje (pesquisas pós-1º turno) com a Datafolha de setembro (pré-1º turno), ~3 p.p. acima em todas as regiões; o teste agora checa só a estrutura regional nos dois turnos e mantém o limite bruto de 5 p.p. para o 1º turno.
