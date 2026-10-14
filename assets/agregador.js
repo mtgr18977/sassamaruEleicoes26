@@ -16,12 +16,12 @@ const fimLinha = { id:"fimLinha", afterDatasetsDraw(c, _, o) {   // valor atual 
 Chart.register(fimLinha);
 
 function agregador() {
-  const A = D.agg, T = A.turnos[state.aggT], modo = state.aggAj ? "aj" : "bruta", datas = A.datas.map(aggData);
+  const A = D.agg, T = A.turnos[state.aggT], modo = state.aggAj ? "aj" : "bruta", DATAS = T.datas || A.datas, datas = DATAS.map(aggData);
   const insts = [...new Set(T.series.flatMap(s => s.pontos.map(p => p.inst)))];
   // ---- cartões: média atual, variação em 14 dias, faixa de 90% ----
-  $("aggKpis").innerHTML = T.series.map(s => { const m = s[modo].m, k = m.length - 1, dl = m[k] - m[Math.max(0, k - 14)], cls = Math.abs(dl) < 0.3 ? "eq" : dl > 0 ? "up" : "dn";
+  $("aggKpis").innerHTML = T.series.map(s => { const m = s[modo].m, k = m.length - 1, ki = Math.max(0, k - 14), dl = m[k] - m[ki], cls = Math.abs(dl) < 0.3 ? "eq" : dl > 0 ? "up" : "dn";
     return `<div class="agg-k" style="--c:${css(s.cor)}"><div class="nome"><i></i>${s.nome}</div><b>${f1(m[k])}%</b>
-      <span class="dl ${cls}">${Math.abs(dl) < 0.3 ? "● estável" : (dl > 0 ? "▲ +" : "▼ −") + f1(Math.abs(dl)) + " p.p."} <small>em 14 dias</small></span>
+      <span class="dl ${cls}">${Math.abs(dl) < 0.3 ? "● estável" : (dl > 0 ? "▲ +" : "▼ −") + f1(Math.abs(dl)) + " p.p."} <small>em ${k - ki} dias</small></span>
       <small>faixa de 90%: ${f1(s[modo].lo[k])}–${f1(s[modo].hi[k])}</small></div>`; }).join("");
   // ---- gráfico: faixa + linha + pontos por instituto ----
   const ds = [];
@@ -40,9 +40,9 @@ function agregador() {
         label:(i) => i.raw && i.raw.p ? `${i.dataset.label.replace(" (pesquisas)", "")} · ${AGG_NOME[i.raw.p.inst] || i.raw.p.inst}: ${f1(i.raw.p.y)}% (campo até ${i.raw.p.campo.split("-").reverse().join("/")}, n=${i.raw.p.n})` : i.dataset.aux ? null : `${i.dataset.label}: ${f1(i.parsed.y)}%` } } } } });
   $("aggLeg").innerHTML = "<b>Pontos:</b> " + insts.map(i => `<span><svg viewBox="0 0 12 12">${AGG_SVG[AGG_FORMAS[i] || "circle"]}</svg>${AGG_NOME[i] || i}</span>`).join("") + "<span>tamanho = amostra</span>";
   // ---- tabelas ----
-  const semanal = A.datas.map((d, i) => i).filter(i => (A.datas.length - 1 - i) % 7 === 0);
+  const semanal = DATAS.map((d, i) => i).filter(i => (DATAS.length - 1 - i) % 7 === 0);
   tabela("tAggTend", ["Data", ...T.series.map(s => s.nome + " %"), ...T.series.map(s => s.nome.split(" ")[0] + " (90%)")],
-    semanal.slice().reverse().map(i => [A.datas[i].split("-").reverse().join("/"), ...T.series.map(s => s[modo].m[i]), ...T.series.map(s => `${f1(s[modo].lo[i])}–${f1(s[modo].hi[i])}`)]));
+    semanal.slice().reverse().map(i => [DATAS[i].split("-").reverse().join("/"), ...T.series.map(s => s[modo].m[i]), ...T.series.map(s => `${f1(s[modo].lo[i])}–${f1(s[modo].hi[i])}`)]));
   const vies = insts.map(i => [AGG_NOME[i] || i, ...T.series.map(s => s.vies[i] ?? null)]);
   $("tAggVies").innerHTML = ""; tabela("tAggVies", ["Instituto (viés estimado, p.p.)", ...T.series.map(s => s.nome)], vies);
   const linhas = {}; T.series.forEach(s => s.pontos.forEach(p => { const k = p.inst + p.x; (linhas[k] = linhas[k] || [AGG_NOME[p.inst] || p.inst, p.campo.split("-").reverse().join("/"), p.n, ...T.series.map(() => null)])[3 + T.series.indexOf(s)] = p.y; }));
