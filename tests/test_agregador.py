@@ -34,9 +34,16 @@ def test_pacotes_do_site_tem_series_nos_dois_turnos_e_valores_plausiveis():
         assert len(p["datas"]) > 30 and set(p["turnos"]) == {"1", "2"}
         for t in p["turnos"].values():
             for s in t["series"]:
-                assert len(s["aj"]["m"]) == len(p["datas"]) and 0 < s["hoje"] < 100 and s["pontos"]
+                assert len(s["aj"]["m"]) == len(t.get("datas", p["datas"])) and 0 < s["hoje"] < 100 and s["pontos"]
     ult = ag.presidente()["turnos"]["2"]["series"]
     assert abs(ult[0]["hoje"] + ult[1]["hoje"] - 100) < 0.05                   # 2º turno fecha em 100
+
+
+def test_segundo_turno_do_presidente_comeca_em_5_de_outubro():
+    t2 = ag.presidente()["turnos"]["2"]
+    assert t2["datas"][0] == "2026-10-05"                                      # só pesquisas pós-1º turno
+    assert all(p["campo"] >= "2026-10-05" for s in t2["series"] for p in s["pontos"])
+    assert all(s["dias_delta"] == len(t2["datas"]) - 1 for s in t2["series"])  # série curta: variação sobre todo o período
 
 
 def test_data_de_referencia_segue_as_constantes_dos_modelos():

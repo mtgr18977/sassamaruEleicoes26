@@ -16,6 +16,7 @@ K0 = 2.0            # encolhimento do viés de instituto (equivale a 2 pesquisas
 TAU_PP = 1.5        # ASSUMIDO: ruído residual entre pesquisas (p.p.) além do erro amostral
 DERIVA_PP = 0.35    # ASSUMIDO: p.p. de incerteza por semana sem pesquisa perto do dia
 Z90 = 1.645
+INICIO_2T = pd.Timestamp("2026-10-05")   # 2º turno presidencial: só pesquisas com campo encerrado a partir daqui (pós-1º turno, 4/10); as de antes são cenários hipotéticos
 
 
 def _kernel(dias_grade, dias_pesq, n):
@@ -62,8 +63,9 @@ def _serie(d, grade, k, nome, cor, col, extra=None):
     pts = [dict(x=str(r.data.date()), y=round(100 * r.y, 2), inst=r.instituto, n=int(r.n), campo=str(r.campo_fim.date()))
            for r in dd.dropna(subset=["y"]).sort_values("data").itertuples()]
     m = aj["m"]
-    ant = m[-15] if len(m) > 15 else m[0]
-    return dict(k=k, nome=nome, cor=cor, aj=aj, bruta=br, pontos=pts, hoje=m[-1], delta14=round(m[-1] - ant, 2), vies=aj["vies"], **(extra or {}))
+    dias = min(14, len(m) - 1)    # janela da variação: 14 dias, ou todo o período se a série for mais curta (2º turno)
+    ant = m[-1 - dias]
+    return dict(k=k, nome=nome, cor=cor, aj=aj, bruta=br, pontos=pts, hoje=m[-1], delta14=round(m[-1] - ant, 2), dias_delta=dias, vies=aj["vies"], **(extra or {}))
 
 
 def _grade(d, hoje):
@@ -86,9 +88,13 @@ def presidente(hoje=None):
     d["l2"], d["f2"] = d.t2_lula / (d.t2_lula + d.t2_flavio), d.t2_flavio / (d.t2_lula + d.t2_flavio)
     g = _grade(d, hoje)
     t1 = [_serie(d, g, "lula", "Lula (PT)", "--pt", "v_lula"), _serie(d, g, "flavio", "Flávio Bolsonaro (PL)", "--anti", "v_flavio")]
-    t2 = [_serie(d, g, "lula", "Lula (PT)", "--pt", "l2"), _serie(d, g, "flavio", "Flávio Bolsonaro (PL)", "--anti", "f2")]
+    d2 = d[d.campo_fim >= INICIO_2T].dropna(subset=["l2"])      # 2º turno: só pós-1º turno
+    if d2.empty:                                                # data de referência anterior ao 2º turno: usa tudo
+        d2 = d.dropna(subset=["l2"])
+    g2 = _grade(d2, hoje)
+    t2 = [_serie(d2, g2, "lula", "Lula (PT)", "--pt", "l2"), _serie(d2, g2, "flavio", "Flávio Bolsonaro (PL)", "--anti", "f2")]
     turnos = {"1": dict(titulo="1º turno", unidade="% dos votos válidos", ymin=20, ymax=60, ref=None, series=t1),
-              "2": dict(titulo="2º turno", unidade="% dos votos válidos (Lula + Flávio = 100%)", ymin=40, ymax=60, ref=50, series=t2)}
+              "2": dict(titulo="2º turno", unidade="% dos votos válidos (Lula + Flávio = 100%)", ymin=40, ymax=60, ref=50, series=t2, datas=[str(x.date()) for x in g2])}
     return _pacote(g, turnos, hoje, "Datafolha, Quaest, AtlasIntel, Real Time Big Data, Vox Brasil e PoderData. Ponto = pesquisa (data = meio do campo).")
 
 
