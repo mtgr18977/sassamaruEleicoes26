@@ -30,6 +30,7 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `nav.py` | Moldura do site em uma só definição: menu de abas agrupado (`ABAS`), cabeçalho, rodapé e botão de tema. Os geradores passam o template por `nav.moldura(html, pagina)` antes de trocar `__DATA__`. `python nav.py` gera `documentacao.html` a partir de `apps/documentacao.template.html` |
 | `gerar_pagina_modelo.py` | Gera `analise-modelo.html` (aba Análise do modelo): reúne as previsões congeladas de 2/10 (projeção do presidente, modelo do governador, bancada) e os resultados preliminares de `datasets/resultado-2026-*.csv`; faixas, erros, pesquisas finais e a previsão atual do 2º turno (a preencher em 25/10) |
 | `gerar_pagina_lula.py` | Gera `index.html` (dados embutidos) a partir de `apps/lula.template.html` |
+| `sensibilidade_2t.py` | Sensibilidade da projeção do 2º turno à confiança em cada instituto (correção e peso pelo erro do 1º turno, só Palver/Gerp, só pós-1º turno, sem um instituto de cada vez); grava `modelos/sensibilidade-2t.csv`, não altera o modelo |
 | `validar_regioes.py` | Compara a distribuição regional do modelo com o cruzamento por região da Datafolha (22–23/9) |
 | `fetch_tse_rs.py`, `regioes_rs.py`, `rs_dados.py` | ETL do governador do RS (zips do TSE já baixados), mapa município → mesorregião do IBGE (rede) e blocos/unidades |
 | `rs_modelo.py`, `modelos/rs-model.js` | Aba do RS: estimativa das pesquisas, chances (1º e 2º turno simulados juntos) e projeção por região, em Python e JS (teste de equivalência) |
