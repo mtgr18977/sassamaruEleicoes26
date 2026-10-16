@@ -103,3 +103,8 @@ Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exc
 - Entrou a Quaest (10–13/10, div. 14/10; totais Lula 44 × Flávio 46, brancos/nulos 9 + indecisos 1; BR-08729/2026; n=2154; contratante TV Globo e O Globo). Os válidos 48,9×51,1 são cálculo nosso (46/90 e 44/90), a Quaest não os publicou; método de coleta não localizado. Fontes: O Povo, Imirante e Poder360 (resumos de busca); relatório não conferido.
 - `HOJE` = 15/10, `HORIZONTE[2]` = 10. Lula/(Lula+Flávio) 47,7% → 47,7% (48,05% no agregador); chance de Lula no 2º turno 17,7% → 18,0%.
 - **Pendente:** Datafolha (campo 13–15/10, n=2520, BR-00466/2026, contratante Folha e Globo) com divulgação prevista para 15/10 às 18h; ainda não estava publicada na busca. Sem pesquisa nova de Atlas, Vox, RTBD ou Paraná Pesquisas.
+
+## Atualização de 16/10/2026
+- Entraram Datafolha (13–14/10, div. 15/10; totais Lula 45 × Flávio 47, brancos/nulos 6 + indecisos 2; válidos 49×51; BR-00466/2026; n=2520; Folha) e PoderData/Aya (13–15/10, div. 16/10; válidos 50 × 50; BR-04258/2026; n=3000; totais não informados, base `validos`). O campo da Datafolha diverge entre fontes (13–14 na Gazeta; 13–15 nas matérias de pré-divulgação): usado 13–14. Relatórios oficiais não conferidos.
+- `HOJE` = 16/10, `HORIZONTE[2]` = 9. Lula/(Lula+Flávio) 47,7% → 47,9%; chance de Lula no 2º turno 18,0% → 19,5%; agregador (média de Lula) 48,05% → 48,35%.
+- Tendência nas pesquisas da mesma casa: Datafolha 48 → 49 e PoderData 47 → 49 → 50 (válidos de Lula). Flávio segue numericamente à frente em todas menos a PoderData (empate) e a Vox. Sem pesquisa nova de Atlas, Vox, Gerp, RTBD ou Paraná.

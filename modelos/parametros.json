@@ -1,5 +1,5 @@
 {
- "data_referencia": "2026-10-15",
+ "data_referencia": "2026-10-16",
  "data_referencia_1t": "2026-10-02",
  "turno1": {
   "p_pesquisas": 0.4551,
@@ -17,22 +17,22 @@
   "n_vies": 6
  },
  "turno2": {
-  "p_pesquisas": 0.4771,
+  "p_pesquisas": 0.4785,
   "sd_logit": 0.1002,
-  "delta": -0.1276,
+  "delta": -0.1221,
   "p_2022": 0.509024,
   "house_effects_logit": {
-   "AtlasIntel": -0.0049,
-   "Datafolha": 0.0449,
-   "Futura Inteligência": -0.0016,
-   "Gerp": -0.1108,
-   "Nexus/BTG": 0.014,
-   "PoderData": 0.0025,
-   "Quaest": 0.0186,
-   "RealTimeBigData": -0.0061,
-   "Vox Brasil": 0.0434
+   "AtlasIntel": -0.0065,
+   "Datafolha": 0.0403,
+   "Futura Inteligência": -0.0069,
+   "Gerp": -0.1169,
+   "Nexus/BTG": 0.0074,
+   "PoderData": 0.0321,
+   "Quaest": 0.0152,
+   "RealTimeBigData": -0.0056,
+   "Vox Brasil": 0.0408
   },
-  "n_pesquisas": 33,
+  "n_pesquisas": 35,
   "sd_vies_hist": 0.0146,
   "n_vies": 4
  },
