@@ -81,3 +81,12 @@ def test_parametros_anteriores_erram_o_total_e_o_alfa_calibrado_melhora(m):
     for b in m["backtest"]:
         assert b["trocadas_cal"] <= b["trocadas"] and b["trocadas_cal"] < b["vagas"] / 4
     assert m["backtest"][-1]["esperado"] > m["backtest"][-1]["real"] + 5          # 2026: o modelo com os parâmetros de 2022 passa de 40
+
+
+def test_x_de_2026_e_o_voto_real_da_presidencial_no_1_turno(m):
+    sm = __import__("senado_modelo")
+    u = pd.read_csv("datasets/tse-presidente-uf.csv").query("ano == 2026 and turno == 1").set_index("uf")
+    x = sm.painel()[2026].x
+    esperado = (u.pct_antipt_validos / (u.pct_antipt_validos + u.pct_pt_validos)).reindex(x.index)
+    assert (x - esperado).abs().max() < 1e-9
+
