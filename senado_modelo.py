@@ -7,8 +7,9 @@ então é um modelo pequeno: o ajuste é instável e eu mostro isso em vez de es
 Dois resultados que o modelo sustenta (ver `backtest`):
  * β (o quanto a presidencial explica o Senado) sobe de eleição em eleição: o voto no Senado se nacionalizou;
  * α (o "nível" nacional da Direita no Senado) NÃO é previsível pelos parâmetros da eleição anterior: o modelo erra o total, não a distribuição.
-Por isso o produto é condicional: dado o total nacional de cadeiras da Direita, quais UFs. Em 2026 o x vem da projeção presidencial do site
-(modelos/previsao-uf-turno1.csv: mediana de Lula/(Lula+Flávio) por UF), porque a presidencial por UF de 2026 ainda não saiu do TSE."""
+Por isso o produto é condicional: dado o total nacional de cadeiras da Direita, quais UFs. Em 2026 o x é o resultado real da presidencial por UF
+(arquivo oficial do TSE, 1º turno de 4/10). Até 19/10 ele era a projeção congelada de 2/10 (mediana de Lula/(Lula+Flávio) por UF), porque a
+presidencial por UF de 2026 ainda não tinha sido baixada."""
 import numpy as np
 import pandas as pd
 
@@ -24,13 +25,12 @@ def painel():
     """UF × eleição: n vagas, D eleitos da Direita, x (parcela anti-PT entre PT e anti-PT no 1º turno presidencial da UF)."""
     pres = pd.read_csv(D + "tse-presidente-uf.csv").query("turno == 1")
     pres = pres.assign(x=pres.pct_antipt_validos / (pres.pct_antipt_validos + pres.pct_pt_validos))
-    proj = pd.read_csv("modelos/previsao-uf-turno1.csv").set_index("uf")
     out = {}
     for y in ANOS:
         d = pd.read_csv(D + f"tse-senado-{y}.csv")
         d["bloco"] = d.partido.map(senado.lin).map(senado.bloco)
         e = d[d.situacao == "ELEITO"].groupby("uf").agg(n=("bloco", "size"), D=("bloco", lambda s: int((s == "D").sum())))
-        e["x"] = (1 - proj.mediana / 100).reindex(e.index) if y == 2026 else pres[pres.ano == y].set_index("uf").x.reindex(e.index)
+        e["x"] = pres[pres.ano == y].set_index("uf").x.reindex(e.index)
         assert e.x.notna().all(), y
         out[y] = e
     return out

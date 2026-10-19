@@ -1,5 +1,6 @@
 // Monte Carlo da eleição presidencial (porta de montecarlo.py). Parâmetros vêm de parametros.json.
 // swing uniforme + choque regional + ruído por UF; capital = estado + gap + choque comum + ruído.
+// Base por UF: pbase (2º turno: 1º turno de 2026) ou, se não houver, p2022 (1º turno: eleição de 2022).
 (function (root) {
   const logit = (p) => Math.log(p / (1 - p));
   const inv = (y) => 1 / (1 + Math.exp(-y));
@@ -25,7 +26,7 @@
     for (let s = 0; s < N; s++) {
       const alvo = inv(logit(p) + sd * z());
       const reg = Object.fromEntries(regs.map((r) => [r, mc.sd_reg * z()]));
-      for (let i = 0; i < k; i++) y[i] = logit(U[i].p2022) + reg[U[i].regiao] + mc.sd_uf * z();
+      for (let i = 0; i < k; i++) y[i] = logit(U[i].pbase ?? U[i].p2022) + reg[U[i].regiao] + mc.sd_uf * z();
       let lo = -3, hi = 3;
       for (let it = 0; it < 50; it++) {
         const m = (lo + hi) / 2; let tot = 0;
@@ -45,7 +46,7 @@
     return {
       p_nac_gt50: nac.reduce((s, x) => s + (x > 0.5), 0) / N,
       margem_mediana_pp: 100 * (2 * quantil(nac, 0.5) - 1),
-      ufs: U.map((u, i) => resumo(ps[i], u, { p2022: u.p2022 })),
+      ufs: U.map((u, i) => resumo(ps[i], u, { p2022: u.p2022, pbase: u.pbase ?? u.p2022 })),
       capitais: U.filter((u) => u.capital).map((u) => resumo(pcs[U.indexOf(u)], u, { capital: u.capital, p2022: u.cap2022 })),
     };
   }

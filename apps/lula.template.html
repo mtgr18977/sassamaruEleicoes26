@@ -10,8 +10,8 @@
 <main>
   <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
   <div class="topo"><div class="semnota"><h1>Eleições Dashboard 2026</h1>
-  <p class="sub">Chances na corrida de 2026, o histórico do Lula (2002–2022) por região e capital, pesquisas contra resultado real e um simulador interativo.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
-  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (resultado preliminar); 2º turno em 25/10. As <b>chances do topo agora são só do 2º turno</b>, recalibradas com as pesquisas feitas depois do 1º turno (até 12/10); a projeção e o simulador do 1º turno seguem congelados em 2/10 para comparar com o resultado. Veja a aba <a href="analise.html">Análise</a>.</div>
+  <p class="sub">Chances na corrida de 2026, o histórico do Lula (2002–2026, com o 1º turno de 2026) por região e capital, pesquisas contra resultado real e um simulador interativo.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (arquivo oficial do TSE); 2º turno em 25/10. As <b>chances do topo agora são só do 2º turno</b>, recalibradas com as pesquisas feitas depois do 1º turno (a data da última está no card); a projeção e o simulador do 1º turno seguem congelados em 2/10 para comparar com o resultado. Veja a aba <a href="analise.html">Análise</a>.</div>
   <div class="sec"><div class="mainc">
   <section class="card hero" id="hero">
     <div class="filtros" style="justify-content:space-between;margin:0 0 6px">
@@ -44,7 +44,7 @@
     <p class="nota" id="aggNota"></p>
   </section>
   </div><aside class="side" id="nota0"></aside></div>
-  <div class="aviso semnota"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code>: a série da Datafolha foi conferida no relatório oficial (BR-00304/2026); as demais vieram de busca web e não foram conferidas no TSE.</div>
+  <div class="aviso semnota"><b>Como ler:</b> pontos cheios e linha contínua são eleições com Lula na urna (2002, 2006, 2022 e 2026, esta só com o 1º turno, já apurado; o 2º é em 25/10). 2010 e 2014 (Dilma) e 2018 (Haddad) aparecem como <b>contexto</b>, em ponto vazado e tracejado, e podem ser ocultadas. Percentuais são sobre votos válidos; dados do TSE; pesquisas conforme <code>datasets/</code>: a série da Datafolha foi conferida no relatório oficial (BR-00304/2026); as demais vieram de busca web e não foram conferidas no TSE.</div>
   <div class="kpis semnota" id="kpis"></div>
 
   <section class="sec"><div class="mainc">
@@ -100,7 +100,7 @@
     <div class="cv med"><canvas id="cVies"></canvas></div>
     <div id="viesResumo" class="nota"></div>
     <details><summary>Ver tabela</summary><div id="tVies"></div></details>
-    <p class="nota">Fontes: Wikipedia (en) e Poder360 via busca web, não conferidas contra os registros do TSE. RTBD 2022, Quaest e Atlas 2018 e 2006 não localizados; poucos pontos por eleição.</p>
+    <p class="nota">Fontes: Wikipedia (en) e Poder360 via busca web, não conferidas contra os registros do TSE. RTBD 2022, Quaest e Atlas 2018 e 2006 não localizados; poucos pontos por eleição. 2026: a última pesquisa de 1º turno de cada instituto antes da votação (<code>datasets/pesquisas-2026.csv</code>), contra o resultado do TSE.</p>
   </div>
 
   </div><aside class="side" id="nota4"></aside></section>
@@ -114,14 +114,14 @@
       <div><h3>2º turno</h3><div class="cv med"><canvas id="c262"></canvas></div></div>
     </div>
     <details><summary>Ver tabela</summary><div id="t26"></div></details>
-    <p class="nota">Linha tracejada = 50%. Última rodada de cada instituto na tabela. Células vazias = pesquisa sem 2º turno localizado.
+    <p class="nota">Linha tracejada = 50%; a estrela é o resultado do 1º turno (4/10), segundo o TSE. Cada ponto é uma pesquisa, na data do meio do campo; o 2º turno mostra também as pesquisas de depois do 1º turno. Última rodada de cada instituto na tabela. Células vazias = pesquisa sem 2º turno localizado.
       A estimativa do modelo é a média dos institutos com correção de house effect e recência (<code>pesquisas.py</code>).</p>
   </div>
 
   </div><aside class="side" id="nota5"></aside></section>
   <section class="sec"><div class="mainc">
   <h2>6. Projeção e simulador</h2>
-  <p class="sub">Base: como cada estado votou em 2022 (lulismo × bolsonarismo × terceira via). Os totais nacionais vêm das pesquisas e você pode mexer neles; a distribuição por estado é o swing 2022→2026 com choques regionais medidos em 2002–2022.</p>
+  <p class="sub">Base: no 1º turno, como cada estado votou em 2022 (lulismo × bolsonarismo × terceira via); no 2º turno, como votou no 1º turno de 2026, que já foi apurado. Os totais nacionais vêm das pesquisas e você pode mexer neles; a distribuição por estado é um swing uniforme com choques regionais medidos em 2002–2022 (no 2º turno, do 1º para o 2º turno de cada eleição).</p>
   <div class="aviso"><b>Simulação condicional às pesquisas, não uma previsão validada.</b> Não há backtest do caminho pesquisa → resultado e o ruído por estado é grande (veja os intervalos). "Flávio" = bloco anti-PT de 2022. A projeção do 1º turno é refeita a cada rodada de pesquisas (a de 1/10 está na tag <code>projecao-1turno-2026-10-01</code>); os sliders partem da atual.</div>
   <div class="card">
     <div class="filtros">Turno <span class="seg" id="segProjT"></span> Cenário <span class="seg" id="segCen"></span> <button id="rst" class="lnk">redefinir</button></div>
@@ -155,17 +155,17 @@
 <script src="modelos/projecao-model.js"></script>
 <script>
 const D = __DATA__;
-const ANOS = ["2002","2006","2010","2014","2018","2022"], LULA = {2002:1,2006:1,2022:1};
+const ANOS = ["2002","2006","2010","2014","2018","2022","2026"], LULA = {2002:1,2006:1,2022:1,2026:1};
 const REG = ["N","NE","CO","SE","S"], REGNOME = {N:"Norte",NE:"Nordeste",CO:"Centro-Oeste",SE:"Sudeste",S:"Sul"};
-const INST = ["Datafolha","Quaest","AtlasIntel","RealTimeBigData"], INSTNOME = {RealTimeBigData:"Real Time Big Data"};
+const INST = [...new Set(D.pesq26.map(p => p.inst))], INSTNOME = {RealTimeBigData:"Real Time Big Data"};
 const FATOR = { pesquisas:0, meio:0.5, total:1 }, NOMEVIES = { pesquisas:"Pesquisas", meio:"½ do viés histórico", total:"Viés histórico" };
-const state = { aggT:1, aggAj:true, heroCen:"pesquisas", projT:1, cen:"pesquisas", s:51.8, q:87.5, turnoReg:2, turnoHeat:2, turnoCap:2, ano:"2022" };
+const state = { aggT:1, aggAj:true, heroCen:"pesquisas", projT:1, cen:"pesquisas", s:51.8, q:87.5, turnoReg:1, turnoHeat:1, turnoCap:1, ano:"2026" };
 // ---------- KPIs ----------
 function kpis() {
   const g = (a, t) => D.nac.find(x => x.ano == a && x.turno == t);
   const k = (a, t, nome) => `<div class="kpi"><span>${nome} ${a}, ${t}º turno</span><b>${f1(g(a,t).pt)}%</b><small>${(g(a,t).votos/1e6).toFixed(1).replace(".",",")} mi de votos</small></div>`;
   const ne = D.reg[2]["2022"].NE, se = D.reg[2]["2022"].SE;
-  $("kpis").innerHTML = k(2002,2,"Lula") + k(2006,2,"Lula") + k(2022,2,"Lula") +
+  $("kpis").innerHTML = k(2002,2,"Lula") + k(2006,2,"Lula") + k(2022,2,"Lula") + k(2026,1,"Lula") +
     `<div class="kpi"><span>Nordeste, 2º turno 2022</span><b>${f1(ne)}%</b><small>Sudeste: ${f1(se)}%</small></div>`;
 }
 
@@ -181,14 +181,15 @@ function evolucao() {
   chart("cEvo", { type:"line", data:{ labels:ANOS, datasets:[ds(2, pt, "2º turno", "cima"), ds(1, css("--ink2"), "1º turno", "baixo"), ref] },
     options:{ interaction:{ mode:"index", intersect:false }, scales:{ x:eixo({ grid:{display:false} }), y:eixo({ min:25, max:65, ticks:{ color:css("--ink2"), callback:v=>v+"%" } }) },
       plugins:{ rotulos:{ on:true }, tooltip:tip, legend:{ position:"bottom", labels:{ color:css("--ink2"), usePointStyle:true, filter:(l)=>l.text!=="50%" } } } } });
-  const votos = (t) => ANOS.map(a => (com || LULA[a]) ? D.nac.find(n => n.ano == a && n.turno == t).votos / 1e6 : null);
+  const mi = (v) => v == null ? null : v / 1e6;
+  const votos = (t) => ANOS.map(a => (com || LULA[a]) ? mi(D.nac.find(n => n.ano == a && n.turno == t).votos) : null);
   const cor = (c, a) => LULA[a] ? c : c + "66";
   chart("cVotos", { type:"bar", data:{ labels:ANOS, datasets:[
       { label:"1º turno", data:votos(1), backgroundColor:ANOS.map(a=>cor(css("--ink2"),a)), borderRadius:4, borderColor:css("--surface"), borderWidth:2 },
       { label:"2º turno", data:votos(2), backgroundColor:ANOS.map(a=>cor(css("--pt"),a)), borderRadius:4, borderColor:css("--surface"), borderWidth:2 } ] },
     options:{ scales:{ x:eixo({ grid:{display:false} }), y:eixo({ beginAtZero:true }) }, plugins:{ tooltip:{ ...tip, callbacks:{ ...tip.callbacks, label:(c)=>`${c.dataset.label}: ${c.parsed.y.toFixed(1).replace(".",",")} mi` } } } } });
   tabela("tEvo", ["Eleição","Candidato","1º turno %","2º turno %","Votos 1º (mi)","Votos 2º (mi)"],
-    ANOS.map(a => { const x = (t) => D.nac.find(n => n.ano == a && n.turno == t); return [a, D.cand[a] + (LULA[a] ? "" : " (sem Lula)"), x(1).pt, x(2).pt, x(1).votos/1e6, x(2).votos/1e6]; }));
+    ANOS.map(a => { const x = (t) => D.nac.find(n => n.ano == a && n.turno == t); return [a, D.cand[a] + (LULA[a] ? "" : " (sem Lula)"), x(1).pt, x(2).pt, mi(x(1).votos), mi(x(2).votos)]; }));
 }
 
 // ---------- 2. regiões ----------
@@ -210,7 +211,7 @@ function heat() {
   const mix = (a, b, w) => a.map((x, i) => Math.round(x + (b[i] - x) * w));
   const rgb = (h) => [1,3,5].map(i => parseInt(h.slice(i, i+2), 16));
   const [b, m, r] = ["--div-blue","--div-mid","--div-red"].map(v => rgb(css(v)));
-  const cell = (v) => { const w = Math.min(1, Math.abs(v - 50) / 30), c = mix(m, v < 50 ? b : r, w); const lum = (0.299*c[0]+0.587*c[1]+0.114*c[2]);
+  const cell = (v) => { if (v == null) return `<td style="color:var(--muted)" title="sem dado">–</td>`; const w = Math.min(1, Math.abs(v - 50) / 30), c = mix(m, v < 50 ? b : r, w); const lum = (0.299*c[0]+0.587*c[1]+0.114*c[2]);
     return `<td style="background:rgb(${c});color:${lum > 140 ? "#0b0b0b" : "#fff"}" title="${v}%">${f1(v)}</td>`; };
   $("heat").innerHTML = `<tr><th></th>${ANOS.map(a => `<th>${a}<br><small style="color:var(--muted);font-weight:400">${LULA[a] ? "Lula" : D.cand[a]}</small></th>`).join("")}</tr>` +
     ufs.map(u => `<tr><td>${u}</td>${ANOS.map(a => cell(D.heat[t][a][u])).join("")}</tr>`).join("");
@@ -219,7 +220,7 @@ function heat() {
 // ---------- 3. capitais ----------
 function capitais() {
   const t = state.turnoCap, a = state.ano;
-  const sel = $("selAno"); if (!sel.options.length) { sel.innerHTML = ANOS.map(x => `<option value="${x}">${x} · ${D.cand[x]}</option>`).join(""); sel.value = "2022"; sel.onchange = () => { state.ano = sel.value; capitais(); }; }
+  const sel = $("selAno"); if (!sel.options.length) { sel.innerHTML = ANOS.map(x => `<option value="${x}">${x} · ${D.cand[x]}</option>`).join(""); sel.value = "2026"; sel.onchange = () => { state.ano = sel.value; capitais(); }; }
   const L = (k, nome, cor, dash) => ({ label:nome, data:ANOS.map(x => D.cvi[t][x][k]), borderColor:css(cor), backgroundColor:css(cor), borderWidth:2, pointRadius:4, borderDash:dash, tension:0 });
   chart("cCVI", { type:"line", data:{ labels:ANOS, datasets:[L("capitais","Capitais","--pt"), L("interior","Interior","--anti"), L("brasil","Brasil","--muted",[4,4])] },
     options:{ interaction:{ mode:"index", intersect:false }, scales:{ x:eixo({grid:{display:false}}), y:eixo({ ticks:{ color:css("--ink2"), callback:v=>v+"%" } }) } } });
@@ -247,11 +248,14 @@ function vies() {
 
 // ---------- 5. 2026 ----------
 function pesq26() {
-  const cores = { Datafolha:"--s1", Quaest:"--s2", AtlasIntel:"--s3", RealTimeBigData:"--s4" };
+  const paleta = ["--s1","--s2","--s3","--s4","--s5","--s7"], formas = ["circle","rect","triangle","rectRot"];
+  const cor = (i) => paleta[INST.indexOf(i) % paleta.length], forma = (i) => formas[Math.floor(INST.indexOf(i) / paleta.length) % formas.length];
   const pts = (inst, k) => D.pesq26.filter(p => p.inst === inst && p[k] != null).map(p => ({ x:Date.parse(p.data), y:p[k] }));
-  const mk = (k, id) => chart(id, { type:"line", data:{ datasets: INST.map(i => ({ label:INSTNOME[i] || i, data:pts(i, k), borderColor:css(cores[i]), backgroundColor:css(cores[i]), borderWidth:2, pointRadius:3.5, tension:0 }))
-      .concat([{ label:"50%", data:[{x:"2026-06-20",y:50},{x:"2026-10-02",y:50}], borderColor:css("--muted"), borderDash:[3,4], borderWidth:1, pointRadius:0 }]) },
-    options:{ parsing:false, interaction:{ mode:"nearest", intersect:true }, scales:{ x:{ type:"linear", min:Date.parse("2026-06-20"), max:Date.parse("2026-10-02"), ...eixo({ grid:{display:false} }),
+  const fim = { s1: "2026-10-07", s2: "2026-10-26" };
+  const mk = (k, id) => chart(id, { type:"line", data:{ datasets: INST.filter(i => pts(i, k).length).map(i => ({ label:INSTNOME[i] || i, data:pts(i, k), borderColor:css(cor(i)), backgroundColor:css(cor(i)), borderWidth:2, pointRadius:3.5, pointStyle:forma(i), tension:0 }))
+      .concat(k === "s1" ? [{ label:"Resultado (4/10)", data:[{x:Date.parse("2026-10-04"),y:D.r1t_s}], borderColor:css("--ink"), backgroundColor:css("--ink"), pointRadius:7, pointStyle:"star", showLine:false }] : [])
+      .concat([{ label:"50%", data:[{x:Date.parse("2026-06-20"),y:50},{x:Date.parse(fim[k]),y:50}], borderColor:css("--muted"), borderDash:[3,4], borderWidth:1, pointRadius:0 }]) },
+    options:{ parsing:false, interaction:{ mode:"nearest", intersect:true }, scales:{ x:{ type:"linear", min:Date.parse("2026-06-20"), max:Date.parse(fim[k]), ...eixo({ grid:{display:false} }),
         ticks:{ color:css("--ink2"), maxTicksLimit:6, callback:(v)=>new Date(v).toLocaleDateString("pt-BR",{day:"2-digit",month:"short"}) } },
         y:eixo({ min:k==="s1"?44:42, max:k==="s1"?66:60, ticks:{ color:css("--ink2"), callback:v=>v+"%" } }) },
       plugins:{ legend:{ position:"bottom", labels:{ color:css("--ink2"), usePointStyle:true, filter:(l)=>l.text!=="50%" } },
@@ -389,11 +393,13 @@ function notas() {
     `A incerteza do 2º turno tem piso assumido de <b>${f1(D.piso2t)} p.p.</b>`]);
   nota("nota1", [`Lula no 2º turno: <b>${f1(g(2002,2).pt)}%</b> (2002), <b>${f1(g(2006,2).pt)}%</b> (2006) e <b>${f1(g(2022,2).pt)}%</b> (2022).`,
     `Votos no 2º turno: ${f1(g(2002,2).votos / 1e6)} mi em 2002, ${f1(g(2022,2).votos / 1e6)} mi em 2022.`,
+    `1º turno de 2026: Lula <b>${f1(g(2026,1).pt)}%</b> (2022: ${f1(g(2022,1).pt)}%) e ${f1(g(2026,1).votos / 1e6)} mi de votos. O 2º turno é em 25/10.`,
     `Dilma (2010, 2014) e Haddad (2018) aparecem só como <b>contexto</b>, em ponto vazado.`]);
   const r = D.reg[2], sh = D.share[2];
   nota("nota2", [`Nordeste: <b>${f1(r["2002"].NE)}% → ${f1(r["2022"].NE)}%</b> do PT (2002 → 2022).`,
     `Sudeste: <b>${f1(r["2002"].SE)}% → ${f1(r["2022"].SE)}%</b>; Sul: ${f1(r["2002"].S)}% → ${f1(r["2022"].S)}%.`,
-    `O Nordeste passou de ${f1(sh["2002"].NE)}% para <b>${f1(sh["2022"].NE)}%</b> dos votos do PT.`]);
+    `O Nordeste passou de ${f1(sh["2002"].NE)}% para <b>${f1(sh["2022"].NE)}%</b> dos votos do PT.`,
+    `1º turno de 2026: Nordeste <b>${f1(D.reg[1]["2026"].NE)}%</b>, Sudeste ${f1(D.reg[1]["2026"].SE)}%, Sul ${f1(D.reg[1]["2026"].S)}% (2022: ${f1(D.reg[1]["2022"].NE)}%, ${f1(D.reg[1]["2022"].SE)}%, ${f1(D.reg[1]["2022"].S)}%).`]);
   const c = D.cvi[2], gp = (a) => c[a].capitais - c[a].interior;
   nota("nota3", [`Capitais menos interior (2º turno): <b>${sg(gp("2002"))} p.p.</b> em 2002, <b>${sg(gp("2018"))}</b> em 2018 e <b>${sg(gp("2022"))}</b> em 2022.`,
     `A distância não é estável: em 2002 as capitais votavam mais no PT; em 2018, menos.`,

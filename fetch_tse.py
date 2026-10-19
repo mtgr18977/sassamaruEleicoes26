@@ -9,8 +9,8 @@ classifica os candidatos em blocos (PT / anti-PT / outros) e salva CSVs no proje
 COMO RODAR (na sua máquina; o sandbox do Claude não acessa o TSE):
 
     pip install pandas
-    python fetch_tse.py                      # 2002, 2006, 2010, 2014, 2018, 2022
-    python fetch_tse.py --anos 2018 2022     # só alguns anos
+    python fetch_tse.py                      # 2002, 2006, 2010, 2014, 2018, 2022, 2026
+    python fetch_tse.py --anos 2026          # só um ano (os outros anos dos CSVs são preservados)
     python fetch_tse.py --inspecionar 2022   # mostra colunas/arquivos do zip (debug)
     python fetch_tse.py --sem-detalhe        # não baixa aptos/brancos/nulos (mais rápido)
     python fetch_tse.py --offline            # só usa zips já em datasets/tse_raw/
@@ -58,15 +58,16 @@ import pandas as pd
 # Configuração
 # --------------------------------------------------------------------------- #
 
-ANOS_PADRAO = [2002, 2006, 2010, 2014, 2018, 2022]
+ANOS_PADRAO = [2002, 2006, 2010, 2014, 2018, 2022, 2026]
 
 BASE_URL = "https://cdn.tse.jus.br/estatistica/sead/odsele"
 URL_CANDIDATO = BASE_URL + "/votacao_candidato_munzona/votacao_candidato_munzona_{ano}.zip"
 URL_DETALHE = BASE_URL + "/detalhe_votacao_munzona/detalhe_votacao_munzona_{ano}.zip"
 
 # Se a classificação automática do adversário do PT falhar em algum ano,
-# informe o número do candidato aqui. Ex.: {2026: 22}
-ANTIPT_OVERRIDE: dict[int, int] = {}
+# informe o número do candidato aqui. 2026: o 2º turno ainda não existia quando o 1º foi baixado,
+# então o adversário do PT (Flávio Bolsonaro, PL) é fixado pelo número da urna.
+ANTIPT_OVERRIDE: dict[int, int] = {2026: 22}
 
 # Referência oficial (% de votos válidos do PT) — para sanity check, não para o modelo.
 # Confira no site do TSE se quiser ter certeza; tolerância de 0,15 p.p.
@@ -77,6 +78,7 @@ OFICIAL_PT = {
     (2014, 1): 41.59, (2014, 2): 51.64,
     (2018, 1): 29.28, (2018, 2): 44.87,
     (2022, 1): 48.43, (2022, 2): 50.90,
+    (2026, 1): 45.16,   # resultado preliminar de imprensa (Wikipedia/O Tempo), mesmos votos do TSE
 }
 TOLERANCIA_PP = 0.15
 
@@ -434,6 +436,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--anos", type=int, nargs="+", default=ANOS_PADRAO, help="anos de eleição (padrão: 2002–2022)")
     p.add_argument("--saida", type=Path, default=Path("datasets"), help="pasta de saída dos CSVs")
     p.add_argument("--cache", type=Path, default=None, help="pasta dos zips (padrão: <saida>/tse_raw)")
+    p.add_argument("--substituir", action="store_true", help="grava só os anos pedidos, apagando os demais anos dos CSVs (padrão: preserva os outros anos)")
     p.add_argument("--sem-detalhe", action="store_true", help="não baixa aptos/comparecimento/brancos/nulos")
     p.add_argument("--forcar", action="store_true", help="baixa de novo mesmo se já estiver no cache")
     p.add_argument("--offline", action="store_true", help="não acessa a rede; usa só o cache")
@@ -488,8 +491,14 @@ def main(argv: list[str] | None = None) -> int:
         "tse-presidente-nacional.csv": nac,
     }
     log("\n=== Salvando ===")
+    anos_novos = {int(a) for a in mun["ano"].unique()}
     for nome, df in arquivos.items():
         caminho = args.saida / nome
+        if caminho.exists() and not args.substituir:
+            antigo = pd.read_csv(caminho, dtype={"cod_municipio": str})
+            antigo = antigo[~antigo["ano"].isin(anos_novos)]
+            df = pd.concat([antigo, df], ignore_index=True)[list(df.columns)]
+            df = df.sort_values([c for c in ("ano", "turno", "uf", "municipio") if c in df.columns]).reset_index(drop=True)
         df.to_csv(caminho, index=False, encoding="utf-8")
         log(f"  {caminho}  ({len(df)} linhas)")
 

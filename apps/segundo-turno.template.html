@@ -30,7 +30,7 @@
   </div><aside class="side" id="nota1"></aside></section>
   <section class="sec"><div>
   <h2>2. Simulador de cenários</h2>
-  <p>Escolha a parcela de Lula nos votos válidos do 2º turno (só dois candidatos). Meu modelo parte do 2º turno de 2022 por estado, aplica uma mudança uniforme em logit, choques regionais e ruído por UF (medidos em 2002–2022) e recalibra para o total escolhido. <b>Isto não é previsão</b>: é o que eu consigo dizer sobre o que cada cenário implica.</p>
+  <p>Escolha a parcela de Lula nos votos válidos do 2º turno (só dois candidatos). Meu modelo parte do 1º turno de 2026 por estado (Lula/(Lula+Flávio), já apurado), aplica uma mudança uniforme em logit, choques regionais e ruído por UF (medidos na passagem do 1º para o 2º turno em 2002–2022) e recalibra para o total escolhido. <b>Isto não é previsão</b>: é o que eu consigo dizer sobre o que cada cenário implica.</p>
   <div class="sl2">
     <label>Lula nos válidos do 2º turno: <b id="vS"></b><input id="slS" type="range" min="44" max="56" step="0.1"></label>
     <label>Incerteza do total nacional (desvio-padrão): <b id="vSd"></b><input id="slSd" type="range" min="1" max="4" step="0.5"></label>
@@ -109,8 +109,8 @@ function simulador() {
   const m22 = {}, m26 = {}; r.ufs.forEach(u => { if (u.uf === "ZZ") return; m22[u.uf] = 100 * (2 * u.p2022 - 1); m26[u.uf] = 100 * (2 * u.mediana - 1); });
   mapaTiles("mapa22", m22); mapaTiles("mapa26", m26, { destaque: ch.map(u => u.uf) }); notaSim(r, ch);
   const o = r.ufs.slice().sort((a, b) => b.pvit - a.pvit);
-  $("tUF").innerHTML = `<table class="t"><tr><th>UF</th><th>Região</th><th>Peso (válidos 2022)</th><th>Lula 2022 (2º)</th><th>Cenário: mediana (p5–p95)</th><th>Chance de Lula na UF</th></tr>` + o.map(u => { const m = U.find(x => x.uf === u.uf); return `<tr class="${u.pvit > .25 && u.pvit < .75 ? "chave" : ""}"><td>${nomeUF(u.uf)}</td><td>${m.regiao}</td><td>${f1(100 * m.validos / W)}%</td><td>${f1(100 * u.p2022)}</td><td>${f1(100 * u.mediana)} (${f1(100 * u.p5)}–${f1(100 * u.p95)})</td><td>${f1(100 * u.pvit)}%</td></tr>`; }).join("") + `</table>`;
-  $("simNota").innerHTML = `As linhas destacadas são os estados-chave. A minha premissa é que a mudança é uniforme em logit a partir do 2º turno de 2022, com os choques regionais medidos no passado. O modelo <b>não sabe onde Lula perdeu no 1º turno</b> (Minas Gerais e Tocantins mudaram de lado, o Sul e o Centro-Oeste andaram mais à direita, como mostro na aba Análise), então eu leio os estados do Sudeste e do Centro-Oeste com cautela. Aqui o desvio do total nacional é ${f1(state.sd)} p.p. (no meu modelo é ${f1(D.piso)}, um piso que eu assumi).`;
+  $("tUF").innerHTML = `<table class="t"><tr><th>UF</th><th>Região</th><th>Peso (Lula + Flávio, 1º turno 2026)</th><th>Lula 2022 (2º)</th><th>Base: 1º turno 2026</th><th>Cenário: mediana (p5–p95)</th><th>Chance de Lula na UF</th></tr>` + o.map(u => { const m = U.find(x => x.uf === u.uf); return `<tr class="${u.pvit > .25 && u.pvit < .75 ? "chave" : ""}"><td>${nomeUF(u.uf)}</td><td>${m.regiao}</td><td>${f1(100 * m.validos / W)}%</td><td>${f1(100 * u.p2022)}</td><td>${f1(100 * u.pbase)}</td><td>${f1(100 * u.mediana)} (${f1(100 * u.p5)}–${f1(100 * u.p95)})</td><td>${f1(100 * u.pvit)}%</td></tr>`; }).join("") + `</table>`;
+  $("simNota").innerHTML = `As linhas destacadas são os estados-chave. A minha premissa é que a mudança é uniforme em logit a partir do 1º turno de 2026, com os choques regionais medidos entre o 1º e o 2º turno de cada eleição passada. Desde 19/10 o modelo <b>já parte de onde Lula foi bem e mal no 1º turno</b> (antes partia do 2º turno de 2022 e não sabia, por exemplo, que Minas Gerais e Tocantins tinham mudado de lado). O que ele não sabe é para quem vão os votos dos demais candidatos (7,8% no 1º turno), e é isso que o ruído por UF mede; nas eleições com muitos candidatos de terceira via (2002 e 2018) ele subestimou a incerteza, e em 2026 o risco é menor. Aqui o desvio do total nacional é ${f1(state.sd)} p.p. (no meu modelo é ${f1(D.piso)}, um piso que eu assumi).`;
   curva();
 }
 function curva() {
@@ -143,7 +143,7 @@ function falta() {
     `<b>Pesquisas de 2º turno depois de 4/10</b> (seção 3): é a partir delas que o meu modelo estima o nível, com efeito de instituto e recência.`,
     `<b>O erro do 1º turno entra no viés histórico:</b> as pesquisas finais deram a Lula 2,8 a 4,4 p.p. a mais na disputa a dois (média ≈ 3,5). O viés médio que eu uso hoje é de +${f1(D.vies1)} p.p. no 1º turno e +${f1(D.vies2)} p.p. no 2º (poucas eleições). Ainda não pus isso em <code>datasets/vies-pesquisas.csv</code>, porque mudaria as projeções sem validação.`,
     `<b>Resultado oficial por município e UF:</b> o meu modelo precisa saber onde o voto de Lula caiu, e hoje eu só tenho números por UF para uma parte dos estados.`,
-    `<b>Um 2º turno costuma mudar a composição do eleitorado</b> (abstenção, voto em branco). Eu uso os votos válidos de 2022 como peso dos estados e não simulo mudança de comparecimento; a seção 4 mostra só o que aconteceria com uma abstenção diferencial, como cenário.`].map(t => `<li>${t}</li>`).join("");
+    `<b>Um 2º turno costuma mudar a composição do eleitorado</b> (abstenção, voto em branco). Eu uso os votos de Lula e Flávio no 1º turno de 2026 como peso dos estados e não simulo mudança de comparecimento; a seção 4 mostra só o que aconteceria com uma abstenção diferencial, como cenário.`].map(t => `<li>${t}</li>`).join("");
 }
 // ---------- notas laterais ----------
 function notas() {
