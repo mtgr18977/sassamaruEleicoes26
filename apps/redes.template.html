@@ -15,6 +15,7 @@
   .leg .fav { background:var(--s3) } .leg .neu { background:var(--muted); opacity:.45 } .leg .des { background:#b35c00 }
   .duas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px } @media (max-width:760px) { .duas { grid-template-columns:minmax(0,1fr) } }
   .titc { margin:18px 0 2px; font-size:.95rem }
+  #tAcesso th, #tAcesso td, .txt th, .txt td { text-align:left; vertical-align:top }
 </style>
 </head>
 <body>
@@ -23,7 +24,7 @@
   <div class="topo"><div><h1>Redes sociais: a conversa no Bluesky sobre Lula e Flávio</h1>
   <p class="sub">O que dá para medir com posts públicos do Bluesky no 2º turno, com o debate da Band (18/10, 20h às 22h). <b>Isto não é pesquisa de intenção de voto.</b></p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
   <div class="an">
-  <div class="aviso"><b>Leia antes.</b> O Bluesky não representa o eleitorado. Nos 304 posts que eu li, quem fala de Lula é quase sempre a favor e quem fala de Flávio é quase sempre contra. Por isso eu <b>não</b> mostro um "termômetro de sentimento" nem somo isso às pesquisas. O X e o Instagram ficaram de fora: o X exige um token de API (a chamada sem token foi recusada) e o Instagram não tem busca pública. Os posts vêm da busca pública do Bluesky, em amostras por janela de tempo.</div>
+  <div class="aviso"><b>Leia antes.</b> O Bluesky não representa o eleitorado. Nos 304 posts que eu li, quem fala de Lula é quase sempre a favor e quem fala de Flávio é quase sempre contra. Por isso eu <b>não</b> mostro um "termômetro de sentimento" nem somo isso às pesquisas. As outras redes ficaram de fora porque o acesso aos dados é pago ou fechado (seção 5). Os posts vêm da busca pública do Bluesky, em amostras por janela de tempo.</div>
   <div class="kpis" id="kpis"></div>
 
   <section class="sec"><div>
@@ -60,23 +61,31 @@
   </div><aside class="side" id="nota4"></aside></section>
 
   <section class="sec"><div>
-  <h2>5. O que outros monitoramentos mostraram</h2>
+  <h2>5. As outras redes: por que não medimos</h2>
+  <p>Eu tentei levar a mesma análise para o X, o Threads, o Instagram, o Facebook e o Mastodon. <b>Só o Bluesky deixa qualquer pessoa buscar posts e ver o total por janela, sem pagar e sem pedir autorização.</b> Nas outras, ou o acesso é pago (X) ou passa por ferramentas fechadas que devolvem resumos e amostras pequenas (Meta). A tabela mostra o que cada tentativa devolveu.</p>
+  <div id="tAcesso"></div>
+  <h3 class="titc">Posts que deu para analisar em cada rede</h3>
+  <div id="bAcesso"></div>
+  <p class="fonte">Para o X, o Threads, o Instagram e o Facebook, "0" quer dizer que não consegui contagem nem texto literal confiável; os resumos não foram classificados. Os testes (chamada ao X sem token, hashtags e busca do Mastodon, abertura dos links da Meta) foram feitos por mim em 19/10/2026. <b>Preços e regras de acesso vêm de blogs e reportagens de terceiros, podem ter mudado e não foram conferidos na documentação oficial das empresas.</b> As respostas do Grok e da Meta AI não foram verificadas de forma independente, além de três links da Meta que abri e existem.</p>
+  </div><aside class="side"><h4>O que isso significa</h4><ul><li>Qualquer "termômetro das redes" que não mostre de onde vieram os posts, quantos foram lidos e como foram classificados <b>não dá para auditar</b>.</li><li>As redes maiores controlam o acesso por preço (X) ou por ferramentas fechadas (Meta). O que sobra de aberto é pequeno e tem viés próprio.</li></ul></aside></section>
+
+  <section class="sec"><div>
+  <h2>6. O que outros monitoramentos mostraram</h2>
   <p>Não coletei X, Instagram nem Facebook. Para dar contexto, a tabela resume o que institutos e empresas de monitoramento divulgaram sobre essas redes. <b>Os métodos são outros e os números não se comparam com os do Bluesky nem entre si</b>: uns medem menções, outros engajamento, outros um índice próprio.</p>
-  <table class="t"><thead><tr><th>Quem</th><th>Período</th><th>Redes</th><th>O que mede</th><th>Resultado divulgado</th></tr></thead><tbody>
+  <table class="t txt"><thead><tr><th>Quem</th><th>Período</th><th>Redes</th><th>O que mede</th><th>Resultado divulgado</th></tr></thead><tbody>
   <tr><td style="text-align:left">Palver</td><td>15–16/8</td><td>WhatsApp público, Instagram, X</td><td>Parcela das menções</td><td>Lula: 63% no WhatsApp, 57% no Instagram, 41% no X. Flávio: entre 28% e 30% nas três</td></tr>
   <tr><td>Bites (CNN Brasil)</td><td>jan–jun</td><td>X, Instagram, Facebook</td><td>Interações</td><td>Flávio liderou o engajamento em 21 das 26 semanas; Lula lidera em seguidores (38,9 milhões)</td></tr>
   <tr><td>IR² Nexus</td><td>jan–jul</td><td>Instagram, X, Facebook, YouTube, TikTok</td><td>Índice de relevância (0–100)</td><td>Lula 79,8; Flávio 49,0</td></tr>
   <tr><td>Brandwatch (via Veja)</td><td>1/7–2/9</td><td>Não detalhadas</td><td>Volume de citações</td><td>Lula ≈ 8,7 milhões de citações</td></tr>
   </tbody></table>
-  <p class="fonte"><b>Outras redes, o que eu tentei.</b> <b>X:</b> pedi a um assistente de IA com acesso ao X (Grok) um resumo do debate e depois contagens e uma amostra com links; o resumo apontou o mesmo padrão do Bluesky (muita crítica a Flávio, queixas gerais sobre o nível do debate), mas o assistente respondeu que sua ferramenta devolve no máximo 10 posts por busca e não dá contagens, então não há volume nem amostra. <b>Threads, Instagram e Facebook:</b> o assistente da Meta devolveu 16 posts com link (10 do Threads, 3 do Instagram, 3 do Facebook), selecionados pelos primeiros resultados da busca, sem contagem de volume nem seguidores; é pouco para qualquer proporção e foi classificado pelo próprio assistente. <b>Mastodon.social:</b> testado e descartado: a busca de texto exige login e, nas hashtags públicas, a maior parte dos posts é cópia automática de sites de notícia e poucos estão em português. Nada disso entra nos gráficos.</p>
   <p class="fonte">Valores como foram reportados pela imprensa (Poder360, Money Times, ABC do ABC, Diário do Centro do Mundo, Revista Oeste); não acessei os relatórios originais. Todos são anteriores ao 2º turno e ao debate de 18/10. Mostrar mais menções ou engajamento não significa ter mais apoio: o que se mede é atenção, e atenção inclui crítica.</p>
   </div><aside class="side"><h4>Como ler</h4><ul><li>Bites e Nexus apontam Lula na frente em <b>presença</b> (seguidores, índice) e Flávio na frente em <b>engajamento</b>.</li><li>Atenção não é apoio: menção inclui crítica.</li></ul></aside></section>
 
   <section class="sec"><div>
-  <h2>6. Limites desta análise</h2>
+  <h2>7. Limites desta análise</h2>
   <ul class="fonte" style="font-size:.88rem">
     <li>O Bluesky é uma rede pequena e muito inclinada à esquerda: a ausência de apoio ao Flávio na amostra diz mais sobre a rede que sobre o eleitorado.</li>
-    <li>Só uma rede. O X, o Instagram, o Facebook, o Threads e o Mastodon não entram nos números: o X exige token de API, o Instagram não tem busca pública que dê volume, e as tentativas por assistentes de IA e pelo Mastodon não renderam contagem nem amostra utilizável (seção 5). A seção 5 também resume o que outros monitoramentos divulgaram, sem refazer a conta.</li>
+    <li>Só uma rede. O X, o Threads, o Instagram, o Facebook e o Mastodon não entram nos números: a seção 5 mostra o que cada tentativa devolveu e por que não dá para medir.</li>
     <li>A coleta pega os posts mais recentes de cada janela, não todos; o volume vem do total que a busca informa, que pode ser aproximado. Algumas janelas falharam e foram refeitas; a última (19/10) é parcial.</li>
     <li>Um mesmo autor, ou uma campanha organizada, pode inflar o volume: por isso a amostra de posição tira textos repetidos e limita 3 posts por autor por dia.</li>
     <li>Os rótulos da amostra são de uma só leitora (eu, Claude), sem validação por outra pessoa. Com 76 posts por grupo, o intervalo de confiança é de uns 10 p.p. para cada lado.</li>
@@ -154,6 +163,19 @@ function hashtags() {
   $("hashTxt").innerHTML = `${f1(c.texto_repetido_pct)}% dos posts coletados repetem o texto de outro (cópia de mensagem), e ${N(c.textos_repetidos_5x)} mensagens aparecem 5 vezes ou mais, somando ${N(c.posts_em_textos_repetidos_5x)} posts (${f1(100 * c.posts_em_textos_repetidos_5x / c.posts)}%). ${c.autores_10mais_posts} autores com 10 posts ou mais respondem por ${f1(c.posts_dos_autores_10mais_pct)}% do total. Depois do debate, as hashtags mais usadas são de mobilização em torno do debate e de pedidos para o Flávio abrir o sigilo bancário.`;
 }
 
+function acesso() {
+  const c = D.corpus, A = D.amostra_rotulada;
+  const L = [
+    ["Bluesky", "API pública de busca, sem login.", `Total de posts por janela (6 h; 1 h no debate) e o texto de ${N(c.posts)} posts.`, "Nada: o limite é só o ritmo das chamadas.", "<code>coletar_redes.py</code>: aberto e refazível."],
+    ["X", "Chamada à API sem token. Pedi ao Grok um resumo do debate e depois contagens e uma amostra com links.", "Recusa (401). O Grok deu um resumo qualitativo sem números e disse que sua ferramenta devolve até 10 posts por busca, sem contagens.", "API paga por uso (cerca de US$ 0,005 por post lido). Planos mensais fechados a novos desenvolvedores. Acesso de pesquisador pelo DSA sem concessão confirmada.", "Token pago (≈ US$ 50 por 10 mil posts, estimativa) ou CSV de ferramenta de monitoramento."],
+    ["Threads, Instagram, Facebook", "Dois pedidos ao assistente da Meta, com texto literal e sem classificação.", "17 posts (14 de Flávio e 3 de Lula; 3 fora da janela), quase todos como <b>resumo escrito pela IA</b>. Sem volume e sem seguidores.", "O assistente só devolve amostra e resumo. A API do Threads para posts de terceiros e a busca por hashtag do Instagram exigem revisão de app e conta profissional.", "Meta Content Library, só para pesquisadores credenciados (semanas)."],
+    ["Mastodon", "Hashtags públicas e busca de texto na mastodon.social.", "200 posts por hashtag. Em #flaviobolsonaro, 24 estavam em português e 124 eram cópia automática de sites de notícia. A busca de texto voltou vazia sem login.", "Sem busca de texto sem login e sem total por janela. Poucos brasileiros.", "Só hashtags: descartado."]];
+  tab("tAcesso", ["Rede", "O que tentei", "O que veio", "O que trava", "Caminho aberto"], L.map(r => r.map((x, i) => i ? x : `<b>${x}</b>`)));
+  const B = [["Bluesky: posts lidos", c.posts], ["Bluesky: posts classificados por mim", A], ["Meta (Threads, Instagram, Facebook): posts em resumo", 17], ["X: posts com texto e contagem", 0], ["Mastodon: posts analisados", 0]];
+  const mx = Math.max(...B.map(b => b[1]));
+  $("bAcesso").innerHTML = B.map(b => `<div class="barra"><div>${b[0]}</div><div><div style="height:22px;border-radius:5px;background:${b[1] > 20 ? "var(--s3)" : "var(--muted)"};width:${Math.max(0.6, 100 * b[1] / mx)}%"></div><small>${N(b[1])}</small></div></div>`).join("");
+}
+
 function notas() {
   const c = D.corpus, pl = maxX("lula"), pf = maxX("flavio");
   nota("nota1", [`${N(c.posts)} posts coletados de ${c.de} a ${c.ate}.`, `Lula: pico de <b>×${f1(pl.lula_x)}</b> às ${pl.h.split(" ")[1]}.`, `Flávio: pico de <b>×${f1(pf.flavio_x)}</b> às ${pf.h.split(" ")[1]}.`]);
@@ -161,7 +183,7 @@ function notas() {
   nota("nota3", [`Modelos prontos: <b>${f1(100 * Math.min(...D.avaliacao.modelos.filter(m => /multilíngue|tweets|NLI/.test(m.nome)).map(m => m.acuracia)))}% a ${f1(100 * Math.max(...D.avaliacao.modelos.filter(m => /multilíngue|tweets|NLI/.test(m.nome)).map(m => m.acuracia)))}%</b> de acerto.`, `Linha de base trivial: <b>${f1(100 * D.avaliacao.modelos[0].acuracia)}%</b>.`]);
   nota("nota4", [`${f1(c.texto_repetido_pct)}% dos posts são texto repetido.`, `Mobilização organizada aparece nas hashtags dos dois lados.`]);
 }
-function tudo() { kpis(); volume(); debate(); posicao(); modelos(); hashtags(); notas(); }
+function tudo() { kpis(); volume(); debate(); posicao(); modelos(); hashtags(); acesso(); notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
