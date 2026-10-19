@@ -225,3 +225,6 @@ docs/*.pdf
 
 # pesquisas candidatas, ainda nao conferidas (buscar_pesquisas.py)
 datasets/candidatas.csv
+
+# cache local de posts do Bluesky (so agregados vao para o git)
+datasets/redes/bluesky-bruto.jsonl
