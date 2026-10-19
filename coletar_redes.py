@@ -17,8 +17,8 @@ API = "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts"
 BRT = timezone(timedelta(hours=-3))
 SAIDA = Path("datasets/redes/bluesky-bruto.jsonl")
 VOLUME = Path("datasets/redes/bluesky-volume.csv")      # agregado (vai para o git): total de posts que a busca informa em cada janela e termo
-TERMOS = {"lula": ["Lula"], "flavio": ["Flávio Bolsonaro", "Flavio Bolsonaro", "Flávio"]}
-MAX_PAG = 3          # páginas de 100 posts por (termo, janela)
+TERMOS = {"lula": ["Lula"], "flavio": ["Flávio Bolsonaro"]}
+MAX_PAG = 1          # páginas de 100 posts por (termo, janela); a busca também informa o total (hitsTotal) de cada janela
 DEBATE = (datetime(2026, 10, 18, 20, tzinfo=BRT), datetime(2026, 10, 18, 22, tzinfo=BRT))
 
 
@@ -32,7 +32,7 @@ def janelas(agora):
         t = fim
     t = DEBATE[0] - timedelta(hours=1)
     while t < min(DEBATE[1] + timedelta(hours=6), agora):
-        out.append((t, min(t + timedelta(hours=1), agora), 5))
+        out.append((t, min(t + timedelta(hours=1), agora), 2))
         t += timedelta(hours=1)
     return sorted(out)
 
@@ -43,11 +43,11 @@ def buscar(q, ini, fim, cursor=None):
     if cursor:
         p["cursor"] = cursor
     req = urllib.request.Request(API + "?" + urllib.parse.urlencode(p), headers={"User-Agent": "eleicoes-dashboard-pesquisa/1.0"})
-    for tentativa in range(5):
+    for tentativa in range(4):
         try:
-            return json.load(urllib.request.urlopen(req, timeout=40))
-        except Exception as e:                      # 403/429/5xx e quedas do túnel: espera um pouco mais a cada tentativa
-            time.sleep(3 * (tentativa + 1))
+            return json.load(urllib.request.urlopen(req, timeout=25))
+        except Exception as e:                      # 403/429/5xx e quedas do túnel (intermitentes nesta rede): espera um pouco mais a cada tentativa
+            time.sleep(2 + tentativa)
             err = e
     print("falhou:", q, ini, err, file=sys.stderr)
     return {"posts": []}
@@ -95,7 +95,7 @@ def main():
                         elif cand not in vistos[d["id"]]["busca"]:
                             vistos[d["id"]]["busca"] += "," + cand
                     cursor = r.get("cursor")
-                    time.sleep(0.8)
+                    time.sleep(0.5)
                     if not cursor:
                         break
         print(ini.strftime("%d/%m %Hh"), "->", len(vistos), "posts", flush=True)
