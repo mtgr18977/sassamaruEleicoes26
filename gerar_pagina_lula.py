@@ -85,7 +85,9 @@ _r = pd.read_csv(D + "resultado-2026-turno1.csv").query("uf == 'BR'").iloc[0]
 out["r1t_s"] = round(100 * float(_r.lula) / (float(_r.lula) + float(_r.flavio)), 2)   # Lula/(Lula+Flávio) no 1º turno realizado
 out["p2022_2t"] = round(100 * P2022[2], 2)
 from pesquisas import evolucao
-out["evolucao"] = evolucao(sorted({*pd.date_range("2026-08-20", "2026-10-09", freq="7D").strftime("%Y-%m-%d"), "2026-10-02", "2026-10-09", "2026-10-12"}))
+from pesquisas import HOJE
+out["evolucao"] = evolucao(sorted({*pd.date_range("2026-08-20", "2026-10-09", freq="7D").strftime("%Y-%m-%d"), "2026-10-02", "2026-10-09",
+                                   *pd.date_range("2026-10-12", HOJE, freq="3D").strftime("%Y-%m-%d"), str(HOJE.date())}))   # semanal até 9/10; depois a cada 3 dias e na data de referência
 out["valreg"] = validar_regioes.comparar()
 out["modelo"] = json.load(open("modelos/parametros.json"))
 import agregador
