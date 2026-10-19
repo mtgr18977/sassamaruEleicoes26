@@ -52,7 +52,20 @@
   <div id="tPesq"></div>
   </div><aside class="side" id="nota3"></aside></section>
   <section class="sec"><div>
-  <h2>4. O que falta para eu recalibrar</h2>
+  <h2>4. E se a abstenção cair só de um lado?</h2>
+  <p id="absTxt"></p>
+  <h3 class="titc">Onde estão os 2º turnos de governador de 2026</h3>
+  <div id="tAbsComp"></div>
+  <h3 class="titc">O que a história mostra (2018 e 2022)</h3>
+  <p id="absHist"></p>
+  <div id="tAbsHist"></div>
+  <h3 class="titc">O que cada nível de abstenção extra muda</h3>
+  <div id="tAbsCen"></div>
+  <p id="absQuebra"></p>
+  <p class="fonte">Base: o 2º turno de 2022 por UF (aptos, votos de Lula e de Bolsonaro). "Abstenção extra" é em pontos percentuais dos aptos das 20 UFs sem 2º turno de governador; "dos dois lados" tira os ausentes na proporção do voto local, e "só do lado do Flávio" tira todos dos votos dele. Supõe que o resto do país não muda. A lista de UFs de 2026 é da Agência Brasil (as fontes divergem entre 5 e 7 UFs); as de 2018 e 2022 vêm de matérias. Veja também <code>modelos/abstencao-2t.json</code> e o cenário "abstenção" em <code>sensibilidade_2t.py</code>.</p>
+  </div><aside class="side" id="nota4"></aside></section>
+  <section class="sec"><div>
+  <h2>5. O que falta para eu recalibrar</h2>
   <ul id="falta" style="font-size:.9rem"></ul>
   </div></section>
   </div>
@@ -114,12 +127,23 @@ function pesqs() {
   $("tPesq").innerHTML = D.pesq.length ? "" : `<p>Eu não registrei nenhuma pesquisa ainda. Para acrescentar, ponho uma linha em <code>datasets/pesquisas-2turno-pos-1t-2026.csv</code> por pesquisa (instituto, datas de campo, base, Lula, Flávio, registro no TSE), <b>conferida na fonte</b>, e rodo <code>python atualizar.py</code>. A página passa a mostrar a tabela e a usar a média simples como ponto de partida.`;
   if (D.pesq.length) tabela("tPesq", ["Instituto", "Campo até", "Base", "Lula", "Flávio", "Lula/(L+F)", "Registro"], D.pesq.map(x => [x.inst, x.campo, x.base, f1(x.L), f1(x.F), f2(x.s), x.registro || "–"]));
 }
+const ppp = (x) => (x > 0 ? "+" : x < 0 ? "−" : "") + f2(Math.abs(x));
+function abstencao() {
+  const A2 = D.abst, c = A2.composicao, com = c.find(g => g.grupo.startsWith("com ")), sem = c.find(g => g.grupo.startsWith("sem ")), h = A2.historico, q = A2.quebra;
+  $("absTxt").innerHTML = `Uma hipótese que eu ouvi: nos estados em que só há eleição presidencial no 2º turno, e com o clima atual, muita gente não vai votar. Eu testei com os dados do TSE. Só <b>${com.ufs} UFs</b> têm 2º turno de governador em 2026 (${A2.ufs_2026_com_gov2.join(", ")}), com ${f1(com.aptos_pct)}% dos eleitores; nas outras ${sem.ufs} UFs (${f1(sem.aptos_pct)}% dos eleitores) só se vota para presidente. Isso vale <b>para os dois lados</b>: ${f1(sem.lula_pct)}% dos votos de Lula e ${f1(sem.bolsonaro_pct)}% dos de Bolsonaro em 2022 estavam nessas UFs. E as UFs com 2º turno de governador são mais à direita (Flávio teria ${f1(com.bolsonaro_validos_pct)}% dos válidos nelas, contra ${f1(sem.bolsonaro_validos_pct)}% nas outras).`;
+  tab("tAbsComp", ["Grupo de UFs", "UFs", "Eleitores aptos", "Votos de Lula em 2022", "Votos de Bolsonaro em 2022", "Bolsonaro nos válidos (L+B)"], c.map(g => [g.grupo, g.ufs, f1(g.aptos_pct) + "%", f1(g.lula_pct) + "%", f1(g.bolsonaro_pct) + "%", f1(g.bolsonaro_validos_pct) + "%"]));
+  $("absHist").innerHTML = `Nas UFs com 2º turno de governador, a abstenção subiu menos do 1º para o 2º turno presidencial. Juntando 2018 e 2022 (${h.n} UFs, com efeito fixo de ano e controlando o voto bolsonarista), o efeito é de <b>${ppp(h.efeito_gov2)} p.p. (± ${f2(h.efeito_ic)})</b>: o sinal bate com a hipótese, mas o intervalo inclui zero. O grau de bolsonarismo da UF quase não explica a variação da abstenção (${f2(h.coef_bolsonarismo)} p.p. por ponto, ± ${f2(h.coef_ic)}).`;
+  tab("tAbsHist", ["Ano", "Abstenção nacional, 1º turno", "Abstenção nacional, 2º turno", "Variação nas UFs com 2º turno de governador", "Variação nas UFs sem"], h.por_ano.map(a => [String(a.ano), f1(a.abst1) + "%", f1(a.abst2) + "%", `${ppp(a.dabst_com)} p.p. (${a.n_com} UFs)`, `${ppp(a.dabst_sem)} p.p. (${a.n_sem} UFs)`]));
+  tab("tAbsCen", ["Abstenção extra nas UFs sem 2º turno de governador", "Eleitores", "% dos votos do Flávio nessas UFs", "Efeito em Lula/(L+F), ausentes dos dois lados", "Efeito em Lula/(L+F), só do lado do Flávio"],
+    A2.cenarios.map(x => [`${f1(x.delta)} p.p. dos aptos`, `${f2(x.eleitores_mi)} mi`, f1(x.pct_votos_flavio) + "%", `${ppp(x.proporcional)} p.p.`, `<b>${ppp(x.so_flavio)} p.p.</b>`]));
+  $("absQuebra").innerHTML = `Se os ausentes saem dos dois lados na mesma proporção, o efeito é irrelevante. O que importa é a abstenção <b>só do lado do Flávio</b>: ${q.map(x => `${x.alvo.charAt(0).toLowerCase() + x.alvo.slice(1)} pede ${f1(x.delta)} p.p. dos aptos, ${f1(x.eleitores_mi)} mi de eleitores, ${f1(x.pct_votos_flavio)}% dos votos dele nessas UFs`).join("; ")}. A abstenção nacional variou +1,0 p.p. em 2018 e −0,4 p.p. em 2022 do 1º para o 2º turno. Tratar isso como cenário de risco para Lula, não como estimativa.`;
+}
 function falta() {
   $("falta").innerHTML = [
     `<b>Pesquisas de 2º turno depois de 4/10</b> (seção 3): é a partir delas que o meu modelo estima o nível, com efeito de instituto e recência.`,
     `<b>O erro do 1º turno entra no viés histórico:</b> as pesquisas finais deram a Lula 2,8 a 4,4 p.p. a mais na disputa a dois (média ≈ 3,5). O viés médio que eu uso hoje é de +${f1(D.vies1)} p.p. no 1º turno e +${f1(D.vies2)} p.p. no 2º (poucas eleições). Ainda não pus isso em <code>datasets/vies-pesquisas.csv</code>, porque mudaria as projeções sem validação.`,
     `<b>Resultado oficial por município e UF:</b> o meu modelo precisa saber onde o voto de Lula caiu, e hoje eu só tenho números por UF para uma parte dos estados.`,
-    `<b>Um 2º turno costuma mudar a composição do eleitorado</b> (abstenção, voto em branco). Eu uso os votos válidos de 2022 como peso dos estados e não simulo mudança de comparecimento.`].map(t => `<li>${t}</li>`).join("");
+    `<b>Um 2º turno costuma mudar a composição do eleitorado</b> (abstenção, voto em branco). Eu uso os votos válidos de 2022 como peso dos estados e não simulo mudança de comparecimento; a seção 4 mostra só o que aconteceria com uma abstenção diferencial, como cenário.`].map(t => `<li>${t}</li>`).join("");
 }
 // ---------- notas laterais ----------
 function notas() {
@@ -131,13 +155,18 @@ function notas() {
     `Pesquisas anteriores a 4/10 não entram: são de antes do resultado.`,
     `Só entra pesquisa conferida na fonte (registro no TSE ou relatório do instituto).`]);
 }
+function notaAbs() {
+  const A2 = D.abst, q = A2.quebra[1], c1 = A2.cenarios.find(x => x.delta === 1);
+  nota("nota4", [`<b>${f1(A2.composicao.find(g => g.grupo.startsWith("sem ")).aptos_pct)}%</b> dos eleitores só votam para presidente, nos dois lados.`, `Efeito histórico de ter 2º turno de governador: <b>${ppp(A2.historico.efeito_gov2)} p.p.</b> na abstenção (± ${f2(A2.historico.efeito_ic)}).`,
+    `1 p.p. de abstenção extra só do lado do Flávio: <b>${ppp(c1.so_flavio)} p.p.</b> em Lula/(L+F).`, `Para Lula chegar a 50%: <b>${f1(q.delta)} p.p.</b> dos aptos, só do lado do Flávio.`]);
+}
 function notaSim(r, ch) {
   nota("nota2", [`Com Lula em <b>${f1(state.s)}%</b>, a chance de vitória dele é de <b>${f1(100 * r.p_nac_gt50)}%</b>.`,
     `<b>${ch.length}</b> estado(s)-chave (chance de Lula entre 25% e 75%).`,
     `Cada 1 p.p. na disputa vale ≈ ${f1(R.validos / 1e8)} mi de votos.`,
     `É um cenário, <b>não uma previsão</b>: o total nacional é uma escolha sua.`]);
 }
-function tudo() { topo(); ancoras(); simulador(); pesqs(); falta();  notas(); }
+function tudo() { topo(); ancoras(); simulador(); pesqs(); abstencao(); falta();  notas(); notaAbs(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 $("slS").oninput = () => { state.s = +$("slS").value; clearTimeout(state.t); state.t = setTimeout(simulador, 120); $("vS").textContent = f1(state.s) + "%"; };
 $("slSd").oninput = () => { state.sd = +$("slSd").value; clearTimeout(state.t); state.t = setTimeout(simulador, 120); $("vSd").textContent = f1(state.sd) + " p.p."; };

@@ -34,6 +34,7 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `gerar_pagina_redes.py` | Gera `redes.html` (aba Redes sociais) só a partir do agregado |
 | `gerar_pagina_modelo.py` | Gera `analise-modelo.html` (aba Análise do modelo): reúne as previsões congeladas de 2/10 (projeção do presidente, modelo do governador, bancada) e os resultados preliminares de `datasets/resultado-2026-*.csv`; faixas, erros, pesquisas finais e a previsão atual do 2º turno (a preencher em 25/10) |
 | `gerar_pagina_lula.py` | Gera `index.html` (dados embutidos) a partir de `apps/lula.template.html` |
+| `abstencao_2t.py` | Cenário de abstenção diferencial no 2º turno: onde estão os 2º turnos de governador de 2026, efeito histórico (2018 e 2022) na variação da abstenção e o que cada nível de abstenção extra, só do lado do Flávio ou dos dois lados, muda em Lula/(Lula+Flávio); grava `modelos/abstencao-2t.json` (alimenta a seção 4 de `segundo-turno.html` e `sensibilidade_2t.py`) |
 | `sensibilidade_2t.py` | Sensibilidade da projeção do 2º turno à confiança em cada instituto (correção e peso pelo erro do 1º turno, só Palver/Gerp, só pós-1º turno, sem um instituto de cada vez); grava `modelos/sensibilidade-2t.csv`, não altera o modelo |
 | `validar_regioes.py` | Compara a distribuição regional do modelo com o cruzamento por região da Datafolha (22–23/9) |
 | `fetch_tse_rs.py`, `regioes_rs.py`, `rs_dados.py` | ETL do governador do RS (zips do TSE já baixados), mapa município → mesorregião do IBGE (rede) e blocos/unidades |
