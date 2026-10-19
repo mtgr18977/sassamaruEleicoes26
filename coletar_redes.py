@@ -82,6 +82,8 @@ def main():
     for ini, fim, mp in janelas(agora):
         for cand, qs in TERMOS.items():
             for q in qs:
+                if (ini.isoformat(), fim.isoformat(), cand, q) in volume:       # já coletada com sucesso: só refaz o que falhou
+                    continue
                 cursor = None
                 for _ in range(mp):
                     r = buscar(q, ini, fim, cursor)
