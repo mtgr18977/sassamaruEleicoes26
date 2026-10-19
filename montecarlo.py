@@ -55,9 +55,9 @@ def simular(unid, p_nac, sd_nac, sd_reg, sd_uf):
 
 def main():
     par = json.load(open("modelos/parametros.json"))
-    nac = pd.read_csv(D + "tse-presidente-nacional.csv").set_index(["ano", "turno"])
-    uf = pd.read_csv(D + "tse-presidente-uf.csv")
-    cap = pd.read_csv(D + "tse-presidente-capitais.csv")
+    nac = pd.read_csv(D + "tse-presidente-nacional.csv").query("ano <= 2022").set_index(["ano", "turno"])
+    uf = pd.read_csv(D + "tse-presidente-uf.csv").query("ano <= 2022")
+    cap = pd.read_csv(D + "tse-presidente-capitais.csv").query("ano <= 2022")
     pd.options.display.float_format = "{:.1f}".format
     mc = {}
     for turno in (1, 2):

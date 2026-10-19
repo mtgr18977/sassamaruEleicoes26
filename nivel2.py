@@ -75,8 +75,8 @@ def rodar(df, nac, turno, modo):
 
 if __name__ == "__main__":
     from backtest import backtest
-    nac = pd.read_csv(D + "tse-presidente-nacional.csv").set_index(["ano", "turno"])
-    uf = pd.read_csv(D + "tse-presidente-uf.csv")
+    nac = pd.read_csv(D + "tse-presidente-nacional.csv").query("ano <= 2022").set_index(["ano", "turno"])
+    uf = pd.read_csv(D + "tse-presidente-uf.csv").query("ano <= 2022")
     uf = uf[~uf.uf.isin(["ZZ", "VT"])]
     base, _ = backtest(uf, "uf")
     base = base.pivot_table(index=["turno", "ano"], columns="modelo", values="MAE_pp")

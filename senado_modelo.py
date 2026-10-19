@@ -22,7 +22,7 @@ sg = lambda z: 1 / (1 + np.exp(-z))
 
 def painel():
     """UF × eleição: n vagas, D eleitos da Direita, x (parcela anti-PT entre PT e anti-PT no 1º turno presidencial da UF)."""
-    pres = pd.read_csv(D + "tse-presidente-uf.csv").query("turno == 1")
+    pres = pd.read_csv(D + "tse-presidente-uf.csv").query("turno == 1 and ano <= 2022")
     pres = pres.assign(x=pres.pct_antipt_validos / (pres.pct_antipt_validos + pres.pct_pt_validos))
     proj = pd.read_csv("modelos/previsao-uf-turno1.csv").set_index("uf")
     out = {}

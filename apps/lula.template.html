@@ -11,7 +11,7 @@
   <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
   <div class="topo"><div class="semnota"><h1>Eleições Dashboard 2026</h1>
   <p class="sub">Chances na corrida de 2026, o histórico do Lula (2002–2026, com o 1º turno de 2026) por região e capital, pesquisas contra resultado real e um simulador interativo.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
-  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (resultado preliminar); 2º turno em 25/10. As <b>chances do topo agora são só do 2º turno</b>, recalibradas com as pesquisas feitas depois do 1º turno (até 12/10); a projeção e o simulador do 1º turno seguem congelados em 2/10 para comparar com o resultado. Veja a aba <a href="analise.html">Análise</a>.</div>
+  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (arquivo oficial do TSE); 2º turno em 25/10. As <b>chances do topo agora são só do 2º turno</b>, recalibradas com as pesquisas feitas depois do 1º turno (a data da última está no card); a projeção e o simulador do 1º turno seguem congelados em 2/10 para comparar com o resultado. Veja a aba <a href="analise.html">Análise</a>.</div>
   <div class="sec"><div class="mainc">
   <section class="card hero" id="hero">
     <div class="filtros" style="justify-content:space-between;margin:0 0 6px">
@@ -251,7 +251,7 @@ function pesq26() {
   const paleta = ["--s1","--s2","--s3","--s4","--s5","--s7"], formas = ["circle","rect","triangle","rectRot"];
   const cor = (i) => paleta[INST.indexOf(i) % paleta.length], forma = (i) => formas[Math.floor(INST.indexOf(i) / paleta.length) % formas.length];
   const pts = (inst, k) => D.pesq26.filter(p => p.inst === inst && p[k] != null).map(p => ({ x:Date.parse(p.data), y:p[k] }));
-  const fim = { s1: "2026-10-05", s2: "2026-10-26" };
+  const fim = { s1: "2026-10-07", s2: "2026-10-26" };
   const mk = (k, id) => chart(id, { type:"line", data:{ datasets: INST.filter(i => pts(i, k).length).map(i => ({ label:INSTNOME[i] || i, data:pts(i, k), borderColor:css(cor(i)), backgroundColor:css(cor(i)), borderWidth:2, pointRadius:3.5, pointStyle:forma(i), tension:0 }))
       .concat(k === "s1" ? [{ label:"Resultado (4/10)", data:[{x:Date.parse("2026-10-04"),y:D.r1t_s}], borderColor:css("--ink"), backgroundColor:css("--ink"), pointRadius:7, pointStyle:"star", showLine:false }] : [])
       .concat([{ label:"50%", data:[{x:Date.parse("2026-06-20"),y:50},{x:Date.parse(fim[k]),y:50}], borderColor:css("--muted"), borderDash:[3,4], borderWidth:1, pointRadius:0 }]) },

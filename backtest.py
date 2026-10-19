@@ -25,7 +25,7 @@ def swing_uniforme(prev, p_real_nac, w):
 
 
 def backtest(df, chave):
-    nac = pd.read_csv(D + "tse-presidente-nacional.csv").set_index(["ano", "turno"])
+    nac = pd.read_csv(D + "tse-presidente-nacional.csv").query("ano <= 2022").set_index(["ano", "turno"])
     anos = sorted(df.ano.unique())
     linhas, det = [], []
     for turno in (1, 2):
@@ -48,9 +48,9 @@ def backtest(df, chave):
 
 
 if __name__ == "__main__":
-    uf = pd.read_csv(D + "tse-presidente-uf.csv")
+    uf = pd.read_csv(D + "tse-presidente-uf.csv").query("ano <= 2022")
     uf = uf[~uf.uf.isin(["ZZ", "VT"])]
-    cap = pd.read_csv(D + "tse-presidente-capitais.csv")
+    cap = pd.read_csv(D + "tse-presidente-capitais.csv").query("ano <= 2022")
     pd.options.display.float_format = "{:.2f}".format
     for nome, df, ch in (("UF", uf, "uf"), ("Capitais", cap, "uf")):
         r, _ = backtest(df, ch)

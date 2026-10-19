@@ -77,7 +77,7 @@ if __name__ == "__main__":
     sv, _ = vies_rmse(1)
     s_nac, sd_s, _, _ = estimar(d, "p1s", hoje=HOJE, sd_vies=sv)
     q_nac, sd_q, _, _ = estimar(d, "q", hoje=HOJE, sd_vies=SD_VIES_HIST)       # ponytail: viés da terceira via não medido (2 p.p. assumidos)
-    uf = pd.read_csv(D + "tse-presidente-uf.csv")
+    uf = pd.read_csv(D + "tse-presidente-uf.csv").query("ano <= 2022")
     rs, qs = ruido(uf.assign(num=uf.votos_pt, den=uf.votos_pt + uf.votos_antipt), "num", "den"), \
         ruido(uf.assign(num=uf.votos_pt + uf.votos_antipt), "num", "validos")
     u = uf[(uf.ano == 2022) & (uf.turno == 1) & (uf.uf != "VT")].reset_index(drop=True)

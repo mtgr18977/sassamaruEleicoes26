@@ -78,6 +78,7 @@ OFICIAL_PT = {
     (2014, 1): 41.59, (2014, 2): 51.64,
     (2018, 1): 29.28, (2018, 2): 44.87,
     (2022, 1): 48.43, (2022, 2): 50.90,
+    (2026, 1): 45.16,   # resultado preliminar de imprensa (Wikipedia/O Tempo), mesmos votos do TSE
 }
 TOLERANCIA_PP = 0.15
 
