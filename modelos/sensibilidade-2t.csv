@@ -1,23 +1,23 @@
 cenario,s2,lo,hi,chance_lula,n_pesquisas,delta_s2,delta_chance
-Base (o que o site usa hoje),47.98,43.9,52.1,21.0,36,0.0,0.0
-Cada instituto − metade do erro do 1º turno,47.35,43.3,51.5,14.5,36,-0.63,-6.5
-Cada instituto − erro inteiro do 1º turno,46.72,42.6,50.8,9.6,36,-1.26,-11.4
-"Peso pela acurácia no 1º turno, 1/(erro²+1²)",48.55,44.5,52.7,28.0,36,0.57,7.0
-"Só Palver (média ponderada, sd do modelo)",49.49,45.4,53.6,42.0,1,1.51,21.0
-"Só Gerp (média ponderada, sd do modelo)",45.36,41.3,49.5,3.2,1,-2.62,-17.8
-"Só Palver + Gerp (média ponderada, sd do modelo)",48.22,44.1,52.3,23.8,2,0.24,2.8
-"Só pós-1º turno (5/10 em diante), com tendência linear",50.34,46.2,54.4,55.3,12,2.36,34.3
-"Só pós-1º turno (5/10 em diante), média sem tendência",48.56,44.5,52.7,28.2,12,0.58,7.2
-"Abstenção só do lado do Flávio, 1 p.p. dos aptos nas UFs sem 2º turno de governador",48.55,44.5,52.7,28.1,0,0.57,7.1
-"Abstenção só do lado do Flávio, 2 p.p. dos aptos nas UFs sem 2º turno de governador",49.13,45.0,53.2,36.5,0,1.15,15.5
-"Abstenção só do lado do Flávio, 3 p.p. dos aptos nas UFs sem 2º turno de governador",49.73,45.6,53.8,45.7,0,1.75,24.7
-Sem AtlasIntel,48.27,44.2,52.4,24.4,30,0.29,3.4
-Sem Datafolha,48.08,44.0,52.2,22.1,26,0.1,1.1
-Sem Futura Inteligência,48.01,43.9,52.1,21.4,35,0.03,0.4
-Sem Gerp,48.32,44.2,52.4,25.1,35,0.34,4.1
-Sem Nexus/BTG,47.98,43.9,52.1,20.9,35,0.0,-0.1
-Sem Palver,47.85,43.8,52.0,19.5,35,-0.13,-1.5
-Sem PoderData,47.7,43.6,51.8,17.9,33,-0.28,-3.1
-Sem Quaest,47.89,43.8,52.0,19.9,29,-0.09,-1.1
-Sem RealTimeBigData,48.01,43.9,52.1,21.3,33,0.03,0.3
-Sem Vox Brasil,47.82,43.7,51.9,19.1,33,-0.16,-1.9
+Base (o que o site usa hoje),48.1,44.0,52.2,22.4,38,0.0,0.0
+Cada instituto − metade do erro do 1º turno,47.47,43.4,51.6,15.6,38,-0.63,-6.8
+Cada instituto − erro inteiro do 1º turno,46.84,42.8,51.0,10.4,38,-1.26,-12.0
+"Peso pela acurácia no 1º turno, 1/(erro²+1²)",48.46,44.4,52.6,26.9,38,0.36,4.5
+"Só Palver (média ponderada, sd do modelo)",49.49,45.4,53.6,42.0,1,1.39,19.6
+"Só Gerp (média ponderada, sd do modelo)",45.36,41.3,49.5,3.2,1,-2.74,-19.2
+"Só Palver + Gerp (média ponderada, sd do modelo)",48.22,44.1,52.3,23.8,2,0.12,1.4
+"Só pós-1º turno (5/10 em diante), com tendência linear",49.68,45.6,53.8,45.0,14,1.58,22.6
+"Só pós-1º turno (5/10 em diante), média sem tendência",48.59,44.5,52.7,28.7,14,0.49,6.3
+"Abstenção só do lado do Flávio, 1 p.p. dos aptos nas UFs sem 2º turno de governador",48.67,44.6,52.8,29.8,0,0.57,7.4
+"Abstenção só do lado do Flávio, 2 p.p. dos aptos nas UFs sem 2º turno de governador",49.25,45.1,53.4,38.3,0,1.15,15.9
+"Abstenção só do lado do Flávio, 3 p.p. dos aptos nas UFs sem 2º turno de governador",49.85,45.7,54.0,47.6,0,1.75,25.2
+Sem AtlasIntel,48.08,44.0,52.2,22.1,31,-0.02,-0.3
+Sem Datafolha,48.22,44.1,52.3,23.9,28,0.12,1.5
+Sem Futura Inteligência,48.14,44.1,52.3,22.9,37,0.04,0.5
+Sem Gerp,48.45,44.4,52.6,26.8,37,0.35,4.4
+Sem Nexus/BTG,48.11,44.0,52.2,22.5,37,0.01,0.1
+Sem Palver,47.99,43.9,52.1,21.1,37,-0.11,-1.3
+Sem PoderData,47.92,43.8,52.0,20.3,34,-0.18,-2.1
+Sem Quaest,48.07,44.0,52.2,22.1,31,-0.03,-0.3
+Sem RealTimeBigData,48.11,44.0,52.2,22.5,35,0.01,0.1
+Sem Vox Brasil,47.95,43.9,52.1,20.6,35,-0.15,-1.8
