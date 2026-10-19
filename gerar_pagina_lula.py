@@ -1,5 +1,5 @@
 """Gera index.html (raiz, servida pelo Netlify) (autocontida, dados embutidos) a partir dos CSVs.
-Lula = 2002, 2006, 2022. Eleições sem Lula na urna (2010/2014 Dilma, 2018 Haddad) ficam como pontos de contexto."""
+Lula = 2002, 2006, 2022 e 2026 (só o 1º turno, que o TSE já publicou; o 2º turno é em 25/10). Eleições sem Lula na urna (2010/2014 Dilma, 2018 Haddad) ficam como pontos de contexto."""
 import json
 
 import nav
@@ -8,8 +8,9 @@ import pandas as pd
 from nivel2 import REGIAO
 
 D = "datasets/"
-CAND = {2002: "Lula", 2006: "Lula", 2010: "Dilma", 2014: "Dilma", 2018: "Haddad", 2022: "Lula"}
-RIVAL = {2002: "Serra", 2006: "Alckmin", 2010: "Serra", 2014: "Aécio", 2018: "Bolsonaro", 2022: "Bolsonaro"}
+CAND = {2002: "Lula", 2006: "Lula", 2010: "Dilma", 2014: "Dilma", 2018: "Haddad", 2022: "Lula", 2026: "Lula"}
+COM_LULA = (2002, 2006, 2022, 2026)
+RIVAL = {2002: "Serra", 2006: "Alckmin", 2010: "Serra", 2014: "Aécio", 2018: "Bolsonaro", 2022: "Bolsonaro", 2026: "Flávio"}
 r1 = lambda x: None if pd.isna(x) else round(float(x), 2)
 
 nac = pd.read_csv(D + "tse-presidente-nacional.csv")
@@ -21,23 +22,28 @@ cap = pd.read_csv(D + "tse-presidente-capitais.csv")
 
 out = {"cand": CAND, "rival": RIVAL}
 out["nac"] = [dict(ano=int(r.ano), turno=int(r.turno), pt=r1(r.pct_pt_validos), anti=r1(r.pct_antipt_validos),
-                   votos=int(r.votos_pt), cand=CAND[r.ano], rival=RIVAL[r.ano], lula=bool(r.ano in (2002, 2006, 2022)))
+                   votos=int(r.votos_pt), cand=CAND[r.ano], rival=RIVAL[r.ano], lula=bool(r.ano in COM_LULA))
               for r in nac.itertuples()]
+# 2026 ainda não tem 2º turno: linha vazia, para os gráficos deixarem o ponto em branco
+out["nac"] += [dict(ano=a, turno=t, pt=None, anti=None, votos=None, cand=CAND[a], rival=RIVAL[a], lula=a in COM_LULA)
+               for a in CAND for t in (1, 2) if not ((nac.ano == a) & (nac.turno == t)).any()]
 
 reg, share, heat, cvi, caps = {}, {}, {}, {}, {}
+REGS = ["N", "NE", "CO", "SE", "S"]
+UFS = sorted(uf.uf.unique())
 for t in (1, 2):
     ut = uf[uf.turno == t]
     g = ut.groupby(["ano", "reg"])[["votos_pt", "validos"]].sum()
-    reg[t] = {str(a): {r: r1(100 * g.loc[(a, r), "votos_pt"] / g.loc[(a, r), "validos"]) for r in ["N", "NE", "CO", "SE", "S"]}
-              for a in CAND}
-    share[t] = {str(a): {r: r1(100 * g.loc[(a, r), "votos_pt"] / g.loc[a].votos_pt.sum()) for r in ["N", "NE", "CO", "SE", "S"]}
-                for a in CAND}
-    heat[t] = {str(a): {u: r1(v) for u, v in ut[ut.ano == a].set_index("uf").pct_pt_validos.items()} for a in CAND}
+    tem = lambda a: bool(((uf.ano == a) & (uf.turno == t)).any())     # 2026 ainda não tem 2º turno: fica em branco (None)
+    reg[t] = {str(a): {r: r1(100 * g.loc[(a, r), "votos_pt"] / g.loc[(a, r), "validos"]) if tem(a) else None for r in REGS} for a in CAND}
+    share[t] = {str(a): {r: r1(100 * g.loc[(a, r), "votos_pt"] / g.loc[a].votos_pt.sum()) if tem(a) else None for r in REGS} for a in CAND}
+    heat[t] = {str(a): ({u: r1(v) for u, v in ut[ut.ano == a].set_index("uf").pct_pt_validos.items()} if tem(a) else {u: None for u in UFS})
+               for a in CAND}
     mt = mun[mun.turno == t]
     cvi[t] = {}
     for a in CAND:
         m = mt[mt.ano == a]
-        f = lambda d: r1(100 * d.votos_pt.sum() / d.validos.sum())
+        f = lambda d: r1(100 * d.votos_pt.sum() / d.validos.sum()) if len(d) else None
         cvi[t][str(a)] = dict(capitais=f(m[m.eh_capital]), interior=f(m[~m.eh_capital]), brasil=f(m))
     caps[t] = {}
     for a in CAND:
@@ -56,6 +62,17 @@ out["vies"] = [dict(ano=int(r.ano), turno=int(r.turno), inst=r.instituto, cand=C
                     lula=bool(r.ano in (2002, 2006, 2022))) for r in v.itertuples()]
 for x in out["vies"]:
     x["erro"] = r1(x["pesq"] - x["real"])
+# 2026: última pesquisa de 1º turno de cada instituto antes da votação (4/10), contra o resultado do TSE
+_p = pd.read_csv(D + "pesquisas-2026.csv")
+_p = _p[_p.t1_lula.notna() & _p.t1_flavio.notna() & (pd.to_datetime(_p.campo_fim) <= "2026-10-03")].sort_values("campo_fim").groupby("instituto").tail(1)
+_r = nac[(nac.ano == 2026) & (nac.turno == 1)]
+if len(_r):
+    _real = round(100 * _r.iloc[0].votos_pt / (_r.iloc[0].votos_pt + _r.iloc[0].votos_antipt), 2)
+    out["vies"] += [dict(ano=2026, turno=1, inst=r.instituto, cand="Lula", rival="Flávio", pesq=r1(100 * r.t1_lula / (r.t1_lula + r.t1_flavio)),
+                         real=_real, lula=True) for r in _p.itertuples()]
+    for x in out["vies"][-len(_p):]:
+        x["erro"] = r1(x["pesq"] - x["real"])
+
 
 p = pd.read_csv(D + "pesquisas-2026.csv")
 p["data"] = pd.to_datetime(p.campo_fim).fillna(pd.to_datetime(p.divulgacao))
