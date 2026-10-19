@@ -22,9 +22,9 @@
 <main>
   <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
   <div class="topo"><div><h1>Redes sociais: a conversa no Bluesky sobre Lula e Flávio</h1>
-  <p class="sub">O que dá para medir com posts públicos do Bluesky no 2º turno, com o debate da Band (18/10, 20h às 22h). <b>Isto não é pesquisa de intenção de voto.</b></p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <p class="sub">O que dá para medir com posts públicos do Bluesky no 2º turno, com o debate da Band (18/10, 20h às 22h). <b>Eu não estou medindo intenção de voto aqui.</b></p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
   <div class="an">
-  <div class="aviso"><b>Leia antes.</b> O Bluesky não representa o eleitorado. Nos 304 posts que eu li, quem fala de Lula é quase sempre a favor e quem fala de Flávio é quase sempre contra. Por isso eu <b>não</b> mostro um "termômetro de sentimento" nem somo isso às pesquisas. As outras redes ficaram de fora porque o acesso aos dados é pago ou fechado (seção 5). Os posts vêm da busca pública do Bluesky, em amostras por janela de tempo.</div>
+  <div class="aviso"><b>Leia antes.</b> O Bluesky não representa o eleitorado. Nos 304 posts que li e classifiquei com a ajuda do Claude (uma IA), quem fala de Lula é quase sempre a favor e quem fala de Flávio é quase sempre contra. Por isso eu <b>não</b> mostro um "termômetro de sentimento" nem somo isso às pesquisas. As outras redes ficaram de fora porque o acesso aos dados é pago ou fechado (seção 5). Os posts vêm da busca pública do Bluesky, em amostras por janela de tempo.</div>
   <div class="kpis" id="kpis"></div>
 
   <section class="sec"><div>
@@ -43,21 +43,21 @@
   <div class="leg"><span><s class="fav"></s>favorável ao candidato citado</span><span><s class="neu"></s>neutro, notícia, piada ou sem posição</span><span><s class="des"></s>desfavorável</span></div>
   <div id="barras"></div>
   <div id="tPos"></div>
-  <p class="fonte">Amostra de posts que citam só um dos dois candidatos, sem link e sem texto repetido, no máximo 3 por autor por dia: 76 posts por grupo, sorteados. Cada post foi lido e classificado por mim (Claude); não houve segundo anotador, então a concordância entre pessoas não foi medida. Intervalo de confiança de Wilson, 95%.</p>
+  <p class="fonte">Amostra de posts que citam só um dos dois candidatos, sem link e sem texto repetido, no máximo 3 por autor por dia: 76 posts por grupo, sorteados. Eu usei o Claude (uma IA) para ler e classificar cada post; não houve segundo anotador, então eu não medi a concordância entre pessoas. Intervalo de confiança de Wilson, 95%.</p>
   </div><aside class="side" id="nota2"></aside></section>
 
   <section class="sec"><div>
   <h2>3. Por que não há um termômetro automático</h2>
   <p id="modTxt"></p>
   <div id="tMod"></div>
-  <p class="fonte">Acurácia em 3 classes (favorável, neutro, desfavorável) contra os 304 posts que eu classifiquei. A linha de base não lê o texto: diz "favorável" para quem cita Lula e "desfavorável" para quem cita Flávio. Os rótulos são meus, então isto mede a concordância dos modelos comigo, não uma verdade externa.</p>
+  <p class="fonte">Acurácia em 3 classes (favorável, neutro, desfavorável) contra os 304 posts que classifiquei com o Claude. A linha de base não lê o texto: diz "favorável" para quem cita Lula e "desfavorável" para quem cita Flávio. Os rótulos vêm de uma só leitura, a do Claude, então isto mede a concordância dos modelos com ele, não uma verdade externa.</p>
   </div><aside class="side" id="nota3"></aside></section>
 
   <section class="sec"><div>
   <h2>4. Hashtags e mensagens repetidas</h2>
   <p id="hashTxt"></p>
   <div class="duas"><div><h3 class="titc">Antes do debate</h3><div id="tHashA"></div></div><div><h3 class="titc">Debate e depois</h3><div id="tHashD"></div></div></div>
-  <p class="fonte">Posts que contêm cada hashtag (sem diferenciar maiúsculas nem acentos), em todos os posts coletados. Hashtags de campanha dos dois lados; não verifico quem as organiza.</p>
+  <p class="fonte">Posts que contêm cada hashtag (sem diferenciar maiúsculas nem acentos), em todos os posts coletados. Hashtags de campanha dos dois lados; eu não verifico quem as organiza.</p>
   </div><aside class="side" id="nota4"></aside></section>
 
   <section class="sec"><div>
@@ -66,7 +66,15 @@
   <div id="tAcesso"></div>
   <h3 class="titc">Posts que deu para analisar em cada rede</h3>
   <div id="bAcesso"></div>
-  <p class="fonte">Para o X, o Threads, o Instagram e o Facebook, "0" quer dizer que não consegui contagem nem texto literal confiável; os resumos não foram classificados. Os testes (chamada ao X sem token, hashtags e busca do Mastodon, abertura dos links da Meta) foram feitos por mim em 19/10/2026. <b>Preços e regras de acesso vêm de blogs e reportagens de terceiros, podem ter mudado e não foram conferidos na documentação oficial das empresas.</b> As respostas do Grok e da Meta AI não foram verificadas de forma independente, além de três links da Meta que abri e existem.</p>
+  <p class="fonte">Para o X, o Threads, o Instagram e o Facebook, "0" quer dizer que não consegui contagem nem texto literal confiável, e eu não classifiquei os resumos. Eu fiz os testes (chamada ao X sem token, hashtags e busca do Mastodon, abertura dos links da Meta) em 19/10/2026. <b>Os preços e as regras de acesso vêm de blogs e reportagens de terceiros, podem ter mudado, e eu não os conferi na documentação oficial das empresas.</b> Eu não verifiquei de forma independente as respostas do Grok e da Meta AI, exceto três links da Meta, que abri e existem.</p>
+  <h3 class="titc">A Meta na campanha: o que eu apurei</h3>
+  <table class="t txt"><thead><tr><th>O quê</th><th>O que eu li</th><th>Fonte</th></tr></thead><tbody>
+  <tr><td style="text-align:left"><b>IA da Meta e imagens</b></td><td>A Meta AI recusava pedidos de imagem com o nome de Lula e gerava peças com o de Flávio Bolsonaro. O Metrópoles relatou 13 recusas em 14 pedidos de Lula. A Meta disse que restringiu temporariamente a recomendação e a geração de imagens de candidatos por causa das regras eleitorais.</td><td><a href="https://agenciabrasil.ebc.com.br/justica/noticia/2026-10/tse-determina-isonomia-apos-ia-da-meta-barrar-imagens-de-lula">Agência Brasil</a>, <a href="https://www.brasildefato.com.br/2026/10/14/ia-da-meta-bloqueia-criacao-de-imagens-com-nome-de-lula-e-libera-pecas-com-flavio/">Brasil de Fato</a>, <a href="https://www.metropoles.com/colunas/observatorio-das-eleicoes/ia-generativa-e-o-desequilibrio-no-tratamento-diferenciado-de-candidatos">Metrópoles</a></td></tr>
+  <tr><td style="text-align:left"><b>Decisão do TSE</b></td><td>Em 15/10, o ministro Marco Aurélio Bellizze determinou tratamento igual às duas candidaturas, com multa de R$ 500 mil por dia. Em exame preliminar, viu falha na ferramenta de controle de comandos e disse que não há elementos para concluir que foi deliberada.</td><td><a href="https://agenciabrasil.ebc.com.br/justica/noticia/2026-10/tse-determina-isonomia-apos-ia-da-meta-barrar-imagens-de-lula">Agência Brasil</a> (li a matéria)</td></tr>
+  <tr><td style="text-align:left"><b>Falhas técnicas e engajamento</b></td><td>Na manifestação de 12/10, a Meta reconheceu "falhas técnicas" em anúncios e publicações da campanha de Lula, sem dizer quais, e negou favorecer Flávio. A campanha de Lula aponta diferenças de engajamento e interrupções na contagem de visualizações. Em teste de 8/10 na busca do Instagram, os perfis de Lula e de Alckmin não apareceram entre os primeiros resultados e os de Flávio e de Jair Bolsonaro apareceram.</td><td><a href="https://www.cartacapital.com.br/politica/meta-admite-falhas-tecnicas-em-conteudos-de-lula-mas-nega-favorecer-flavio-bolsonaro/">CartaCapital</a> (li a matéria)</td></tr>
+  <tr><td style="text-align:left"><b>Outros relatos</b></td><td>Reportagens dizem que um relatório interno do PT mostra a página de Flávio com cerca de três vezes o engajamento da de Lula, e que mensagens internas de funcionários da Meta, publicadas pela Folha, reconheciam a desvantagem de Lula. <b>Eu li isso só em resumos de busca e não vi o relatório nem as mensagens.</b></td><td>Diário do Centro do Mundo, Revista Fórum, Bnews (resumos)</td></tr>
+  </tbody></table>
+  <p class="fonte">A Meta nega que seus sistemas tenham sido usados para prejudicar Lula ou beneficiar Flávio, e o TSE não encontrou, até aqui, prova de intenção. Eu <b>não</b> estou dizendo que foi proposital. O que importa para a medição é outra coisa: se distribuição, alcance e contagem de visualizações da Meta tiveram falhas reconhecidas pela própria empresa, o engajamento nessas redes é um termômetro ruim de opinião, e eu não tenho como auditar isso porque não tenho acesso aos dados. Parte dessas fontes tem posição política definida ou vem da própria campanha de Lula.</p>
   </div><aside class="side"><h4>O que isso significa</h4><ul><li>Qualquer "termômetro das redes" que não mostre de onde vieram os posts, quantos foram lidos e como foram classificados <b>não dá para auditar</b>.</li><li>As redes maiores controlam o acesso por preço (X) ou por ferramentas fechadas (Meta). O que sobra de aberto é pequeno e tem viés próprio.</li></ul></aside></section>
 
   <section class="sec"><div>
@@ -85,11 +93,11 @@
   <h2>7. Limites desta análise</h2>
   <ul class="fonte" style="font-size:.88rem">
     <li>O Bluesky é uma rede pequena e muito inclinada à esquerda: a ausência de apoio ao Flávio na amostra diz mais sobre a rede que sobre o eleitorado.</li>
-    <li>Só uma rede. O X, o Threads, o Instagram, o Facebook e o Mastodon não entram nos números: a seção 5 mostra o que cada tentativa devolveu e por que não dá para medir.</li>
-    <li>A coleta pega os posts mais recentes de cada janela, não todos; o volume vem do total que a busca informa, que pode ser aproximado. Algumas janelas falharam e foram refeitas; a última (19/10) é parcial.</li>
-    <li>Um mesmo autor, ou uma campanha organizada, pode inflar o volume: por isso a amostra de posição tira textos repetidos e limita 3 posts por autor por dia.</li>
-    <li>Os rótulos da amostra são de uma só leitora (eu, Claude), sem validação por outra pessoa. Com 76 posts por grupo, o intervalo de confiança é de uns 10 p.p. para cada lado.</li>
-    <li>Só aparecem agregados. Os textos dos posts ficam num cache local, fora do repositório, sem nome nem @ dos autores.</li>
+    <li>Eu só medi uma rede. O X, o Threads, o Instagram, o Facebook e o Mastodon não entram nos números: a seção 5 mostra o que cada tentativa devolveu e por que eu não consegui medir.</li>
+    <li>Eu coleto os posts mais recentes de cada janela, não todos; o volume vem do total que a busca informa, que pode ser aproximado. Algumas janelas falharam e eu as refiz; a última (19/10) é parcial.</li>
+    <li>Um mesmo autor, ou uma campanha organizada, pode inflar o volume: por isso eu tiro os textos repetidos da amostra de posição e limito a 3 posts por autor por dia.</li>
+    <li>Os rótulos da amostra vêm de uma só leitura (a do Claude, a IA que usei), sem validação por outra pessoa. Com 76 posts por grupo, o intervalo de confiança é de uns 10 p.p. para cada lado.</li>
+    <li>Eu só publico agregados. Os textos dos posts ficam num cache local meu, fora do repositório, sem nome nem @ dos autores.</li>
   </ul>
   </div></section>
   </div>
@@ -146,14 +154,14 @@ function posicao() {
   const ic = (x) => `${f1(x.pct)}% (${f1(x.ic[0])} a ${f1(x.ic[1])})`;
   tab("tPos", ["Candidato citado", "Período", "Posts", "Favorável", "Neutro", "Desfavorável"], D.posicao.map(p => [nomes[p.candidato], p.periodo, p.n, ic(p.P), ic(p["0"]), ic(p.N)]));
   const la = pos("lula", "antes do debate"), ld = pos("lula", "debate e depois"), fa = pos("flavio", "antes do debate"), fd = pos("flavio", "debate e depois");
-  $("posTxt").innerHTML = `Entre os posts que citam <b>só Lula</b>, ${f1(la.P.pct)}% são favoráveis antes do debate e ${f1(ld.P.pct)}% depois; os desfavoráveis passam de ${f1(la.N.pct)}% para ${f1(ld.N.pct)}%. Entre os que citam <b>só Flávio</b>, ${f1(fa.N.pct)}% são desfavoráveis antes e ${f1(fd.N.pct)}% depois, e quase nenhum é a favor (${f1(fa.P.pct)}% e ${f1(fd.P.pct)}%). Dos 6 posts desfavoráveis a Lula depois do debate, 5 são, pela minha leitura, críticas ao desempenho ou à campanha feitas por quem aparenta apoiá-lo, não ataque de adversário. Com 76 posts por grupo, a mudança é um indício, não uma conclusão.`;
+  $("posTxt").innerHTML = `Entre os posts que citam <b>só Lula</b>, ${f1(la.P.pct)}% são favoráveis antes do debate e ${f1(ld.P.pct)}% depois; os desfavoráveis passam de ${f1(la.N.pct)}% para ${f1(ld.N.pct)}%. Entre os que citam <b>só Flávio</b>, ${f1(fa.N.pct)}% são desfavoráveis antes e ${f1(fd.N.pct)}% depois, e quase nenhum é a favor (${f1(fa.P.pct)}% e ${f1(fd.P.pct)}%). Dos 6 posts desfavoráveis a Lula depois do debate, 5 são, pela minha leitura (e a do Claude), críticas ao desempenho ou à campanha feitas por quem aparenta apoiá-lo, não ataque de adversário. Com 76 posts por grupo, a mudança é um indício, não uma conclusão.`;
 }
 
 function modelos() {
   const M = D.avaliacao.modelos;
   tab("tMod", ["Método", "Acerta (3 classes)"], M.slice().sort((a, b) => b.acuracia - a.acuracia).map(m => [`${m.nome}<br><small class="fonte">${m.descricao}</small>`, `<b>${f1(100 * m.acuracia)}%</b>${m.desvio ? ` <small class="fonte">± ${f1(100 * m.desvio)}</small>` : ""}`]));
   const base = M.find(m => m.nome.startsWith("Linha de base")), pr = M.filter(m => !m.nome.startsWith("Linha de base") && !m.nome.startsWith("Regressão"));
-  $("modTxt").innerHTML = `Eu testei três modelos prontos de sentimento e de posição (e uma regressão treinada nos meus rótulos). Os prontos acertam entre <b>${f1(100 * Math.min(...pr.map(m => m.acuracia)))}% e ${f1(100 * Math.max(...pr.map(m => m.acuracia)))}%</b>: leem muito texto a favor como neutro ou negativo (em um teste, "Lula arrasou no debate" saiu negativo). A <b>linha de base trivial</b>, que só olha quem é citado, acerta <b>${f1(100 * base.acuracia)}%</b>, e a regressão não a supera. Ou seja: aqui, o sentimento de um post quase só repete qual candidato ele cita, e a rede é muito pró-Lula. Uma pontuação automática viraria ruído com cara de dado, e por isso a página não mostra uma.`;
+  $("modTxt").innerHTML = `Eu testei três modelos prontos de sentimento e de posição (e uma regressão treinada nos rótulos que fiz com o Claude). Os prontos acertam entre <b>${f1(100 * Math.min(...pr.map(m => m.acuracia)))}% e ${f1(100 * Math.max(...pr.map(m => m.acuracia)))}%</b>: leem muito texto a favor como neutro ou negativo (em um teste, "Lula arrasou no debate" saiu negativo). A <b>linha de base trivial</b>, que só olha quem é citado, acerta <b>${f1(100 * base.acuracia)}%</b>, e a regressão não a supera. Ou seja: aqui, o sentimento de um post quase só repete qual candidato ele cita, e a rede é muito pró-Lula. Uma pontuação automática viraria ruído com cara de dado, e por isso a página não mostra uma.`;
 }
 
 function hashtags() {
@@ -166,12 +174,12 @@ function hashtags() {
 function acesso() {
   const c = D.corpus, A = D.amostra_rotulada;
   const L = [
-    ["Bluesky", "API pública de busca, sem login.", `Total de posts por janela (6 h; 1 h no debate) e o texto de ${N(c.posts)} posts.`, "Nada: o limite é só o ritmo das chamadas.", "<code>coletar_redes.py</code>: aberto e refazível."],
-    ["X", "Chamada à API sem token. Pedi ao Grok um resumo do debate e depois contagens e uma amostra com links.", "Recusa (401). O Grok deu um resumo qualitativo sem números e disse que sua ferramenta devolve até 10 posts por busca, sem contagens.", "API paga por uso (cerca de US$ 0,005 por post lido). Planos mensais fechados a novos desenvolvedores. Acesso de pesquisador pelo DSA sem concessão confirmada.", "Token pago (≈ US$ 50 por 10 mil posts, estimativa) ou CSV de ferramenta de monitoramento."],
-    ["Threads, Instagram, Facebook", "Dois pedidos ao assistente da Meta, com texto literal e sem classificação.", "17 posts (14 de Flávio e 3 de Lula; 3 fora da janela), quase todos como <b>resumo escrito pela IA</b>. Sem volume e sem seguidores.", "O assistente só devolve amostra e resumo. A API do Threads para posts de terceiros e a busca por hashtag do Instagram exigem revisão de app e conta profissional.", "Meta Content Library, só para pesquisadores credenciados (semanas)."],
-    ["Mastodon", "Hashtags públicas e busca de texto na mastodon.social.", "200 posts por hashtag. Em #flaviobolsonaro, 24 estavam em português e 124 eram cópia automática de sites de notícia. A busca de texto voltou vazia sem login.", "Sem busca de texto sem login e sem total por janela. Poucos brasileiros.", "Só hashtags: descartado."]];
+    ["Bluesky", "Eu usei a API pública de busca, sem login.", `Total de posts por janela (6 h; 1 h no debate) e o texto de ${N(c.posts)} posts.`, "Nada: o limite é só o ritmo das chamadas.", "<code>coletar_redes.py</code>: aberto e refazível."],
+    ["X", "Eu chamei a API sem token. Pedi ao Grok um resumo do debate e depois contagens e uma amostra com links.", "Recusa (401). O Grok deu um resumo qualitativo sem números e disse que sua ferramenta devolve até 10 posts por busca, sem contagens.", "API paga por uso (cerca de US$ 0,005 por post lido). Planos mensais fechados a novos desenvolvedores. Acesso de pesquisador pelo DSA sem concessão confirmada.", "Token pago (≈ US$ 50 por 10 mil posts, estimativa) ou CSV de ferramenta de monitoramento."],
+    ["Threads, Instagram, Facebook", "Fiz dois pedidos ao assistente da Meta, com texto literal e sem classificação.", "17 posts (14 de Flávio e 3 de Lula; 3 fora da janela), quase todos como <b>resumo escrito pela IA</b>. Sem volume e sem seguidores.", "O assistente só devolve amostra e resumo. A API do Threads para posts de terceiros e a busca por hashtag do Instagram exigem revisão de app e conta profissional.", "Meta Content Library, só para pesquisadores credenciados (semanas)."],
+    ["Mastodon", "Eu testei as hashtags públicas e a busca de texto na mastodon.social.", "200 posts por hashtag. Em #flaviobolsonaro, 24 estavam em português e 124 eram cópia automática de sites de notícia. A busca de texto voltou vazia sem login.", "Sem busca de texto sem login e sem total por janela. Poucos brasileiros.", "Só hashtags: eu descartei."]];
   tab("tAcesso", ["Rede", "O que tentei", "O que veio", "O que trava", "Caminho aberto"], L.map(r => r.map((x, i) => i ? x : `<b>${x}</b>`)));
-  const B = [["Bluesky: posts lidos", c.posts], ["Bluesky: posts classificados por mim", A], ["Meta (Threads, Instagram, Facebook): posts em resumo", 17], ["X: posts com texto e contagem", 0], ["Mastodon: posts analisados", 0]];
+  const B = [["Bluesky: posts lidos", c.posts], ["Bluesky: posts que classifiquei (com o Claude)", A], ["Meta (Threads, Instagram, Facebook): posts em resumo", 17], ["X: posts com texto e contagem", 0], ["Mastodon: posts analisados", 0]];
   const mx = Math.max(...B.map(b => b[1]));
   $("bAcesso").innerHTML = B.map(b => `<div class="barra"><div>${b[0]}</div><div><div style="height:22px;border-radius:5px;background:${b[1] > 20 ? "var(--s3)" : "var(--muted)"};width:${Math.max(0.6, 100 * b[1] / mx)}%"></div><small>${N(b[1])}</small></div></div>`).join("");
 }
