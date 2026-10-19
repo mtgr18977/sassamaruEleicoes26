@@ -23,6 +23,7 @@ out = dict(
     r26=dict(L=L, F=F, O=round(100 - L - F, 2), vL=int(br.votos_lula), vF=int(br.votos_flavio), validos=round(br.votos_flavio / (F / 100)), s=round(100 * br.votos_lula / (br.votos_lula + br.votos_flavio), 2)),
     ancoras=dict(l1_2022=round(float(nac.loc[(2022, 1)].pct_pt_validos), 2), t1_2022=round(float(nac.loc[(2022, 1)].pct_pt_dois), 2), t2_2022=round(float(nac.loc[(2022, 2)].pct_pt_validos), 2),
                  pre_t1=round(100 * par["turno2"]["p_pesquisas"], 2), pre_t1_data=par["data_referencia"], bbc=round(100 * 44 / (44 + 47), 2), bbc_data="2026-10-09", demais_meio=round(L + (100 - L - F) / 2, 2), demais_todos=round(L + (100 - L - F), 2)),
+    abst=json.load(open("modelos/abstencao-2t.json", encoding="utf-8")),
     pesq=pesq, vies2=round(vies_eleicao(2)[0], 2), vies1=round(vies_eleicao(1)[0], 2), piso=SD_PISO_2T_PP,
 )
 html = nav.moldura(open("apps/segundo-turno.template.html", encoding="utf-8").read(), "segundo-turno.html").replace("__DATA__", json.dumps(out, ensure_ascii=False))

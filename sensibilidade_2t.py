@@ -1,7 +1,7 @@
 """Sensibilidade da projeção do 2º turno à confiança em cada instituto (não altera o modelo).
 
 Cenários: (1) base, (2) correção pelo erro que cada instituto teve no 1º turno (½× e 1×), (3) peso pela acurácia no 1º turno,
-(4) só os institutos que mais se aproximaram (Palver, Gerp), (5) só pesquisas pós-1º turno (campo a partir de 5/10), com e sem a tendência linear, e (6) retirar um instituto de cada vez.
+(4) só os institutos que mais se aproximaram (Palver, Gerp), (5) só pesquisas pós-1º turno (campo a partir de 5/10), com e sem a tendência linear, (6) abstenção que cai só do lado do Flávio nas UFs sem 2º turno de governador (abstencao_2t.py) e (7) retirar um instituto de cada vez.
   python sensibilidade_2t.py              # imprime a tabela, grava modelos/sensibilidade-2t.csv
   python sensibilidade_2t.py --grafico X  # também grava o gráfico em X (PNG; requer matplotlib)
 Erro do 1º turno = Lula/(Lula+Flávio) da última pesquisa antes de 4/10 − resultado (48,99%); + = deu a Lula mais do que ele teve.
@@ -13,6 +13,7 @@ import math
 import numpy as np
 import pandas as pd
 
+import abstencao_2t
 from pesquisas import DEFF, HOJE, HORIZONTE, SD_PISO_2T_PP, TAU_DIAS, estimar, logit, preparar, vies_rmse
 
 D = "datasets/"
@@ -48,6 +49,13 @@ def rodar(x, nome, direto=False, base_sd=None):
     return dict(cenario=nome, s2=round(100 * p, 2), lo=round(lo, 1), hi=round(hi, 1), chance_lula=round(100 * Phi(logit(p) / sd), 1), n_pesquisas=n)
 
 
+def deslocar(p, sd, ganho_pp, nome):
+    """Soma `ganho_pp` (p.p.) à parcela de Lula e recalcula faixa e chance com o mesmo desvio do modelo."""
+    q = p + ganho_pp / 100
+    return dict(cenario=nome, s2=round(100 * q, 2), lo=round(100 / (1 + math.exp(-(logit(q) - 1.645 * sd))), 1), hi=round(100 / (1 + math.exp(-(logit(q) + 1.645 * sd))), 1),
+                chance_lula=round(100 * Phi(logit(q) / sd), 1), n_pesquisas=0)
+
+
 def descontar(desc):
     x = d.copy()
     x["p2"] = x.p2 - x.instituto.map(desc).fillna(0) / 100
@@ -62,7 +70,7 @@ def pesar(fator):
 
 def montar():
     base = rodar(d, "Base (o que o site usa hoje)")
-    bsd = estimar(d, "p2", hoje=HOJE, sd_vies=sv, h_dias=H, piso_pp=SD_PISO_2T_PP)[1]
+    p0, bsd = estimar(d, "p2", hoje=HOJE, sd_vies=sv, h_dias=H, piso_pp=SD_PISO_2T_PP)[:2]
     w = 1 / (erro ** 2 + TAU_ACURACIA ** 2)
     w = w / w.mean()
     L = [base,
@@ -74,6 +82,9 @@ def montar():
     pos = d[d.campo_fim >= INICIO_2T]
     L.append(rodar(pos, "Só pós-1º turno (5/10 em diante), com tendência linear"))
     L.append(rodar(pos, "Só pós-1º turno (5/10 em diante), média sem tendência", direto=True, base_sd=bsd))
+    x22 = abstencao_2t.base_2022()                                       # abstenção diferencial: desloca a estimativa pelo efeito calculado sobre a geografia de 2022
+    for delta in (1, 2, 3):
+        L.append(deslocar(p0, bsd, abstencao_2t.efeito(x22, delta), f"Abstenção só do lado do Flávio, {delta} p.p. dos aptos nas UFs sem 2º turno de governador"))
     for i in sorted(d.dropna(subset=["p2"]).instituto.unique()):
         L.append(rodar(d[d.instituto != i], "Sem " + i))
     t = pd.DataFrame(L)
@@ -103,7 +114,7 @@ if __name__ == "__main__":
         ax.axvline(50, color="#555", ls="--", lw=1)
         ax.axvline(t.s2[0], color="#999", ls=":", lw=1)
         ax.set_yticks(range(len(g)))
-        ax.set_yticklabels([c.replace(" (média ponderada, sd do modelo)", "").replace("Só pós-1º turno (5/10 em diante), ", "Pós-1º turno: ") for c in g.cenario], fontsize=8)
+        ax.set_yticklabels([c.replace(" (média ponderada, sd do modelo)", "").replace(" dos aptos nas UFs sem 2º turno de governador", "").replace("Só pós-1º turno (5/10 em diante), ", "Pós-1º turno: ") for c in g.cenario], fontsize=8)
         for k, r in g.iterrows():
             ax.text(max(r.hi, 53) + .3, k, "%.0f%%" % r.chance_lula, va="center", fontsize=8)
         ax.set_xlim(38, 58)

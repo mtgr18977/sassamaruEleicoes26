@@ -1,0 +1,113 @@
+{
+ "ufs_2026_com_gov2": [
+  "AC",
+  "AM",
+  "DF",
+  "ES",
+  "RJ",
+  "RN",
+  "TO"
+ ],
+ "composicao": [
+  {
+   "grupo": "com 2º turno de governador",
+   "ufs": 7,
+   "aptos_pct": 15.9,
+   "lula_pct": 14.5,
+   "bolsonaro_pct": 17.4,
+   "bolsonaro_validos_pct": 53.7
+  },
+  {
+   "grupo": "sem 2º turno de governador",
+   "ufs": 20,
+   "aptos_pct": 84.1,
+   "lula_pct": 85.5,
+   "bolsonaro_pct": 82.6,
+   "bolsonaro_validos_pct": 48.2
+  }
+ ],
+ "historico": {
+  "n": 54,
+  "efeito_gov2": -0.95,
+  "efeito_ic": 1.13,
+  "coef_bolsonarismo": 0.027,
+  "coef_ic": 0.03,
+  "por_ano": [
+   {
+    "ano": 2018,
+    "abst1": 20.19,
+    "abst2": 21.17,
+    "n_com": 14,
+    "n_sem": 13,
+    "dabst_com": 1.85,
+    "dabst_sem": 2.17
+   },
+   {
+    "ano": 2022,
+    "abst1": 20.79,
+    "abst2": 20.43,
+    "n_com": 12,
+    "n_sem": 15,
+    "dabst_com": -0.09,
+    "dabst_sem": 1.21
+   }
+  ]
+ },
+ "cenarios": [
+  {
+   "delta": 0.5,
+   "eleitores_mi": 0.65,
+   "pct_votos_flavio": 1.4,
+   "so_flavio": 0.28,
+   "proporcional": -0.005
+  },
+  {
+   "delta": 1,
+   "eleitores_mi": 1.31,
+   "pct_votos_flavio": 2.7,
+   "so_flavio": 0.57,
+   "proporcional": -0.01
+  },
+  {
+   "delta": 2,
+   "eleitores_mi": 2.62,
+   "pct_votos_flavio": 5.5,
+   "so_flavio": 1.15,
+   "proporcional": -0.02
+  },
+  {
+   "delta": 3,
+   "eleitores_mi": 3.93,
+   "pct_votos_flavio": 8.2,
+   "so_flavio": 1.75,
+   "proporcional": -0.03
+  },
+  {
+   "delta": 4,
+   "eleitores_mi": 5.24,
+   "pct_votos_flavio": 10.9,
+   "so_flavio": 2.36,
+   "proporcional": -0.04
+  }
+ ],
+ "quebra": [
+  {
+   "alvo": "Para Lula ganhar 1 p.p.",
+   "ganho_pp": 1.0,
+   "delta": 1.74,
+   "eleitores_mi": 2.3,
+   "pct_votos_flavio": 4.8
+  },
+  {
+   "alvo": "Para Lula chegar a 50% (o modelo está em 48,3%)",
+   "ganho_pp": 1.69,
+   "delta": 2.9,
+   "eleitores_mi": 3.8,
+   "pct_votos_flavio": 7.9
+  }
+ ],
+ "s2_modelo": 48.31,
+ "base_2022": 50.9,
+ "aptos_sem_mi": 130.9,
+ "votos_flavio_sem_mi": 48.0
+}

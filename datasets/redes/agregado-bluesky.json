@@ -1,0 +1,754 @@
+{
+ "gerado_em": "19/10/2026 13h47",
+ "debate": "18/10/2026, 20h às 22h (Band)",
+ "volume": [
+  {
+   "ini": "2026-10-12T00:00:00-03:00",
+   "fim": "2026-10-12T06:00:00-03:00",
+   "horas": 6.0,
+   "lula": 316,
+   "flavio": 53,
+   "lula_ph": 52.7,
+   "flavio_ph": 8.8
+  },
+  {
+   "ini": "2026-10-12T06:00:00-03:00",
+   "fim": "2026-10-12T12:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1183,
+   "flavio": 302,
+   "lula_ph": 197.2,
+   "flavio_ph": 50.3
+  },
+  {
+   "ini": "2026-10-12T12:00:00-03:00",
+   "fim": "2026-10-12T18:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1929,
+   "flavio": 405,
+   "lula_ph": 321.5,
+   "flavio_ph": 67.5
+  },
+  {
+   "ini": "2026-10-12T18:00:00-03:00",
+   "fim": "2026-10-13T00:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1783,
+   "flavio": 279,
+   "lula_ph": 297.2,
+   "flavio_ph": 46.5
+  },
+  {
+   "ini": "2026-10-13T00:00:00-03:00",
+   "fim": "2026-10-13T06:00:00-03:00",
+   "horas": 6.0,
+   "lula": 263,
+   "flavio": 39,
+   "lula_ph": 43.8,
+   "flavio_ph": 6.5
+  },
+  {
+   "ini": "2026-10-13T06:00:00-03:00",
+   "fim": "2026-10-13T12:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1385,
+   "flavio": 251,
+   "lula_ph": 230.8,
+   "flavio_ph": 41.8
+  },
+  {
+   "ini": "2026-10-13T12:00:00-03:00",
+   "fim": "2026-10-13T18:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1947,
+   "flavio": 416,
+   "lula_ph": 324.5,
+   "flavio_ph": 69.3
+  },
+  {
+   "ini": "2026-10-13T18:00:00-03:00",
+   "fim": "2026-10-14T00:00:00-03:00",
+   "horas": 6.0,
+   "lula": 2579,
+   "flavio": 453,
+   "lula_ph": 429.8,
+   "flavio_ph": 75.5
+  },
+  {
+   "ini": "2026-10-14T00:00:00-03:00",
+   "fim": "2026-10-14T06:00:00-03:00",
+   "horas": 6.0,
+   "lula": 380,
+   "flavio": 45,
+   "lula_ph": 63.3,
+   "flavio_ph": 7.5
+  },
+  {
+   "ini": "2026-10-14T06:00:00-03:00",
+   "fim": "2026-10-14T12:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1728,
+   "flavio": 368,
+   "lula_ph": 288.0,
+   "flavio_ph": 61.3
+  },
+  {
+   "ini": "2026-10-14T12:00:00-03:00",
+   "fim": "2026-10-14T18:00:00-03:00",
+   "horas": 6.0,
+   "lula": 2176,
+   "flavio": 460,
+   "lula_ph": 362.7,
+   "flavio_ph": 76.7
+  },
+  {
+   "ini": "2026-10-14T18:00:00-03:00",
+   "fim": "2026-10-15T00:00:00-03:00",
+   "horas": 6.0,
+   "lula": 2384,
+   "flavio": 596,
+   "lula_ph": 397.3,
+   "flavio_ph": 99.3
+  },
+  {
+   "ini": "2026-10-15T00:00:00-03:00",
+   "fim": "2026-10-15T06:00:00-03:00",
+   "horas": 6.0,
+   "lula": 378,
+   "flavio": 93,
+   "lula_ph": 63.0,
+   "flavio_ph": 15.5
+  },
+  {
+   "ini": "2026-10-15T06:00:00-03:00",
+   "fim": "2026-10-15T12:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1406,
+   "flavio": 262,
+   "lula_ph": 234.3,
+   "flavio_ph": 43.7
+  },
+  {
+   "ini": "2026-10-15T12:00:00-03:00",
+   "fim": "2026-10-15T18:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1562,
+   "flavio": 379,
+   "lula_ph": 260.3,
+   "flavio_ph": 63.2
+  },
+  {
+   "ini": "2026-10-15T18:00:00-03:00",
+   "fim": "2026-10-16T00:00:00-03:00",
+   "horas": 6.0,
+   "lula": 3142,
+   "flavio": 314,
+   "lula_ph": 523.7,
+   "flavio_ph": 52.3
+  },
+  {
+   "ini": "2026-10-16T00:00:00-03:00",
+   "fim": "2026-10-16T06:00:00-03:00",
+   "horas": 6.0,
+   "lula": 377,
+   "flavio": 44,
+   "lula_ph": 62.8,
+   "flavio_ph": 7.3
+  },
+  {
+   "ini": "2026-10-16T06:00:00-03:00",
+   "fim": "2026-10-16T12:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1600,
+   "flavio": 260,
+   "lula_ph": 266.7,
+   "flavio_ph": 43.3
+  },
+  {
+   "ini": "2026-10-16T12:00:00-03:00",
+   "fim": "2026-10-16T18:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1964,
+   "flavio": 511,
+   "lula_ph": 327.3,
+   "flavio_ph": 85.2
+  },
+  {
+   "ini": "2026-10-16T18:00:00-03:00",
+   "fim": "2026-10-17T00:00:00-03:00",
+   "horas": 6.0,
+   "lula": 2530,
+   "flavio": 721,
+   "lula_ph": 421.7,
+   "flavio_ph": 120.2
+  },
+  {
+   "ini": "2026-10-17T00:00:00-03:00",
+   "fim": "2026-10-17T06:00:00-03:00",
+   "horas": 6.0,
+   "lula": 344,
+   "flavio": 94,
+   "lula_ph": 57.3,
+   "flavio_ph": 15.7
+  },
+  {
+   "ini": "2026-10-17T06:00:00-03:00",
+   "fim": "2026-10-17T12:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1753,
+   "flavio": 312,
+   "lula_ph": 292.2,
+   "flavio_ph": 52.0
+  },
+  {
+   "ini": "2026-10-17T12:00:00-03:00",
+   "fim": "2026-10-17T18:00:00-03:00",
+   "horas": 6.0,
+   "lula": 2434,
+   "flavio": 336,
+   "lula_ph": 405.7,
+   "flavio_ph": 56.0
+  },
+  {
+   "ini": "2026-10-17T18:00:00-03:00",
+   "fim": "2026-10-18T00:00:00-03:00",
+   "horas": 6.0,
+   "lula": 2306,
+   "flavio": 249,
+   "lula_ph": 384.3,
+   "flavio_ph": 41.5
+  },
+  {
+   "ini": "2026-10-18T00:00:00-03:00",
+   "fim": "2026-10-18T06:00:00-03:00",
+   "horas": 6.0,
+   "lula": 397,
+   "flavio": 58,
+   "lula_ph": 66.2,
+   "flavio_ph": 9.7
+  },
+  {
+   "ini": "2026-10-18T06:00:00-03:00",
+   "fim": "2026-10-18T12:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1395,
+   "flavio": 193,
+   "lula_ph": 232.5,
+   "flavio_ph": 32.2
+  },
+  {
+   "ini": "2026-10-18T12:00:00-03:00",
+   "fim": "2026-10-18T18:00:00-03:00",
+   "horas": 6.0,
+   "lula": 2098,
+   "flavio": 286,
+   "lula_ph": 349.7,
+   "flavio_ph": 47.7
+  },
+  {
+   "ini": "2026-10-18T18:00:00-03:00",
+   "fim": "2026-10-19T00:00:00-03:00",
+   "horas": 6.0,
+   "lula": 6662,
+   "flavio": 1293,
+   "lula_ph": 1110.3,
+   "flavio_ph": 215.5
+  },
+  {
+   "ini": "2026-10-18T19:00:00-03:00",
+   "fim": "2026-10-18T20:00:00-03:00",
+   "horas": 1.0,
+   "lula": 485,
+   "flavio": 79,
+   "lula_ph": 485.0,
+   "flavio_ph": 79.0
+  },
+  {
+   "ini": "2026-10-18T20:00:00-03:00",
+   "fim": "2026-10-18T21:00:00-03:00",
+   "horas": 1.0,
+   "lula": 2274,
+   "flavio": 271,
+   "lula_ph": 2274.0,
+   "flavio_ph": 271.0
+  },
+  {
+   "ini": "2026-10-18T21:00:00-03:00",
+   "fim": "2026-10-18T22:00:00-03:00",
+   "horas": 1.0,
+   "lula": 1923,
+   "flavio": 350,
+   "lula_ph": 1923.0,
+   "flavio_ph": 350.0
+  },
+  {
+   "ini": "2026-10-18T22:00:00-03:00",
+   "fim": "2026-10-18T23:00:00-03:00",
+   "horas": 1.0,
+   "lula": 1102,
+   "flavio": 294,
+   "lula_ph": 1102.0,
+   "flavio_ph": 294.0
+  },
+  {
+   "ini": "2026-10-18T23:00:00-03:00",
+   "fim": "2026-10-19T00:00:00-03:00",
+   "horas": 1.0,
+   "lula": 478,
+   "flavio": 240,
+   "lula_ph": 478.0,
+   "flavio_ph": 240.0
+  },
+  {
+   "ini": "2026-10-19T00:00:00-03:00",
+   "fim": "2026-10-19T01:00:00-03:00",
+   "horas": 1.0,
+   "lula": 276,
+   "flavio": 93,
+   "lula_ph": 276.0,
+   "flavio_ph": 93.0
+  },
+  {
+   "ini": "2026-10-19T01:00:00-03:00",
+   "fim": "2026-10-19T02:00:00-03:00",
+   "horas": 1.0,
+   "lula": 107,
+   "flavio": 33,
+   "lula_ph": 107.0,
+   "flavio_ph": 33.0
+  },
+  {
+   "ini": "2026-10-19T02:00:00-03:00",
+   "fim": "2026-10-19T03:00:00-03:00",
+   "horas": 1.0,
+   "lula": 77,
+   "flavio": 34,
+   "lula_ph": 77.0,
+   "flavio_ph": 34.0
+  },
+  {
+   "ini": "2026-10-19T03:00:00-03:00",
+   "fim": "2026-10-19T04:00:00-03:00",
+   "horas": 1.0,
+   "lula": 34,
+   "flavio": 11,
+   "lula_ph": 34.0,
+   "flavio_ph": 11.0
+  },
+  {
+   "ini": "2026-10-19T06:00:00-03:00",
+   "fim": "2026-10-19T12:00:00-03:00",
+   "horas": 6.0,
+   "lula": 1686,
+   "flavio": 519,
+   "lula_ph": 281.0,
+   "flavio_ph": 86.5
+  },
+  {
+   "ini": "2026-10-19T12:00:00-03:00",
+   "fim": "2026-10-19T13:34:02.577881-03:00",
+   "horas": 1.57,
+   "lula": 509,
+   "flavio": 170,
+   "lula_ph": 324.7,
+   "flavio_ph": 108.5
+  }
+ ],
+ "debate_efeito": {
+  "base_por_faixa": {
+   "00h-06h": {
+    "lula": 60.0,
+    "flavio": 8.2
+   },
+   "06h-12h": {
+    "lula": 250.5,
+    "flavio": 47.0
+   },
+   "12h-18h": {
+    "lula": 325.9,
+    "flavio": 68.4
+   },
+   "18h-24h": {
+    "lula": 409.5,
+    "flavio": 63.9
+   }
+  },
+  "horas": [
+   {
+    "h": "18/10 19h",
+    "lula_ph": 485.0,
+    "flavio_ph": 79.0,
+    "lula_base": 409.5,
+    "flavio_base": 63.9,
+    "lula_x": 1.18,
+    "flavio_x": 1.24
+   },
+   {
+    "h": "18/10 20h",
+    "lula_ph": 2274.0,
+    "flavio_ph": 271.0,
+    "lula_base": 409.5,
+    "flavio_base": 63.9,
+    "lula_x": 5.55,
+    "flavio_x": 4.24
+   },
+   {
+    "h": "18/10 21h",
+    "lula_ph": 1923.0,
+    "flavio_ph": 350.0,
+    "lula_base": 409.5,
+    "flavio_base": 63.9,
+    "lula_x": 4.7,
+    "flavio_x": 5.48
+   },
+   {
+    "h": "18/10 22h",
+    "lula_ph": 1102.0,
+    "flavio_ph": 294.0,
+    "lula_base": 409.5,
+    "flavio_base": 63.9,
+    "lula_x": 2.69,
+    "flavio_x": 4.6
+   },
+   {
+    "h": "18/10 23h",
+    "lula_ph": 478.0,
+    "flavio_ph": 240.0,
+    "lula_base": 409.5,
+    "flavio_base": 63.9,
+    "lula_x": 1.17,
+    "flavio_x": 3.76
+   },
+   {
+    "h": "19/10 00h",
+    "lula_ph": 276.0,
+    "flavio_ph": 93.0,
+    "lula_base": 60.0,
+    "flavio_base": 8.2,
+    "lula_x": 4.6,
+    "flavio_x": 11.41
+   },
+   {
+    "h": "19/10 01h",
+    "lula_ph": 107.0,
+    "flavio_ph": 33.0,
+    "lula_base": 60.0,
+    "flavio_base": 8.2,
+    "lula_x": 1.78,
+    "flavio_x": 4.05
+   },
+   {
+    "h": "19/10 02h",
+    "lula_ph": 77.0,
+    "flavio_ph": 34.0,
+    "lula_base": 60.0,
+    "flavio_base": 8.2,
+    "lula_x": 1.28,
+    "flavio_x": 4.17
+   },
+   {
+    "h": "19/10 03h",
+    "lula_ph": 34.0,
+    "flavio_ph": 11.0,
+    "lula_base": 60.0,
+    "flavio_base": 8.2,
+    "lula_x": 0.57,
+    "flavio_x": 1.35
+   }
+  ]
+ },
+ "corpus": {
+  "posts": 6786,
+  "autores": 2795,
+  "so_lula": 2742,
+  "so_flavio": 1913,
+  "ambos": 1021,
+  "nenhum": 1110,
+  "texto_repetido_pct": 12.6,
+  "com_link_pct": 33.7,
+  "autores_10mais_posts": 89,
+  "posts_dos_autores_10mais_pct": 30.6,
+  "textos_repetidos_5x": 44,
+  "posts_em_textos_repetidos_5x": 421,
+  "de": "12/10/2026",
+  "ate": "19/10/2026 13h33"
+ },
+ "hashtags": {
+  "antes": {
+   "posts": 5142,
+   "top": [
+    [
+     "#lula",
+     100
+    ],
+    [
+     "#boralula",
+     89
+    ],
+    [
+     "#lula2026",
+     55
+    ],
+    [
+     "#lula13",
+     52
+    ],
+    [
+     "#eleicoes2026",
+     45
+    ],
+    [
+     "#flaviobolsonaro",
+     43
+    ],
+    [
+     "#brasil",
+     36
+    ],
+    [
+     "#news",
+     34
+    ],
+    [
+     "#lulapresidente",
+     34
+    ],
+    [
+     "#seflaviovencevoceperde",
+     32
+    ],
+    [
+     "#seflavioganhavoceperde",
+     31
+    ],
+    [
+     "#lulapelademocracia",
+     30
+    ]
+   ]
+  },
+  "depois": {
+   "posts": 1644,
+   "top": [
+    [
+     "#abreosigiloflavio",
+     54
+    ],
+    [
+     "#lula",
+     41
+    ],
+    [
+     "#boralula",
+     29
+    ],
+    [
+     "#debatenaband",
+     23
+    ],
+    [
+     "#lula2026",
+     22
+    ],
+    [
+     "#resistencia3030dias",
+     17
+    ],
+    [
+     "#janonesestamoscomvoce",
+     17
+    ],
+    [
+     "#flaviopresidiario2027",
+     17
+    ],
+    [
+     "#lulapresidente2026",
+     15
+    ],
+    [
+     "#news",
+     10
+    ],
+    [
+     "#lulavaivencer",
+     9
+    ],
+    [
+     "#eleicoes2026",
+     9
+    ]
+   ]
+  }
+ },
+ "posicao": [
+  {
+   "candidato": "lula",
+   "periodo": "antes do debate",
+   "n": 76,
+   "P": {
+    "n": 63,
+    "pct": 82.9,
+    "ic": [
+     72.9,
+     89.7
+    ]
+   },
+   "N": {
+    "n": 0,
+    "pct": 0.0,
+    "ic": [
+     0,
+     4.8
+    ]
+   },
+   "0": {
+    "n": 13,
+    "pct": 17.1,
+    "ic": [
+     10.3,
+     27.1
+    ]
+   }
+  },
+  {
+   "candidato": "lula",
+   "periodo": "debate e depois",
+   "n": 76,
+   "P": {
+    "n": 57,
+    "pct": 75.0,
+    "ic": [
+     64.2,
+     83.4
+    ]
+   },
+   "N": {
+    "n": 6,
+    "pct": 7.9,
+    "ic": [
+     3.7,
+     16.2
+    ]
+   },
+   "0": {
+    "n": 13,
+    "pct": 17.1,
+    "ic": [
+     10.3,
+     27.1
+    ]
+   }
+  },
+  {
+   "candidato": "flavio",
+   "periodo": "antes do debate",
+   "n": 76,
+   "P": {
+    "n": 1,
+    "pct": 1.3,
+    "ic": [
+     0.2,
+     7.1
+    ]
+   },
+   "N": {
+    "n": 63,
+    "pct": 82.9,
+    "ic": [
+     72.9,
+     89.7
+    ]
+   },
+   "0": {
+    "n": 12,
+    "pct": 15.8,
+    "ic": [
+     9.3,
+     25.6
+    ]
+   }
+  },
+  {
+   "candidato": "flavio",
+   "periodo": "debate e depois",
+   "n": 76,
+   "P": {
+    "n": 0,
+    "pct": 0.0,
+    "ic": [
+     0,
+     4.8
+    ]
+   },
+   "N": {
+    "n": 70,
+    "pct": 92.1,
+    "ic": [
+     83.8,
+     96.3
+    ]
+   },
+   "0": {
+    "n": 6,
+    "pct": 7.9,
+    "ic": [
+     3.7,
+     16.2
+    ]
+   }
+  }
+ ],
+ "amostra_rotulada": 304,
+ "avaliacao": {
+  "n": 304,
+  "rotulos": {
+   "N": 139,
+   "P": 121,
+   "0": 44
+  },
+  "modelos": [
+   {
+    "nome": "Linha de base (Lula = favorável, Flávio = desfavorável)",
+    "descricao": "Não olha o texto: só quem é citado.",
+    "acuracia": 0.832
+   },
+   {
+    "nome": "Sentimento multilíngue (DistilBERT)",
+    "descricao": "lxyuan/distilbert-base-multilingual-cased-sentiments-student",
+    "acuracia": 0.53,
+    "segundos": 8
+   },
+   {
+    "nome": "Sentimento de tweets (XLM-R)",
+    "descricao": "cardiffnlp/twitter-xlm-roberta-base-sentiment",
+    "acuracia": 0.421,
+    "segundos": 13
+   },
+   {
+    "nome": "Posição por NLI zero-shot (mDeBERTa)",
+    "descricao": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli, três hipóteses por candidato",
+    "acuracia": 0.549,
+    "segundos": 99
+   },
+   {
+    "nome": "Regressão logística em TF-IDF (validação cruzada)",
+    "descricao": "Palavras e trechos de letras + quem é citado; 5 partições × 5 repetições",
+    "acuracia": 0.812,
+    "desvio": 0.01
+   }
+  ],
+  "por_candidato": {
+   "lula": {
+    "P": 120,
+    "0": 26,
+    "N": 6
+   },
+   "flavio": {
+    "N": 133,
+    "0": 18,
+    "P": 1
+   }
+  }
+ }
+}

@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 
 # (arquivo, rótulo, grupo). A ordem é a do menu: Presidente primeiro, 2º turno depois.
-ABAS = [("index.html", "Presidente", "Presidente"), ("segundo-turno.html", "2º turno", "Presidente"), ("analise.html", "Análise", "Presidente"),
+ABAS = [("index.html", "Presidente", "Presidente"), ("segundo-turno.html", "2º turno", "Presidente"), ("analise.html", "Análise", "Presidente"), ("redes.html", "Redes sociais", "Presidente"),
         ("rs.html", "Governo RS", "Rio Grande do Sul"), ("analise-governo.html", "Análise do governo", "Rio Grande do Sul"),
         ("bancada.html", "Bancada RS", "Rio Grande do Sul"), ("analise-bancada.html", "Análise da bancada", "Rio Grande do Sul"),
         ("analise-senado.html", "Análise do Senado", "Senado"), ("analise-modelo.html", "Previsto × real", "Modelo"), ("documentacao.html", "Documentação", "Sobre")]
