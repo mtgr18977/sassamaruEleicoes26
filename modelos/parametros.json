@@ -44,11 +44,13 @@
    "sd_uf": 0.3,
    "sd_com": 0.2906,
    "sd_id": 0.201,
+   "base": "2022",
    "unidades": [
     {
      "uf": "AC",
      "regiao": "N",
      "p2022": 0.292622,
+     "pbase": 0.292622,
      "validos": 440917,
      "capital": "RIO BRANCO",
      "cap2022": 0.263027,
@@ -58,6 +60,7 @@
      "uf": "AL",
      "regiao": "NE",
      "p2022": 0.564985,
+     "pbase": 0.564985,
      "validos": 1724217,
      "capital": "MACEIÓ",
      "cap2022": 0.404305,
@@ -67,6 +70,7 @@
      "uf": "AM",
      "regiao": "N",
      "p2022": 0.495792,
+     "pbase": 0.495792,
      "validos": 2056676,
      "capital": "MANAUS",
      "cap2022": 0.370186,
@@ -76,6 +80,7 @@
      "uf": "AP",
      "regiao": "N",
      "p2022": 0.456733,
+     "pbase": 0.456733,
      "validos": 432161,
      "capital": "MACAPÁ",
      "cap2022": 0.408825,
@@ -85,6 +90,7 @@
      "uf": "BA",
      "regiao": "NE",
      "p2022": 0.697266,
+     "pbase": 0.697266,
      "validos": 8423008,
      "capital": "SALVADOR",
      "cap2022": 0.669891,
@@ -94,6 +100,7 @@
      "uf": "CE",
      "regiao": "NE",
      "p2022": 0.659087,
+     "pbase": 0.659087,
      "validos": 5429264,
      "capital": "FORTALEZA",
      "cap2022": 0.531964,
@@ -103,6 +110,7 @@
      "uf": "DF",
      "regiao": "CO",
      "p2022": 0.368514,
+     "pbase": 0.368514,
      "validos": 1762575,
      "capital": "BRASÍLIA",
      "cap2022": 0.368514,
@@ -112,6 +120,7 @@
      "uf": "ES",
      "regiao": "SE",
      "p2022": 0.404005,
+     "pbase": 0.404005,
      "validos": 2221130,
      "capital": "VITÓRIA",
      "cap2022": 0.419202,
@@ -121,6 +130,7 @@
      "uf": "GO",
      "regiao": "CO",
      "p2022": 0.395147,
+     "pbase": 0.395147,
      "validos": 3681469,
      "capital": "GOIÂNIA",
      "cap2022": 0.330772,
@@ -130,6 +140,7 @@
      "uf": "MA",
      "regiao": "NE",
      "p2022": 0.688445,
+     "pbase": 0.688445,
      "validos": 3781645,
      "capital": "SÃO LUÍS",
      "cap2022": 0.565011,
@@ -139,6 +150,7 @@
      "uf": "MG",
      "regiao": "SE",
      "p2022": 0.482878,
+     "pbase": 0.482878,
      "validos": 12016633,
      "capital": "BELO HORIZONTE",
      "cap2022": 0.425278,
@@ -148,6 +160,7 @@
      "uf": "MS",
      "regiao": "CO",
      "p2022": 0.390396,
+     "pbase": 0.390396,
      "validos": 1506989,
      "capital": "CAMPO GRANDE",
      "cap2022": 0.34572,
@@ -157,6 +170,7 @@
      "uf": "MT",
      "regiao": "CO",
      "p2022": 0.343889,
+     "pbase": 0.343889,
      "validos": 1842888,
      "capital": "CUIABÁ",
      "cap2022": 0.364811,
@@ -166,6 +180,7 @@
      "uf": "PA",
      "regiao": "N",
      "p2022": 0.522172,
+     "pbase": 0.522172,
      "validos": 4679936,
      "capital": "BELÉM",
      "cap2022": 0.457381,
@@ -175,6 +190,7 @@
      "uf": "PB",
      "regiao": "NE",
      "p2022": 0.64206,
+     "pbase": 0.64206,
      "validos": 2421688,
      "capital": "JOÃO PESSOA",
      "cap2022": 0.473794,
@@ -184,6 +200,7 @@
      "uf": "PE",
      "regiao": "NE",
      "p2022": 0.652663,
+     "pbase": 0.652663,
      "validos": 5452009,
      "capital": "RECIFE",
      "cap2022": 0.540347,
@@ -193,6 +210,7 @@
      "uf": "PI",
      "regiao": "NE",
      "p2022": 0.742525,
+     "pbase": 0.742525,
      "validos": 2044386,
      "capital": "TERESINA",
      "cap2022": 0.623653,
@@ -202,6 +220,7 @@
      "uf": "PR",
      "regiao": "S",
      "p2022": 0.359917,
+     "pbase": 0.359917,
      "validos": 6566764,
      "capital": "CURITIBA",
      "cap2022": 0.314214,
@@ -211,6 +230,7 @@
      "uf": "RJ",
      "regiao": "SE",
      "p2022": 0.406818,
+     "pbase": 0.406818,
      "validos": 9456677,
      "capital": "RIO DE JANEIRO",
      "cap2022": 0.43469,
@@ -220,6 +240,7 @@
      "uf": "RN",
      "regiao": "NE",
      "p2022": 0.629802,
+     "pbase": 0.629802,
      "validos": 2007264,
      "capital": "NATAL",
      "cap2022": 0.501478,
@@ -229,6 +250,7 @@
      "uf": "RO",
      "regiao": "N",
      "p2022": 0.289791,
+     "pbase": 0.289791,
      "validos": 903235,
      "capital": "PORTO VELHO",
      "cap2022": 0.342122,
@@ -238,6 +260,7 @@
      "uf": "RR",
      "regiao": "N",
      "p2022": 0.230453,
+     "pbase": 0.230453,
      "validos": 298369,
      "capital": "BOA VISTA",
      "cap2022": 0.191154,
@@ -247,6 +270,7 @@
      "uf": "RS",
      "regiao": "S",
      "p2022": 0.422835,
+     "pbase": 0.422835,
      "validos": 6637752,
      "capital": "PORTO ALEGRE",
      "cap2022": 0.498257,
@@ -256,6 +280,7 @@
      "uf": "SC",
      "regiao": "S",
      "p2022": 0.295364,
+     "pbase": 0.295364,
      "validos": 4330984,
      "capital": "FLORIANÓPOLIS",
      "cap2022": 0.424321,
@@ -265,6 +290,7 @@
      "uf": "SE",
      "regiao": "NE",
      "p2022": 0.638244,
+     "pbase": 0.638244,
      "validos": 1298432,
      "capital": "ARACAJU",
      "cap2022": 0.525631,
@@ -274,6 +300,7 @@
      "uf": "SP",
      "regiao": "SE",
      "p2022": 0.408867,
+     "pbase": 0.408867,
      "validos": 25656334,
      "capital": "SÃO PAULO",
      "cap2022": 0.475364,
@@ -283,6 +310,7 @@
      "uf": "TO",
      "regiao": "N",
      "p2022": 0.503953,
+     "pbase": 0.503953,
      "validos": 861792,
      "capital": "PALMAS",
      "cap2022": 0.380606,
@@ -292,6 +320,7 @@
      "uf": "ZZ",
      "regiao": "EX",
      "p2022": 0.471719,
+     "pbase": 0.471719,
      "validos": 294525,
      "capital": "",
      "cap2022": null,
@@ -300,70 +329,78 @@
    ]
   },
   "turno2": {
-   "sd_reg": 0.2169,
-   "sd_uf": 0.2514,
-   "sd_com": 0.2496,
-   "sd_id": 0.2415,
+   "sd_reg": 0.0589,
+   "sd_uf": 0.1329,
+   "sd_com": 0.1227,
+   "sd_id": 0.0837,
+   "base": "1º turno de 2026",
    "unidades": [
     {
      "uf": "AC",
      "regiao": "N",
      "p2022": 0.296998,
-     "validos": 409316,
+     "pbase": 0.307992,
+     "validos": 437577,
      "capital": "RIO BRANCO",
      "cap2022": 0.274914,
-     "gap": -0.1082
+     "gap": -0.0396
     },
     {
      "uf": "AL",
      "regiao": "NE",
      "p2022": 0.586806,
-     "validos": 1664658,
+     "pbase": 0.575019,
+     "validos": 1731177,
      "capital": "MACEIÓ",
      "cap2022": 0.428243,
-     "gap": -0.6398
+     "gap": -0.5448
     },
     {
      "uf": "AM",
      "regiao": "N",
      "p2022": 0.510995,
-     "validos": 1966732,
+     "pbase": 0.517352,
+     "validos": 2023760,
      "capital": "MANAUS",
      "cap2022": 0.387244,
-     "gap": -0.5029
+     "gap": -0.4493
     },
     {
      "uf": "AP",
      "regiao": "N",
      "p2022": 0.486389,
-     "validos": 390465,
+     "pbase": 0.500265,
+     "validos": 424781,
      "capital": "MACAPÁ",
      "cap2022": 0.450781,
-     "gap": -0.1431
+     "gap": -0.0866
     },
     {
      "uf": "BA",
      "regiao": "NE",
      "p2022": 0.721222,
-     "validos": 8454843,
+     "pbase": 0.69872,
+     "validos": 8107356,
      "capital": "SALVADOR",
      "cap2022": 0.707254,
-     "gap": -0.0684
+     "gap": 0.0401
     },
     {
      "uf": "CE",
      "regiao": "NE",
      "p2022": 0.699675,
-     "validos": 5442368,
+     "pbase": 0.669275,
+     "validos": 5312113,
      "capital": "FORTALEZA",
      "cap2022": 0.581777,
-     "gap": -0.5157
+     "gap": -0.3978
     },
     {
      "uf": "DF",
      "regiao": "CO",
      "p2022": 0.411885,
-     "validos": 1770626,
+     "pbase": 0.426198,
+     "validos": 1585243,
      "capital": "BRASÍLIA",
      "cap2022": 0.411885,
      "gap": null
@@ -372,187 +409,208 @@
      "uf": "ES",
      "regiao": "SE",
      "p2022": 0.419558,
-     "validos": 2208912,
+     "pbase": 0.408035,
+     "validos": 2083222,
      "capital": "VITÓRIA",
      "cap2022": 0.452994,
-     "gap": 0.136
+     "gap": 0.199
     },
     {
      "uf": "GO",
      "regiao": "CO",
      "p2022": 0.412865,
-     "validos": 3735156,
+     "pbase": 0.366851,
+     "validos": 3240768,
      "capital": "GOIÂNIA",
      "cap2022": 0.360478,
-     "gap": -0.2212
+     "gap": -0.1159
     },
     {
      "uf": "MA",
      "regiao": "NE",
      "p2022": 0.711357,
-     "validos": 3751174,
+     "pbase": 0.674394,
+     "validos": 3805341,
      "capital": "SÃO LUÍS",
      "cap2022": 0.603793,
-     "gap": -0.4807
+     "gap": -0.3411
     },
     {
      "uf": "MG",
      "regiao": "SE",
      "p2022": 0.502013,
-     "validos": 12332270,
+     "pbase": 0.473163,
+     "validos": 10966484,
      "capital": "BELO HORIZONTE",
      "cap2022": 0.457488,
-     "gap": -0.1785
+     "gap": -0.0471
     },
     {
      "uf": "MS",
      "regiao": "CO",
      "p2022": 0.405057,
-     "validos": 1480153,
+     "pbase": 0.371783,
+     "validos": 1390206,
      "capital": "CAMPO GRANDE",
      "cap2022": 0.37346,
-     "gap": -0.133
+     "gap": -0.0699
     },
     {
      "uf": "MT",
      "regiao": "CO",
      "p2022": 0.349174,
-     "validos": 1869516,
+     "pbase": 0.309362,
+     "validos": 1880262,
      "capital": "CUIABÁ",
      "cap2022": 0.385032,
-     "gap": 0.1544
+     "gap": 0.2764
     },
     {
      "uf": "PA",
      "regiao": "N",
      "p2022": 0.547479,
-     "validos": 4582979,
+     "pbase": 0.528672,
+     "validos": 4591194,
      "capital": "BELÉM",
      "cap2022": 0.502798,
-     "gap": -0.1793
+     "gap": -0.0219
     },
     {
      "uf": "PB",
      "regiao": "NE",
      "p2022": 0.666244,
-     "validos": 2404455,
+     "pbase": 0.649578,
+     "validos": 2372504,
      "capital": "JOÃO PESSOA",
      "cap2022": 0.501011,
-     "gap": -0.6872
+     "gap": -0.599
     },
     {
      "uf": "PE",
      "regiao": "NE",
      "p2022": 0.669318,
-     "validos": 5439765,
+     "pbase": 0.671572,
+     "validos": 5292014,
      "capital": "RECIFE",
      "cap2022": 0.563192,
-     "gap": -0.451
+     "gap": -0.3501
     },
     {
      "uf": "PI",
      "regiao": "NE",
      "p2022": 0.768602,
-     "validos": 2018448,
+     "pbase": 0.746647,
+     "validos": 2040738,
      "capital": "TERESINA",
      "cap2022": 0.664439,
-     "gap": -0.5173
+     "gap": -0.416
     },
     {
      "uf": "PR",
      "regiao": "S",
      "p2022": 0.376031,
-     "validos": 6665948,
+     "pbase": 0.342436,
+     "validos": 5999942,
      "capital": "CURITIBA",
      "cap2022": 0.352227,
-     "gap": -0.1028
+     "gap": 0.0142
     },
     {
      "uf": "RJ",
      "regiao": "SE",
      "p2022": 0.434746,
-     "validos": 9560111,
+     "pbase": 0.426452,
+     "validos": 8659865,
      "capital": "RIO DE JANEIRO",
      "cap2022": 0.473378,
-     "gap": 0.1559
+     "gap": 0.2098
     },
     {
      "uf": "RN",
      "regiao": "NE",
      "p2022": 0.65097,
-     "validos": 2038166,
+     "pbase": 0.632112,
+     "validos": 1958456,
      "capital": "NATAL",
      "cap2022": 0.529575,
-     "gap": -0.5049
+     "gap": -0.4376
     },
     {
      "uf": "RO",
      "regiao": "N",
      "p2022": 0.293374,
-     "validos": 896140,
+     "pbase": 0.277392,
+     "validos": 903655,
      "capital": "PORTO VELHO",
      "cap2022": 0.35366,
-     "gap": 0.2761
+     "gap": 0.3313
     },
     {
      "uf": "RR",
      "regiao": "N",
      "p2022": 0.239191,
-     "validos": 280646,
+     "pbase": 0.243408,
+     "validos": 305742,
      "capital": "BOA VISTA",
      "cap2022": 0.205322,
-     "gap": -0.1962
+     "gap": -0.2047
     },
     {
      "uf": "RS",
      "regiao": "S",
      "p2022": 0.436503,
-     "validos": 6625036,
+     "pbase": 0.391027,
+     "validos": 5868542,
      "capital": "PORTO ALEGRE",
      "cap2022": 0.535011,
-     "gap": 0.3956
+     "gap": 0.5917
     },
     {
      "uf": "SC",
      "regiao": "S",
      "p2022": 0.307286,
-     "validos": 4399548,
+     "pbase": 0.273108,
+     "validos": 4127188,
      "capital": "FLORIANÓPOLIS",
      "cap2022": 0.466727,
-     "gap": 0.6795
+     "gap": 0.804
     },
     {
      "uf": "SE",
      "regiao": "NE",
      "p2022": 0.672061,
-     "validos": 1284037,
+     "pbase": 0.671989,
+     "validos": 1273858,
      "capital": "ARACAJU",
      "cap2022": 0.572572,
-     "gap": -0.4252
+     "gap": -0.3464
     },
     {
      "uf": "SP",
      "regiao": "SE",
      "p2022": 0.447609,
-     "validos": 25736469,
+     "pbase": 0.42383,
+     "validos": 22427436,
      "capital": "SÃO PAULO",
      "cap2022": 0.535406,
-     "gap": 0.3522
+     "gap": 0.4075
     },
     {
      "uf": "TO",
      "regiao": "N",
      "p2022": 0.513553,
-     "validos": 846247,
+     "pbase": 0.462607,
+     "validos": 873330,
      "capital": "PALMAS",
      "cap2022": 0.39679,
-     "gap": -0.4731
+     "gap": -0.4048
     },
     {
      "uf": "ZZ",
      "regiao": "EX",
      "p2022": 0.512813,
-     "validos": 298169,
+     "pbase": 0.522382,
+     "validos": 301287,
      "capital": "",
      "cap2022": null,
      "gap": null

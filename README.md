@@ -22,7 +22,7 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `backtest.py`, `nivel2.py` | Baselines (persistência, swing uniforme), backtest e λ regional (não melhora de forma clara o swing uniforme) |
 | `buscar_pesquisas.py` | Busca pesquisas novas em tabelas HTML (Wikipedia) e grava **candidatas** em `datasets/candidatas.csv` (nova/divergente vs. o CSV oficial); não altera `pesquisas-2026.csv`. Conferir na fonte antes de promover a linha |
 | `pesquisas.py` | δ nacional a partir das pesquisas: house effect, recência, viés histórico → `modelos/parametros.json` |
-| `montecarlo.py`, `modelos/eleicoes-model.js` | Monte Carlo por UF e capital (Python e JS, com teste de equivalência) |
+| `montecarlo.py`, `modelos/eleicoes-model.js` | Monte Carlo por UF e capital (Python e JS, com teste de equivalência). 1º turno: base 2022; 2º turno: base = 1º turno de 2026 por UF e capital, com o ruído medido do 1º para o 2º turno de 2002–2022 |
 | `projecao.py`, `modelos/projecao-model.js` | Projeção do 1º turno (Lula × Flávio × demais) com base em 2022 |
 | `gerar_pagina_analise.py` | Gera `analise.html` a partir de `apps/analise.template.html` e `datasets/resultado-2026-turno1.csv` (resultado do 1º turno da presidencial por UF, do arquivo oficial do TSE, com a fonte de cada linha): 2022 × 2026, pesquisas e modelo × resultado, mapa do post de Marco Faganello, aritmética do 2º turno |
 | `gerar_pagina_segundo_turno.py` | Gera `segundo-turno.html` (aba do 2º turno): pontos de referência, simulador de cenários por UF (`modelos/eleicoes-model.js`, base 2º turno de 2022) e as pesquisas pós-1º turno de `datasets/pesquisas-2turno-pos-1t-2026.csv` (vazio até haver pesquisa conferida) |
