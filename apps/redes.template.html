@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redes sociais · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+<style>
+  .barra { display:grid; grid-template-columns:minmax(120px,210px) minmax(0,1fr); gap:10px; align-items:center; margin:9px 0; font-size:.88rem }
+  .barra .seg3 { display:flex; height:26px; border-radius:6px; overflow:hidden; border:1px solid var(--line) }
+  .barra .seg3 i { display:block; height:100% } .barra .fav { background:var(--s3) } .barra .neu { background:var(--muted); opacity:.45 } .barra .des { background:#b35c00 }
+  .barra small { display:block; color:var(--muted); font-size:.76rem; margin-top:2px }
+  .leg { display:flex; flex-wrap:wrap; gap:14px; font-size:.8rem; color:var(--ink2); margin:6px 0 2px } .leg s { display:inline-block; vertical-align:middle; margin-right:5px; width:14px; height:10px; border-radius:3px; text-decoration:none }
+  .leg .fav { background:var(--s3) } .leg .neu { background:var(--muted); opacity:.45 } .leg .des { background:#b35c00 }
+  .duas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px } @media (max-width:760px) { .duas { grid-template-columns:minmax(0,1fr) } }
+  .titc { margin:18px 0 2px; font-size:.95rem }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
+  <div class="topo"><div><h1>Redes sociais: a conversa no Bluesky sobre Lula e Flávio</h1>
+  <p class="sub">O que dá para medir com posts públicos do Bluesky no 2º turno, com o debate da Band (18/10, 20h às 22h). <b>Isto não é pesquisa de intenção de voto.</b></p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="an">
+  <div class="aviso"><b>Leia antes.</b> O Bluesky não representa o eleitorado. Nos 304 posts que eu li, quem fala de Lula é quase sempre a favor e quem fala de Flávio é quase sempre contra. Por isso eu <b>não</b> mostro um "termômetro de sentimento" nem somo isso às pesquisas. O X e o Instagram ficaram de fora: o X exige um token de API (a chamada sem token foi recusada) e o Instagram não tem busca pública. Os posts vêm da busca pública do Bluesky, em amostras por janela de tempo.</div>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="sec"><div>
+  <h2>1. O volume da conversa e o debate</h2>
+  <p id="volTxt"></p>
+  <div class="cv" style="height:340px"><canvas id="cVol"></canvas></div>
+  <h3 class="titc">As horas do debate, em múltiplos do volume normal da mesma faixa do dia</h3>
+  <div class="cv" style="height:300px"><canvas id="cDeb"></canvas></div>
+  <div id="tDeb"></div>
+  <p class="fonte">A busca informa o total de posts de cada janela (6 horas; 1 hora em volta do debate). Eu divido pelas horas da janela. "Normal da faixa" é a mediana das janelas de 6 horas da mesma faixa do dia (0–6h, 6–12h, 12–18h ou 18–24h) de 12 a 17/10. A busca de "Lula" é bem mais ampla que a de "Flávio Bolsonaro", então compare cada linha com ela mesma, não uma com a outra. As horas da madrugada (a partir das 0h) são comparadas com a média da faixa de 0–6h, que é baixa e não acompanha o fim da noite, então o múltiplo delas exagera. Escala logarítmica no primeiro gráfico.</p>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div>
+  <h2>2. O que se diz: a favor, contra ou neutro</h2>
+  <p id="posTxt"></p>
+  <div class="leg"><span><s class="fav"></s>favorável ao candidato citado</span><span><s class="neu"></s>neutro, notícia, piada ou sem posição</span><span><s class="des"></s>desfavorável</span></div>
+  <div id="barras"></div>
+  <div id="tPos"></div>
+  <p class="fonte">Amostra de posts que citam só um dos dois candidatos, sem link e sem texto repetido, no máximo 3 por autor por dia: 76 posts por grupo, sorteados. Cada post foi lido e classificado por mim (Claude); não houve segundo anotador, então a concordância entre pessoas não foi medida. Intervalo de confiança de Wilson, 95%.</p>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div>
+  <h2>3. Por que não há um termômetro automático</h2>
+  <p id="modTxt"></p>
+  <div id="tMod"></div>
+  <p class="fonte">Acurácia em 3 classes (favorável, neutro, desfavorável) contra os 304 posts que eu classifiquei. A linha de base não lê o texto: diz "favorável" para quem cita Lula e "desfavorável" para quem cita Flávio. Os rótulos são meus, então isto mede a concordância dos modelos comigo, não uma verdade externa.</p>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div>
+  <h2>4. Hashtags e mensagens repetidas</h2>
+  <p id="hashTxt"></p>
+  <div class="duas"><div><h3 class="titc">Antes do debate</h3><div id="tHashA"></div></div><div><h3 class="titc">Debate e depois</h3><div id="tHashD"></div></div></div>
+  <p class="fonte">Posts que contêm cada hashtag (sem diferenciar maiúsculas nem acentos), em todos os posts coletados. Hashtags de campanha dos dois lados; não verifico quem as organiza.</p>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div>
+  <h2>5. Limites desta análise</h2>
+  <ul class="fonte" style="font-size:.88rem">
+    <li>O Bluesky é uma rede pequena e muito inclinada à esquerda: a ausência de apoio ao Flávio na amostra diz mais sobre a rede que sobre o eleitorado.</li>
+    <li>Só uma rede. O X e o Instagram não entram (o X exige token de API; o Instagram não tem busca pública).</li>
+    <li>A coleta pega os posts mais recentes de cada janela, não todos; o volume vem do total que a busca informa, que pode ser aproximado. Algumas janelas falharam e foram refeitas; a última (19/10) é parcial.</li>
+    <li>Um mesmo autor, ou uma campanha organizada, pode inflar o volume: por isso a amostra de posição tira textos repetidos e limita 3 posts por autor por dia.</li>
+    <li>Os rótulos da amostra são de uma só leitora (eu, Claude), sem validação por outra pessoa. Com 76 posts por grupo, o intervalo de confiança é de uns 10 p.p. para cada lado.</li>
+    <li>Só aparecem agregados. Os textos dos posts ficam num cache local, fora do repositório, sem nome nem @ dos autores.</li>
+  </ul>
+  </div></section>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = __DATA__;
+const N = (x) => x.toLocaleString("pt-BR"), DEB = [Date.parse("2026-10-18T20:00:00-03:00"), Date.parse("2026-10-18T22:00:00-03:00")];
+const NOME = { lula: "Lula", flavio: "Flávio Bolsonaro" };
+const dia = (ms) => new Date(ms).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", timeZone: "America/Sao_Paulo" });
+const pos = (c, p) => D.posicao.find(x => x.candidato === c && x.periodo === p);
+const maxX = (c) => D.debate_efeito.horas.filter(h => h.h === "18/10 20h" || h.h === "18/10 21h").reduce((a, h) => (h[c + "_x"] > a[c + "_x"] ? h : a));   // pico durante o debate (20h e 21h)
+
+const debateBox = { id: "debateBox", beforeDatasetsDraw(c) {
+  const x = c.scales.x, a = c.chartArea; if (!x) return; const l = x.getPixelForValue(DEB[0]), r = x.getPixelForValue(DEB[1]);
+  c.ctx.save(); c.ctx.fillStyle = "rgba(128,128,128,.18)"; c.ctx.fillRect(l, a.top, Math.max(3, r - l), a.bottom - a.top);
+  c.ctx.fillStyle = css("--ink2"); c.ctx.font = "600 11px system-ui"; c.ctx.fillText("debate", l + 3, a.top + 12); c.ctx.restore(); } };
+Chart.register(debateBox);
+
+function kpis() {
+  const c = D.corpus, pl = maxX("lula"), pf = maxX("flavio");
+  $("kpis").innerHTML = `<div class="kpi"><span>Posts coletados</span><b>${N(c.posts)}</b><small>${c.de} a ${c.ate} · ${N(c.autores)} autores</small></div>
+    <div class="kpi l"><span>Pico do debate, Lula</span><b>×${f1(pl.lula_x)}</b><small>${pl.h}: ${N(pl.lula_ph)} posts/h (normal da faixa: ${N(pl.lula_base)})</small></div>
+    <div class="kpi f"><span>Pico do debate, Flávio</span><b>×${f1(pf.flavio_x)}</b><small>${pf.h}: ${N(pf.flavio_ph)} posts/h (normal da faixa: ${N(pf.flavio_base)})</small></div>
+    <div class="kpi o"><span>Posts que eu li</span><b>${D.amostra_rotulada}</b><small>amostra rotulada: a favor, contra ou neutro</small></div>`;
+}
+
+function volume() {
+  const mid = (w) => (Date.parse(w.ini) + Date.parse(w.fim)) / 2;
+  const ds = (k, cor) => ({ label: NOME[k], data: D.volume.map(w => ({ x: mid(w), y: w[k + "_ph"] })), borderColor: css(cor), backgroundColor: css(cor), borderWidth: 2.5, pointRadius: 2, tension: .2 });
+  chart("cVol", { type: "line", data: { datasets: [ds("lula", "--pt"), ds("flavio", "--anti")] }, options: { parsing: false, interaction: { mode: "nearest", axis: "x", intersect: false },
+    scales: { x: { type: "linear", ...eixo({ grid: { display: false } }), ticks: { color: css("--ink2"), maxTicksLimit: 8, callback: (v) => dia(v) } },
+      y: { type: "logarithmic", ...eixo(), min: 5, ticks: { color: css("--ink2"), callback: (v) => [10, 100, 1000].includes(v) ? N(v) : "" }, title: { display: true, text: "posts por hora (escala log)", color: css("--ink2") } } },
+    plugins: { tooltip: { callbacks: { title: (i) => dia(i[0].parsed.x), label: (i) => `${i.dataset.label}: ${N(Math.round(i.parsed.y))} posts/h` } } } } });
+  const b = D.debate_efeito.base_por_faixa["18h-24h"], pl = maxX("lula"), pf = maxX("flavio");
+  $("volTxt").innerHTML = `Nas noites normais (faixa de 18h a 24h, mediana de 12 a 17/10), o Bluesky teve cerca de <b>${N(b.lula)} posts por hora</b> citando Lula e <b>${N(b.flavio)}</b> citando Flávio Bolsonaro. No debate, a conversa sobre Lula chegou a <b>${f1(pl.lula_x)} vezes</b> o normal da faixa (${pl.h}) e a sobre Flávio a <b>${f1(pf.flavio_x)} vezes</b> (${pf.h}). O interesse por Lula caiu mais rápido depois do debate; o por Flávio ficou alto por mais tempo. O volume tem ciclo diário forte, por isso cada hora é comparada com a mesma faixa do dia nos dias anteriores.`;
+}
+
+function debate() {
+  const H = D.debate_efeito.horas;
+  chart("cDeb", { type: "bar", data: { labels: H.map(h => h.h), datasets: [{ label: "Lula", data: H.map(h => h.lula_x), backgroundColor: css("--pt") }, { label: "Flávio Bolsonaro", data: H.map(h => h.flavio_x), backgroundColor: css("--anti") }] },
+    options: { scales: { x: eixo({ grid: { display: false } }), y: eixo({ beginAtZero: true, title: { display: true, text: "múltiplo do normal da faixa", color: css("--ink2") }, ticks: { color: css("--ink2"), callback: (v) => "×" + v } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ×${f1(i.parsed.y)}` } } } } });
+  tab("tDeb", ["Hora (Brasília)", "Lula, posts/h", "normal da faixa", "× normal", "Flávio, posts/h", "normal da faixa", "× normal"], H.map(h => [h.h, N(h.lula_ph), N(h.lula_base), "×" + f1(h.lula_x), N(h.flavio_ph), N(h.flavio_base), "×" + f1(h.flavio_x)]));
+}
+
+function posicao() {
+  const nomes = { lula: "Lula", flavio: "Flávio" };
+  $("barras").innerHTML = D.posicao.map(p => `<div class="barra"><span><b>${nomes[p.candidato]}</b>, ${p.periodo}<small>n = ${p.n} posts</small></span>
+    <div><div class="seg3" title="favorável ${f1(p.P.pct)}%, neutro ${f1(p["0"].pct)}%, desfavorável ${f1(p.N.pct)}%"><i class="fav" style="width:${p.P.pct}%"></i><i class="neu" style="width:${p["0"].pct}%"></i><i class="des" style="width:${p.N.pct}%"></i></div>
+    <small>favorável ${f1(p.P.pct)}% · neutro ${f1(p["0"].pct)}% · desfavorável ${f1(p.N.pct)}%</small></div></div>`).join("");
+  const ic = (x) => `${f1(x.pct)}% (${f1(x.ic[0])} a ${f1(x.ic[1])})`;
+  tab("tPos", ["Candidato citado", "Período", "Posts", "Favorável", "Neutro", "Desfavorável"], D.posicao.map(p => [nomes[p.candidato], p.periodo, p.n, ic(p.P), ic(p["0"]), ic(p.N)]));
+  const la = pos("lula", "antes do debate"), ld = pos("lula", "debate e depois"), fa = pos("flavio", "antes do debate"), fd = pos("flavio", "debate e depois");
+  $("posTxt").innerHTML = `Entre os posts que citam <b>só Lula</b>, ${f1(la.P.pct)}% são favoráveis antes do debate e ${f1(ld.P.pct)}% depois; os desfavoráveis passam de ${f1(la.N.pct)}% para ${f1(ld.N.pct)}%. Entre os que citam <b>só Flávio</b>, ${f1(fa.N.pct)}% são desfavoráveis antes e ${f1(fd.N.pct)}% depois, e quase nenhum é a favor (${f1(fa.P.pct)}% e ${f1(fd.P.pct)}%). Dos 6 posts desfavoráveis a Lula depois do debate, 5 são, pela minha leitura, críticas ao desempenho ou à campanha feitas por quem aparenta apoiá-lo, não ataque de adversário. Com 76 posts por grupo, a mudança é um indício, não uma conclusão.`;
+}
+
+function modelos() {
+  const M = D.avaliacao.modelos;
+  tab("tMod", ["Método", "Acerta (3 classes)"], M.slice().sort((a, b) => b.acuracia - a.acuracia).map(m => [`${m.nome}<br><small class="fonte">${m.descricao}</small>`, `<b>${f1(100 * m.acuracia)}%</b>${m.desvio ? ` <small class="fonte">± ${f1(100 * m.desvio)}</small>` : ""}`]));
+  const base = M.find(m => m.nome.startsWith("Linha de base")), pr = M.filter(m => !m.nome.startsWith("Linha de base") && !m.nome.startsWith("Regressão"));
+  $("modTxt").innerHTML = `Eu testei três modelos prontos de sentimento e de posição (e uma regressão treinada nos meus rótulos). Os prontos acertam entre <b>${f1(100 * Math.min(...pr.map(m => m.acuracia)))}% e ${f1(100 * Math.max(...pr.map(m => m.acuracia)))}%</b>: leem muito texto a favor como neutro ou negativo (em um teste, "Lula arrasou no debate" saiu negativo). A <b>linha de base trivial</b>, que só olha quem é citado, acerta <b>${f1(100 * base.acuracia)}%</b>, e a regressão não a supera. Ou seja: aqui, o sentimento de um post quase só repete qual candidato ele cita, e a rede é muito pró-Lula. Uma pontuação automática viraria ruído com cara de dado, e por isso a página não mostra uma.`;
+}
+
+function hashtags() {
+  const t = (id, h) => tab(id, ["Hashtag", "Posts"], h.top.map(([k, n]) => [k, N(n)]));
+  t("tHashA", D.hashtags.antes); t("tHashD", D.hashtags.depois);
+  const c = D.corpus;
+  $("hashTxt").innerHTML = `${f1(c.texto_repetido_pct)}% dos posts coletados repetem o texto de outro (cópia de mensagem), e ${N(c.textos_repetidos_5x)} mensagens aparecem 5 vezes ou mais, somando ${N(c.posts_em_textos_repetidos_5x)} posts (${f1(100 * c.posts_em_textos_repetidos_5x / c.posts)}%). ${c.autores_10mais_posts} autores com 10 posts ou mais respondem por ${f1(c.posts_dos_autores_10mais_pct)}% do total. Depois do debate, as hashtags mais usadas são de mobilização em torno do debate e de pedidos para o Flávio abrir o sigilo bancário.`;
+}
+
+function notas() {
+  const c = D.corpus, pl = maxX("lula"), pf = maxX("flavio");
+  nota("nota1", [`${N(c.posts)} posts coletados de ${c.de} a ${c.ate}.`, `Lula: pico de <b>×${f1(pl.lula_x)}</b> às ${pl.h.split(" ")[1]}.`, `Flávio: pico de <b>×${f1(pf.flavio_x)}</b> às ${pf.h.split(" ")[1]}.`]);
+  nota("nota2", [`Quem cita Lula é <b>favorável</b> em ~80% dos posts.`, `Quem cita Flávio é <b>desfavorável</b> em ~88%.`, `Praticamente <b>não há apoio ao Flávio</b> na amostra: isso é a rede, não o eleitorado.`]);
+  nota("nota3", [`Modelos prontos: <b>${f1(100 * Math.min(...D.avaliacao.modelos.filter(m => /multilíngue|tweets|NLI/.test(m.nome)).map(m => m.acuracia)))}% a ${f1(100 * Math.max(...D.avaliacao.modelos.filter(m => /multilíngue|tweets|NLI/.test(m.nome)).map(m => m.acuracia)))}%</b> de acerto.`, `Linha de base trivial: <b>${f1(100 * D.avaliacao.modelos[0].acuracia)}%</b>.`]);
+  nota("nota4", [`${f1(c.texto_repetido_pct)}% dos posts são texto repetido.`, `Mobilização organizada aparece nas hashtags dos dois lados.`]);
+}
+function tudo() { kpis(); volume(); debate(); posicao(); modelos(); hashtags(); notas(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>

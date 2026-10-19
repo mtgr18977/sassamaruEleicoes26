@@ -1,0 +1,51 @@
+{
+ "n": 304,
+ "rotulos": {
+  "N": 139,
+  "P": 121,
+  "0": 44
+ },
+ "modelos": [
+  {
+   "nome": "Linha de base (Lula = favorável, Flávio = desfavorável)",
+   "descricao": "Não olha o texto: só quem é citado.",
+   "acuracia": 0.832
+  },
+  {
+   "nome": "Sentimento multilíngue (DistilBERT)",
+   "descricao": "lxyuan/distilbert-base-multilingual-cased-sentiments-student",
+   "acuracia": 0.53,
+   "segundos": 8
+  },
+  {
+   "nome": "Sentimento de tweets (XLM-R)",
+   "descricao": "cardiffnlp/twitter-xlm-roberta-base-sentiment",
+   "acuracia": 0.421,
+   "segundos": 13
+  },
+  {
+   "nome": "Posição por NLI zero-shot (mDeBERTa)",
+   "descricao": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli, três hipóteses por candidato",
+   "acuracia": 0.549,
+   "segundos": 99
+  },
+  {
+   "nome": "Regressão logística em TF-IDF (validação cruzada)",
+   "descricao": "Palavras e trechos de letras + quem é citado; 5 partições × 5 repetições",
+   "acuracia": 0.812,
+   "desvio": 0.01
+  }
+ ],
+ "por_candidato": {
+  "lula": {
+   "P": 120,
+   "0": 26,
+   "N": 6
+  },
+  "flavio": {
+   "N": 133,
+   "0": 18,
+   "P": 1
+  }
+ }
+}
