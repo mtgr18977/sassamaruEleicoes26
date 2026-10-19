@@ -16,6 +16,7 @@ from pathlib import Path
 API = "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts"
 BRT = timezone(timedelta(hours=-3))
 SAIDA = Path("datasets/redes/bluesky-bruto.jsonl")
+VOLUME = Path("datasets/redes/bluesky-volume.csv")      # agregado (vai para o git): total de posts que a busca informa em cada janela e termo
 TERMOS = {"lula": ["Lula"], "flavio": ["Flávio Bolsonaro", "Flavio Bolsonaro", "Flávio"]}
 MAX_PAG = 3          # páginas de 100 posts por (termo, janela)
 DEBATE = (datetime(2026, 10, 18, 20, tzinfo=BRT), datetime(2026, 10, 18, 22, tzinfo=BRT))
@@ -42,11 +43,11 @@ def buscar(q, ini, fim, cursor=None):
     if cursor:
         p["cursor"] = cursor
     req = urllib.request.Request(API + "?" + urllib.parse.urlencode(p), headers={"User-Agent": "eleicoes-dashboard-pesquisa/1.0"})
-    for tentativa in range(4):
+    for tentativa in range(5):
         try:
             return json.load(urllib.request.urlopen(req, timeout=40))
-        except Exception as e:                      # 429/5xx: espera e tenta de novo
-            time.sleep(2 ** tentativa * 2)
+        except Exception as e:                      # 403/429/5xx e quedas do túnel: espera um pouco mais a cada tentativa
+            time.sleep(3 * (tentativa + 1))
             err = e
     print("falhou:", q, ini, err, file=sys.stderr)
     return {"posts": []}
@@ -60,12 +61,18 @@ def enxuto(p, cand):
                 citacoes=p.get("quoteCount", 0), link=bool(tem_link), busca=cand)
 
 
-def salvar(vistos):
+def salvar(vistos, volume):
     SAIDA.write_text("\n".join(json.dumps(d, ensure_ascii=False) for d in vistos.values()) + "\n", encoding="utf-8")
+    VOLUME.write_text("inicio,fim,candidato,termo,posts\n" + "".join(f"{a},{b},{c},{d},{n}\n" for (a, b, c, d), n in sorted(volume.items())), encoding="utf-8")
 
 
 def main():
     agora = datetime.now(BRT)
+    volume = {}
+    if VOLUME.exists():
+        for l in VOLUME.read_text(encoding="utf-8").splitlines()[1:]:
+            ini_, fim_, cand_, termo_, n_ = l.split(",")
+            volume[(ini_, fim_, cand_, termo_)] = int(n_)
     vistos = {}
     if SAIDA.exists():
         for l in SAIDA.read_text(encoding="utf-8").splitlines():
@@ -78,6 +85,8 @@ def main():
                 cursor = None
                 for _ in range(mp):
                     r = buscar(q, ini, fim, cursor)
+                    if cursor is None and "hitsTotal" in r:
+                        volume[(ini.isoformat(), fim.isoformat(), cand, q)] = int(r["hitsTotal"])
                     for p in r.get("posts", []):
                         d = enxuto(p, cand)
                         if d["id"] not in vistos:
@@ -86,12 +95,12 @@ def main():
                         elif cand not in vistos[d["id"]]["busca"]:
                             vistos[d["id"]]["busca"] += "," + cand
                     cursor = r.get("cursor")
-                    time.sleep(0.4)
+                    time.sleep(0.8)
                     if not cursor:
                         break
         print(ini.strftime("%d/%m %Hh"), "->", len(vistos), "posts", flush=True)
-        salvar(vistos)                                  # grava a cada janela: se for interrompido, retoma do cache
-    salvar(vistos)
+        salvar(vistos, volume)                          # grava a cada janela: se for interrompido, retoma do cache
+    salvar(vistos, volume)
     print("novos:", novos, "total:", len(vistos))
 
 
