@@ -6,7 +6,7 @@ Hipótese (André Rocha, 19/10): nos estados em que só há eleição presidenci
   3) o que cada nível de abstenção extra muda no Lula/(Lula+Flávio): se os ausentes saem dos dois lados na proporção local, quase nada; se saem só do lado do Flávio, muda bastante.
 Usa datasets/tse-presidente-uf.csv (aptos, comparecimento e votos por UF e turno). Os votos de 2022 são o peso dos estados.
   python abstencao_2t.py
-ponytail: as listas de UFs com 2º turno de governador vêm de matérias (as fontes divergem em 2026: 5 a 7 UFs; usei a da Agência Brasil); a variação da abstenção tem n=54 e
+ponytail: as listas de UFs com 2º turno de governador (2018, 2022 e 2026) foram conferidas em 20/10/2026 nos arquivos de votação por candidato do TSE (candidatos a governador do 2º turno; a lista de 2026 da Agência Brasil trazia o RJ, que elegeu governador no 1º turno); a variação da abstenção tem n=54 e
 intervalo que inclui zero; o cenário supõe que os ausentes eram eleitores do candidato na proporção do voto local e que o resto do país não muda."""
 import json
 
@@ -14,10 +14,10 @@ import numpy as np
 import pandas as pd
 
 D = "datasets/"
-# UFs com 2º turno de governador (matérias: 2018 e 2022 com 14 e 12 UFs; 2026 pela Agência Brasil, 7 UFs com o DF)
+# UFs com 2º turno de governador, conforme os arquivos do TSE: 2018 e 2022 com 14 e 12 UFs; 2026 com 6 (o RJ elegeu Douglas Ruas no 1º turno)
 GOV2 = {2018: {"AM", "AP", "MG", "MS", "PA", "RS", "RO", "RN", "SE", "RR", "RJ", "SC", "SP", "DF"},
         2022: {"AL", "AM", "BA", "ES", "MS", "PB", "PE", "RS", "RO", "SC", "SP", "SE"},
-        2026: {"AC", "AM", "DF", "ES", "RJ", "RN", "TO"}}
+        2026: {"AC", "AM", "DF", "ES", "RN", "TO"}}
 SEM_GOV2 = "sem 2º turno de governador"
 COM_GOV2 = "com 2º turno de governador"
 
