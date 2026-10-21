@@ -4,26 +4,25 @@
   "AM",
   "DF",
   "ES",
-  "RJ",
   "RN",
   "TO"
  ],
  "composicao": [
   {
    "grupo": "com 2º turno de governador",
-   "ufs": 7,
-   "aptos_pct": 15.9,
-   "lula_pct": 14.5,
-   "bolsonaro_pct": 17.4,
-   "bolsonaro_validos_pct": 53.7
+   "ufs": 6,
+   "aptos_pct": 7.7,
+   "lula_pct": 7.5,
+   "bolsonaro_pct": 8.1,
+   "bolsonaro_validos_pct": 50.8
   },
   {
    "grupo": "sem 2º turno de governador",
-   "ufs": 20,
-   "aptos_pct": 84.1,
-   "lula_pct": 85.5,
-   "bolsonaro_pct": 82.6,
-   "bolsonaro_validos_pct": 48.2
+   "ufs": 21,
+   "aptos_pct": 92.3,
+   "lula_pct": 92.5,
+   "bolsonaro_pct": 91.9,
+   "bolsonaro_validos_pct": 49.0
   }
  ],
  "historico": {
@@ -56,58 +55,58 @@
  "cenarios": [
   {
    "delta": 0.5,
-   "eleitores_mi": 0.65,
-   "pct_votos_flavio": 1.4,
-   "so_flavio": 0.28,
-   "proporcional": -0.005
+   "eleitores_mi": 0.72,
+   "pct_votos_flavio": 1.3,
+   "so_flavio": 0.31,
+   "proporcional": -0.001
   },
   {
    "delta": 1,
-   "eleitores_mi": 1.31,
+   "eleitores_mi": 1.44,
    "pct_votos_flavio": 2.7,
-   "so_flavio": 0.57,
-   "proporcional": -0.01
+   "so_flavio": 0.63,
+   "proporcional": -0.001
   },
   {
    "delta": 2,
-   "eleitores_mi": 2.62,
-   "pct_votos_flavio": 5.5,
-   "so_flavio": 1.15,
-   "proporcional": -0.02
+   "eleitores_mi": 2.87,
+   "pct_votos_flavio": 5.4,
+   "so_flavio": 1.27,
+   "proporcional": -0.003
   },
   {
    "delta": 3,
-   "eleitores_mi": 3.93,
-   "pct_votos_flavio": 8.2,
-   "so_flavio": 1.75,
-   "proporcional": -0.03
+   "eleitores_mi": 4.31,
+   "pct_votos_flavio": 8.1,
+   "so_flavio": 1.93,
+   "proporcional": -0.005
   },
   {
    "delta": 4,
-   "eleitores_mi": 5.24,
-   "pct_votos_flavio": 10.9,
-   "so_flavio": 2.36,
-   "proporcional": -0.04
+   "eleitores_mi": 5.75,
+   "pct_votos_flavio": 10.8,
+   "so_flavio": 2.6,
+   "proporcional": -0.006
   }
  ],
  "quebra": [
   {
    "alvo": "Para Lula ganhar 1 p.p.",
    "ganho_pp": 1.0,
-   "delta": 1.74,
+   "delta": 1.59,
    "eleitores_mi": 2.3,
-   "pct_votos_flavio": 4.8
+   "pct_votos_flavio": 4.3
   },
   {
    "alvo": "Para Lula chegar a 50% (o modelo está em 48,3%)",
    "ganho_pp": 1.69,
-   "delta": 2.9,
+   "delta": 2.64,
    "eleitores_mi": 3.8,
-   "pct_votos_flavio": 7.9
+   "pct_votos_flavio": 7.1
   }
  ],
  "s2_modelo": 48.31,
  "base_2022": 50.9,
- "aptos_sem_mi": 130.9,
- "votos_flavio_sem_mi": 48.0
+ "aptos_sem_mi": 143.7,
+ "votos_flavio_sem_mi": 53.4
 }
