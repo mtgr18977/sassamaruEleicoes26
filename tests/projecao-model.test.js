@@ -1,8 +1,8 @@
 // Compara o simulador JS do 1º turno com a projeção em Python (modelos/projecao-1turno-uf-pesquisas.csv).
-// Entrada: parâmetros embutidos em index.html. Rodar: node tests/projecao-model.test.js
+// Entrada: parâmetros embutidos em historico.html. Rodar: node tests/projecao-model.test.js
 const fs = require("fs"), assert = require("assert");
 const { simular } = require("../modelos/projecao-model.js");
-const html = fs.readFileSync("index.html", "utf8");
+const html = fs.readFileSync("historico.html", "utf8");
 const par = JSON.parse(html.match(/const D = (.*?);\nconst ANOS/s)[1]).projmodel;
 const r = simular(par, { s: par.s, q: par.q, n: 20000 });
 const ref = Object.fromEntries(fs.readFileSync("modelos/projecao-1turno-uf-pesquisas.csv", "utf8").trim().split("\n").slice(1).map((l) => l.split(",")).map((c) => [c[0], c]));

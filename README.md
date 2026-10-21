@@ -2,8 +2,8 @@
 
 Simulação estatística da eleição presidencial de 2026 a partir do histórico do TSE (2002–2022) e das pesquisas de 2026. Python faz ETL e ajuste; o JS roda a simulação no navegador. **É um modelo estatístico condicional às pesquisas, não uma pesquisa eleitoral nem uma previsão validada.**
 
-- **Abas** (menu agrupado; Presidente antes do 2º turno): *Presidente* (`index.html`, `previsao.html`, `segundo-turno.html`, `analise.html`, `redes.html`), *Rio Grande do Sul* (`rs.html`, `analise-governo.html`, `bancada.html`, `analise-bancada.html`), *Senado* (`analise-senado.html`), *Análise do modelo* (`analise-modelo.html`: previsão de 2/10 × resultado do 1º turno, para presidente, governador e bancada do RS) e *Sobre* (`documentacao.html`). Cada seção das abas tem uma nota lateral "Em resumo" (abaixo da seção no celular). O site é responsivo (menu com rolagem horizontal, tabelas com rolagem própria) e tem tema automático/claro/escuro. Estilos e utilidades comuns em `assets/`.
-- **Dashboard:** `index.html` ("Eleições Dashboard 2026": resumo da previsão, tema claro/escuro, notas laterais, histórico do Lula de 2002 a 2026, regiões, mapa de calor, capitais, pesquisa × resultado, pesquisas de 2026 e simulador do 2º turno). `previsao.html` é a aba da **previsão do 2º turno**: chances de Lula e de Flávio, evolução, agregador de pesquisas e lista das pesquisas. `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
+- **Abas** (menu agrupado; Presidente antes do 2º turno): *Presidente* (`index.html` = Previsão, a home; `segundo-turno.html`, `historico.html`, `analise.html`, `redes.html`), *Rio Grande do Sul* (`rs.html`, `analise-governo.html`, `bancada.html`, `analise-bancada.html`), *Senado* (`analise-senado.html`), *Análise do modelo* (`analise-modelo.html`: previsão de 2/10 × resultado do 1º turno, para presidente, governador e bancada do RS) e *Sobre* (`documentacao.html`). Cada seção das abas tem uma nota lateral "Em resumo" (abaixo da seção no celular). O site é responsivo (menu com rolagem horizontal, tabelas com rolagem própria) e tem tema automático/claro/escuro. Estilos e utilidades comuns em `assets/`.
+- **Dashboard:** `index.html` é a home, a aba **Previsão** ("Eleições Dashboard 2026": previsão do 2º turno, só o 2º turno: chances de Lula e de Flávio, evolução, agregador de pesquisas e lista das pesquisas; tema claro/escuro, notas laterais). `historico.html` é o **Histórico**: o Lula de 2002 a 2026 por região, mapa de calor e capitais, pesquisa × resultado, pesquisas de 2026 e simulador do 2º turno. `apps/eleicoes.html` é o simulador do Monte Carlo por UF/capital.
 - **Projeção do 1º turno:** refeita a cada rodada de pesquisas (`modelos/projecao-1turno*`). A versão de 1/10/2026 está na tag `projecao-1turno-2026-10-01`. Compare com o resultado real com `python avaliar_projecao.py resultado.csv`.
 
 ## Como rodar
@@ -20,7 +20,7 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 2. `HOJE` e `HORIZONTE[2]` (dias até 25/10) em `pesquisas.py`.
 3. `python atualizar.py`: regenera o modelo, o agregador, a evolução das chances, **todas** as páginas (Previsão, Presidente, 2º turno, Análise, Senado, RS…) e roda os testes.
 4. `tests/test_dashboard_atualizado.py` falha se alguma página ficou para trás (data de referência, agregador, evolução, lista de pesquisas, modelo).
-5. Conferir a aba Previsão, a página inicial e a do 2º turno no navegador; anotar a rodada no `HANDOFF.md`; commit e push.
+5. Conferir a home (Previsão), o Histórico e a aba 2º turno no navegador; anotar a rodada no `HANDOFF.md`; commit e push.
 
 ## Estrutura
 | Arquivo | Papel |
@@ -40,8 +40,8 @@ Abra `index.html` direto no navegador (a página precisa de internet só para o 
 | `analisar_redes.py` | Agrega o cache em `datasets/redes/agregado-bluesky.json` (volume por hora, efeito do debate, hashtags, repetição, posição com intervalo de Wilson) |
 | `gerar_pagina_redes.py` | Gera `redes.html` (aba Redes sociais) só a partir do agregado |
 | `gerar_pagina_modelo.py` | Gera `analise-modelo.html` (aba Análise do modelo): reúne as previsões congeladas de 2/10 (projeção do presidente, modelo do governador, bancada) e os resultados preliminares de `datasets/resultado-2026-*.csv`; faixas, erros, pesquisas finais e a previsão atual do 2º turno (a preencher em 25/10) |
-| `gerar_pagina_lula.py` | Gera `index.html` (dados embutidos) a partir de `apps/lula.template.html` |
-| `gerar_pagina_previsao.py` | Gera `previsao.html` (só o 2º turno: previsão do modelo, agregador e pesquisas) a partir de `apps/previsao.template.html` |
+| `gerar_pagina_lula.py` | Gera `historico.html` (dados embutidos) a partir de `apps/lula.template.html` |
+| `gerar_pagina_previsao.py` | Gera `index.html`, a home (só o 2º turno: previsão do modelo, agregador e pesquisas) a partir de `apps/previsao.template.html` |
 | `abstencao_2t.py` | Cenário de abstenção diferencial no 2º turno: onde estão os 2º turnos de governador de 2026, efeito histórico (2018 e 2022) na variação da abstenção e o que cada nível de abstenção extra, só do lado do Flávio ou dos dois lados, muda em Lula/(Lula+Flávio); grava `modelos/abstencao-2t.json` (alimenta a seção 4 de `segundo-turno.html` e `sensibilidade_2t.py`) |
 | `sensibilidade_2t.py` | Sensibilidade da projeção do 2º turno à confiança em cada instituto (correção e peso pelo erro do 1º turno, só Palver/Gerp, só pós-1º turno, sem um instituto de cada vez); grava `modelos/sensibilidade-2t.csv`, não altera o modelo |
 | `validar_regioes.py` | Compara a distribuição regional do modelo com o cruzamento por região da Datafolha (22–23/9) |
@@ -65,7 +65,7 @@ Em logit, `y_UF,2026 = y_UF,2022 + δ`, com δ vindo das pesquisas; choque regio
 - **Viés histórico das pesquisas com poucas eleições.** Medido com a eleição como unidade (média das médias por eleição, para não contar 2022 três vezes): +2,3 p.p. no 1º turno (2002, 2018, 2022) e +0,8 p.p. no 2º (2018, 2022) a favor do PT, mas o erro-padrão da média é ~1,1 e ~0,7 p.p., então o viés mal se distingue de zero. A página mostra três cenários: **Pesquisas** (sem correção, padrão), **½ do viés histórico** e **Viés histórico** (extremo, não o mais provável). A projeção congelada de 1/10 usou a média por pesquisa (+3,0 p.p. no 1º turno).
 - **Pouco histórico:** 5 transições eleitorais para estimar choques regionais; λ por região é instável. Falácia ecológica (resultado por UF não é comportamento individual).
 - **Mudança de oferta eleitoral:** 2018 e as eleições de Dilma não têm Lula na urna; o "bloco anti-PT" muda de candidato a cada eleição.
-- **Chance de vencer o 2º turno (aba Previsão, `previsao.html`):** desde 9/10 é só o 2º turno (o 1º já ocorreu): P(Lula/(Lula+Flávio) > 50%) com logit normal, centro nas pesquisas de 2º turno (até a data de referência `HOJE`), desvio = tendência + RMSE histórico + piso assumido de 2,5 p.p.; os cenários de viés deslocam o centro. Com o 2º turno perto de 50%, +1 p.p. muda a chance de Lula em ~14 p.p. (a página calcula o valor atual).
+- **Chance de vencer o 2º turno (a home, `index.html`):** desde 9/10 é só o 2º turno (o 1º já ocorreu): P(Lula/(Lula+Flávio) > 50%) com logit normal, centro nas pesquisas de 2º turno (até a data de referência `HOJE`), desvio = tendência + RMSE histórico + piso assumido de 2,5 p.p.; os cenários de viés deslocam o centro. Com o 2º turno perto de 50%, +1 p.p. muda a chance de Lula em ~14 p.p. (a página calcula o valor atual).
 - **Terceira via:** os "demais" entram como um bloco; o viés das pesquisas sobre eles não foi medido (2 p.p. assumidos).
 - **Piso de incerteza no 2º turno (assumido):** 2,5 p.p. em Lula/(Lula+Flávio) (`SD_PISO_2T_PP` em `pesquisas.py`). O erro medido (1,5 p.p.) é de pesquisas finais; a 24 dias da eleição tende a ser maior. É um parâmetro, não uma medida.
 - **Sem drift de opinião até a eleição** além da incerteza da tendência; a deriva semanal observada em 2026 não passa do ruído amostral.

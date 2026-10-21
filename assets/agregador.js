@@ -1,4 +1,4 @@
-// Agregador de pesquisas (previsao.html e rs.html). Dados de agregador.py em D.agg; usa chart(), eixo(), seg(), tabela(), f1 e state de site.js.
+// Agregador de pesquisas (index.html, a Previsão, e rs.html). Dados de agregador.py em D.agg; usa chart(), eixo(), seg(), tabela(), f1 e state de site.js.
 const AGG_FORMAS = { Datafolha:"circle", Quaest:"triangle", AtlasIntel:"rect", RealTimeBigData:"rectRot", ParanaPesquisas:"star", Neokemp:"crossRot" };
 const AGG_SVG = { circle:'<circle cx="6" cy="6" r="4"/>', triangle:'<path d="M6 1.5 11 10.5H1Z"/>', rect:'<rect x="2" y="2" width="8" height="8"/>', rectRot:'<path d="M6 1 11 6 6 11 1 6Z"/>',
   star:'<path d="M6 1l1.4 3.4 3.6.3-2.7 2.4.8 3.5L6 8.7 2.9 10.6l.8-3.5L1 4.7l3.6-.3Z"/>', crossRot:'<path d="M2 2l8 8M10 2l-8 8"/>' };

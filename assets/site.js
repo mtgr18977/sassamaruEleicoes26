@@ -1,4 +1,4 @@
-// Utilidades compartilhadas pelas abas (index.html e rs.html). Usa os globais da página: state, tudo().
+// Utilidades compartilhadas pelas abas (index.html, historico.html e rs.html). Usa os globais da página: state, tudo().
 const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const f1 = (x) => x == null ? "–" : x.toFixed(1).replace(".", ","), $ = (id) => document.getElementById(id);
 let charts = {};
