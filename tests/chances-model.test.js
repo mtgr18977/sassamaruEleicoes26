@@ -2,7 +2,7 @@
 // Rodar: node tests/chances-model.test.js
 const fs = require("fs"), assert = require("assert");
 const { chances2t } = require("../modelos/projecao-model.js");
-const D = JSON.parse(fs.readFileSync("index.html", "utf8").match(/const D = (.*?);\nconst ANOS/s)[1]);
+const D = JSON.parse(fs.readFileSync("historico.html", "utf8").match(/const D = (.*?);\nconst ANOS/s)[1]);
 const t2 = D.modelo.turno2, v = D.projmodel.vies_medio[2];
 const r = chances2t({ s2: t2.p_pesquisas, sd2: t2.sd_logit });
 assert(Math.abs(r.lula + r.flavio - 1) < 1e-12, "as chances devem somar 1");

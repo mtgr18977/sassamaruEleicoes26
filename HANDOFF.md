@@ -178,3 +178,8 @@ Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exc
 - `HOJE` segue 21/10 e `HORIZONTE[2]` = 4. Lula/(Lula+Flávio) 48,37% → 48,37% (as duas pesquisas ficaram perto da média: 48,9% e 49,0%); chance de Lula 25,7% (card da aba Previsão); agregador (Lula) 48,86% → 48,85%; 19 pesquisas de 2º turno, 43 no modelo.
 - `tests/test_dashboard_atualizado.py`: o teste da pesquisa mais recente comparava com uma só linha por data e falhou quando três pesquisas terminaram em 20/10 (Quaest, Palver) e 19/10; agora compara a data mais recente e o conjunto de institutos empatados.
 
+## A Previsão virou a home (21/10/2026)
+- Pedido: a aba de previsão deve ser a home do dashboard. Agora **`index.html` é a Previsão** (gerada por `gerar_pagina_previsao.py` a partir de `apps/previsao.template.html`) e o que era a página inicial virou **`historico.html`**, aba "Histórico" (gerada por `gerar_pagina_lula.py` a partir de `apps/lula.template.html`: Lula de 2002 a 2026, regiões, mapa de calor, capitais, pesquisa × resultado, pesquisas de 2026 e simulador do 2º turno). Menu de Presidente: Previsão → 2º turno → Histórico → Análise → Redes sociais.
+- `previsao.html` deixou de existir; `_redirects` manda `/previsao.html` para `/` (301) para o link de hoje de manhã não dar 404. Quem tinha `/` salvo como o histórico agora cai na Previsão.
+- Tests: `test_dashboard_atualizado` lê `index.html` (previsão) e `historico.html` (histórico); os testes em node (`chances-model`, `projecao-model`) leem os parâmetros embutidos em `historico.html`. Documentação e README atualizados. A rotina "atualizar TUDO" não mudou.
+

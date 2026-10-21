@@ -1,4 +1,4 @@
-"""Gera index.html (raiz, servida pelo Netlify) (autocontida, dados embutidos) a partir dos CSVs.
+"""Gera historico.html (aba "Histórico": o Lula de 2002 a 2026 por região e capital, pesquisas × resultado e simulador do 2º turno; autocontida, dados embutidos) a partir dos CSVs.
 Lula = 2002, 2006, 2022 e 2026 (só o 1º turno, que o TSE já publicou; o 2º turno é em 25/10). Eleições sem Lula na urna (2010/2014 Dilma, 2018 Haddad) ficam como pontos de contexto."""
 import json
 
@@ -104,6 +104,6 @@ out["p2022_2t"] = round(100 * P2022[2], 2)
 out["valreg"] = validar_regioes.comparar()
 out["modelo"] = json.load(open("modelos/parametros.json"))
 
-html = nav.moldura(open("apps/lula.template.html", encoding="utf-8").read(), "index.html").replace("__DATA__", json.dumps(out, ensure_ascii=False))
-open("index.html", "w", encoding="utf-8").write(html)
-print("index.html", len(html) // 1024, "KB")
+html = nav.moldura(open("apps/lula.template.html", encoding="utf-8").read(), "historico.html").replace("__DATA__", json.dumps(out, ensure_ascii=False))
+open("historico.html", "w", encoding="utf-8").write(html)
+print("historico.html", len(html) // 1024, "KB")

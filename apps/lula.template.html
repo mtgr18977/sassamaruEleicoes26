@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Eleições Dashboard 2026</title>
+<title>Histórico do Lula · Eleições Dashboard 2026</title>
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
 <main>
   <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
-  <div class="topo"><div class="semnota"><h1>Eleições Dashboard 2026</h1>
+  <div class="topo"><div class="semnota"><h1>Histórico do Lula e simulador do 2º turno</h1>
   <p class="sub">O histórico do Lula (2002–2026, com o 1º turno de 2026) por região e capital, pesquisas contra resultado real e um simulador do 2º turno. A previsão está na aba Previsão.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
-  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (arquivo oficial do TSE); 2º turno em 25/10. A <b>previsão e o agregador de pesquisas</b> ficam na aba <a href="previsao.html">Previsão</a>; aqui estão o histórico, as pesquisas contra o resultado real e o simulador do 2º turno. Veja também as abas <a href="segundo-turno.html">2º turno</a> e <a href="analise.html">Análise</a>.</div>
+  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (arquivo oficial do TSE); 2º turno em 25/10. A <b>previsão e o agregador de pesquisas</b> estão na <a href="index.html">página inicial (Previsão)</a>; aqui estão o histórico, as pesquisas contra o resultado real e o simulador do 2º turno. Veja também as abas <a href="segundo-turno.html">2º turno</a> e <a href="analise.html">Análise</a>.</div>
   <div class="sec"><div class="mainc">
   <section class="card" id="destaque">
     <div class="filtros" style="justify-content:space-between;margin:0 0 6px">
       <div><b style="font-size:1.05rem;color:var(--ink)">Previsão do 2º turno, em resumo</b><div class="nota" style="margin:0" id="destaqueData"></div></div>
-      <a class="lnk" href="previsao.html">Ver a previsão e o agregador de pesquisas →</a>
+      <a class="lnk" href="index.html">Ver a previsão e o agregador de pesquisas →</a>
     </div>
     <div class="kpis semnota" id="destaqueKpis" style="margin:6px 0 0"></div>
   </section>
@@ -99,7 +99,7 @@
   <section class="sec"><div class="mainc">
   <h2>6. Simulador do 2º turno</h2>
   <p class="sub">Base: como cada estado votou no 1º turno de 2026 (Lula/(Lula+Flávio)), já apurado. O total nacional vem das pesquisas e você pode mexer nele; a distribuição por estado é um swing uniforme com choques regionais medidos do 1º para o 2º turno de cada eleição de 2002 a 2022.</p>
-  <div class="aviso"><b>Simulação condicional às pesquisas, não uma previsão validada.</b> Não há backtest do caminho pesquisa → resultado e o ruído por estado é grande (veja os intervalos). O slider parte do total das pesquisas atuais (cenário escolhido); a previsão do modelo e o agregador estão na aba <a href="previsao.html">Previsão</a>.</div>
+  <div class="aviso"><b>Simulação condicional às pesquisas, não uma previsão validada.</b> Não há backtest do caminho pesquisa → resultado e o ruído por estado é grande (veja os intervalos). O slider parte do total das pesquisas atuais (cenário escolhido); a previsão do modelo e o agregador estão na <a href="index.html">página inicial (Previsão)</a>.</div>
   <div class="card">
     <div class="filtros">Cenário <span class="seg" id="segCen"></span> <button id="rst" class="lnk">redefinir</button></div>
     <div class="filtros sl">
@@ -303,7 +303,7 @@ function valReg() { tabela("tValReg", ["Turno","Região","Modelo %","Datafolha %
   D.valreg.filter(x => x.turno == 2).map(x => [x.turno + "º", x.regiao, x.modelo, x.datafolha, x.dif, x.me])); }
 
 
-// ---------- resumo da previsão (a previsão completa está em previsao.html) ----------
+// ---------- resumo da previsão (a previsão completa está em index.html) ----------
 function destaque() {
   const t2 = D.modelo.turno2, r = ProjecaoModel.chances2t({ s2: t2.p_pesquisas, sd2: t2.sd_logit });
   $("destaqueData").textContent = "Lula × Flávio Bolsonaro em 25/10, condicionado às pesquisas até " + D.modelo.data_referencia.split("-").reverse().join("/");
@@ -315,7 +315,7 @@ function destaque() {
 // ---------- notas laterais (microcopy) ----------
 function notas() {
   const g = (a, t) => D.nac.find(x => x.ano == a && x.turno == t), m = D.projmodel, v = m.vies_medio, t2 = D.modelo.turno2;
-  nota("nota0", [`A <b>previsão</b> (chances, agregador e pesquisas do 2º turno) está na aba <a href="previsao.html">Previsão</a>.`,
+  nota("nota0", [`A <b>previsão</b> (chances, agregador e pesquisas do 2º turno) está na <a href="index.html">página inicial (Previsão)</a>.`,
     `Aqui: o <b>histórico</b> do Lula, o 1º turno de 2026 (${f1(g(2026,1).pt)}%) e o simulador do 2º turno.`,
     `O 2º turno é um <b>empate técnico</b>: Lula/(Lula+Flávio) está em ${f1(100 * t2.p_pesquisas)}%.`]);
   nota("nota1", [`Lula no 2º turno: <b>${f1(g(2002,2).pt)}%</b> (2002), <b>${f1(g(2006,2).pt)}%</b> (2006) e <b>${f1(g(2022,2).pt)}%</b> (2022).`,
@@ -333,7 +333,7 @@ function notas() {
     `Por isso a projeção das capitais usa o estado mais um <b>gap</b> com choque comum.`]);
   nota("nota4", [`Eleições com Lula: as pesquisas finais deram em média <b>${sg(v[1])} p.p.</b> (1º turno) e <b>${sg(v[2])} p.p.</b> (2º) a mais ao PT, por eleição.`,
     `São só ${m.vies_n_eleicoes[1]} e ${m.vies_n_eleicoes[2]} eleições: o viés mal se distingue de zero.`,
-    `Pesquisa não é previsão: use os cenários da aba Previsão.`]);
+    `Pesquisa não é previsão: use os cenários da página inicial (Previsão).`]);
   const ult = {}; D.pesq26.forEach(p => { if (p.s2 != null) ult[p.inst] = p; });
   const lst = Object.values(ult).sort((a, b) => b.s2 - a.s2).map(p => `${INSTNOME[p.inst] || p.inst} <b>${f1(p.s2)}%</b>`);
   nota("nota5", [`Última rodada, Lula/(Lula+Flávio) no 2º turno: ${lst.join(" · ")}.`,
