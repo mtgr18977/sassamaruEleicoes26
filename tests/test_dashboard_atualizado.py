@@ -51,8 +51,9 @@ def test_toda_pesquisa_de_2o_turno_esta_nas_paginas(pg):
     assert len(prev["pesq2"]) == len(p2) == len(pg["segundo-turno.html"]["pesq"])
     campos = {(x["inst"], x["campo"]) for s in prev["agg"]["turnos"]["2"]["series"] for x in s["pontos"]}
     assert {(r.instituto, r.campo_fim) for r in p2.itertuples()} <= campos           # entra no agregador
-    ult = p2.sort_values("campo_fim").iloc[-1]
-    assert prev["pesq2"][0]["fim"] == ult.campo_fim and prev["pesq2"][0]["inst"] == ult.instituto
+    ult = p2[p2.campo_fim == p2.campo_fim.max()]                                       # várias pesquisas podem terminar no mesmo dia
+    topo = [x for x in prev["pesq2"] if x["fim"] == p2.campo_fim.max()]
+    assert prev["pesq2"][0]["fim"] == p2.campo_fim.max() and {x["inst"] for x in topo} == set(ult.instituto)
 
 
 def test_toda_pesquisa_de_2026_esta_na_pagina_inicial(pg):
