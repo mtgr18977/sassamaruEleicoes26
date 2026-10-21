@@ -11,13 +11,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-HOJE = pd.Timestamp("2026-10-19")   # data de referência: atualizar a cada rodada (e HORIZONTE)
+HOJE = pd.Timestamp("2026-10-21")   # data de referência: atualizar a cada rodada (e HORIZONTE)
 TAU_DIAS = 14.0        # meia-vida do decaimento ≈ TAU·ln2
 DEFF = 1.5             # efeito de desenho: amostra efetiva = n / DEFF
 SD_VIES_HIST = 0.02    # padrão de estimar(); main() usa o RMSE medido por turno (vies_rmse)
 SD_PISO_2T_PP = 2.5   # ASSUMIDO: piso (p.p. de Lula/(Lula+Flávio)) para a incerteza do 2º turno; o erro medido é de pesquisas FINAIS e a 24 dias da eleição tende a ser maior
 HOJE_1T = pd.Timestamp("2026-10-02")   # projeção do 1º turno (já realizado em 4/10): congelada na data em que foi feita, para a aba Análise comparar com o resultado
-HORIZONTE = {1: 2, 2: 6}   # dias: 1º turno de 2/10 até 4/10; 2º turno de 19/10 até 25/10: a incerteza da tendência cresce com o prazo
+HORIZONTE = {1: 2, 2: 4}   # dias: 1º turno de 2/10 até 4/10; 2º turno de 21/10 até 25/10: a incerteza da tendência cresce com o prazo
 P2022 = {1: 0.484307, 2: 0.509024}  # % PT nos válidos, tse-presidente-nacional.csv
 logit = lambda p: np.log(p / (1 - p))
 

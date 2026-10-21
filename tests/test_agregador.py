@@ -43,7 +43,7 @@ def test_segundo_turno_do_presidente_comeca_em_5_de_outubro():
     t2 = ag.presidente()["turnos"]["2"]
     assert t2["datas"][0] == "2026-10-05"                                      # só pesquisas pós-1º turno
     assert all(p["campo"] >= "2026-10-05" for s in t2["series"] for p in s["pontos"])
-    assert all(s["dias_delta"] == len(t2["datas"]) - 1 for s in t2["series"])  # série curta: variação sobre todo o período
+    assert all(s["dias_delta"] == min(14, len(t2["datas"]) - 1) for s in t2["series"])  # janela de 14 dias; série mais curta: todo o período
 
 
 def test_data_de_referencia_segue_as_constantes_dos_modelos():
