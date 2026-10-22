@@ -62,17 +62,12 @@ out["vies"] = [dict(ano=int(r.ano), turno=int(r.turno), inst=r.instituto, cand=C
                     lula=bool(r.ano in (2002, 2006, 2022))) for r in v.itertuples()]
 for x in out["vies"]:
     x["erro"] = r1(x["pesq"] - x["real"])
-# 2026: última pesquisa de 1º turno de cada instituto antes da votação (4/10), contra o resultado do TSE
-_p = pd.read_csv(D + "pesquisas-2026.csv")
-_p = _p[_p.t1_lula.notna() & _p.t1_flavio.notna() & (pd.to_datetime(_p.campo_fim) <= "2026-10-03")].sort_values("campo_fim").groupby("instituto").tail(1)
-_r = nac[(nac.ano == 2026) & (nac.turno == 1)]
-if len(_r):
-    _real = round(100 * _r.iloc[0].votos_pt / (_r.iloc[0].votos_pt + _r.iloc[0].votos_antipt), 2)
-    out["vies"] += [dict(ano=2026, turno=1, inst=r.instituto, cand="Lula", rival="Flávio", pesq=r1(100 * r.t1_lula / (r.t1_lula + r.t1_flavio)),
-                         real=_real, lula=True) for r in _p.itertuples()]
-    for x in out["vies"][-len(_p):]:
-        x["erro"] = r1(x["pesq"] - x["real"])
-
+# 2026: última pesquisa de 1º turno de cada um dos 16 institutos antes da votação (4/10), contra o resultado do TSE (erros_1turno.py)
+import erros_1turno
+_t = erros_1turno.tabela()
+_real = round(erros_1turno.resultado()[0], 2)
+out["vies"] += [dict(ano=2026, turno=1, inst=i, cand="Lula", rival="Flávio", pesq=round(float(r.erro) + _real, 2), real=_real, lula=True,
+                     erro=round(float(r.erro), 2), atlas=bool(r.origem == "atlas")) for i, r in _t.iterrows()]
 
 p = pd.read_csv(D + "pesquisas-2026.csv")
 p["data"] = pd.to_datetime(p.campo_fim).fillna(pd.to_datetime(p.divulgacao))

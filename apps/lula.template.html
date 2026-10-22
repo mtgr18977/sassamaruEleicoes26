@@ -74,6 +74,10 @@
   <p class="sub">Parcela Lula/(Lula + principal rival) nas últimas pesquisas antes da eleição, contra o resultado nas urnas. Positivo = a pesquisa deu mais votos ao PT do que ele teve.</p>
   <div class="card">
     <div class="filtros"><label class="chk"><input type="checkbox" id="semLula2" checked> incluir 2018 (Haddad)</label></div>
+    <h3>2026 · 1º turno, instituto por instituto</h3>
+    <div class="cv med"><canvas id="cDot"></canvas></div>
+    <div id="dotResumo" class="nota"></div>
+    <h3>Todas as eleições</h3>
     <div class="cv med"><canvas id="cVies"></canvas></div>
     <div id="viesResumo" class="nota"></div>
     <details><summary>Ver tabela</summary><div id="tVies"></div></details>
@@ -210,7 +214,22 @@ function capitais() {
 }
 
 // ---------- 4. pesquisa × real ----------
+function dotplot() {
+  const v = D.vies.filter(x => x.ano === 2026).sort((a, b) => a.erro - b.erro), nm = (x) => INSTNOME[x.inst] || (x.inst === "RealTimeBigData" ? "RTBD" : x.inst);
+  if (!v.length) return;
+  const real = v[0].real, n = v.length;
+  const seg = v.map((x, i) => ({ type:"line", label:"", data:[{x:real,y:i},{x:x.pesq,y:i}], borderColor:css(x.erro >= 0 ? "--pt" : "--anti"), borderWidth:2, pointRadius:0 }));
+  chart("cDot", { type:"scatter", data:{ datasets:[...seg,
+      { label:"Pesquisa", data:v.map((x, i) => ({x:x.pesq, y:i})), backgroundColor:v.map(x => css(x.erro >= 0 ? "--pt" : "--anti") + (x.atlas ? "88" : "")), pointRadius:6 },
+      { label:"Resultado (TSE)", data:[{x:real,y:-0.7},{x:real,y:n-0.3}], type:"line", borderColor:css("--ink"), borderDash:[4,3], borderWidth:1.5, pointRadius:0 }] },
+    options:{ parsing:false, scales:{ x:eixo({ title:{display:true,text:"Lula/(Lula+Flávio), %",color:css("--ink2")}, ticks:{ color:css("--ink2"), callback:q=>q+"%" } }),
+        y:eixo({ min:-0.7, max:n-0.3, grid:{display:false}, afterBuildTicks:(a)=>{ a.ticks = v.map((_, i) => ({value:i})); }, ticks:{ color:css("--ink2"), callback:(q)=>v[q] ? nm(v[q]) : "" } }) },
+      plugins:{ legend:{ display:false }, tooltip:{ filter:(i)=>i.dataset.label === "Pesquisa", callbacks:{ title:(i)=>nm(v[i[0].parsed.y]), label:(i)=>{ const x = v[i.parsed.y]; return [`Pesquisa: ${f1(x.pesq)}%`, `Resultado: ${f1(x.real)}%`, `Erro: ${x.erro>0?"+":""}${f1(x.erro)} p.p.${x.atlas ? " (aproximado, via Atlas)" : ""}`]; } } } } } });
+  const m = v.reduce((s, x) => s + x.erro, 0) / n, med = (v[Math.floor((n - 1) / 2)].erro + v[Math.floor(n / 2)].erro) / 2;
+  $("dotResumo").innerHTML = `Linha tracejada: resultado do TSE (${f1(real)}%). Pontos à direita = a pesquisa deu mais a Lula do que ele teve. Erro médio de ${n} institutos: <b>${m > 0 ? "+" : ""}${f1(m)} p.p.</b> (mediana ${med > 0 ? "+" : ""}${f1(med)}). Pontos claros = erro aproximado a partir da margem publicada pelo Atlas.`;
+}
 function vies() {
+  dotplot();
   const inc = $("semLula2").checked, v = D.vies.filter(x => inc || x.lula);
   const nome = (x) => `${x.inst === "RealTimeBigData" ? "RTBD" : x.inst} ${x.ano} · ${x.turno}º`;
   chart("cVies", { type:"bar", data:{ labels:v.map(nome), datasets:[{ label:"Pesquisa − resultado (p.p.)", data:v.map(x => x.erro),
