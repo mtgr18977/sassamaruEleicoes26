@@ -183,3 +183,8 @@ Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exc
 - `previsao.html` deixou de existir; `_redirects` manda `/previsao.html` para `/` (301) para o link de hoje de manhã não dar 404. Quem tinha `/` salvo como o histórico agora cai na Previsão.
 - Tests: `test_dashboard_atualizado` lê `index.html` (previsão) e `historico.html` (histórico); os testes em node (`chances-model`, `projecao-model`) leem os parâmetros embutidos em `historico.html`. Documentação e README atualizados. A rotina "atualizar TUDO" não mudou.
 
+
+## Veritá e a tabela de erros de 1º turno (22/10/2026)
+- Entrou a **Veritá/CNN** (campo 15–19/10; n=15.554; válidos 49,3 × 50,7; BR-06396/2026) nos dois CSVs de pesquisas. Com n tão grande ela pesa muito na média (peso ∝ n/DEFF, sem teto de amostra); sem ela o modelo dá 48,37% → 48,37% (efeito pequeno porque ela fica perto da média). Teto de amostra: decisão pendente do usuário.
+- Novo `erros_1turno.py` + `datasets/pesquisas-1turno-final-2026.csv`: última pesquisa de 1º turno de 16 institutos contra o resultado do TSE (Lula/(Lula+Flávio) = 48,99%). Erros de −1,2 (Palver) a +4,4 (Indexa), média +1,9, mediana +2,2. Veritá, DataTrends e IFP só têm o erro de margem do Atlas (convertido). Quaest: 40×38 (2–3/10) dá +2,3; o Atlas registra ~+1,6 (conflito não resolvido). `sensibilidade_2t.py` e `vies_instituto.py` agora usam essa tabela (antes: literais de Palver/Gerp e Quaest de 24–27/9 com +4,4).
+- Chance de Lula no 2º turno: 25,7% → 26,5%. O texto do LinkedIn precisa do número novo.

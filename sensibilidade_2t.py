@@ -14,6 +14,7 @@ import numpy as np
 import pandas as pd
 
 import abstencao_2t
+import erros_1turno
 from pesquisas import DEFF, HOJE, HORIZONTE, SD_PISO_2T_PP, TAU_DIAS, estimar, logit, preparar, vies_rmse
 
 D = "datasets/"
@@ -24,11 +25,7 @@ TAU_ACURACIA = 1.0   # ASSUMIDO (p.p.): erro mínimo efetivo no peso 1/(erro² +
 INICIO_2T = pd.Timestamp("2026-10-05")
 
 d = preparar()
-fin = d[d.campo_fim <= "2026-10-03"].dropna(subset=["p1s"]).sort_values("campo_fim")
-erro = (100 * fin.groupby("instituto").tail(1).set_index("instituto").p1s - REAL)
-erro["Palver"] = 100 * 43 / (43 + 47) - REAL          # Palver 30/9–3/10: Lula 43 × Flávio 47 (Exame, BR-00198/2026)
-erro["Gerp"] = 100 * 44 / (44 + 46) - REAL            # Gerp 30/9–2/10: Lula 44 × Flávio 46 (Gazeta do Povo, BR-00509/2026)
-erro = erro.round(2)
+erro = erros_1turno.erros()   # erro da última pesquisa de 1º turno por instituto (ver erros_1turno.py)
 sv, _ = vies_rmse(2)
 H = HORIZONTE[2]
 

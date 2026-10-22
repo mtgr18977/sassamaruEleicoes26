@@ -99,13 +99,13 @@
   },
   {
    "alvo": "Para Lula chegar a 50% (o modelo está em 48,4%)",
-   "ganho_pp": 1.63,
-   "delta": 2.55,
-   "eleitores_mi": 3.7,
-   "pct_votos_flavio": 6.9
+   "ganho_pp": 1.57,
+   "delta": 2.46,
+   "eleitores_mi": 3.5,
+   "pct_votos_flavio": 6.6
   }
  ],
- "s2_modelo": 48.37,
+ "s2_modelo": 48.43,
  "base_2022": 50.9,
  "aptos_sem_mi": 143.7,
  "votos_flavio_sem_mi": 53.4
