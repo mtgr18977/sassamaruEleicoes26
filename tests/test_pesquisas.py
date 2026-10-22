@@ -18,13 +18,14 @@ def test_incerteza_cresce_com_o_prazo_ate_a_eleicao():
 
 
 def test_evolucao_so_usa_pesquisas_ate_a_data_e_a_ultima_bate_com_o_modelo_atual():
-    from pesquisas import evolucao, preparar, vies_rmse
+    from pesquisas import HORIZONTE, evolucao, preparar, vies_rmse
     d = preparar()
     assert evolucao(["2026-06-01"]) == []                      # pesquisas insuficientes: pula a data
-    atual = evolucao(["2026-10-02"])[0]
-    s, _, _, _ = estimar(d, "p1s", hoje=pd.Timestamp("2026-10-02"), sd_vies=vies_rmse(1)[0], h_dias=2)
+    atual = evolucao(["2026-10-21"])[0]
+    s, _, _, _ = estimar(d, "p1s", hoje=pd.Timestamp("2026-10-21"), sd_vies=vies_rmse(1)[0], h_dias=HORIZONTE[1])
     assert abs(atual["s"] - s) < 1e-4
-    assert evolucao(["2026-09-24"])[0]["n2"] < atual["n2"]     # menos pesquisas de 2º turno na data anterior
+    assert evolucao(["2026-10-16"])[0]["n2"] < atual["n2"]     # menos pesquisas de 2º turno na data anterior
+    assert evolucao(["2026-10-02"]) == []                      # antes do 1º turno o modelo do 2º turno não tem pesquisa suficiente
 
 
 def test_vies_por_eleicao_nao_conta_2022_tres_vezes():

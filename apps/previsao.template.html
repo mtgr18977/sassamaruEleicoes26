@@ -11,7 +11,7 @@
   <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
   <div class="topo"><div class="semnota"><h1>Previsão do 2º turno</h1>
   <p class="sub">Lula × Flávio Bolsonaro em 25/10: o que o modelo prevê e o que as pesquisas mostram, sem o resto. O histórico do Lula, as regiões e o simulador estão em Histórico; o simulador por UF está em 2º turno.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
-  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (arquivo oficial do TSE). Esta aba é só do 2º turno: o modelo usa as pesquisas feitas depois do 1º turno e a distribuição por estado parte do 1º turno de 2026.</div>
+  <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (arquivo oficial do TSE). Esta aba é só do 2º turno: o modelo usa só as pesquisas de 2º turno feitas depois do 1º turno (a campanha mudou) e a distribuição por estado parte do 1º turno de 2026.</div>
   <div class="kpis semnota" id="kpis"></div>
   <div class="sec"><div class="mainc">
   <section class="card hero" id="hero">
@@ -27,7 +27,7 @@
     <h3 style="margin:14px 0 4px">Como as chances evoluíram</h3>
     <div class="cv" style="height:250px"><canvas id="cEvoChances"></canvas></div>
     <details><summary>Ver tabela</summary><div id="tEvoCh"></div></details>
-    <p class="nota" style="margin:2px 0 0">Reconstrução semanal até 9/10 e a cada 3 dias depois, e na data de referência: para cada data, o modelo usa só as pesquisas já divulgadas até ela (mesma metodologia de hoje, inclusive o viés histórico atual). Poucas pesquisas em agosto: as primeiras semanas têm mais incerteza.</p>
+    <p class="nota" style="margin:2px 0 0">Reconstrução diária: para cada data, o modelo usa só as pesquisas de 2º turno que foram a campo depois do 1º turno (a partir de 5/10) e já divulgadas até ela, com a mesma metodologia de hoje. A série só começa quando há pesquisas suficientes (8); nos primeiros dias a incerteza é maior e a chance oscila bastante.</p>
     <p class="nota" id="heroNota"></p>
   </section>
   <section class="card" id="agregador">

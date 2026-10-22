@@ -17,6 +17,7 @@ DEFF = 1.5             # efeito de desenho: amostra efetiva = n / DEFF
 SD_VIES_HIST = 0.02    # padrão de estimar(); main() usa o RMSE medido por turno (vies_rmse)
 SD_PISO_2T_PP = 2.5   # ASSUMIDO: piso (p.p. de Lula/(Lula+Flávio)) para a incerteza do 2º turno; o erro medido é de pesquisas FINAIS e a 24 dias da eleição tende a ser maior
 HOJE_1T = pd.Timestamp("2026-10-02")   # projeção do 1º turno (já realizado em 4/10): congelada na data em que foi feita, para a aba Análise comparar com o resultado
+INICIO_2T = pd.Timestamp("2026-10-05")   # o modelo do 2º turno usa só pesquisas de campo depois do 1º turno (4/10): a campanha mudou
 HORIZONTE = {1: 2, 2: 4}   # dias: 1º turno de 2/10 até 4/10; 2º turno de 21/10 até 25/10: a incerteza da tendência cresce com o prazo
 P2022 = {1: 0.484307, 2: 0.509024}  # % PT nos válidos, tse-presidente-nacional.csv
 logit = lambda p: np.log(p / (1 - p))
@@ -60,6 +61,8 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
 def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, piso_pp=0.0):
     """Retorna (p, sd_logit, house_effects, n_pesquisas)."""
     d = df.dropna(subset=[col])
+    if col == "p2":
+        d = d[d.campo_fim >= INICIO_2T]                       # 2º turno: só o que foi a campo depois do 1º turno
     d = d[d.data <= hoje]                                     # só pesquisas até a data de referência
     d = d[d.registrado_em.isna() | (d.registrado_em <= hoje)].copy() if "registrado_em" in d else d.copy()   # e só as que eu já tinha registrado nela (projeção do 1º turno congelada)
     p = d[col].to_numpy()

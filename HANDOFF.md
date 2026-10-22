@@ -192,3 +192,8 @@ Células vazias no CSV = "não localizei". Quaest sem 2º turno em setembro (exc
 ## Dot-plot de 1º turno 2026 no Histórico (22/10/2026)
 - Seção 4 de `historico.html` ganhou um gráfico por instituto (`cDot`, estilo Atlas): ponto = parcela Lula/(Lula+Flávio) da última pesquisa, linha tracejada = resultado do TSE (49,0%), vermelho = deu mais a Lula, azul = menos; pontos claros = erro aproximado via Atlas (Veritá, DataTrends, IFP). O gráfico de barras com todas as eleições continua abaixo.
 - As 16 linhas de 2026 em `D.vies` agora vêm de `erros_1turno.tabela()` (antes eram só as pesquisas de `pesquisas-2026.csv`, com números diferentes). Não desenhei faixa de margem de erro: o CSV não tem margem para todos os institutos.
+
+## Modelo do 2º turno só com pesquisas pós-1º turno (22/10/2026)
+- Auditoria da Previsão: o modelo usava 44 pesquisas de 2º turno (24 hipotéticas de jun–4/10), mas a página dizia usar só as pós-1T e o agregador usava só elas. Por decisão do usuário ("a campanha mudou"), `pesquisas.estimar` agora filtra `campo_fim >= INICIO_2T` (5/10) quando `col == "p2"` (todas as 20 pesquisas, sem teto na Veritá).
+- Efeito: Lula/(Lula+Flávio) 48,43% → 49,46%; chance de Lula 26,6% → 41,5% (card: 41,4%; Monte Carlo 40,9%). Sem a Veritá: −0,01 p.p.; sem a Vox: −0,24 p.p. (3,7 p.p. de chance). Os efeitos de instituto agora vêm de poucas pesquisas por instituto.
+- A evolução das chances só existe a partir de 14/10 (mínimo de 8 pesquisas); a página usa datas diárias de 12/10 até `HOJE`. `tests/test_pesquisas.py` e `tests/chances-model.test.js` ajustados (faixa 0,1–0,6). Documentação: data, lista de institutos e a explicação da mudança. O texto do LinkedIn precisa do número novo.
