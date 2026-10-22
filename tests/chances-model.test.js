@@ -10,5 +10,5 @@ assert(Math.abs(chances2t({ s2: 0.5, sd2: 0.1 }).lula - 0.5) < 1e-6, "s2 = 50% d
 assert(Math.abs(chances2t({ s2: 0.4814, sd2: 0.1001 }).lula - 0.2286) < 0.002, "referência numpy: Φ(logit(0,4814)/0,1001) = 0,2286");
 assert(chances2t({ s2: t2.p_pesquisas + 0.01, sd2: t2.sd_logit }).lula > r.lula, "mais Lula no 2º turno deve aumentar a chance");
 assert(chances2t({ s2: t2.p_pesquisas - v / 100, sd2: t2.sd_logit }).lula < r.lula, "descontar o viés a favor do PT deve reduzir a chance de Lula");
-assert(r.lula > 0.1 && r.lula < 0.4, `Lula ${r.lula}: fora da faixa esperada para as pesquisas de 9/10`);
+assert(r.lula > 0.1 && r.lula < 0.6, `Lula ${r.lula}: fora da faixa esperada (empate técnico, pesquisas pós-1º turno)`);
 console.log(`OK  Lula vence o 2º turno ${(100 * r.lula).toFixed(1)}% | Flávio ${(100 * r.flavio).toFixed(1)}% | s2 ${(100 * t2.p_pesquisas).toFixed(1)}% sd ${t2.sd_logit}`);
