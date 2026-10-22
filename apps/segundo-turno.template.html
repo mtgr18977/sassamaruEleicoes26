@@ -141,7 +141,7 @@ function abstencao() {
 function falta() {
   $("falta").innerHTML = [
     `<b>Pesquisas de 2º turno depois de 4/10</b> (seção 3): é a partir delas que o meu modelo estima o nível, com efeito de instituto e recência.`,
-    `<b>O erro do 1º turno entra no viés histórico:</b> as pesquisas finais deram a Lula 2,8 a 4,4 p.p. a mais na disputa a dois (média ≈ 3,5). O viés médio que eu uso hoje é de +${f1(D.vies1)} p.p. no 1º turno e +${f1(D.vies2)} p.p. no 2º (poucas eleições). Ainda não pus isso em <code>datasets/vies-pesquisas.csv</code>, porque mudaria as projeções sem validação.`,
+    `<b>O erro do 1º turno entra no viés histórico:</b> as últimas pesquisas de 16 institutos erraram entre −1,2 (Palver, a favor de Flávio) e +4,4 p.p. (Indexa) na disputa a dois, com média de +1,9 e mediana de +2,2 a favor de Lula (tabela em <code>erros_1turno.py</code>; três institutos só têm o erro de margem do Atlas). O viés médio que eu uso hoje é de +${f1(D.vies1)} p.p. no 1º turno e +${f1(D.vies2)} p.p. no 2º (poucas eleições). Ainda não pus isso em <code>datasets/vies-pesquisas.csv</code>, porque mudaria as projeções sem validação.`,
     `<b>Resultado oficial por município e UF:</b> o meu modelo precisa saber onde o voto de Lula caiu, e hoje eu só tenho números por UF para uma parte dos estados.`,
     `<b>Um 2º turno costuma mudar a composição do eleitorado</b> (abstenção, voto em branco). Eu uso os votos de Lula e Flávio no 1º turno de 2026 como peso dos estados e não simulo mudança de comparecimento; a seção 4 mostra só o que aconteceria com uma abstenção diferencial, como cenário.`].map(t => `<li>${t}</li>`).join("");
 }

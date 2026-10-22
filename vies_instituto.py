@@ -9,6 +9,7 @@ import math
 import numpy as np
 import pandas as pd
 
+import erros_1turno
 from pesquisas import HOJE, HORIZONTE, P2022, SD_PISO_2T_PP, estimar, logit, preparar, vies_rmse
 
 D = "datasets/"
@@ -17,9 +18,7 @@ br = pd.read_csv(D + "resultado-2026-turno1.csv").query("uf == 'BR'").iloc[0]
 real = 100 * br.votos_lula / (br.votos_lula + br.votos_flavio)
 
 d = preparar()
-fin = d[d.campo_fim <= "2026-10-03"].dropna(subset=["p1s"]).sort_values("campo_fim")
-ult = fin.groupby("instituto").tail(1).set_index("instituto")
-erro = (100 * ult.p1s - real).round(2)                      # + = deu a Lula mais do que ele teve
+erro = erros_1turno.erros()                              # + = deu a Lula mais do que ele teve
 print("Erro da última pesquisa do 1º turno (p.p. em Lula/(Lula+Flávio); resultado %.2f%%)" % real)
 print(erro.sort_values().to_string(), "\n")
 
