@@ -12,6 +12,7 @@
   <div class="topo"><div class="semnota"><h1>Previsão do 2º turno</h1>
   <p class="sub">Lula × Flávio Bolsonaro em 25/10: o que o modelo prevê e o que as pesquisas mostram, sem o resto. O histórico do Lula, as regiões e o simulador estão em Histórico; o simulador por UF está em 2º turno.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
   <div class="aviso semnota" style="border-left-color:var(--pt)"><b>1º turno realizado (4/10/2026):</b> Flávio Bolsonaro 47,03% × Lula 45,16% dos válidos (arquivo oficial do TSE). Esta aba é só do 2º turno: o modelo usa só as pesquisas de 2º turno feitas depois do 1º turno (a campanha mudou) e a distribuição por estado parte do 1º turno de 2026.</div>
+  <section class="card hero semnota" id="placar" style="margin-top:14px"></section>
   <div class="kpis semnota" id="kpis"></div>
   <div class="sec"><div class="mainc">
   <section class="card hero" id="hero">
@@ -65,13 +66,25 @@ const state = { aggT:2, aggAj:true, heroCen:"pesquisas" };
 const UFNOME = {AC:"Acre",AL:"Alagoas",AP:"Amapá",AM:"Amazonas",BA:"Bahia",CE:"Ceará",DF:"Distrito Federal",ES:"Espírito Santo",GO:"Goiás",MA:"Maranhão",MT:"Mato Grosso",MS:"Mato Grosso do Sul",MG:"Minas Gerais",PA:"Pará",PB:"Paraíba",PR:"Paraná",PE:"Pernambuco",PI:"Piauí",RJ:"Rio de Janeiro",RN:"Rio Grande do Norte",RS:"Rio Grande do Sul",RO:"Rondônia",RR:"Roraima",SC:"Santa Catarina",SP:"São Paulo",SE:"Sergipe",TO:"Tocantins"};
 const dataBR = (iso) => iso.split("-").reverse().join("/");
 
+// ---------- placar: chance de cada um e resultado provável ----------
+function placar() {
+  const t2 = D.modelo.turno2, r = ProjecaoModel.chances2t({ s2: t2.p_pesquisas, sd2: t2.sd_logit }), sd = t2.sd_logit;
+  const L = 100 * t2.p_pesquisas, F = 100 - L, q = (z) => 100 / (1 + Math.exp(-(Math.log(L / F) + z * 1.645 * sd)));
+  const lLo = q(-1), lHi = q(1), lider = F > L ? "Flávio" : "Lula", dif = Math.abs(F - L);
+  const c = (nome, cor, p, txt) => `<div class="cand" style="--c:${css(cor)}"><div class="nome"><i></i>${nome}</div><div class="big">${f1(100 * p)}%</div><div class="rot">${txt}</div></div>`;
+  $("placar").innerHTML = `<div class="hero-grid">${c("Chance de Flávio Bolsonaro (PL)", "--anti", r.flavio, "de vencer o 2º turno hoje")}
+    ${c("Chance de Lula (PT) virar", "--pt", r.lula, "de vencer o 2º turno hoje")}</div>
+    <div class="hero-foot" style="flex-direction:column;gap:6px;font-size:1rem">
+      <span><b>Cenário mais provável</b> com os dados que temos: Flávio <b>${f1(F)}%</b> × Lula <b>${f1(L)}%</b> dos votos válidos (${lider} à frente por ${f1(dif)} p.p.)</span>
+      <span><b>Resultado final possível</b> (faixa de 90%): Flávio <b>${f1(100 - lHi)}–${f1(100 - lLo)}%</b> × Lula <b>${f1(lLo)}–${f1(lHi)}%</b></span></div>
+    <p class="nota" style="margin:8px 0 0">Modelo com as pesquisas de 2º turno feitas depois do 1º turno, até ${dataBR(D.modelo.data_referencia)}, sem correção de viés. A faixa mostra onde o resultado pode cair, não um empate: uma diferença de ${f1(dif)} p.p. é pequena perto da incerteza das pesquisas, e por isso a virada é uma chance real.</p>`;
+}
+
 // ---------- números do topo ----------
 function kpis() {
   const t2 = D.modelo.turno2, ult = D.pesq2[0], ag = D.agg.turnos["2"].series[0], k = ag.aj.m.length - 1;
   const c = (t, v, s) => `<div class="kpi"><span>${t}</span><b>${v}</b><small>${s}</small></div>`;
-  const r = ProjecaoModel.chances2t({ s2: t2.p_pesquisas, sd2: t2.sd_logit });
-  $("kpis").innerHTML = c("Chance de Lula vencer", f1(100 * r.lula) + "%", "modelo, cenário Pesquisas") +
-    c("Previsão do modelo", f1(100 * t2.p_pesquisas) + "%", "Lula/(Lula+Flávio), pesquisas até " + dataBR(D.modelo.data_referencia)) +
+  $("kpis").innerHTML = c("Previsão do modelo", f1(100 * t2.p_pesquisas) + "%", "Lula/(Lula+Flávio), pesquisas até " + dataBR(D.modelo.data_referencia)) +
     c("Agregador de pesquisas", f1(ag.aj.m[k]) + "%", "Lula/(Lula+Flávio), tendência suavizada") +
     c("Última pesquisa", f1(ult.s) + "%", `${INSTNOME[ult.inst] || ult.inst} · campo até ${dataBR(ult.fim)}`);
 }
@@ -131,13 +144,13 @@ function pesquisas2() {
 // ---------- notas laterais ----------
 function notas() {
   const t2 = D.modelo.turno2, ult = D.pesq2.slice(0, 3).map(p => `${INSTNOME[p.inst] || p.inst} <b>${f1(p.s)}%</b>`);
-  nota("nota0", [`O 2º turno é um <b>empate técnico</b>: Lula/(Lula+Flávio) está em ${f1(100 * t2.p_pesquisas)}%.`,
+  nota("nota0", [`Lula/(Lula+Flávio) está em ${f1(100 * t2.p_pesquisas)}%: ${t2.p_pesquisas < 0.5 ? "Flávio" : "Lula"} à frente por ${f1(Math.abs(100 - 200 * t2.p_pesquisas))} p.p., menos que a incerteza das pesquisas. Não é um empate: a chance de Lula é de ${f1(100 * ProjecaoModel.chances2t({ s2: t2.p_pesquisas, sd2: t2.sd_logit }).lula)}%.`,
     `Por isso <b>1 p.p.</b> a mais para Lula muda a chance dele de vencer em ~${f1(100 * (state.sens ?? 0))} p.p.`,
     `Últimas pesquisas: ${ult.join(" · ")}.`,
     `O cenário padrão é <b>Pesquisas</b>, sem correção de viés. Os cenários de viés são hipóteses, não o caso base.`,
     `A incerteza do 2º turno tem piso assumido de <b>${f1(D.piso2t)} p.p.</b>`]);
 }
-function tudo() { agregador(); hero(); kpis(); pesquisas2(); notas(); }
+function tudo() { agregador(); hero(); placar(); kpis(); pesquisas2(); notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 aggLigar();
 tudo();
