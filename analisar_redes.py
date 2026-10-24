@@ -23,7 +23,8 @@ GLOBO_INI = datetime(2026, 10, 23, 21, 20, tzinfo=BRT)       # debate da Globo (
 GLOBO_FIM = datetime(2026, 10, 23, 23, 30, tzinfo=BRT)
 GLOBO_BASE = (datetime(2026, 10, 20, tzinfo=BRT), datetime(2026, 10, 23, 18, tzinfo=BRT))     # "normal" da Globo: janelas de 6 h de 20/10 até a tarde do debate (sem debate, sem o efeito da Band)
 TEMAS = {"Banco Master / Vorcaro": r"master|vorcaro", "Uísque, casa, lancha e outros ataques pessoais": r"u[ií]sque|whisky|lancha|casa de|10 milh", "Condenação de Lula": r"condena",
-         "Filme sobre Bolsonaro (Dark Horse)": r"dark horse|filme", "Checagem, mentira, fake news": r"checag|fato ou fake|fake news|mentira|mentiu|mentiroso|mente\b"}
+         "Filme sobre Bolsonaro (Dark Horse)": r"dark horse|filme",
+         "Caso Ana Clara (Flávio defendeu o acusado)": r"ana clara", "Bets e Tigrinho": r"\bbets?\b|tigrinho", "Bolsa Família (R$ 600, \"bolsa-farelo\")": r"bolsa fam[ií]lia|bolsa-farelo|farelo", "Checagem, mentira, fake news": r"checag|fato ou fake|fake news|mentira|mentiu|mentiroso"}
 
 
 def wilson(k, n, z=1.96):
