@@ -22,9 +22,9 @@
 <main>
   <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
   <div class="topo"><div><h1>Redes sociais: a conversa no Bluesky sobre Lula e Flávio</h1>
-  <p class="sub">O que dá para medir com posts públicos do Bluesky no 2º turno, com o debate da Band (18/10, 20h às 22h). <b>Eu não estou medindo intenção de voto aqui.</b></p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <p class="sub">O que dá para medir com posts públicos do Bluesky no 2º turno, com os debates da Band (18/10, 20h às 22h) e da Globo (23/10, 21h20, com checagem de fatos). <b>Eu não estou medindo intenção de voto aqui.</b></p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
   <div class="an">
-  <div class="aviso"><b>Leia antes.</b> O Bluesky não representa o eleitorado. Nos 304 posts que li e classifiquei com a ajuda do Claude (uma IA), quem fala de Lula é quase sempre a favor e quem fala de Flávio é quase sempre contra. Por isso eu <b>não</b> mostro um "termômetro de sentimento" nem somo isso às pesquisas. As outras redes ficaram de fora porque o acesso aos dados é pago ou fechado (seção 5). Os posts vêm da busca pública do Bluesky, em amostras por janela de tempo.</div>
+  <div class="aviso"><b>Leia antes.</b> O Bluesky não representa o eleitorado. Nos 304 posts que li e classifiquei com a ajuda do Claude (uma IA), quem fala de Lula é quase sempre a favor e quem fala de Flávio é quase sempre contra. Por isso eu <b>não</b> mostro um "termômetro de sentimento" nem somo isso às pesquisas. As outras redes ficaram de fora porque o acesso aos dados é pago ou fechado (seção 6). Os posts vêm da busca pública do Bluesky, em amostras por janela de tempo.</div>
   <div class="kpis" id="kpis"></div>
 
   <section class="sec"><div>
@@ -38,7 +38,29 @@
   </div><aside class="side" id="nota1"></aside></section>
 
   <section class="sec"><div>
-  <h2>2. O que se diz: a favor, contra ou neutro</h2>
+  <h2>2. O debate da Globo (23/10) e a checagem de fatos</h2>
+  <p id="gTxt"></p>
+  <div class="kpis" id="kpisG"></div>
+  <div class="cv" style="height:300px"><canvas id="cDebG"></canvas></div>
+  <div id="tDebG"></div>
+  <p class="fonte">Mesmo método do debate da Band, com uma janela maior: o da Globo era o mais esperado e o último antes do 2º turno, então eu coletei hora a hora de 18h de 23/10 até 12h de 24/10 (a Band teve 1 hora antes e 6 depois). O "normal da faixa" aqui é a mediana das janelas de 6 horas da mesma faixa do dia de 20/10 até a tarde de 23/10, para não misturar com o efeito da Band. A linha "checagem" é a busca pela palavra "checagem" (sem filtrar candidato). As horas da madrugada e da manhã de 24/10 são comparadas com faixas baixas do dia: o múltiplo delas exagera.</p>
+  <h3 class="titc">O que as checagens disseram</h3>
+  <table class="t txt"><thead><tr><th>Quem</th><th>Quando</th><th>O que checou</th><th>Resultado</th></tr></thead><tbody>
+  <tr><td style="text-align:left"><b>Terra com Aos Fatos</b></td><td>Em tempo real, durante o debate</td><td>19 declarações: 12 de Flávio Bolsonaro e 7 de Lula</td><td>Flávio: 4 verdadeiras, 3 enganosas, 3 falsas, 1 sem contexto, 1 "não é bem assim". Lula: 3 verdadeiras, 2 enganosas, 1 "não é bem assim", 1 subestimada</td></tr>
+  <tr><td style="text-align:left"><b>Gazeta do Paraná</b></td><td>Depois do debate</td><td>11 declarações sobre acusações cruzadas (Banco Master e Vorcaro, uísque, filme, casa de R$ 10 milhões, lancha, condenação)</td><td>10 "sem comprovação"; 1 verdadeira com ressalva (a condenação de Lula em 2017 foi anulada pelo STF em 2021)</td></tr>
+  <tr><td style="text-align:left"><b>ICL Notícias</b></td><td>Ao vivo</td><td>Checagem durante o debate (por exemplo, a fala de Lula de que os alimentos subiram menos no governo dele)</td><td>Não li o resultado completo</td></tr>
+  <tr><td style="text-align:left"><b>Petição por checagem ao vivo</b></td><td>Antes do debate</td><td>Pedido a Globo, TSE e mediador para checar as falas ao vivo (Change.org)</td><td>791.865 assinaturas em 21/10. Não encontrei resposta da Globo; também não confirmei se a TV aberta checou ao vivo</td></tr>
+  </tbody></table>
+  <p class="fonte">Valores como foram reportados por Terra/Aos Fatos, Gazeta do Paraná, ICL Notícias e Congresso em Foco; eu não acessei as checagens originais da Aos Fatos nem do Fato ou Fake. Com 12 e 7 declarações, a diferença entre os dois lados não é estatística: são contagens pequenas e cada agência escolhe o que checa. Veredito "sem comprovação" quer dizer que não há prova, não que a acusação seja falsa.</p>
+  <h3 class="titc">Os assuntos da checagem apareceram na conversa?</h3>
+  <p id="temaTxt"></p>
+  <div id="tTemas"></div>
+  <p class="fonte">Busca por palavra no texto dos posts coletados (aproximação: "casa", por exemplo, só conta em "casa de" ou "10 milhões"). Comparo a parcela dos posts depois do início do debate com a de 20/10 até antes dele. Cada janela é uma amostra dos posts mais recentes dela, então as parcelas valem para a amostra, não para a rede inteira.</p>
+  <div class="duas"><div><h3 class="titc">Hashtags antes da Globo (20 a 23/10)</h3><div id="tHashGA"></div></div><div><h3 class="titc">Hashtags na Globo e depois</h3><div id="tHashGD"></div></div></div>
+  </div><aside class="side" id="nota1g"></aside></section>
+
+  <section class="sec"><div>
+  <h2>3. O que se diz: a favor, contra ou neutro</h2>
   <p id="posTxt"></p>
   <div class="leg"><span><s class="fav"></s>favorável ao candidato citado</span><span><s class="neu"></s>neutro, notícia, piada ou sem posição</span><span><s class="des"></s>desfavorável</span></div>
   <div id="barras"></div>
@@ -47,21 +69,21 @@
   </div><aside class="side" id="nota2"></aside></section>
 
   <section class="sec"><div>
-  <h2>3. Por que não há um termômetro automático</h2>
+  <h2>4. Por que não há um termômetro automático</h2>
   <p id="modTxt"></p>
   <div id="tMod"></div>
   <p class="fonte">Acurácia em 3 classes (favorável, neutro, desfavorável) contra os 304 posts que classifiquei com o Claude. A linha de base não lê o texto: diz "favorável" para quem cita Lula e "desfavorável" para quem cita Flávio. Os rótulos vêm de uma só leitura, a do Claude, então isto mede a concordância dos modelos com ele, não uma verdade externa.</p>
   </div><aside class="side" id="nota3"></aside></section>
 
   <section class="sec"><div>
-  <h2>4. Hashtags e mensagens repetidas</h2>
+  <h2>5. Hashtags e mensagens repetidas</h2>
   <p id="hashTxt"></p>
   <div class="duas"><div><h3 class="titc">Antes do debate</h3><div id="tHashA"></div></div><div><h3 class="titc">Debate e depois</h3><div id="tHashD"></div></div></div>
   <p class="fonte">Posts que contêm cada hashtag (sem diferenciar maiúsculas nem acentos), em todos os posts coletados. Hashtags de campanha dos dois lados; eu não verifico quem as organiza.</p>
   </div><aside class="side" id="nota4"></aside></section>
 
   <section class="sec"><div>
-  <h2>5. As outras redes: por que eu não medi</h2>
+  <h2>6. As outras redes: por que eu não medi</h2>
   <p>Eu tentei levar a mesma análise para o X, o Threads, o Instagram, o Facebook e o Mastodon. <b>Só o Bluesky deixa qualquer pessoa buscar posts e ver o total por janela, sem pagar e sem pedir autorização.</b> Nas outras, ou o acesso é pago (X) ou passa por ferramentas fechadas que devolvem resumos e amostras pequenas (Meta). A tabela mostra o que cada tentativa devolveu.</p>
   <div id="tAcesso"></div>
   <h3 class="titc">Posts que deu para analisar em cada rede</h3>
@@ -78,7 +100,7 @@
   </div><aside class="side"><h4>O que isso significa</h4><ul><li>Qualquer "termômetro das redes" que não mostre de onde vieram os posts, quantos foram lidos e como foram classificados <b>não dá para auditar</b>.</li><li>As redes maiores controlam o acesso por preço (X) ou por ferramentas fechadas (Meta). O que sobra de aberto é pequeno e tem viés próprio.</li></ul></aside></section>
 
   <section class="sec"><div>
-  <h2>6. O que outros monitoramentos mostraram</h2>
+  <h2>7. O que outros monitoramentos mostraram</h2>
   <p>Não coletei X, Instagram nem Facebook. Para dar contexto, a tabela resume o que institutos e empresas de monitoramento divulgaram sobre essas redes. <b>Os métodos são outros e os números não se comparam com os do Bluesky nem entre si</b>: uns medem menções, outros engajamento, outros um índice próprio.</p>
   <table class="t txt"><thead><tr><th>Quem</th><th>Período</th><th>Redes</th><th>O que mede</th><th>Resultado divulgado</th></tr></thead><tbody>
   <tr><td style="text-align:left">Palver</td><td>15–16/8</td><td>WhatsApp público, Instagram, X</td><td>Parcela das menções</td><td>Lula: 63% no WhatsApp, 57% no Instagram, 41% no X. Flávio: entre 28% e 30% nas três</td></tr>
@@ -90,10 +112,10 @@
   </div><aside class="side"><h4>Como ler</h4><ul><li>Bites e Nexus apontam Lula na frente em <b>presença</b> (seguidores, índice) e Flávio na frente em <b>engajamento</b>.</li><li>Atenção não é apoio: menção inclui crítica.</li></ul></aside></section>
 
   <section class="sec"><div>
-  <h2>7. Limites desta análise</h2>
+  <h2>8. Limites desta análise</h2>
   <ul class="fonte" style="font-size:.88rem">
     <li>O Bluesky é uma rede pequena e muito inclinada à esquerda: a ausência de apoio ao Flávio na amostra diz mais sobre a rede que sobre o eleitorado.</li>
-    <li>Eu só medi uma rede. O X, o Threads, o Instagram, o Facebook e o Mastodon não entram nos números: a seção 5 mostra o que cada tentativa devolveu e por que eu não consegui medir.</li>
+    <li>Eu só medi uma rede. O X, o Threads, o Instagram, o Facebook e o Mastodon não entram nos números: a seção 6 mostra o que cada tentativa devolveu e por que eu não consegui medir.</li>
     <li>Eu coleto os posts mais recentes de cada janela, não todos; o volume vem do total que a busca informa, que pode ser aproximado. Algumas janelas falharam e eu as refiz; a última (19/10) é parcial.</li>
     <li>Um mesmo autor, ou uma campanha organizada, pode inflar o volume: por isso eu tiro os textos repetidos da amostra de posição e limito a 3 posts por autor por dia.</li>
     <li>Os rótulos da amostra vêm de uma só leitura (a do Claude, a IA que usei), sem validação por outra pessoa. Com 76 posts por grupo, o intervalo de confiança é de uns 10 p.p. para cada lado.</li>
@@ -107,16 +129,17 @@
 <script src="assets/analise.js"></script>
 <script>
 const D = __DATA__;
-const N = (x) => x.toLocaleString("pt-BR"), DEB = [Date.parse("2026-10-18T20:00:00-03:00"), Date.parse("2026-10-18T22:00:00-03:00")];
+const N = (x) => x.toLocaleString("pt-BR"), DEBS = [[Date.parse("2026-10-18T20:00:00-03:00"), Date.parse("2026-10-18T22:00:00-03:00"), "Band"], [Date.parse("2026-10-23T21:20:00-03:00"), Date.parse("2026-10-23T23:30:00-03:00"), "Globo"]];
 const NOME = { lula: "Lula", flavio: "Flávio Bolsonaro" };
 const dia = (ms) => new Date(ms).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", timeZone: "America/Sao_Paulo" });
 const pos = (c, p) => D.posicao.find(x => x.candidato === c && x.periodo === p);
 const maxX = (c) => D.debate_efeito.horas.filter(h => h.h === "18/10 20h" || h.h === "18/10 21h").reduce((a, h) => (h[c + "_x"] > a[c + "_x"] ? h : a));   // pico durante o debate (20h e 21h)
 
 const debateBox = { id: "debateBox", beforeDatasetsDraw(c) {
-  const x = c.scales.x, a = c.chartArea; if (!x) return; const l = x.getPixelForValue(DEB[0]), r = x.getPixelForValue(DEB[1]);
-  c.ctx.save(); c.ctx.fillStyle = "rgba(128,128,128,.18)"; c.ctx.fillRect(l, a.top, Math.max(3, r - l), a.bottom - a.top);
-  c.ctx.fillStyle = css("--ink2"); c.ctx.font = "600 11px system-ui"; c.ctx.fillText("debate", l + 3, a.top + 12); c.ctx.restore(); } };
+  const x = c.scales.x, a = c.chartArea; if (!x) return;
+  for (const [i, f, nome] of DEBS) { const l = x.getPixelForValue(i), r = x.getPixelForValue(f);
+    c.ctx.save(); c.ctx.fillStyle = "rgba(128,128,128,.18)"; c.ctx.fillRect(l, a.top, Math.max(3, r - l), a.bottom - a.top);
+    c.ctx.fillStyle = css("--ink2"); c.ctx.font = "600 11px system-ui"; c.ctx.fillText(nome, l + 3, a.top + 12); c.ctx.restore(); } } };
 Chart.register(debateBox);
 
 function kpis() {
