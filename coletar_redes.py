@@ -1,6 +1,6 @@
 """Coleta posts públicos do Bluesky (busca aberta da API, sem login) sobre Lula e Flávio no 2º turno.
 
-  python coletar_redes.py                 # janelas de 6 h de 12/10 até agora + janelas de 1 h no debate (18/10, 20h-22h BRT)
+  python coletar_redes.py                 # janelas de 6 h de 12/10 até agora + janelas de 1 h em volta dos debates (Band 18/10 20h-22h; Globo 23/10 21h20-23h30, BRT)
 Grava datasets/redes/bluesky-bruto.jsonl (cache LOCAL, fora do git): sem @, sem nome, sem avatar; autor só como hash curto, para contar posts por autor.
 O que vai para o git são só os agregados (analisar_redes.py). Posts públicos; a coleta respeita os limites da API (pausa entre chamadas).
 ponytail: a busca devolve os posts mais recentes de cada janela, então cada janela é uma amostra (até MAX_PAG páginas), não o total; o Bluesky não é uma amostra do eleitorado."""
@@ -17,23 +17,29 @@ API = "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts"
 BRT = timezone(timedelta(hours=-3))
 SAIDA = Path("datasets/redes/bluesky-bruto.jsonl")
 VOLUME = Path("datasets/redes/bluesky-volume.csv")      # agregado (vai para o git): total de posts que a busca informa em cada janela e termo
-TERMOS = {"lula": ["Lula"], "flavio": ["Flávio Bolsonaro"]}
+TERMOS = {"lula": ["Lula"], "flavio": ["Flávio Bolsonaro"], "checagem": ["checagem"]}   # "checagem": conversa sobre fact-check (só volume, para o debate da Globo)
 MAX_PAG = 1          # páginas de 100 posts por (termo, janela); a busca também informa o total (hitsTotal) de cada janela
-DEBATE = (datetime(2026, 10, 18, 20, tzinfo=BRT), datetime(2026, 10, 18, 22, tzinfo=BRT))
+DEBATES = [    # (início, fim, horas de janela fina antes, horas depois): o da Globo é o mais esperado (checagem ao vivo), então a janela dele é bem maior
+    (datetime(2026, 10, 18, 20, tzinfo=BRT), datetime(2026, 10, 18, 22, tzinfo=BRT), 1, 6),
+    (datetime(2026, 10, 23, 21, 20, tzinfo=BRT), datetime(2026, 10, 23, 23, 30, tzinfo=BRT), 3, 12.5),   # janelas finas de 23/10 18h a 24/10 12h (alinhadas à grade de 6 h)
+]
 
 
 def janelas(agora):
     ini = datetime(2026, 10, 12, 0, tzinfo=BRT)
+    finas = [((a - timedelta(hours=antes)).replace(minute=0), b + timedelta(hours=depois)) for a, b, antes, depois in DEBATES]
+    em_fina = lambda t: any(x <= t < y for x, y in finas)
     out, t = [], ini
     while t < agora:
         fim = min(t + timedelta(hours=6), agora)
-        if not (DEBATE[0] - timedelta(hours=1) <= t < DEBATE[1] + timedelta(hours=6)):    # em volta do debate: janelas finas
+        if not em_fina(t):                                        # em volta dos debates: janelas finas
             out.append((t, fim, MAX_PAG))
         t = fim
-    t = DEBATE[0] - timedelta(hours=1)
-    while t < min(DEBATE[1] + timedelta(hours=6), agora):
-        out.append((t, min(t + timedelta(hours=1), agora), 2))
-        t += timedelta(hours=1)
+    for x, y in finas:
+        t = x.replace(minute=0)
+        while t < min(y, agora):
+            out.append((t, min(t + timedelta(hours=1), agora), 2))
+            t += timedelta(hours=1)
     return sorted(out)
 
 
