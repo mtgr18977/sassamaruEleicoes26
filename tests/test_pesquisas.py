@@ -43,3 +43,15 @@ def test_piso_de_incerteza_em_pp_vira_logit_e_so_age_quando_maior():
     _, sd1, _, _ = estimar(d, "p", hoje=hoje, sd_vies=0.0, piso_pp=2.5)
     assert abs(sd1 - 0.025 / (p * (1 - p))) < 1e-9 and sd1 > sd0          # 2,5 p.p. em p=0,5 = 0,10 em logit
     assert estimar(d, "p", hoje=hoje, sd_vies=0.05, piso_pp=0.1)[1] > 0.1  # piso menor que a incerteza: não muda
+
+
+def test_segundo_turno_nao_extrapola_tendencia_e_o_resto_extrapola():
+    """Pesquisas que sobem em linha reta: sem tendência (padrão do 2º turno) o nível fica no meio, com tendência ele vai para o último ponto."""
+    datas = pd.date_range("2026-10-06", periods=10, freq="2D")
+    d = pd.DataFrame([dict(instituto=i, data=t, campo_fim=t, n=2000, p2=.46 + .004 * k, p1s=.46 + .004 * k, registrado_em=pd.NaT)
+                      for k, t in enumerate(datas) for i in "AB"])
+    hoje = datas[-1]
+    sem = estimar(d, "p2", hoje=hoje, tau=1e6)[0]                     # padrão do 2º turno
+    com = estimar(d, "p2", hoje=hoje, tau=1e6, tendencia=True)[0]
+    assert abs(sem - .478) < .002 and com > sem + .01 and abs(com - .496) < .003
+    assert abs(estimar(d, "p1s", hoje=hoje, tau=1e6)[0] - com) < 1e-9    # 1º turno continua com tendência

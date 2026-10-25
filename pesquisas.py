@@ -11,14 +11,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-HOJE = pd.Timestamp("2026-10-24")   # data de referência: atualizar a cada rodada (e HORIZONTE)
+HOJE = pd.Timestamp("2026-10-25")   # data de referência: atualizar a cada rodada (e HORIZONTE)
 TAU_DIAS = 14.0        # meia-vida do decaimento ≈ TAU·ln2
 DEFF = 1.5             # efeito de desenho: amostra efetiva = n / DEFF
 SD_VIES_HIST = 0.02    # padrão de estimar(); main() usa o RMSE medido por turno (vies_rmse)
 SD_PISO_2T_PP = 2.5   # ASSUMIDO: piso (p.p. de Lula/(Lula+Flávio)) para a incerteza do 2º turno; o erro medido é de pesquisas FINAIS e a 24 dias da eleição tende a ser maior
 HOJE_1T = pd.Timestamp("2026-10-02")   # projeção do 1º turno (já realizado em 4/10): congelada na data em que foi feita, para a aba Análise comparar com o resultado
 INICIO_2T = pd.Timestamp("2026-10-05")   # o modelo do 2º turno usa só pesquisas de campo depois do 1º turno (4/10): a campanha mudou
-HORIZONTE = {1: 2, 2: 1}   # dias: 1º turno de 2/10 até 4/10; 2º turno de 24/10 até 25/10: a incerteza da tendência cresce com o prazo
+HORIZONTE = {1: 2, 2: 0}   # dias: 1º turno de 2/10 até 4/10; 2º turno: 0 no dia da votação (25/10); antes, os dias até lá: a incerteza da tendência cresce com o prazo
 P2022 = {1: 0.484307, 2: 0.509024}  # % PT nos válidos, tse-presidente-nacional.csv
 logit = lambda p: np.log(p / (1 - p))
 
@@ -58,8 +58,10 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
     return d
 
 
-def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, piso_pp=0.0):
-    """Retorna (p, sd_logit, house_effects, n_pesquisas)."""
+def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, piso_pp=0.0, tendencia=None):
+    """Retorna (p, sd_logit, house_effects, n_pesquisas). tendencia=None: o 2º turno (p2) usa nível sem tendência linear (as pesquisas estabilizaram, extrapolar infla o nível); o resto usa tendência."""
+    if tendencia is None:
+        tendencia = col != "p2"
     d = df.dropna(subset=[col])
     if col == "p2":
         d = d[d.campo_fim >= INICIO_2T]                       # 2º turno: só o que foi a campo depois do 1º turno
@@ -69,7 +71,8 @@ def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, pi
     inst = sorted(d.instituto.unique())
     k = len(inst)
     dias = (d.data - hoje).dt.days.to_numpy(float)          # ≤ 0
-    X = np.column_stack([np.ones(len(d)), dias / 30] +
+    nt = 2 if tendencia else 1                                # colunas antes dos efeitos de instituto: constante (+ tendência)
+    X = np.column_stack([np.ones(len(d))] + ([dias / 30] if tendencia else []) +
                         [(d.instituto == i).astype(float) - (d.instituto == inst[-1]).astype(float)
                          for i in inst[:-1]])
     var = 1 / (d.n.to_numpy() / DEFF * p * (1 - p))        # variância de logit(p)
@@ -77,9 +80,9 @@ def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, pi
     A = np.linalg.inv(X.T @ (w[:, None] * X))
     beta = A @ X.T @ (w * logit(p))
     cov = A @ (X.T @ ((w * w * var)[:, None] * X)) @ A      # sanduíche: pesos ≠ 1/var
-    h = np.append(beta[2:], -beta[2:].sum())
+    h = np.append(beta[nt:], -beta[nt:].sum())
     var_inst = h.var(ddof=1) / k if k > 1 else 0.0          # incerteza de qual conjunto de institutos
-    var_drift = (h_dias / 30) ** 2 * cov[1, 1]               # incerteza da tendência até a eleição (média sem extrapolar)
+    var_drift = (h_dias / 30) ** 2 * cov[1, 1] if tendencia else 0.0   # incerteza da tendência até a eleição (média sem extrapolar)
     sd = np.sqrt(cov[0, 0] + var_inst + var_drift + (sd_vies / (p.mean() * (1 - p.mean()))) ** 2)
     p_est = 1 / (1 + np.exp(-beta[0]))
     sd = max(sd, piso_pp / 100 / (p_est * (1 - p_est)))     # piso da incerteza, convertido de p.p. para logit

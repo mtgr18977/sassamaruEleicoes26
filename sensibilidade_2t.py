@@ -6,7 +6,7 @@ Cenários: (1) base, (2) correção pelo erro que cada instituto teve no 1º tur
   python sensibilidade_2t.py --grafico X  # também grava o gráfico em X (PNG; requer matplotlib)
 Erro do 1º turno = Lula/(Lula+Flávio) da última pesquisa antes de 4/10 − resultado (48,99%); + = deu a Lula mais do que ele teve.
 ponytail: 1 pesquisa por instituto = 1 observação; PoderData, Nexus/BTG e Futura não têm pesquisa de 1º turno no CSV e ficam sem correção/peso extra;
-o erro do 1º turno mistura a migração dos "demais"; a tendência linear do modelo, com janela curta, extrapola o último trecho (ver "só pós-1º turno"); Palver e Gerp entram pelos números da imprensa (relatórios não conferidos)."""
+o erro do 1º turno mistura a migração dos "demais"; desde 25/10 o modelo do 2º turno não usa tendência linear (as pesquisas estabilizaram depois de 15/10 e a extrapolação subia o nível em ~0,4 p.p.; ver "com tendência linear"); Palver e Gerp entram pelos números da imprensa (relatórios não conferidos)."""
 import argparse
 import math
 
@@ -30,7 +30,7 @@ sv, _ = vies_rmse(2)
 H = HORIZONTE[2]
 
 
-def rodar(x, nome, direto=False, base_sd=None):
+def rodar(x, nome, direto=False, base_sd=None, tendencia=None):
     """Estima o 2º turno em x. direto=True: média ponderada simples (poucos institutos para o ajuste de efeito de casa)."""
     if direto:
         y = x.dropna(subset=["p2"])
@@ -40,7 +40,7 @@ def rodar(x, nome, direto=False, base_sd=None):
         p, sd = float((w * y.p2).sum() / w.sum()), base_sd
         n = len(y)
     else:
-        p, sd, _, n = estimar(x, "p2", hoje=HOJE, sd_vies=sv, h_dias=H, piso_pp=SD_PISO_2T_PP)
+        p, sd, _, n = estimar(x, "p2", hoje=HOJE, sd_vies=sv, h_dias=H, piso_pp=SD_PISO_2T_PP, tendencia=tendencia)
     lo = 100 / (1 + math.exp(-(logit(p) - 1.645 * sd)))
     hi = 100 / (1 + math.exp(-(logit(p) + 1.645 * sd)))
     return dict(cenario=nome, s2=round(100 * p, 2), lo=round(lo, 1), hi=round(hi, 1), chance_lula=round(100 * Phi(logit(p) / sd), 1), n_pesquisas=n)
@@ -77,7 +77,7 @@ def montar():
     for nome, grupo in (("Só Palver", ["Palver"]), ("Só Gerp", ["Gerp"]), ("Só Palver + Gerp", ["Palver", "Gerp"])):
         L.append(rodar(d[d.instituto.isin(grupo)], nome + " (média ponderada, sd do modelo)", direto=True, base_sd=bsd))
     pos = d[d.campo_fim >= INICIO_2T]
-    L.append(rodar(pos, "Só pós-1º turno (5/10 em diante), com tendência linear"))
+    L.append(rodar(pos, "Só pós-1º turno (5/10 em diante), com tendência linear (o modelo até 24/10)", tendencia=True))
     L.append(rodar(pos, "Só pós-1º turno (5/10 em diante), média sem tendência", direto=True, base_sd=bsd))
     x22 = abstencao_2t.base_2022()                                       # abstenção diferencial: desloca a estimativa pelo efeito calculado sobre a geografia de 2022
     for delta in (1, 2, 3):
