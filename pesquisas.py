@@ -58,8 +58,10 @@ def preparar(csv="datasets/pesquisas-2026.csv"):
     return d
 
 
-def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, piso_pp=0.0):
-    """Retorna (p, sd_logit, house_effects, n_pesquisas)."""
+def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, piso_pp=0.0, tendencia=None):
+    """Retorna (p, sd_logit, house_effects, n_pesquisas). tendencia=None: o 2º turno (p2) usa nível sem tendência linear (as pesquisas estabilizaram, extrapolar infla o nível); o resto usa tendência."""
+    if tendencia is None:
+        tendencia = col != "p2"
     d = df.dropna(subset=[col])
     if col == "p2":
         d = d[d.campo_fim >= INICIO_2T]                       # 2º turno: só o que foi a campo depois do 1º turno
@@ -69,7 +71,8 @@ def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, pi
     inst = sorted(d.instituto.unique())
     k = len(inst)
     dias = (d.data - hoje).dt.days.to_numpy(float)          # ≤ 0
-    X = np.column_stack([np.ones(len(d)), dias / 30] +
+    nt = 2 if tendencia else 1                                # colunas antes dos efeitos de instituto: constante (+ tendência)
+    X = np.column_stack([np.ones(len(d))] + ([dias / 30] if tendencia else []) +
                         [(d.instituto == i).astype(float) - (d.instituto == inst[-1]).astype(float)
                          for i in inst[:-1]])
     var = 1 / (d.n.to_numpy() / DEFF * p * (1 - p))        # variância de logit(p)
@@ -77,9 +80,9 @@ def estimar(df, col, hoje=HOJE, tau=TAU_DIAS, sd_vies=SD_VIES_HIST, h_dias=0, pi
     A = np.linalg.inv(X.T @ (w[:, None] * X))
     beta = A @ X.T @ (w * logit(p))
     cov = A @ (X.T @ ((w * w * var)[:, None] * X)) @ A      # sanduíche: pesos ≠ 1/var
-    h = np.append(beta[2:], -beta[2:].sum())
+    h = np.append(beta[nt:], -beta[nt:].sum())
     var_inst = h.var(ddof=1) / k if k > 1 else 0.0          # incerteza de qual conjunto de institutos
-    var_drift = (h_dias / 30) ** 2 * cov[1, 1]               # incerteza da tendência até a eleição (média sem extrapolar)
+    var_drift = (h_dias / 30) ** 2 * cov[1, 1] if tendencia else 0.0   # incerteza da tendência até a eleição (média sem extrapolar)
     sd = np.sqrt(cov[0, 0] + var_inst + var_drift + (sd_vies / (p.mean() * (1 - p.mean()))) ** 2)
     p_est = 1 / (1 + np.exp(-beta[0]))
     sd = max(sd, piso_pp / 100 / (p_est * (1 - p_est)))     # piso da incerteza, convertido de p.p. para logit
