@@ -1,5 +1,5 @@
 {
- "gerado_em": "26/10/2026 11h04",
+ "gerado_em": "26/10/2026 11h19",
  "debate": "18/10/2026, 20h às 22h (Band)",
  "volume": [
   {
@@ -1753,11 +1753,11 @@
       22
      ],
      [
-      "#lulaomaiordetodos",
+      "#lulapaidobrasil",
       17
      ],
      [
-      "#lulapaidobrasil",
+      "#lulaomaiordetodos",
       17
      ],
      [
@@ -2082,52 +2082,52 @@
  ],
  "amostra_rotulada": 608,
  "avaliacao": {
-  "n": 304,
+  "n": 608,
   "rotulos": {
-   "N": 139,
-   "P": 121,
-   "0": 44
+   "N": 278,
+   "P": 228,
+   "0": 102
   },
   "modelos": [
    {
     "nome": "Linha de base (Lula = favorável, Flávio = desfavorável)",
     "descricao": "Não olha o texto: só quem é citado.",
-    "acuracia": 0.832
+    "acuracia": 0.811
    },
    {
     "nome": "Sentimento multilíngue (DistilBERT)",
     "descricao": "lxyuan/distilbert-base-multilingual-cased-sentiments-student",
-    "acuracia": 0.53,
-    "segundos": 8
+    "acuracia": 0.508,
+    "segundos": 64
    },
    {
     "nome": "Sentimento de tweets (XLM-R)",
     "descricao": "cardiffnlp/twitter-xlm-roberta-base-sentiment",
-    "acuracia": 0.421,
-    "segundos": 13
+    "acuracia": 0.488,
+    "segundos": 127
    },
    {
     "nome": "Posição por NLI zero-shot (mDeBERTa)",
     "descricao": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli, três hipóteses por candidato",
-    "acuracia": 0.549,
-    "segundos": 99
+    "acuracia": 0.567,
+    "segundos": 278
    },
    {
     "nome": "Regressão logística em TF-IDF (validação cruzada)",
     "descricao": "Palavras e trechos de letras + quem é citado; 5 partições × 5 repetições",
-    "acuracia": 0.812,
-    "desvio": 0.01
+    "acuracia": 0.795,
+    "desvio": 0.005
    }
   ],
   "por_candidato": {
    "lula": {
-    "P": 120,
-    "0": 26,
-    "N": 6
+    "P": 227,
+    "0": 65,
+    "N": 12
    },
    "flavio": {
-    "N": 133,
-    "0": 18,
+    "N": 266,
+    "0": 37,
     "P": 1
    }
   }
