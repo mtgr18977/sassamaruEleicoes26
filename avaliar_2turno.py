@@ -1,8 +1,8 @@
 """Compara o resultado do 2º turno de 2026 (datasets/resultado-2026-turno2.csv) com o que o modelo e as pesquisas projetavam.
 
   python avaliar_2turno.py
-Resultado nacional e por UF: Lula/(Lula+Flávio) nos votos válidos. Os números de 25/10 vêm de matérias que reproduzem o painel do TSE (Wikipedia, g1, CGN), com 99,9% das seções;
-o arquivo oficial de votação do TSE (cdn.tse.jus.br) ainda não tinha o 2º turno quando isto foi feito. Troque datasets/resultado-2026-turno2.csv pelo oficial quando sair.
+Resultado nacional e por UF: Lula/(Lula+Flávio) nos votos válidos. O resultado é o OFICIAL do TSE (portal resultados.tse.jus.br, 100% das seções, 25/10/2026 23h27), baixado por fetch_tse_2turno.py em datasets/resultado-2026-turno2.csv;
+os arquivos de votação por zona/seção (dados abertos, cdn.tse.jus.br) ainda não tinham o 2º turno quando isto foi feito.
 Sai: modelos/avaliacao-2turno.json (resumo, tabela por instituto e por UF) e as tabelas no terminal.
 Compara: (1) o modelo (modelos/parametros.json e previsao-uf-turno2.csv), (2) a última pesquisa de cada instituto (as mesmas que o modelo usa, via pesquisas.preparar),
 (3) o erro de cada instituto no 1º turno (erros_1turno.py)."""
@@ -49,7 +49,7 @@ inst = dict(media_simples=round(float(t.ultima.mean()), 2), mediana=round(float(
 m = pd.read_csv("modelos/previsao-uf-turno2.csv").set_index("uf")
 w = pd.Series({u["uf"]: u["validos"] for u in param["mc"]["turno2"]["unidades"]})
 b = pd.Series({u["uf"]: 100 * u["pbase"] for u in param["mc"]["turno2"]["unidades"]})
-act = res.drop(index="BR").lula_pct
+act = res.drop(index=["BR", "ZZ"]).lula_pct                      # as 27 UFs; o exterior (ZZ) vai à parte
 u = pd.DataFrame({"real": act, "modelo": m.mediana, "p5": m.p5, "p95": m.p95, "base_1t_2026": b}).dropna()
 u["erro"] = (u.modelo - u.real).round(2)
 u["dentro90"] = (u.real >= u.p5) & (u.real <= u.p95)
@@ -101,11 +101,47 @@ sem = sens[sens.cenario.str.startswith("Sem ")]
 sem_res = dict(max_mudanca=round(float(sem.delta_s2.abs().max()), 2), instituto=sem.loc[sem.delta_s2.abs().idxmax(), "cenario"][4:],
                max_mudanca_chance=round(float(sem.delta_chance.abs().max()), 1))
 
+# ---- 1º × 2º turno com os arquivos oficiais do portal do TSE (fetch_tse_2turno.py, com e sem --turno1): a conta de votos e o comparecimento por UF
+t1 = pd.read_csv(D + "tse-presidente-1turno-uf.csv").set_index("uf")
+t2u = pd.read_csv(D + "tse-presidente-2turno-uf.csv").set_index("uf")
+c = pd.DataFrame(index=t1.index)
+c["d_lula"], c["d_flavio"] = t2u.votos_lula - t1.votos_lula, t2u.votos_flavio - t1.votos_flavio
+c["outros"], c["d_bn"], c["d_comp"] = t1.votos_outros, (t1.brancos + t1.nulos) - (t2u.brancos + t2u.nulos), t2u.comparecimento - t1.comparecimento
+c["residuo"] = c.outros + c.d_bn + c.d_comp - c.d_lula - c.d_flavio
+c["lula_1t"] = 100 * t1.votos_lula / (t1.votos_lula + t1.votos_flavio)
+c["lula_2t"] = 100 * t2u.votos_lula / (t2u.votos_lula + t2u.votos_flavio)
+c["swing"] = c.lula_2t - c.lula_1t
+c["d_comp_pp"] = 100 * (t2u.comparecimento / t2u.eleitorado - t1.comparecimento / t1.eleitorado)
+n = c.loc["BR"]
+cont = dict(lula_1t=int(t1.loc["BR", "votos_lula"]), lula_2t=int(t2u.loc["BR", "votos_lula"]), flavio_1t=int(t1.loc["BR", "votos_flavio"]), flavio_2t=int(t2u.loc["BR", "votos_flavio"]),
+            outros_1t=int(n.outros), queda_branco_nulo=int(n.d_bn), mais_comparecimento=int(n.d_comp), ganho_lula=int(n.d_lula), ganho_flavio=int(n.d_flavio),
+            abstencao_1t=int(t1.loc["BR", "abstencao"]), abstencao_2t=int(t2u.loc["BR", "abstencao"]), residuo=int(n.residuo), swing_nacional=round(float(n.swing), 2), d_comp_pp=round(float(n.d_comp_pp), 2))
+cu = c.drop(index=["BR", "ZZ"])
+erro_uf = u.erro
+cu = cu.join(erro_uf.rename("erro_modelo"))
+teste = dict(swing_medio=round(float(cu.swing.mean()), 2), swing_dp=round(float(cu.swing.std()), 2), swing_min=round(float(cu.swing.min()), 2), uf_swing_min=cu.swing.idxmin(), swing_max=round(float(cu.swing.max()), 2), uf_swing_max=cu.swing.idxmax(),
+             ufs_com_swing_positivo=int((cu.swing > 0).sum()), ufs_com_queda_de_comparecimento=int((cu.d_comp < 0).sum()), ufs_queda=cu.index[cu.d_comp < 0].tolist(),
+             corr_comparecimento_erro=round(float(cu.d_comp_pp.corr(cu.erro_modelo)), 2), corr_comparecimento_swing=round(float(cu.d_comp_pp.corr(cu.swing)), 2),
+             residuo_max_uf=int(cu.residuo.abs().max()))
+uf_turnos = cu.reset_index().rename(columns={"uf": "uf"})[["uf", "lula_1t", "lula_2t", "swing", "d_comp_pp", "erro_modelo"]].round(2).to_dict("records")
+
+# ---- a mesma conta de votos nas eleições de 2002 a 2022 (tse-presidente-nacional.csv): ganho dos dois finalistas = outros + queda de branco/nulo + mais comparecimento
+nac_h = pd.read_csv(D + "tse-presidente-nacional.csv").set_index(["ano", "turno"])
+hist = []
+for ano in (2002, 2006, 2010, 2014, 2018, 2022):
+    p1, p2 = nac_h.loc[(ano, 1)], nac_h.loc[(ano, 2)]
+    hist.append(dict(ano=ano, outros=round(p1.votos_outros / 1e6, 2), queda_bn=round(((p1.brancos + p1.nulos) - (p2.brancos + p2.nulos)) / 1e6, 2), mais_comp=round((p2.comparecimento - p1.comparecimento) / 1e6, 2),
+                     ganho_pt=round((p2.votos_pt - p1.votos_pt) / 1e6, 2), ganho_anti=round((p2.votos_antipt - p1.votos_antipt) / 1e6, 2)))
+hist.append(dict(ano=2026, outros=round(cont["outros_1t"] / 1e6, 2), queda_bn=round(cont["queda_branco_nulo"] / 1e6, 2), mais_comp=round(cont["mais_comparecimento"] / 1e6, 2),
+                 ganho_pt=round(cont["ganho_lula"] / 1e6, 2), ganho_anti=round(cont["ganho_flavio"] / 1e6, 2)))
+
 # ---- regiões
 REG = {"Nordeste": "AL BA CE MA PB PE PI RN SE", "Norte": "AC AM AP PA RO RR TO", "Centro-Oeste": "DF GO MS MT", "Sudeste": "ES MG RJ SP", "Sul": "PR RS SC"}
 regioes = [dict(regiao=k, ufs=len(v.split()), real=round(float(u.loc[v.split()].real.mean()), 1), erro=round(float(u.loc[v.split()].erro.mean()), 2)) for k, v in REG.items()]
 
-out = dict(fonte="datasets/resultado-2026-turno2.csv (provisório: painel do TSE via imprensa, 99,9% das seções)", nacional=nac, reguas=reguas, linha_do_tempo=tempo, versoes=versoes, regioes=regioes, efeitos_instituto=efeitos, arredondamento=arred, arredondamento_resumo=arred_res, sem_instituto=sem_res, institutos=inst, uf_resumo=uf,
+zz = m.loc["ZZ"] if "ZZ" in m.index and "ZZ" in res.index else None
+exterior = None if zz is None else dict(previsto=round(float(zz.mediana), 2), real=round(float(res.loc["ZZ", "lula_pct"]), 2), erro=round(float(zz.mediana - res.loc["ZZ", "lula_pct"]), 2), p5=round(float(zz.p5), 1), p95=round(float(zz.p95), 1))
+out = dict(exterior=exterior, fonte="datasets/resultado-2026-turno2.csv (oficial: portal de resultados do TSE, 100% das seções, 25/10/2026 23h27)", nacional=nac, reguas=reguas, linha_do_tempo=tempo, versoes=versoes, regioes=regioes, contabilidade=cont, historico_conta=hist, teste_comparecimento=teste, uf_turnos=uf_turnos, efeitos_instituto=efeitos, arredondamento=arred, arredondamento_resumo=arred_res, sem_instituto=sem_res, institutos=inst, uf_resumo=uf,
            tabela_institutos=t.reset_index().rename(columns={"index": "instituto"}).to_dict("records"),
            tabela_uf=u.round(2).reset_index().to_dict("records"))
 json.dump(out, open("modelos/avaliacao-2turno.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o))

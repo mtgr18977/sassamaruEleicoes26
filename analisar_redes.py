@@ -22,6 +22,14 @@ DEBATE_FIM = datetime(2026, 10, 18, 22, tzinfo=BRT)
 GLOBO_INI = datetime(2026, 10, 23, 21, 20, tzinfo=BRT)       # debate da Globo (23/10, 21h20 às ~23h30): o último do 2º turno, com checagem de fatos
 GLOBO_FIM = datetime(2026, 10, 23, 23, 30, tzinfo=BRT)
 GLOBO_BASE = (datetime(2026, 10, 20, tzinfo=BRT), datetime(2026, 10, 23, 18, tzinfo=BRT))     # "normal" da Globo: janelas de 6 h de 20/10 até a tarde do debate (sem debate, sem o efeito da Band)
+APURACAO_INI = datetime(2026, 10, 25, 18, tzinfo=BRT)      # fechamento das urnas e apuração do 2º turno (25/10); o TSE declarou a reeleição de Lula às 21h08
+APURACAO_FIM = datetime(2026, 10, 25, 23, 30, tzinfo=BRT)
+TEMAS_APURACAO = {"Fraude, urnas e auditoria": r"fraude|\burnas?\b|auditor|voto impresso|recontagem|manipul",
+                  "Moraes, TSE e STF": r"moraes|\btse\b|\bstf\b",
+                  "Golpe, democracia e ditadura": r"golpe|democracia|ditadura",
+                  "Vitória, reeleição e virada": r"reeleit|venceu|vit[óo]ria|ganhou|virada|\bganhamos\b",
+                  "Derrota, reconhecer e conceder": r"derrota|conced|reconhec|perdeu|perdedor",
+                  "Idade e quarto mandato": r"80 anos|idade|quarto mandato|velho"}
 TEMAS = {"Banco Master / Vorcaro": r"master|vorcaro", "Uísque, casa, lancha e outros ataques pessoais": r"u[ií]sque|whisky|lancha|casa de|10 milh", "Condenação de Lula": r"condena",
          "Filme sobre Bolsonaro (Dark Horse)": r"dark horse|filme",
          "Caso Ana Clara (Flávio defendeu o acusado)": r"ana clara", "Bets e Tigrinho": r"\bbets?\b|tigrinho", "Bolsa Família (R$ 600, \"bolsa-farelo\")": r"bolsa fam[ií]lia|bolsa-farelo|farelo", "Checagem, mentira, fake news": r"checag|fato ou fake|fake news|mentira|mentiu|mentiroso"}
@@ -103,12 +111,12 @@ def hashtags(d, cortes=(("antes", None, DEBATE_INI), ("depois", DEBATE_INI, None
     return out
 
 
-def temas(d):
-    """Quanto dos posts de cada período fala de cada assunto que a checagem tratou (busca por palavra no texto: aproximação)."""
-    ref = d[(d.t >= GLOBO_BASE[0]) & (d.t < GLOBO_INI)]
-    dep = d[d.t >= GLOBO_INI]
+def temas(d, topicos=None, inicio=GLOBO_INI):
+    """Quanto dos posts de cada período fala de cada assunto (busca por palavra no texto: aproximação). Compara os posts de 20/10 até `inicio` com os de `inicio` em diante."""
+    ref = d[(d.t >= GLOBO_BASE[0]) & (d.t < inicio)]
+    dep = d[d.t >= inicio]
     out = []
-    for nome, rx in TEMAS.items():
+    for nome, rx in (topicos or TEMAS).items():
         f = lambda g: int(g.texto.str.contains(rx, case=False, regex=True).sum())
         a, b = f(ref), f(dep)
         out.append(dict(tema=nome, antes=a, antes_pct=round(100 * a / len(ref), 2), depois=b, depois_pct=round(100 * b / len(dep), 2), x=round((b / len(dep)) / (a / len(ref)), 1) if a else None))
@@ -119,7 +127,7 @@ def posicao(rot):
     out = []
     per = rot.debate.astype(str)
     for cand in ("lula", "flavio"):
-        for k, nome in (("False", "antes do debate"), ("True", "debate e depois"), ("globo", "Globo e depois")):
+        for k, nome in (("False", "antes do debate"), ("True", "debate e depois"), ("globo", "Globo e depois"), ("resultado", "Resultado e depois")):
             g = rot[(rot.cand == cand) & (per == k)]
             n = len(g)
             if not n:
@@ -139,8 +147,10 @@ def main():
     rot = pd.read_csv(D + "rotulos-amostra.csv")
     globo = dict(debate="23/10/2026, 21h20 às 23h30 (Globo)", efeito=efeito_debate(vol, GLOBO_INI, GLOBO_FIM, GLOBO_BASE, antes=3, depois=12.5, cols=("lula", "flavio", "checagem")),
                  hashtags=hashtags(d, (("antes", GLOBO_BASE[0], GLOBO_INI), ("depois", GLOBO_INI, None))), temas=temas(d))
+    apuracao = dict(debate="25/10/2026, 18h às 23h30 (apuração; reeleição declarada às 21h08)", efeito=efeito_debate(vol, APURACAO_INI, APURACAO_FIM, GLOBO_BASE, antes=0, depois=6.5, cols=("lula", "flavio")),
+                    hashtags=hashtags(d, (("antes", GLOBO_BASE[0], APURACAO_INI), ("depois", APURACAO_INI, None))), temas=temas(d, TEMAS_APURACAO, APURACAO_INI))
     out = dict(gerado_em=datetime.now(BRT).strftime("%d/%m/%Y %Hh%M"), debate="18/10/2026, 20h às 22h (Band)", volume=vol, debate_efeito=efeito_debate(vol), corpus=corpus(d), hashtags=hashtags(d),
-               globo=globo, posicao=posicao(rot), amostra_rotulada=int(len(rot)), avaliacao=json.load(open(D + "avaliacao-modelos.json", encoding="utf-8")))
+               globo=globo, apuracao=apuracao, posicao=posicao(rot), amostra_rotulada=int(len(rot)), avaliacao=json.load(open(D + "avaliacao-modelos.json", encoding="utf-8")))
     json.dump(out, open(D + "agregado-bluesky.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("grava", D + "agregado-bluesky.json")
     print(json.dumps({k: out[k] for k in ("debate_efeito", "corpus", "hashtags", "globo")}, ensure_ascii=False)[:4200])
