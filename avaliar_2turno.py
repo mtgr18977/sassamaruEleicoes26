@@ -82,11 +82,30 @@ versoes = [dict(data="21/10", pr="#31/#33", s2=48.37, chance=25.7, nota="44 pesq
 for v in versoes:
     v["erro"] = round(v["s2"] - REAL, 2)
 
+# ---- incongruências medidas
+# (1) efeito de cada instituto, em p.p. de Lula/(Lula+Flávio) (o modelo guarda em logit; 1 p.p. ≈ 0,04 logit perto de 50%)
+base = t2["p_pesquisas"]
+efeitos = sorted([dict(instituto=k, pp=round(100 * (1 / (1 + math.exp(-(logit(base) + v))) - base), 2)) for k, v in t2["house_effects_logit"].items()], key=lambda e: e["pp"])
+# (2) o modelo calcula a parcela dos TOTAIS; estes são os válidos que os institutos publicaram (matérias lidas; só as pesquisas em que as duas coisas existem)
+PUB = {("Datafolha", "2026-10-22"): 50.0, ("Datafolha", "2026-10-24"): 49.0, ("Quaest", "2026-10-24"): 49.0, ("AtlasIntel", "2026-10-23"): 49.2, ("Nexus/BTG", "2026-10-24"): 49.5,
+       ("CNT/MDA", "2026-10-23"): 49.3, ("Colectta", "2026-10-23"): 50.3, ("Veritá", "2026-10-23"): 48.44, ("Alfa Inteligência", "2026-10-19"): 48.5,
+       ("RealTimeBigData", "2026-10-22"): 48.0, ("RealTimeBigData", "2026-10-19"): 48.0, ("Ipespe/Abrapel", "2026-10-15"): 48.8}
+arred = []
+for (i, f), v in PUB.items():
+    r = x[(x.instituto == i) & (x.campo_fim == f)]
+    arred.append(dict(instituto=i, campo_fim=pd.Timestamp(f).strftime("%d/%m"), totais=round(float(r.s.iloc[0]), 2), publicado=v, dif=round(float(r.s.iloc[0]) - v, 2)))
+arred_res = dict(n=len(arred), media_abs=round(float(np.mean([abs(r["dif"]) for r in arred])), 2), max_abs=round(float(max(abs(r["dif"]) for r in arred)), 2), media=round(float(np.mean([r["dif"] for r in arred])), 2))
+# (3) quanto cada instituto, sozinho, mexe no nível (sensibilidade-2t.csv, linhas "Sem …")
+sens = pd.read_csv("modelos/sensibilidade-2t.csv")
+sem = sens[sens.cenario.str.startswith("Sem ")]
+sem_res = dict(max_mudanca=round(float(sem.delta_s2.abs().max()), 2), instituto=sem.loc[sem.delta_s2.abs().idxmax(), "cenario"][4:],
+               max_mudanca_chance=round(float(sem.delta_chance.abs().max()), 1))
+
 # ---- regiões
 REG = {"Nordeste": "AL BA CE MA PB PE PI RN SE", "Norte": "AC AM AP PA RO RR TO", "Centro-Oeste": "DF GO MS MT", "Sudeste": "ES MG RJ SP", "Sul": "PR RS SC"}
 regioes = [dict(regiao=k, ufs=len(v.split()), real=round(float(u.loc[v.split()].real.mean()), 1), erro=round(float(u.loc[v.split()].erro.mean()), 2)) for k, v in REG.items()]
 
-out = dict(fonte="datasets/resultado-2026-turno2.csv (provisório: painel do TSE via imprensa, 99,9% das seções)", nacional=nac, reguas=reguas, linha_do_tempo=tempo, versoes=versoes, regioes=regioes, institutos=inst, uf_resumo=uf,
+out = dict(fonte="datasets/resultado-2026-turno2.csv (provisório: painel do TSE via imprensa, 99,9% das seções)", nacional=nac, reguas=reguas, linha_do_tempo=tempo, versoes=versoes, regioes=regioes, efeitos_instituto=efeitos, arredondamento=arred, arredondamento_resumo=arred_res, sem_instituto=sem_res, institutos=inst, uf_resumo=uf,
            tabela_institutos=t.reset_index().rename(columns={"index": "instituto"}).to_dict("records"),
            tabela_uf=u.round(2).reset_index().to_dict("records"))
 json.dump(out, open("modelos/avaliacao-2turno.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o))

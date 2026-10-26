@@ -7,8 +7,8 @@ import datetime
 import re
 from pathlib import Path
 
-# (arquivo, rótulo, grupo). A ordem é a do menu: a Previsão (a home, index.html) primeiro, depois o 2º turno e o Histórico.
-ABAS = [("index.html", "Previsão", "Presidente"), ("segundo-turno.html", "2º turno", "Presidente"), ("historico.html", "Histórico", "Presidente"), ("analise.html", "Análise", "Presidente"), ("resultado.html", "Resultado", "Presidente"), ("redes.html", "Redes sociais", "Presidente"),
+# (arquivo, rótulo, grupo). A ordem é a do menu: o Resultado (a home, index.html) primeiro, depois a Previsão (previsao.html, feita antes da votação), o 2º turno e o Histórico.
+ABAS = [("index.html", "Resultado", "Presidente"), ("previsao.html", "Previsão", "Presidente"), ("segundo-turno.html", "2º turno", "Presidente"), ("historico.html", "Histórico", "Presidente"), ("analise.html", "Análise", "Presidente"), ("redes.html", "Redes sociais", "Presidente"),
         ("rs.html", "Governo RS", "Rio Grande do Sul"), ("analise-governo.html", "Análise do governo", "Rio Grande do Sul"),
         ("bancada.html", "Bancada RS", "Rio Grande do Sul"), ("analise-bancada.html", "Análise da bancada", "Rio Grande do Sul"),
         ("analise-senado.html", "Análise do Senado", "Senado"), ("analise-modelo.html", "Previsto × real", "Modelo"), ("documentacao.html", "Documentação", "Sobre")]

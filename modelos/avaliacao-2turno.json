@@ -197,6 +197,169 @@
    "erro": -3.15
   }
  ],
+ "efeitos_instituto": [
+  {
+   "instituto": "Gerp",
+   "pp": -1.81
+  },
+  {
+   "instituto": "RealTimeBigData",
+   "pp": -0.92
+  },
+  {
+   "instituto": "Ipespe/Abrapel",
+   "pp": -0.71
+  },
+  {
+   "instituto": "Alfa Inteligência",
+   "pp": -0.56
+  },
+  {
+   "instituto": "AtlasIntel",
+   "pp": -0.25
+  },
+  {
+   "instituto": "PoderData",
+   "pp": -0.22
+  },
+  {
+   "instituto": "Veritá",
+   "pp": -0.21
+  },
+  {
+   "instituto": "Meio/Ideia",
+   "pp": -0.09
+  },
+  {
+   "instituto": "Datafolha",
+   "pp": 0.19
+  },
+  {
+   "instituto": "Nexus/BTG",
+   "pp": 0.28
+  },
+  {
+   "instituto": "Palver",
+   "pp": 0.29
+  },
+  {
+   "instituto": "CNT/MDA",
+   "pp": 0.34
+  },
+  {
+   "instituto": "Quaest",
+   "pp": 0.34
+  },
+  {
+   "instituto": "Futura Inteligência",
+   "pp": 0.45
+  },
+  {
+   "instituto": "Colectta",
+   "pp": 1.24
+  },
+  {
+   "instituto": "Vox Brasil",
+   "pp": 1.64
+  }
+ ],
+ "arredondamento": [
+  {
+   "instituto": "Datafolha",
+   "campo_fim": "22/10",
+   "totais": 49.46,
+   "publicado": 50.0,
+   "dif": -0.54
+  },
+  {
+   "instituto": "Datafolha",
+   "campo_fim": "24/10",
+   "totais": 49.47,
+   "publicado": 49.0,
+   "dif": 0.47
+  },
+  {
+   "instituto": "Quaest",
+   "campo_fim": "24/10",
+   "totais": 49.45,
+   "publicado": 49.0,
+   "dif": 0.45
+  },
+  {
+   "instituto": "AtlasIntel",
+   "campo_fim": "23/10",
+   "totais": 49.24,
+   "publicado": 49.2,
+   "dif": 0.04
+  },
+  {
+   "instituto": "Nexus/BTG",
+   "campo_fim": "24/10",
+   "totais": 49.46,
+   "publicado": 49.5,
+   "dif": -0.04
+  },
+  {
+   "instituto": "CNT/MDA",
+   "campo_fim": "23/10",
+   "totais": 49.29,
+   "publicado": 49.3,
+   "dif": -0.01
+  },
+  {
+   "instituto": "Colectta",
+   "campo_fim": "23/10",
+   "totais": 50.27,
+   "publicado": 50.3,
+   "dif": -0.03
+  },
+  {
+   "instituto": "Veritá",
+   "campo_fim": "23/10",
+   "totais": 48.45,
+   "publicado": 48.44,
+   "dif": 0.01
+  },
+  {
+   "instituto": "Alfa Inteligência",
+   "campo_fim": "19/10",
+   "totais": 48.47,
+   "publicado": 48.5,
+   "dif": -0.03
+  },
+  {
+   "instituto": "RealTimeBigData",
+   "campo_fim": "22/10",
+   "totais": 47.87,
+   "publicado": 48.0,
+   "dif": -0.13
+  },
+  {
+   "instituto": "RealTimeBigData",
+   "campo_fim": "19/10",
+   "totais": 48.39,
+   "publicado": 48.0,
+   "dif": 0.39
+  },
+  {
+   "instituto": "Ipespe/Abrapel",
+   "campo_fim": "15/10",
+   "totais": 48.94,
+   "publicado": 48.8,
+   "dif": 0.14
+  }
+ ],
+ "arredondamento_resumo": {
+  "n": 12,
+  "media_abs": 0.19,
+  "max_abs": 0.54,
+  "media": 0.06
+ },
+ "sem_instituto": {
+  "max_mudanca": 0.12,
+  "instituto": "Gerp",
+  "max_mudanca_chance": 1.9
+ },
  "institutos": {
   "media_simples": 49.14,
   "mediana": 49.27,

@@ -16,9 +16,9 @@ def test_todas_as_paginas_tem_o_mesmo_menu_com_a_aba_atual_marcada():
         assert _abas(href) == nav.html(href), href
 
 
-def test_a_previsao_e_a_home_e_vem_antes_do_segundo_turno_e_do_historico():
+def test_o_resultado_e_a_home_e_vem_antes_da_previsao_do_segundo_turno_e_do_historico():
     hrefs = [a[0] for a in nav.ABAS]
-    assert hrefs[:4] == ["index.html", "segundo-turno.html", "historico.html", "analise.html"] and hrefs[-1] == "documentacao.html"
+    assert hrefs[:5] == ["index.html", "previsao.html", "segundo-turno.html", "historico.html", "analise.html"] and hrefs[-1] == "documentacao.html"
 
 
 def test_toda_pagina_tem_cabecalho_rodape_e_nenhum_placeholder():

@@ -1,4 +1,4 @@
-"""Gera index.html (a home do dashboard, servida pelo Netlify: aba "Previsão", só o 2º turno, com a previsão do modelo e o agregador de pesquisas) a partir de apps/previsao.template.html.
+"""Gera previsao.html (aba "Previsão", feita antes da votação, só o 2º turno, com a previsão do modelo e o agregador de pesquisas) a partir de apps/previsao.template.html.
 
 Entradas: modelos/parametros.json (modelo do 2º turno, de pesquisas.py + montecarlo.py), agregador.py (tendência das pesquisas pós-1º turno),
 pesquisas.evolucao (chances ao longo do tempo) e datasets/pesquisas-2turno-pos-1t-2026.csv (as pesquisas do 2º turno, uma por linha).
@@ -28,6 +28,6 @@ out = dict(resultado=dict(real=_av["real"], modelo=_av["modelo"], erro=_av["erro
            projmodel=dict(vies_medio={t: round(vies_eleicao(t)[0], 2) for t in (1, 2)}, vies_n_eleicoes={t: vies_eleicao(t)[1] for t in (1, 2)}),
            piso2t=SD_PISO_2T_PP, r1t_s=round(100 * float(uf.lula) / (float(uf.lula) + float(uf.flavio)), 2), p2022_2t=round(100 * P2022[2], 2),
            evolucao=evolucao(datas), agg=agregador.presidente(), pesq2=pesq2)
-html = nav.moldura(Path("apps/previsao.template.html").read_text(encoding="utf-8"), "index.html").replace("__DATA__", json.dumps(out, ensure_ascii=False))
-Path("index.html").write_text(html, encoding="utf-8")
-print("index.html", len(html) // 1024, "KB")
+html = nav.moldura(Path("apps/previsao.template.html").read_text(encoding="utf-8"), "previsao.html").replace("__DATA__", json.dumps(out, ensure_ascii=False))
+Path("previsao.html").write_text(html, encoding="utf-8")
+print("previsao.html", len(html) // 1024, "KB")

@@ -25,8 +25,18 @@ def test_a_previsao_avaliada_e_a_de_25_10_e_nao_mudou():
     assert a["nacional"]["modelo"] == 49.03 and a["nacional"]["chance_lula_modelo"] == 34.9
 
 
-def test_pagina_resultado_e_faixa_na_previsao():
-    r = open("resultado.html", encoding="utf-8").read()
+def test_a_home_e_o_resultado_e_a_previsao_tem_a_faixa():
+    r = open("index.html", encoding="utf-8").read()
     assert "Resultado do 2º turno" in r and "__DATA__" not in r and '"tabela_uf"' in r and "provisórios" in r
-    home = open("index.html", encoding="utf-8").read()
+    home = open("previsao.html", encoding="utf-8").read()
     assert 'id="faixaResultado"' in home and '"resultado": {' in home
+
+
+def test_incongruencias_medidas_batem_com_as_tabelas():
+    a = json.load(open("modelos/avaliacao-2turno.json", encoding="utf-8"))
+    assert len(a["efeitos_instituto"]) == 16 and abs(sum(e["pp"] for e in a["efeitos_instituto"])) < 0.5     # os efeitos de instituto somam ~zero
+    r = a["arredondamento_resumo"]
+    assert r["n"] == len(a["arredondamento"]) == 12 and r["max_abs"] <= 0.6 and abs(r["media"]) < 0.2             # totais × válidos: diferença de arredondamento, sem sinal
+    assert a["sem_instituto"]["max_mudanca"] < 0.2                                                                   # nenhum instituto, sozinho, move o nível mais que 0,2 p.p.
+    home = open("index.html", encoding="utf-8").read()
+    assert "Como o modelo funciona, passo a passo" in home and "O que eu faria diferente" in home

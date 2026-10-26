@@ -22,7 +22,7 @@
   <div class="topo"><div><h1>Resultado do 2º turno: o que eu previ e o que aconteceu</h1>
   <p class="sub">Lula foi reeleito em 25/10/2026. Esta página põe o resultado ao lado do que o modelo e as pesquisas diziam, mostra onde eu errei e como cheguei a cada número. <b>Eu avalio o modelo aqui; não o defendo.</b></p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
   <div class="an">
-  <div class="aviso"><b>Os números do resultado são provisórios.</b> O portal do TSE não respondeu às minhas chamadas e o arquivo de dados abertos do TSE ainda não tinha o 2º turno. Usei o painel do TSE como reproduzido pela imprensa (Wikipedia, g1 e CGN), com 99,9% das seções apuradas; os valores por UF, em particular, são de uma só fonte (CGN) e Maranhão e Minas Gerais ainda estavam abaixo de 100%. Quando o arquivo oficial sair, eu troco <code>datasets/resultado-2026-turno2.csv</code> e refaço tudo com <code>python avaliar_2turno.py</code>. A seção 6 diz de onde vem cada número.</div>
+  <div class="aviso"><b>Os números do resultado são provisórios.</b> O portal do TSE não respondeu às minhas chamadas e o arquivo de dados abertos do TSE ainda não tinha o 2º turno. Usei o painel do TSE como reproduzido pela imprensa (Wikipedia, g1 e CGN), com 99,9% das seções apuradas; os valores por UF, em particular, são de uma só fonte (CGN) e Maranhão e Minas Gerais ainda estavam abaixo de 100%. Quando o arquivo oficial sair, eu troco <code>datasets/resultado-2026-turno2.csv</code> e refaço tudo com <code>python avaliar_2turno.py</code>. A seção 7 diz de onde vem cada número.</div>
   <div class="kpis" id="kpis"></div>
 
   <section class="sec"><div>
@@ -63,7 +63,46 @@
   </div><aside class="side" id="nota4"></aside></section>
 
   <section class="sec"><div>
-  <h2>5. Por que as pesquisas erraram para o mesmo lado?</h2>
+  <h2>5. Como o modelo funciona, passo a passo, e onde ele não fecha</h2>
+  <p>Eu escrevi o modelo para responder a uma pergunta só: <b>dado o que as pesquisas de 2º turno dizem, qual é a chance de Lula/(Lula+Flávio) passar de 50% nos votos válidos?</b> Não é uma pesquisa e não é um modelo de comportamento do eleitor: é uma média cuidadosa de pesquisas, com uma conta de incerteza e, depois, uma distribuição por UF. Abaixo eu explico cada passo como ele estava no ar em 25/10 e, em seguida, as incongruências que eu fui encontrando, com o que cada uma mudou. Se algum passo parece arbitrário, é porque às vezes ele foi: eu marco o que foi <b>medido</b> e o que foi <b>assumido</b>.</p>
+  <h3 class="titc">Os seis passos</h3>
+  <ol class="lista">
+    <li><b>Escolho as pesquisas.</b> Só as de 2º turno cujo campo terminou a partir de 5/10, depois do 1º turno (a campanha mudou e eu não quis misturar). Eram 37 pesquisas de 16 institutos. De cada uma eu tiro uma só grandeza, a <b>parcela Lula/(Lula+Flávio)</b>: calculada dos totais publicados (brancos, nulos e indecisos ficam de fora da conta) e, quando o instituto só publicou os válidos (Vox, Gerp, Futura e outros), dos válidos.</li>
+    <li><b>Dou um peso a cada uma.</b> Proporcional ao tamanho da amostra dividido por 1,5 (o "efeito de desenho": uma pesquisa de 2.000 entrevistas não vale 2.000 respostas aleatórias; o 1,5 é <b>assumido</b>), e multiplicado por um decaimento com a idade: meia-vida de 14 dias, então uma pesquisa de duas semanas atrás pesa metade. Não limito a amostra: a Veritá (15.554 entrevistas) pesa muito, e tirá-la muda o nível em 0,01 p.p.</li>
+    <li><b>Tiro o efeito de cada instituto.</b> Faço uma regressão ponderada, no logit da parcela, com uma constante e um efeito para cada instituto, e obrigo os efeitos a somar zero. Isso quer dizer que eu <b>assumo que, na média, os institutos acertam</b>: o nível que eu publico é a média dos institutos depois de descontar quanto cada um se afasta dos outros. Entre os 16, os efeitos vão de −1,8 p.p. (Gerp) a +1,6 p.p. (Vox).</li>
+    <li><b>Calculo a incerteza.</b> Somo: o erro amostral do ajuste, a incerteza de "qual conjunto de institutos eu tenho", o erro histórico das pesquisas finais de 2º turno (só 2018 e 2022, duas eleições) e, em 25/10, nenhuma tendência. Em cima disso eu ponho um <b>piso de 2,5 p.p.</b>, que é um número <b>assumido</b>, não medido: eu não confiava que 2 eleições bastassem. O desvio final foi de 0,10 no logit, cerca de 2,5 p.p.</li>
+    <li><b>Converto em chance.</b> A chance de Lula é a probabilidade de a parcela passar de 50% numa distribuição normal no logit, centrada no nível do passo 3 e com o desvio do passo 4. Com 49,03% e desvio de 0,10, deu 34,9%. A conta supõe um erro simétrico e <b>não tem um termo para o erro comum a todos os institutos</b>: ele só entra pelo piso.</li>
+    <li><b>Distribuo por UF.</b> Cada UF parte da sua votação de Lula/(Lula+Flávio) no 1º turno de 2026 do TSE; eu somo o mesmo deslocamento (no logit) a todas até o total bater o nível do passo 3; e sobre isso rodo milhares de simulações com um choque regional (desvio de 0,06) e um por UF (0,13), ambos <b>medidos</b> nas diferenças entre o 1º e o 2º turno de 2002 a 2022. Daí saem a mediana e os percentis 5 e 95 de cada UF.</li>
+  </ol>
+  <h3 class="titc">As incongruências que eu encontrei</h3>
+  <table class="t txt"><thead><tr><th>#</th><th>O que não fechava</th><th>Como eu achei</th><th>O que eu fiz</th><th>Efeito</th></tr></thead><tbody>
+  <tr><td>1</td><td>O texto da página dizia que o modelo usava só pesquisas posteriores ao 1º turno, mas ele usava 44 pesquisas de 2º turno: 24 eram cenários hipotéticos de junho a 4/10.</td><td>Auditei a Previsão em 22/10 e comparei as 44 do modelo com as 20 da tabela.</td><td>Filtrei por campo a partir de 5/10 (e refiz o texto).</td><td>48,43% → 49,46%; chance de Lula de 26,6% para 41,5%.</td></tr>
+  <tr><td>2</td><td>Faltavam três institutos inteiros (Real Time Big Data, Alfa e Ipespe/Abrapel) e três tinham só a rodada antiga (Futura, Gerp e Veritá) como se fosse a última.</td><td>Desconfiei de que as pesquisas de véspera não estavam todas lá e fui conferir na Gazeta do Povo, na Exame e em matérias de cada instituto.</td><td>Acrescentei 8 linhas e deixei de fora o que não consegui conferir (PoderData de 23–24/10 e o Ipespe de 24/10).</td><td>Quase nada (49,45% antes e depois): o efeito de instituto absorve o nível de quem entra. Mas eu tinha publicado o modelo como completo sem estar.</td></tr>
+  <tr><td>3</td><td>O ajuste tinha uma <b>tendência linear</b>: ele extrapolava a subida de 8 a 15/10 e as pesquisas estavam planas desde 15/10.</td><td>Comparei o nível do modelo (49,45%) com as médias simples (49,1%, mediana 49,3%): ele estava acima de todas.</td><td>Tirei a tendência do 2º turno em 25/10.</td><td>49,45% → 49,03% (−0,42 p.p.); chance de 41,3% para 34,9%. Pelo resultado, a versão com tendência teria chegado 0,4 p.p. mais perto, o que é ruído.</td></tr>
+  <tr><td>4</td><td>O modelo calcula a parcela dos <b>totais</b>; os institutos publicam <b>válidos</b>, arredondados, e alguns (Quaest, Datafolha, Nexus) também válidos de "eleitor provável".</td><td>Comparei as duas contas nas pesquisas em que existem as duas (tabela abaixo).</td><td>Não mexi: a diferença não tem sinal.</td><td>Em <span id="arN"></span> pesquisas, a diferença média é de <span id="arM"></span> p.p. e a máxima de <span id="arX"></span> p.p. (Datafolha de 22/10: 49,46% dos totais contra 50% publicados).</td></tr>
+  <tr><td>5</td><td>Os efeitos de instituto somam zero, então o modelo <b>não corrige um erro que todos os institutos têm juntos</b>.</td><td>O resultado: os 16 institutos ficaram abaixo dos 51,78%, e o modelo, que é a média deles, também.</td><td>Nada, na hora: eu só vi depois.</td><td>Foi o erro principal: −2,75 p.p. Só o piso de 2,5 p.p. de incerteza o cobria.</td></tr>
+  <tr><td>6</td><td>Eu temia que um instituto fora da curva ou muito grande (Veritá, Gerp, Vox) estivesse puxando o nível.</td><td>Tirei um instituto de cada vez (<code>sensibilidade_2t.py</code>).</td><td>Nada.</td><td>Nenhum, sozinho, move o nível mais de <span id="semX"></span> p.p. (<span id="semI"></span>), nem a chance mais de <span id="semC"></span> p.p. A Veritá, com 15.554 entrevistas, move 0,01.</td></tr>
+  <tr><td>7</td><td>No 1º turno as pesquisas deram a Lula 1,7 p.p. a mais do que ele teve; eu testei corrigir cada instituto pelo erro dele.</td><td>Cenários em <code>sensibilidade_2t.py</code>: descontar metade e o erro inteiro do 1º turno.</td><td>Deixei como cenário, fora do modelo.</td><td>Teriam dado 48,35% e 47,67% (chances de 25,5% e 17,6%): piores. Os erros de 1º e de 2º turno tinham sinais opostos (correlação −0,08).</td></tr>
+  <tr><td>8</td><td>O piso de 2,5 p.p. e o viés histórico (duas eleições) são <b>assumidos</b>; o intervalo de 90% (44,9 a 53,1%) cobriu o resultado, mas isso não prova que ele estava bem calibrado.</td><td>Reli o que cada número tinha de medido e de assumido.</td><td>Documentei.</td><td>Com um único resultado eu não consigo dizer se o piso era folgado ou apertado.</td></tr>
+  <tr><td>9</td><td>O deslocamento igual para todas as UFs (passo 6) supõe que Lula ganha o mesmo em todo lugar.</td><td>Erro por região: −3,4 p.p. no Sudeste e −2,1 no Nordeste.</td><td>Nada: eu só vi depois.</td><td>A estrutura por UF acertou (correlação 0,999), mas o erro foi maior onde Lula já perdia.</td></tr>
+  <tr><td>10</td><td>O site chamava o 2º turno de "empate técnico" em texto fixo, enquanto o modelo dava 35% a 41% de chance para Lula, e a chance publicada foi de 25,7% (21/10) a 41,4% (22/10) e 34,9% (25/10).</td><td>Um texto sobre margem de erro que eu li (comparar a diferença com ±4 p.p., o dobro da margem) e as versões da tabela da seção 1.</td><td>Troquei o rótulo por uma frase calculada (23/10) e passei a mostrar a chance e a faixa de resultado em vez de um número só.</td><td>A variação de 15 p.p. em quatro dias mostra que o modelo era sensível ao que entrava, o que um número com uma casa decimal escondia.</td></tr>
+  </tbody></table>
+  <details><summary>Ver as 12 pesquisas em que existem os totais e os válidos publicados</summary><div id="tArred"></div></details>
+  <h3 class="titc">O efeito de cada instituto no modelo de 25/10</h3>
+  <div id="tEf"></div>
+  <p class="fonte">Efeito = quanto o instituto se afasta da média dos demais, em p.p. de Lula/(Lula+Flávio) (os efeitos somam zero). Vox, Colectta e Futura davam mais a Lula que a média; Gerp, Real Time Big Data, Ipespe e Alfa, menos. Todos, juntos, deram menos a Lula do que ele teve.</p>
+  <h3 class="titc">O que eu faria diferente</h3>
+  <ul class="lista">
+    <li><b>Congelar o método antes da última semana.</b> Nos quatro dias antes da votação eu mudei o método três vezes. Cada mudança tinha uma razão, mas o leitor viu a chance de Lula passar por 25,7%, 41,4% e 34,9%. Eu deveria ter fixado o método e só acrescentado dados.</li>
+    <li><b>Dar um lugar ao erro comum.</b> O modelo trata o erro de cada instituto como independente do dos outros. Um termo de "erro comum a todos", estimado com os erros das pesquisas finais em 2018, 2022 e 2026 (seis turnos), teria alargado a faixa e dito com franqueza que a média de pesquisas não era garantia.</li>
+    <li><b>Auditar a lista de pesquisas a cada rodada contra uma fonte só</b> (o registro do TSE, PesqEle), e não contra as matérias que eu tinha lido: foi assim que três institutos ficaram de fora.</li>
+    <li><b>Tratar totais e válidos de forma explícita</b> e testar o "eleitor provável" separadamente: eu usei os totais e não sei se os válidos teriam feito diferença.</li>
+    <li><b>Mostrar a faixa antes do número.</b> 49,03% parece mais preciso do que é; a faixa de 44,9 a 53,1% é a informação.</li>
+  </ul>
+  </div><aside class="side" id="nota5"></aside></section>
+
+  <section class="sec"><div>
+  <h2>6. Por que as pesquisas erraram para o mesmo lado?</h2>
   <p>Eu não sei. Abaixo estão as hipóteses que ainda estão de pé e o que cada uma exigiria para ser testada. <b>Nenhuma está confirmada.</b></p>
   <table class="t txt"><thead><tr><th>Hipótese</th><th>O que a favorece</th><th>O que a contraria ou falta</th><th>Como testar</th></tr></thead><tbody>
   <tr><td><span class="selo aberto">em aberto</span><b>Comparecimento maior do que o previsto</b></td><td>A abstenção caiu de 21,08% para 19,21% e o total de votos subiu 3 milhões; Datafolha, Quaest e Nexus publicaram válidos de "eleitor provável" (por exemplo, Datafolha: 52×48 para Flávio entre os de alta propensão e 52×48 para Lula entre os de média e baixa).</td><td>Quaest, que usou eleitor provável nos válidos, errou menos pelos totais (49,5%) que pelos válidos (49%): a diferença é pequena. Não tenho o comparecimento por UF do 2º turno.</td><td>Baixar o arquivo de comparecimento do TSE (<code>detalhe_votacao_munzona</code> do 2º turno) e comparar, por UF e município, o aumento de comparecimento com o erro da previsão.</td></tr>
@@ -72,10 +111,10 @@
   <tr><td><span class="selo aberto">em aberto</span><b>Mudança de opinião nos últimos dias</b></td><td>O debate da Globo foi em 23/10 e várias pesquisas de véspera (CNT/MDA, AtlasIntel) terminaram antes dele ou no dia.</td><td>As pesquisas de 23–24/10 (Datafolha, Quaest, Nexus, Palver), feitas depois do debate, ficaram em 49,5%, iguais às anteriores.</td><td>Sem como testar além do que já está: a série de pesquisas é plana depois de 15/10.</td></tr>
   </tbody></table>
   <p class="fonte">O que se pode dizer sem ressalva: o erro foi comum aos institutos e ao modelo, não de um instituto isolado; a escolha de método do modelo (nível sem tendência, efeito de instituto somando zero) não podia corrigi-lo; e a estrutura entre UFs (que é o que o modelo acrescenta às pesquisas) funcionou.</p>
-  </div><aside class="side" id="nota5"></aside></section>
+  </div><aside class="side" id="nota6"></aside></section>
 
   <section class="sec"><div>
-  <h2>6. De onde vêm os números, limites e como reproduzir</h2>
+  <h2>7. De onde vêm os números, limites e como reproduzir</h2>
   <table class="t txt"><thead><tr><th>Número</th><th>Fonte</th><th>Estado</th></tr></thead><tbody>
   <tr><td>Resultado nacional (Lula 64.241.786 × Flávio 59.818.887, 51,78%)</td><td>Wikipedia (infobox: TSE, 99,98% das seções, 25/10 22h05) e g1 (99,96%: 51,78%)</td><td>Provisório: falta o arquivo oficial do TSE</td></tr>
   <tr><td>Abstenção, brancos e nulos (19,21%, 1,12%, 2,12%)</td><td>g1 e Conexão MT (painel do TSE)</td><td>Provisório</td></tr>
@@ -92,7 +131,7 @@
   </ul>
   <h3 class="titc">Como reproduzir</h3>
   <p><code>python avaliar_2turno.py</code> lê <code>datasets/resultado-2026-turno2.csv</code> e grava <code>modelos/avaliacao-2turno.json</code>, que esta página usa; <code>python gerar_pagina_resultado.py</code> (ou <code>python atualizar.py</code>) gera esta página. Os testes <code>tests/test_avaliar_2turno.py</code> e <code>tests/test_dashboard_atualizado.py</code> conferem que o CSV, o JSON e a página dizem o mesmo.</p>
-  </div><aside class="side" id="nota6"></aside></section>
+  </div><aside class="side" id="nota7"></aside></section>
   </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -157,6 +196,13 @@ function ufs() {
   tab("tUF", ["UF", "Previsto (%)", "Intervalo de 90%", "Resultado (%)", "Erro (p.p.)", "Dentro do intervalo", "Vencedor"], T.slice().sort((a, b) => a.index.localeCompare(b.index)).map(t => [t.index, f1(t.modelo), `${f1(t.p5)} a ${f1(t.p95)}`, f1(t.real), cel(s2(t.erro), t.erro), t.dentro90 ? "sim" : "não", t.vencedor_certo ? "certo" : "errado"]));
 }
 
+function modeloExplicado() {
+  const R = D.arredondamento_resumo, S = D.sem_instituto;
+  $("arN").textContent = R.n; $("arM").textContent = f2(R.media_abs); $("arX").textContent = f2(R.max_abs);
+  $("semX").textContent = f2(S.max_mudanca); $("semI").textContent = "o " + S.instituto; $("semC").textContent = f1(S.max_mudanca_chance);
+  tab("tArred", ["Instituto", "Campo até", "Dos totais (%)", "Válidos publicados (%)", "Diferença (p.p.)"], D.arredondamento.map(a => [a.instituto, a.campo_fim, f2(a.totais), f2(a.publicado), cel(s2(a.dif), a.dif)]));
+  tab("tEf", ["Instituto", "Efeito (p.p.)"], D.efeitos_instituto.map(e => [e.instituto, cel(s2(e.pp), e.pp)]));
+}
 function avaliacao() {
   const itens = [
     ["ok", "Acertou", `<b>A estrutura por UF.</b> Correlação de ${U.corr.toFixed(3).replace(".", ",")} e 26 de 27 vencedores. Isso foi possível porque, desde 19/10, a base de cada UF é o 1º turno de 2026 do TSE e não 2022.`],
@@ -174,10 +220,11 @@ function notas() {
   nota("nota2", [`<b>16 de 16</b> institutos subestimaram Lula.`, `Média: <b>${s2(I.erro_2t_medio)} p.p.</b> no 2º turno e <b>${s2(I.erro_1t_medio)}</b> no 1º.`, `O erro de um turno não prevê o do outro.`]);
   nota("nota3", [`Correlação previsão × resultado: <b>${U.corr.toFixed(3).replace(".", ",")}</b>.`, `<b>${U.vencedor_certo} de ${U.n}</b> vencedores; erra Minas.`, `Erro quase constante: <b>${s2(U.vies)} p.p.</b>`]);
   nota("nota4", [`Estrutura por UF e faixa de incerteza: <b>acertou</b>.`, `Nível e favorito: <b>errou</b>.`, `Método mudou três vezes em quatro dias.`]);
-  nota("nota5", [`Nenhuma hipótese está confirmada.`, `O teste mais viável: comparecimento por UF do 2º turno, quando o TSE publicar.`]);
-  nota("nota6", [`Resultado <b>provisório</b>: 99,9% das seções, via imprensa.`, `Trocar <code>resultado-2026-turno2.csv</code> pelo oficial e rodar <code>python avaliar_2turno.py</code>.`]);
+  nota("nota5", [`O modelo é uma média de pesquisas com efeito de instituto, uma conta de incerteza e uma distribuição por UF.`, `Assumido: efeito de desenho 1,5, piso de 2,5 p.p. e institutos sem viés médio.`, `Faltou um termo para o erro comum a todos os institutos.`]);
+  nota("nota6", [`Nenhuma hipótese está confirmada.`, `O teste mais viável: comparecimento por UF do 2º turno, quando o TSE publicar.`]);
+  nota("nota7", [`Resultado <b>provisório</b>: 99,9% das seções, via imprensa.`, `Trocar <code>resultado-2026-turno2.csv</code> pelo oficial e rodar <code>python avaliar_2turno.py</code>.`]);
 }
-function tudo() { kpis(); nacional(); institutos(); ufs(); avaliacao(); notas(); }
+function tudo() { kpis(); nacional(); institutos(); ufs(); modeloExplicado(); avaliacao(); notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);

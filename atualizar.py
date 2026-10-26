@@ -1,4 +1,4 @@
-"""Regenera tudo a partir dos CSVs: pesquisas -> Monte Carlo -> modelo do RS -> páginas (index.html = Previsão, historico.html, analise*.html, segundo-turno.html, rs.html, bancada.html e analise-senado.html).
+"""Regenera tudo a partir dos CSVs: pesquisas -> Monte Carlo -> modelo do RS -> páginas (index.html = Resultado, previsao.html = Previsão, historico.html, analise*.html, segundo-turno.html, rs.html, bancada.html e analise-senado.html).
 
   python atualizar.py   pesquisas.py, montecarlo.py, rs_modelo.py, projecao.py (1º turno), as três páginas e os testes
 
