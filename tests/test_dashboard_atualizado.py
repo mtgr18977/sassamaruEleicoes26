@@ -21,18 +21,18 @@ def dados(arq):
 
 @pytest.fixture(scope="module")
 def pg():
-    return {a: dados(a) for a in ("index.html", "historico.html", "segundo-turno.html")}
+    return {a: dados(a) for a in ("previsao.html", "historico.html", "segundo-turno.html")}
 
 
 def test_todas_as_paginas_tem_a_data_de_referencia_de_pesquisas_py(pg):
     hoje = str(pesquisas.HOJE.date())
     assert pg["historico.html"]["modelo"]["data_referencia"] == hoje
-    assert pg["index.html"]["modelo"]["data_referencia"] == hoje
+    assert pg["previsao.html"]["modelo"]["data_referencia"] == hoje
     assert pg["segundo-turno.html"]["par"]["data_referencia"] == hoje
 
 
 def test_previsao_agregador_e_evolucao_vao_ate_a_data_de_referencia(pg):
-    hoje, prev = str(pesquisas.HOJE.date()), pg["index.html"]
+    hoje, prev = str(pesquisas.HOJE.date()), pg["previsao.html"]
     assert prev["agg"]["hoje"] == hoje and prev["agg"]["turnos"]["2"]["datas"][-1] == hoje
     assert prev["evolucao"][-1]["data"] == hoje
     ult = prev["evolucao"][-1]
@@ -47,7 +47,7 @@ def test_nenhuma_pesquisa_depois_da_data_de_referencia():
 
 def test_toda_pesquisa_de_2o_turno_esta_nas_paginas(pg):
     p2 = pd.read_csv(RAIZ / "datasets/pesquisas-2turno-pos-1t-2026.csv")
-    prev = pg["index.html"]
+    prev = pg["previsao.html"]
     assert len(prev["pesq2"]) == len(p2) == len(pg["segundo-turno.html"]["pesq"])
     campos = {(x["inst"], x["campo"]) for s in prev["agg"]["turnos"]["2"]["series"] for x in s["pontos"]}
     assert {(r.instituto, r.campo_fim) for r in p2.itertuples()} <= campos           # entra no agregador
@@ -62,7 +62,7 @@ def test_toda_pesquisa_de_2026_esta_no_historico(pg):
 
 def test_o_modelo_das_paginas_e_o_de_parametros_json(pg):
     par = json.load(open(RAIZ / "modelos/parametros.json", encoding="utf-8"))
-    for a in ("index.html", "historico.html"):
+    for a in ("previsao.html", "historico.html"):
         assert pg[a]["modelo"]["turno2"] == par["turno2"] and pg[a]["modelo"]["mc"]["turno2"]["base"] == "1º turno de 2026", a
 
 
