@@ -12,6 +12,191 @@
   "z": -1.1,
   "chance_lula_modelo": 34.9
  },
+ "reguas": [
+  {
+   "nome": "Modelo publicado em 25/10 (nível sem tendência)",
+   "previsao": 49.03,
+   "erro": -2.75
+  },
+  {
+   "nome": "Modelo até 24/10 (com tendência linear)",
+   "previsao": 49.45,
+   "erro": -2.33
+  },
+  {
+   "nome": "Média simples da última pesquisa de cada instituto",
+   "previsao": 49.14,
+   "erro": -2.64
+  },
+  {
+   "nome": "Modelo com ½ do viés histórico descontado",
+   "previsao": 48.62,
+   "erro": -3.16
+  },
+  {
+   "nome": "Modelo com o viés histórico descontado (−0,83 p,p,)",
+   "previsao": 48.2,
+   "erro": -3.58
+  },
+  {
+   "nome": "Repetir o 1º turno de 2026 (Lula/(Lula+Flávio) = 48,99%)",
+   "previsao": 48.99,
+   "erro": -2.79
+  },
+  {
+   "nome": "Repetir o 2º turno de 2022 (50,90%)",
+   "previsao": 50.9,
+   "erro": -0.88
+  }
+ ],
+ "linha_do_tempo": [
+  {
+   "data": "2026-10-14",
+   "s2": 48.03,
+   "chance": 21.6,
+   "n2": 8
+  },
+  {
+   "data": "2026-10-15",
+   "s2": 48.13,
+   "chance": 22.7,
+   "n2": 9
+  },
+  {
+   "data": "2026-10-16",
+   "s2": 48.44,
+   "chance": 26.6,
+   "n2": 12
+  },
+  {
+   "data": "2026-10-17",
+   "s2": 48.44,
+   "chance": 26.6,
+   "n2": 12
+  },
+  {
+   "data": "2026-10-18",
+   "s2": 48.44,
+   "chance": 26.6,
+   "n2": 12
+  },
+  {
+   "data": "2026-10-19",
+   "s2": 48.71,
+   "chance": 30.3,
+   "n2": 16
+  },
+  {
+   "data": "2026-10-20",
+   "s2": 48.71,
+   "chance": 30.3,
+   "n2": 16
+  },
+  {
+   "data": "2026-10-21",
+   "s2": 48.78,
+   "chance": 31.3,
+   "n2": 20
+  },
+  {
+   "data": "2026-10-22",
+   "s2": 48.78,
+   "chance": 31.3,
+   "n2": 20
+  },
+  {
+   "data": "2026-10-23",
+   "s2": 48.78,
+   "chance": 31.3,
+   "n2": 20
+  },
+  {
+   "data": "2026-10-24",
+   "s2": 48.99,
+   "chance": 34.3,
+   "n2": 29
+  },
+  {
+   "data": "2026-10-25",
+   "s2": 49.03,
+   "chance": 34.9,
+   "n2": 37
+  }
+ ],
+ "versoes": [
+  {
+   "data": "21/10",
+   "pr": "#31/#33",
+   "s2": 48.37,
+   "chance": 25.7,
+   "nota": "44 pesquisas de 2º turno (24 eram cenários hipotéticos de antes do 1º turno), com tendência",
+   "erro": -3.41
+  },
+  {
+   "data": "22/10",
+   "pr": "#34",
+   "s2": 48.43,
+   "chance": 26.5,
+   "nota": "Veritá/CNN entra; erros de 1º turno de 16 institutos",
+   "erro": -3.35
+  },
+  {
+   "data": "22/10",
+   "pr": "#35",
+   "s2": 49.46,
+   "chance": 41.4,
+   "nota": "só pesquisas feitas depois do 1º turno (a campanha mudou)",
+   "erro": -2.32
+  },
+  {
+   "data": "24/10",
+   "pr": "#37",
+   "s2": 49.45,
+   "chance": 41.3,
+   "nota": "9 pesquisas de véspera (Datafolha ×2, Quaest, Atlas, Nexus, Palver, Vox, CNT/MDA, Colectta)",
+   "erro": -2.33
+  },
+  {
+   "data": "25/10",
+   "pr": "#38",
+   "s2": 49.03,
+   "chance": 34.9,
+   "nota": "entram Real Time Big Data, Alfa, Ipespe e rodadas novas de Futura, Gerp e Veritá; sai a tendência linear",
+   "erro": -2.75
+  }
+ ],
+ "regioes": [
+  {
+   "regiao": "Nordeste",
+   "ufs": 9,
+   "real": 68.7,
+   "erro": -2.13
+  },
+  {
+   "regiao": "Norte",
+   "ufs": 7,
+   "real": 43.1,
+   "erro": -2.54
+  },
+  {
+   "regiao": "Centro-Oeste",
+   "ufs": 4,
+   "real": 40.1,
+   "erro": -3.2
+  },
+  {
+   "regiao": "Sudeste",
+   "ufs": 4,
+   "real": 46.8,
+   "erro": -3.43
+  },
+  {
+   "regiao": "Sul",
+   "ufs": 3,
+   "real": 36.7,
+   "erro": -3.15
+  }
+ ],
  "institutos": {
   "media_simples": 49.14,
   "mediana": 49.27,

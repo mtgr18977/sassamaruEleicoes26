@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resultado do 2º turno · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+<style>
+  .duas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px } @media (max-width:760px) { .duas { grid-template-columns:minmax(0,1fr) } }
+  .titc { margin:18px 0 2px; font-size:.95rem }
+  .txt th, .txt td { text-align:left; vertical-align:top }
+  table.t td.neg { color:var(--pt) } table.t td.pos { color:var(--anti) }
+  .lista { margin:8px 0; padding-left:20px } .lista li { margin:6px 0 }
+  .selo { display:inline-block; font-size:.72rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; padding:1px 7px; border-radius:20px; border:1px solid var(--line); color:var(--ink2); margin-right:6px }
+  .selo.ok { color:var(--s3); border-color:var(--s3) } .selo.ruim { color:var(--pt); border-color:var(--pt) } .selo.aberto { color:var(--s4); border-color:var(--s4) }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
+  <div class="topo"><div><h1>Resultado do 2º turno: o que eu previ e o que aconteceu</h1>
+  <p class="sub">Lula foi reeleito em 25/10/2026. Esta página põe o resultado ao lado do que o modelo e as pesquisas diziam, mostra onde eu errei e como cheguei a cada número. <b>Eu avalio o modelo aqui; não o defendo.</b></p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="an">
+  <div class="aviso"><b>Os números do resultado são provisórios.</b> O portal do TSE não respondeu às minhas chamadas e o arquivo de dados abertos do TSE ainda não tinha o 2º turno. Usei o painel do TSE como reproduzido pela imprensa (Wikipedia, g1 e CGN), com 99,9% das seções apuradas; os valores por UF, em particular, são de uma só fonte (CGN) e Maranhão e Minas Gerais ainda estavam abaixo de 100%. Quando o arquivo oficial sair, eu troco <code>datasets/resultado-2026-turno2.csv</code> e refaço tudo com <code>python avaliar_2turno.py</code>. A seção 6 diz de onde vem cada número.</div>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="sec"><div>
+  <h2>1. O resultado nacional contra o modelo</h2>
+  <p id="nacTxt"></p>
+  <h3 class="titc">O modelo, reconstruído dia a dia, contra o resultado</h3>
+  <div class="cv" style="height:300px"><canvas id="cTempo"></canvas></div>
+  <div id="tTempo"></div>
+  <p class="fonte">Reconstrução: para cada data eu rodo o modelo final (só pesquisas de campo depois do 1º turno, sem tendência linear) com as pesquisas já divulgadas até ela. Não são as versões que o site mostrou; essas estão na tabela "O que o site mostrou" abaixo. A série começa em 14/10 porque o modelo exige pelo menos 8 pesquisas de 2º turno.</p>
+  <h3 class="titc">Outras previsões possíveis, na mesma régua</h3>
+  <div id="tReguas"></div>
+  <p class="fonte">Erro = previsão − resultado, em p.p. de Lula/(Lula+Flávio) nos votos válidos; negativo quer dizer que a previsão deu menos a Lula do que ele teve. "Repetir 2022" chegou mais perto, mas por coincidência: nenhuma regra séria teria escolhido 2022 como previsão, e eu a incluo para mostrar que acertar de perto uma vez não é prova de método. O desconto do viés histórico (as pesquisas finais de 2018 e 2022 deram a Lula em média 0,83 p.p. a mais do que ele teve) teria piorado a previsão.</p>
+  <h3 class="titc">O que o site mostrou a cada versão</h3>
+  <div id="tVersoes"></div>
+  <p class="fonte">Do <code>HANDOFF.md</code> e dos PRs. A chance de Lula é a probabilidade de Lula/(Lula+Flávio) passar de 50% nos votos válidos segundo o modelo. A mudança de 26,5% para 41,4% em 22/10 veio de uma correção que me apontaram: o modelo usava 24 pesquisas de 2º turno de antes do 1º turno e eu tirei essas; a de 41,3% para 34,9% em 25/10 veio de tirar a tendência linear, depois de achar que três institutos inteiros estavam faltando e que três outros estavam com dados antigos.</p>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div>
+  <h2>2. Os institutos</h2>
+  <p id="instTxt"></p>
+  <div class="cv" style="height:460px"><canvas id="cInst"></canvas></div>
+  <div id="tInst"></div>
+  <p class="fonte">Cada ponto é a última pesquisa do instituto antes da votação (Lula/(Lula+Flávio), calculado como o modelo calcula: dos totais, ou dos válidos quando o instituto só os publicou). Erro de 1º turno: ver <code>erros_1turno.py</code> (Veritá, DataTrends e IFP só têm o erro aproximado a partir da margem do Atlas; Alfa, Ipespe e Colectta não têm erro de 1º turno medido). A correlação entre o erro de 1º turno e o de 2º turno é de <span id="corrTxt"></span> em 13 institutos: pouco a dizer com tão poucos pontos.</p>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div>
+  <h2>3. Por UF: a geografia acertou, o nível não</h2>
+  <p id="ufTxt"></p>
+  <div class="cv" style="height:460px"><canvas id="cUF"></canvas></div>
+  <div class="duas"><div><h3 class="titc">Por região</h3><div id="tReg"></div></div><div><h3 class="titc">Os maiores e os menores erros</h3><div id="tExt"></div></div></div>
+  <details><summary>Ver as 27 UFs</summary><div id="tUF"></div></details>
+  <p class="fonte">Previsão = mediana da simulação por UF (<code>modelos/previsao-uf-turno2.csv</code>, que parte do 1º turno de 2026 e é calibrada ao nível nacional do modelo); intervalo = percentis 5 e 95. Resultado = Lula/(Lula+Flávio) nos votos válidos, provisório (ver o aviso do topo). Erro = previsão − resultado.</p>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div>
+  <h2>4. O que deu certo, o que deu errado e o que eu mudei no caminho</h2>
+  <ul class="lista" id="listaAv"></ul>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div>
+  <h2>5. Por que as pesquisas erraram para o mesmo lado?</h2>
+  <p>Eu não sei. Abaixo estão as hipóteses que ainda estão de pé e o que cada uma exigiria para ser testada. <b>Nenhuma está confirmada.</b></p>
+  <table class="t txt"><thead><tr><th>Hipótese</th><th>O que a favorece</th><th>O que a contraria ou falta</th><th>Como testar</th></tr></thead><tbody>
+  <tr><td><span class="selo aberto">em aberto</span><b>Comparecimento maior do que o previsto</b></td><td>A abstenção caiu de 21,08% para 19,21% e o total de votos subiu 3 milhões; Datafolha, Quaest e Nexus publicaram válidos de "eleitor provável" (por exemplo, Datafolha: 52×48 para Flávio entre os de alta propensão e 52×48 para Lula entre os de média e baixa).</td><td>Quaest, que usou eleitor provável nos válidos, errou menos pelos totais (49,5%) que pelos válidos (49%): a diferença é pequena. Não tenho o comparecimento por UF do 2º turno.</td><td>Baixar o arquivo de comparecimento do TSE (<code>detalhe_votacao_munzona</code> do 2º turno) e comparar, por UF e município, o aumento de comparecimento com o erro da previsão.</td></tr>
+  <tr><td><span class="selo aberto">em aberto</span><b>Voto envergonhado ou indecisos que migraram para Lula</b></td><td>Todos os 16 institutos, de métodos diferentes (telefone, internet, presencial), erraram para o mesmo lado, entre −1,2 e −3,9 p.p.</td><td>O erro de 1º turno foi no sentido oposto (pesquisas deram a Lula 1,7 p.p. a mais). Um viés de resposta fixo não explicaria a inversão.</td><td>Comparar, instituto a instituto, a parcela de indecisos e brancos/nulos nas pesquisas finais com o resultado (brancos e nulos caíram de 4,8% para 3,2%).</td></tr>
+  <tr><td><span class="selo aberto">em aberto</span><b>Ajuste de ponderação compartilhado</b></td><td>Os institutos usam as mesmas referências (Censo, resultado do 1º turno) para ponderar; se a referência do 1º turno foi usada, o erro dele se repete.</td><td>Não tenho a metodologia de ponderação de cada instituto (muitas matérias não a trazem).</td><td>Pedir ou ler os relatórios registrados no TSE (PesqEle) dos institutos.</td></tr>
+  <tr><td><span class="selo aberto">em aberto</span><b>Mudança de opinião nos últimos dias</b></td><td>O debate da Globo foi em 23/10 e várias pesquisas de véspera (CNT/MDA, AtlasIntel) terminaram antes dele ou no dia.</td><td>As pesquisas de 23–24/10 (Datafolha, Quaest, Nexus, Palver), feitas depois do debate, ficaram em 49,5%, iguais às anteriores.</td><td>Sem como testar além do que já está: a série de pesquisas é plana depois de 15/10.</td></tr>
+  </tbody></table>
+  <p class="fonte">O que se pode dizer sem ressalva: o erro foi comum aos institutos e ao modelo, não de um instituto isolado; a escolha de método do modelo (nível sem tendência, efeito de instituto somando zero) não podia corrigi-lo; e a estrutura entre UFs (que é o que o modelo acrescenta às pesquisas) funcionou.</p>
+  </div><aside class="side" id="nota5"></aside></section>
+
+  <section class="sec"><div>
+  <h2>6. De onde vêm os números, limites e como reproduzir</h2>
+  <table class="t txt"><thead><tr><th>Número</th><th>Fonte</th><th>Estado</th></tr></thead><tbody>
+  <tr><td>Resultado nacional (Lula 64.241.786 × Flávio 59.818.887, 51,78%)</td><td>Wikipedia (infobox: TSE, 99,98% das seções, 25/10 22h05) e g1 (99,96%: 51,78%)</td><td>Provisório: falta o arquivo oficial do TSE</td></tr>
+  <tr><td>Abstenção, brancos e nulos (19,21%, 1,12%, 2,12%)</td><td>g1 e Conexão MT (painel do TSE)</td><td>Provisório</td></tr>
+  <tr><td>Resultado por UF</td><td>CGN (painel do TSE; 99,9% das seções), conferido em SP, GO, MT, PI e MG com a Conexão MT</td><td>Provisório; uma só fonte; MA e MG abaixo de 100%</td></tr>
+  <tr><td>Pesquisas de 2º turno</td><td>Matérias de CartaCapital, Gazeta do Povo, Terra, Poder360, dgabc, Diário do País e outras, lidas na página (cada linha do CSV diz a fonte)</td><td>Relatórios originais não conferidos</td></tr>
+  <tr><td>Previsão do modelo</td><td><code>modelos/parametros.json</code> e <code>modelos/previsao-uf-turno2.csv</code> (gerados em 25/10, antes da votação)</td><td>Congelada no commit do PR #38</td></tr>
+  </tbody></table>
+  <h3 class="titc">Limites</h3>
+  <ul class="lista">
+    <li>O resultado por UF é provisório e de uma fonte; diferenças de décimos (por exemplo, Minas Gerais 50,39% ou 50,40%) não mudam nenhuma conclusão, mas eu vou trocar tudo pelo arquivo oficial.</li>
+    <li>Uma eleição não valida nem refuta um modelo: um evento de 35% de chance acontece uma vez em cada três. O que dá para avaliar é o nível do erro (2,75 p.p.), a direção compartilhada por todos os institutos e a estrutura por UF.</li>
+    <li>Os intervalos do modelo eram calibrados com poucas eleições (duas para o viés do 2º turno); o resultado ficou dentro do intervalo de 90% nacional e em todos os 27 intervalos por UF, mas isso não prova que os intervalos estavam bem calibrados.</li>
+    <li>Eu mudei o método três vezes nos últimos quatro dias antes da votação (tirar as pesquisas de antes do 1º turno, acrescentar institutos que faltavam, tirar a tendência). Nenhuma mudança foi escolhida olhando o resultado, mas elas mostram que o modelo era sensível ao que entrava nele.</li>
+  </ul>
+  <h3 class="titc">Como reproduzir</h3>
+  <p><code>python avaliar_2turno.py</code> lê <code>datasets/resultado-2026-turno2.csv</code> e grava <code>modelos/avaliacao-2turno.json</code>, que esta página usa; <code>python gerar_pagina_resultado.py</code> (ou <code>python atualizar.py</code>) gera esta página. Os testes <code>tests/test_avaliar_2turno.py</code> e <code>tests/test_dashboard_atualizado.py</code> conferem que o CSV, o JSON e a página dizem o mesmo.</p>
+  </div><aside class="side" id="nota6"></aside></section>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = __DATA__;
+const s2 = (x) => (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x).toFixed(2).replace(".", ",");
+const N = D.nacional, I = D.institutos, U = D.uf_resumo;
+const cel = (txt, v) => `<span class="${v < 0 ? "neg" : "pos"}">${txt}</span>`;
+
+function kpis() {
+  $("kpis").innerHTML = `<div class="kpi l"><span>Resultado (Lula nos válidos)</span><b>${f2(N.real)}%</b><small>Lula 64,2 milhões × Flávio 59,8 milhões · provisório</small></div>
+    <div class="kpi f"><span>Modelo (25/10)</span><b>${f2(N.modelo)}%</b><small>faixa de 90%: ${f1(N.faixa90[0])} a ${f1(N.faixa90[1])}%</small></div>
+    <div class="kpi o"><span>Erro do modelo</span><b>${s2(N.erro_modelo)} p.p.</b><small>${f2(Math.abs(N.z))} desvio · dentro da faixa de 90%</small></div>
+    <div class="kpi"><span>Chance de Lula, no modelo</span><b>${f1(N.chance_lula_modelo)}%</b><small>aconteceu: 1 vez em 3</small></div>`;
+}
+
+function nacional() {
+  $("nacTxt").innerHTML = `Lula teve <b>${f2(N.real)}%</b> dos votos válidos; o modelo dava <b>${f2(N.modelo)}%</b> (faixa de 90%: ${f1(N.faixa90[0])} a ${f1(N.faixa90[1])}%) e a média simples das últimas pesquisas, ${f2(I.media_simples)}%. O modelo <b>subestimou Lula em ${f2(Math.abs(N.erro_modelo))} p.p.</b>, um erro de ${f2(Math.abs(N.z))} desvio do modelo: grande para uma eleição decidida por 3,6 p.p., mas dentro do que o modelo dizia ser possível. Com a chance de Lula em ${f1(N.chance_lula_modelo)}%, o resultado foi o do lado menos provável, que acontece uma vez em cada três. Pelo que o modelo dizia, Flávio era o favorito (${f1(100 - N.chance_lula_modelo)}%); o modelo errou o favorito, e eu devo dizer isso sem rodeios.`;
+  const T = D.linha_do_tempo, lab = T.map(t => t.data.slice(8) + "/" + t.data.slice(5, 7));
+  chart("cTempo", { type: "line", data: { labels: lab, datasets: [
+      { label: "Modelo (Lula/(Lula+Flávio))", data: T.map(t => t.s2), borderColor: css("--anti"), backgroundColor: css("--anti"), borderWidth: 2.5, pointRadius: 4, tension: 0 },
+      { label: "Resultado", data: T.map(() => N.real), borderColor: css("--pt"), borderWidth: 2, borderDash: [6, 4], pointRadius: 0 },
+      { label: "50%", data: T.map(() => 50), borderColor: css("--muted"), borderWidth: 1, borderDash: [2, 4], pointRadius: 0 }] },
+    options: { scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 47, max: 53, ticks: { color: css("--ink2"), callback: v => v + "%" } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${f2(i.parsed.y)}%` } } } } });
+  tab("tTempo", ["Pesquisas até", "Modelo (Lula/(Lula+Flávio), %)", "Chance de Lula (%)", "Pesquisas de 2º turno"], T.map(t => [t.data.split("-").reverse().join("/"), f2(t.s2), f1(t.chance), t.n2]));
+  tab("tReguas", ["Previsão", "Lula/(Lula+Flávio) (%)", "Erro (p.p.)"], D.reguas.map(r => [r.nome, f2(r.previsao), cel(s2(r.erro), r.erro)]));
+  tab("tVersoes", ["Data", "PR", "Modelo (%)", "Erro (p.p.)", "Chance de Lula (%)", "O que mudou"], D.versoes.map(v => [v.data, v.pr, f2(v.s2), cel(s2(v.erro), v.erro), f1(v.chance), v.nota]));
+}
+
+function institutos() {
+  const T = D.tabela_institutos;
+  $("instTxt").innerHTML = `Os ${T.length} institutos subestimaram Lula: <b>nenhuma</b> última pesquisa chegou aos ${f2(N.real)}% (o maior valor foi ${f2(Math.max(...T.map(t => t.ultima)))}%). Os erros ficam entre ${s2(Math.min(...T.map(t => t.erro_2t)))} e ${s2(Math.max(...T.map(t => t.erro_2t)))} p.p., média de ${s2(I.erro_2t_medio)}. No 1º turno o erro era do outro lado: as pesquisas finais deram a Lula em média <b>${s2(I.erro_1t_medio)} p.p.</b> a mais do que ele teve. Quem errou mais para um lado num turno não errou mais no outro (correlação ${f2(I.corr_erro_1t_2t)}). Melhor 2º turno: ${I.melhor}; pior: ${I.pior}.`;
+  const ord = T.slice().sort((a, b) => a.erro_2t - b.erro_2t), lab = ord.map(t => t.instituto);
+  chart("cInst", { type: "bar", data: { labels: lab, datasets: [
+      { label: "Erro no 2º turno", data: ord.map(t => t.erro_2t), backgroundColor: css("--anti"), borderRadius: 3 },
+      { label: "Erro no 1º turno", data: ord.map(t => t.erro_1t), backgroundColor: css("--pt") + "99", borderRadius: 3 }] },
+    options: { indexAxis: "y", scales: { x: eixo({ ticks: { color: css("--ink2"), callback: v => (v > 0 ? "+" : "") + v } , title: { display: true, text: "previsão − resultado (p.p. de Lula/(Lula+Flávio))", color: css("--ink2") } }), y: eixo({ grid: { display: false }, ticks: { color: css("--ink2"), autoSkip: false } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => i.parsed.x == null ? "não medido" : `${i.dataset.label}: ${s2(i.parsed.x)} p.p.` } } } } });
+  tab("tInst", ["Instituto", "Campo até", "Amostra", "Última pesquisa (%)", "Erro 2º turno (p.p.)", "Erro 1º turno (p.p.)"], T.map(t => [t.instituto, t.campo_fim, t.n.toLocaleString("pt-BR"), f2(t.ultima), cel(s2(t.erro_2t), t.erro_2t), t.erro_1t == null ? "não medido" : cel(s2(t.erro_1t), t.erro_1t)]));
+  $("corrTxt").textContent = f2(I.corr_erro_1t_2t);
+}
+
+function ufs() {
+  const T = D.tabela_uf, R = D.regioes;
+  const ordE = T.slice().sort((a, b) => a.erro - b.erro);
+  $("ufTxt").innerHTML = `O que o modelo acrescenta às pesquisas é a distribuição entre as UFs, e essa funcionou: a correlação entre a previsão e o resultado nas 27 UFs é de <b>${U.corr.toFixed(3).replace(".", ",")}</b>, o vencedor está certo em <b>${U.vencedor_certo} de ${U.n}</b> (o erro é ${U.errou_vencedor.join(", ")}: previ Lula com 47,4% e ele teve ${f1(T.find(t => t.index === "MG").real)}%) e <b>${U.dentro_90} dos ${U.n}</b> resultados caíram dentro do intervalo de 90% da UF. O erro é quase todo o mesmo deslocamento para baixo, de <b>${s2(U.vies)} p.p.</b> em média (${s2(U.vies_ponderado)} ponderado pelos votos): depois de tirá-lo, o desvio é de ${f2(U.desvio_apos_tirar_o_vies)} p.p. Ou seja, o nível nacional estava errado e a geografia, certa. O deslocamento não foi igual em todo lugar: foi maior no Sudeste (${s2(R.find(r => r.regiao === "Sudeste").erro)}) e menor no Nordeste (${s2(R.find(r => r.regiao === "Nordeste").erro)}), isto é, Lula ganhou mais do que o previsto sobretudo onde já perdia.`;
+  const pts = T.map(t => ({ x: t.modelo, y: t.real, uf: t.index }));
+  const rot = { id: "ufRot", afterDatasetsDraw(c) { const ctx = c.ctx; ctx.save(); ctx.font = "600 10px system-ui"; ctx.fillStyle = css("--ink2"); ctx.textAlign = "left";
+    c.getDatasetMeta(0).data.forEach((p, k) => ctx.fillText(pts[k].uf, p.x + 6, p.y + 3)); ctx.restore(); } };
+  chart("cUF", { type: "scatter", plugins: [rot], data: { datasets: [
+      { label: "UF", data: pts, backgroundColor: css("--anti"), pointRadius: 4 },
+      { label: "Resultado = previsão", data: [{ x: 20, y: 20 }, { x: 80, y: 80 }], type: "line", borderColor: css("--muted"), borderDash: [4, 4], borderWidth: 1.5, pointRadius: 0 },
+      { label: "Mesmo deslocamento em todas as UFs", data: [{ x: 20, y: 20 - U.vies }, { x: 80, y: 80 - U.vies }], type: "line", borderColor: css("--pt"), borderWidth: 1.5, pointRadius: 0 }] },
+    options: { parsing: false, scales: { x: eixo({ min: 20, max: 80, title: { display: true, text: "previsão do modelo: Lula nos válidos (%)", color: css("--ink2") }, ticks: { color: css("--ink2"), callback: v => v + "%" } }),
+        y: eixo({ min: 20, max: 80, title: { display: true, text: "resultado (%)", color: css("--ink2") }, ticks: { color: css("--ink2"), callback: v => v + "%" } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => i.raw.uf ? `${i.raw.uf}: previsto ${f1(i.parsed.x)}%, resultado ${f1(i.parsed.y)}%` : i.dataset.label } } } } });
+  tab("tReg", ["Região", "UFs", "Lula (média, %)", "Erro médio (p.p.)"], R.map(r => [r.regiao, r.ufs, f1(r.real), cel(s2(r.erro), r.erro)]));
+  tab("tExt", ["UF", "Previsto (%)", "Resultado (%)", "Erro (p.p.)"], ordE.slice(0, 4).concat(ordE.slice(-3)).map(t => [t.index, f1(t.modelo), f1(t.real), cel(s2(t.erro), t.erro)]));
+  tab("tUF", ["UF", "Previsto (%)", "Intervalo de 90%", "Resultado (%)", "Erro (p.p.)", "Dentro do intervalo", "Vencedor"], T.slice().sort((a, b) => a.index.localeCompare(b.index)).map(t => [t.index, f1(t.modelo), `${f1(t.p5)} a ${f1(t.p95)}`, f1(t.real), cel(s2(t.erro), t.erro), t.dentro90 ? "sim" : "não", t.vencedor_certo ? "certo" : "errado"]));
+}
+
+function avaliacao() {
+  const itens = [
+    ["ok", "Acertou", `<b>A estrutura por UF.</b> Correlação de ${U.corr.toFixed(3).replace(".", ",")} e 26 de 27 vencedores. Isso foi possível porque, desde 19/10, a base de cada UF é o 1º turno de 2026 do TSE e não 2022.`],
+    ["ok", "Acertou", `<b>A incerteza nacional.</b> O resultado ficou dentro da faixa de 90% (${f1(N.faixa90[0])} a ${f1(N.faixa90[1])}%) e a chance de Lula nunca esteve abaixo de 25% em nenhuma versão publicada (${f1(N.chance_lula_modelo)}% na última): o modelo nunca disse que Lula não podia ganhar.`],
+    ["ruim", "Errou", `<b>O nível.</b> ${s2(N.erro_modelo)} p.p. Era o erro de todos os institutos, e o modelo, que parte das pesquisas, o herdou. O efeito de instituto (que soma zero) e o piso de incerteza (2,5 p.p.) não tinham como corrigir um erro comum.`],
+    ["ruim", "Errou", `<b>O favorito.</b> O modelo e o placar da home deram Flávio como favorito (65,1%). Lula venceu.`],
+    ["aberto", "Lição", `<b>O erro do 1º turno não ajudou.</b> No 1º turno as pesquisas finais superestimaram Lula (+${f2(I.erro_1t_medio)} p.p. em média). Eu testei corrigir cada instituto por esse erro (<code>vies_instituto.py</code>, só como cenário, fora do modelo), e o erro do 2º turno foi para o lado oposto (correlação ${f2(I.corr_erro_1t_2t)} entre os dois): corrigir pelo erro anterior teria piorado a previsão.`],
+    ["aberto", "Em aberto", `<b>Mudar o método na última semana.</b> Fiz três mudanças: só pesquisas posteriores ao 1º turno (22/10), incluir institutos que faltavam (25/10) e tirar a tendência linear (25/10). A primeira aproximou o modelo do resultado em ${f2(Math.abs(D.versoes[1].erro) - Math.abs(D.versoes[2].erro))} p.p. (de ${s2(D.versoes[1].erro)} para ${s2(D.versoes[2].erro)}); a última afastou em ${f2(Math.abs(D.versoes[4].erro) - Math.abs(D.versoes[3].erro))} p.p. (de ${s2(D.versoes[3].erro)} para ${s2(D.versoes[4].erro)}). A chance divulgada foi de ${f1(D.versoes[0].chance)}% em 21/10 para ${f1(D.versoes[2].chance)}% em 22/10 e ${f1(D.versoes[4].chance)}% em 25/10: o leitor que viu a primeira viu Flávio como grande favorito (74%), e o da segunda, uma disputa mais aberta. Nenhuma mudança foi escolhida olhando o resultado, mas o modelo era sensível ao que entrava nele.`],
+    ["aberto", "Em aberto", `<b>Os dados de véspera.</b> Em 24/10 eu tinha deixado de fora Real Time Big Data, Alfa e Ipespe/Abrapel e usava dados velhos de Futura, Gerp e Veritá; corrigi em 25/10, e a correção quase não mudou o resultado (49,45% antes, 49,45% depois, ainda com tendência), porque o efeito de instituto absorve o nível dos institutos que entram.`]];
+  $("listaAv").innerHTML = itens.map(([c, t, h]) => `<li><span class="selo ${c}">${t}</span>${h}</li>`).join("");
+}
+
+function notas() {
+  nota("nota1", [`Lula: <b>${f2(N.real)}%</b> (válidos, provisório).`, `Modelo: <b>${f2(N.modelo)}%</b>; erro de <b>${s2(N.erro_modelo)} p.p.</b>`, `Chance de Lula no modelo: <b>${f1(N.chance_lula_modelo)}%</b>. Aconteceu.`, `Repetir 2022 teria chegado mais perto, por coincidência.`]);
+  nota("nota2", [`<b>16 de 16</b> institutos subestimaram Lula.`, `Média: <b>${s2(I.erro_2t_medio)} p.p.</b> no 2º turno e <b>${s2(I.erro_1t_medio)}</b> no 1º.`, `O erro de um turno não prevê o do outro.`]);
+  nota("nota3", [`Correlação previsão × resultado: <b>${U.corr.toFixed(3).replace(".", ",")}</b>.`, `<b>${U.vencedor_certo} de ${U.n}</b> vencedores; erra Minas.`, `Erro quase constante: <b>${s2(U.vies)} p.p.</b>`]);
+  nota("nota4", [`Estrutura por UF e faixa de incerteza: <b>acertou</b>.`, `Nível e favorito: <b>errou</b>.`, `Método mudou três vezes em quatro dias.`]);
+  nota("nota5", [`Nenhuma hipótese está confirmada.`, `O teste mais viável: comparecimento por UF do 2º turno, quando o TSE publicar.`]);
+  nota("nota6", [`Resultado <b>provisório</b>: 99,9% das seções, via imprensa.`, `Trocar <code>resultado-2026-turno2.csv</code> pelo oficial e rodar <code>python avaliar_2turno.py</code>.`]);
+}
+function tudo() { kpis(); nacional(); institutos(); ufs(); avaliacao(); notas(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>

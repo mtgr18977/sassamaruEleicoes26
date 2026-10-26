@@ -14,3 +14,19 @@ def test_avaliacao_bate_com_as_tabelas():
     assert abs(a["nacional"]["erro_modelo"] - (a["nacional"]["modelo"] - a["nacional"]["real"])) < 0.01
     assert a["uf_resumo"]["n"] == 27 == len(a["tabela_uf"]) and len(a["tabela_institutos"]) >= 14
     assert abs(sum(r["erro"] for r in a["tabela_uf"]) / 27 - a["uf_resumo"]["vies"]) < 0.02
+
+
+def test_a_previsao_avaliada_e_a_de_25_10_e_nao_mudou():
+    """O 2º turno já aconteceu: modelos/parametros.json guarda a previsão de 25/10 (49,03%; chance de Lula 34,9%). Se este teste falhar, alguém regenerou o modelo com outros dados:
+    a página Resultado compara o resultado com a previsão que foi publicada, então não regenere pesquisas.py/montecarlo.py depois da eleição (ou atualize o texto da página)."""
+    p = json.load(open("modelos/parametros.json", encoding="utf-8"))["turno2"]
+    assert abs(p["p_pesquisas"] - 0.4903) < 1e-4 and p["n_pesquisas"] == 37
+    a = json.load(open("modelos/avaliacao-2turno.json", encoding="utf-8"))
+    assert a["nacional"]["modelo"] == 49.03 and a["nacional"]["chance_lula_modelo"] == 34.9
+
+
+def test_pagina_resultado_e_faixa_na_previsao():
+    r = open("resultado.html", encoding="utf-8").read()
+    assert "Resultado do 2º turno" in r and "__DATA__" not in r and '"tabela_uf"' in r and "provisórios" in r
+    home = open("index.html", encoding="utf-8").read()
+    assert 'id="faixaResultado"' in home and '"resultado": {' in home
