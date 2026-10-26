@@ -69,7 +69,7 @@ const dataBR = (iso) => iso.split("-").reverse().join("/");
 
 function faixaResultado() {
   const r = D.resultado, f2 = (x) => x.toFixed(2).replace(".", ","), sg = (x) => (x > 0 ? "+" : "−") + Math.abs(x).toFixed(2).replace(".", ",");
-  $("faixaResultado").innerHTML = `<b>A eleição já aconteceu: Lula foi reeleito em 25/10 com ${f2(r.real)}% dos votos válidos</b> (dados provisórios, 99,9% das seções). Tudo o que está abaixo é a <b>previsão feita antes da votação</b> (${f2(r.modelo)}% para Lula, chance de ${f1(r.chance)}%), mantida como estava para comparação: o modelo subestimou Lula em ${f2(Math.abs(r.erro))} p.p. e deu Flávio como favorito. <a href="index.html">Veja o resultado e a avaliação do modelo</a>.`;
+  $("faixaResultado").innerHTML = `<b>A eleição já aconteceu: Lula foi reeleito em 25/10 com ${f2(r.real)}% dos votos válidos</b> (resultado oficial do TSE, 100% das seções). Tudo o que está abaixo é a <b>previsão feita antes da votação</b> (${f2(r.modelo)}% para Lula, chance de ${f1(r.chance)}%), mantida como estava para comparação: o modelo subestimou Lula em ${f2(Math.abs(r.erro))} p.p. e deu Flávio como favorito. <a href="index.html">Veja o resultado e a avaliação do modelo</a>.`;
 }
 // ---------- placar: chance de cada um e resultado provável ----------
 function placar() {

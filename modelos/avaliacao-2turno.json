@@ -1,9 +1,16 @@
 {
- "fonte": "datasets/resultado-2026-turno2.csv (provisório: painel do TSE via imprensa, 99,9% das seções)",
+ "exterior": {
+  "previsto": 52.32,
+  "real": 53.86,
+  "erro": -1.54,
+  "p5": 44.7,
+  "p95": 59.9
+ },
+ "fonte": "datasets/resultado-2026-turno2.csv (oficial: portal de resultados do TSE, 100% das seções, 25/10/2026 23h27)",
  "nacional": {
-  "real": 51.78,
+  "real": 51.7852,
   "modelo": 49.03,
-  "erro_modelo": -2.75,
+  "erro_modelo": -2.76,
   "faixa90": [
    44.9,
    53.1
@@ -16,22 +23,22 @@
   {
    "nome": "Modelo publicado em 25/10 (nível sem tendência)",
    "previsao": 49.03,
-   "erro": -2.75
+   "erro": -2.76
   },
   {
    "nome": "Modelo até 24/10 (com tendência linear)",
    "previsao": 49.45,
-   "erro": -2.33
+   "erro": -2.34
   },
   {
    "nome": "Média simples da última pesquisa de cada instituto",
    "previsao": 49.14,
-   "erro": -2.64
+   "erro": -2.65
   },
   {
    "nome": "Modelo com ½ do viés histórico descontado",
    "previsao": 48.62,
-   "erro": -3.16
+   "erro": -3.17
   },
   {
    "nome": "Modelo com o viés histórico descontado (−0,83 p,p,)",
@@ -41,7 +48,7 @@
   {
    "nome": "Repetir o 1º turno de 2026 (Lula/(Lula+Flávio) = 48,99%)",
    "previsao": 48.99,
-   "erro": -2.79
+   "erro": -2.8
   },
   {
    "nome": "Repetir o 2º turno de 2022 (50,90%)",
@@ -130,7 +137,7 @@
    "s2": 48.37,
    "chance": 25.7,
    "nota": "44 pesquisas de 2º turno (24 eram cenários hipotéticos de antes do 1º turno), com tendência",
-   "erro": -3.41
+   "erro": -3.42
   },
   {
    "data": "22/10",
@@ -138,7 +145,7 @@
    "s2": 48.43,
    "chance": 26.5,
    "nota": "Veritá/CNN entra; erros de 1º turno de 16 institutos",
-   "erro": -3.35
+   "erro": -3.36
   },
   {
    "data": "22/10",
@@ -146,7 +153,7 @@
    "s2": 49.46,
    "chance": 41.4,
    "nota": "só pesquisas feitas depois do 1º turno (a campanha mudou)",
-   "erro": -2.32
+   "erro": -2.33
   },
   {
    "data": "24/10",
@@ -154,7 +161,7 @@
    "s2": 49.45,
    "chance": 41.3,
    "nota": "9 pesquisas de véspera (Datafolha ×2, Quaest, Atlas, Nexus, Palver, Vox, CNT/MDA, Colectta)",
-   "erro": -2.33
+   "erro": -2.34
   },
   {
    "data": "25/10",
@@ -162,7 +169,7 @@
    "s2": 49.03,
    "chance": 34.9,
    "nota": "entram Real Time Big Data, Alfa, Ipespe e rodadas novas de Futura, Gerp e Veritá; sai a tendência linear",
-   "erro": -2.75
+   "erro": -2.76
   }
  ],
  "regioes": [
@@ -188,13 +195,329 @@
    "regiao": "Sudeste",
    "ufs": 4,
    "real": 46.8,
-   "erro": -3.43
+   "erro": -3.44
   },
   {
    "regiao": "Sul",
    "ufs": 3,
    "real": 36.7,
    "erro": -3.15
+  }
+ ],
+ "contabilidade": {
+  "lula_1t": 53879538,
+  "lula_2t": 64256232,
+  "flavio_1t": 56104503,
+  "flavio_2t": 59826041,
+  "outros_1t": 9316747,
+  "queda_branco_nulo": 1816000,
+  "mais_comparecimento": 2960239,
+  "ganho_lula": 10376694,
+  "ganho_flavio": 3721538,
+  "abstencao_1t": 33469244,
+  "abstencao_2t": 30509005,
+  "residuo": -5246,
+  "swing_nacional": 2.8,
+  "d_comp_pp": 1.86
+ },
+ "historico_conta": [
+  {
+   "ano": 2002,
+   "outros": 25.79,
+   "queda_bn": 4.35,
+   "mais_comp": -3.14,
+   "ganho_pt": 13.34,
+   "ganho_anti": 13.67
+  },
+  {
+   "ano": 2006,
+   "outros": 9.37,
+   "queda_bn": 2.66,
+   "mais_comp": -2.82,
+   "ganho_pt": 11.63,
+   "ganho_anti": -2.43
+  },
+  {
+   "ano": 2010,
+   "outros": 20.81,
+   "queda_bn": 2.46,
+   "mais_comp": -4.59,
+   "ganho_pt": 8.1,
+   "ganho_anti": 10.58
+  },
+  {
+   "ano": 2014,
+   "outros": 25.86,
+   "queda_bn": 3.96,
+   "mais_comp": -2.44,
+   "ganho_pt": 11.23,
+   "ganho_anti": 16.14
+  },
+  {
+   "ano": 2018,
+   "outros": 26.43,
+   "queda_bn": -0.78,
+   "mais_comp": -1.43,
+   "ganho_pt": 15.7,
+   "ganho_anti": 8.52
+  },
+  {
+   "ano": 2022,
+   "outros": 9.9,
+   "queda_bn": -0.25,
+   "mais_comp": 0.57,
+   "ganho_pt": 3.09,
+   "ganho_anti": 7.13
+  },
+  {
+   "ano": 2026,
+   "outros": 9.32,
+   "queda_bn": 1.82,
+   "mais_comp": 2.96,
+   "ganho_pt": 10.38,
+   "ganho_anti": 3.72
+  }
+ ],
+ "teste_comparecimento": {
+  "swing_medio": 2.74,
+  "swing_dp": 0.69,
+  "swing_min": 1.21,
+  "uf_swing_min": "PI",
+  "swing_max": 4.25,
+  "uf_swing_max": "RJ",
+  "ufs_com_swing_positivo": 27,
+  "ufs_com_queda_de_comparecimento": 9,
+  "ufs_queda": [
+   "AC",
+   "AP",
+   "AM",
+   "MA",
+   "PA",
+   "PI",
+   "RO",
+   "RR",
+   "TO"
+  ],
+  "corr_comparecimento_erro": -0.07,
+  "corr_comparecimento_swing": 0.06,
+  "residuo_max_uf": 1355
+ },
+ "uf_turnos": [
+  {
+   "uf": "AC",
+   "lula_1t": 30.8,
+   "lula_2t": 33.43,
+   "swing": 2.64,
+   "d_comp_pp": -5.65,
+   "erro_modelo": -2.55
+  },
+  {
+   "uf": "AL",
+   "lula_1t": 57.5,
+   "lula_2t": 60.77,
+   "swing": 3.27,
+   "d_comp_pp": 0.54,
+   "erro_modelo": -3.28
+  },
+  {
+   "uf": "AP",
+   "lula_1t": 50.03,
+   "lula_2t": 52.88,
+   "swing": 2.85,
+   "d_comp_pp": -8.06,
+   "erro_modelo": -2.78
+  },
+  {
+   "uf": "AM",
+   "lula_1t": 51.74,
+   "lula_2t": 54.02,
+   "swing": 2.28,
+   "d_comp_pp": -1.52,
+   "erro_modelo": -2.22
+  },
+  {
+   "uf": "BA",
+   "lula_1t": 69.87,
+   "lula_2t": 71.31,
+   "swing": 1.44,
+   "d_comp_pp": 3.26,
+   "erro_modelo": -1.44
+  },
+  {
+   "uf": "CE",
+   "lula_1t": 66.93,
+   "lula_2t": 68.93,
+   "swing": 2.0,
+   "d_comp_pp": 1.63,
+   "erro_modelo": -1.96
+  },
+  {
+   "uf": "DF",
+   "lula_1t": 42.62,
+   "lula_2t": 45.72,
+   "swing": 3.1,
+   "d_comp_pp": 1.61,
+   "erro_modelo": -3.03
+  },
+  {
+   "uf": "ES",
+   "lula_1t": 40.8,
+   "lula_2t": 43.63,
+   "swing": 2.83,
+   "d_comp_pp": 1.91,
+   "erro_modelo": -2.77
+  },
+  {
+   "uf": "GO",
+   "lula_1t": 36.69,
+   "lula_2t": 40.34,
+   "swing": 3.65,
+   "d_comp_pp": 1.49,
+   "erro_modelo": -3.58
+  },
+  {
+   "uf": "MA",
+   "lula_1t": 67.44,
+   "lula_2t": 69.54,
+   "swing": 2.1,
+   "d_comp_pp": -0.63,
+   "erro_modelo": -2.07
+  },
+  {
+   "uf": "MT",
+   "lula_1t": 30.94,
+   "lula_2t": 33.94,
+   "swing": 3.0,
+   "d_comp_pp": 1.26,
+   "erro_modelo": -3.01
+  },
+  {
+   "uf": "MS",
+   "lula_1t": 37.18,
+   "lula_2t": 40.4,
+   "swing": 3.22,
+   "d_comp_pp": 2.63,
+   "erro_modelo": -3.18
+  },
+  {
+   "uf": "MG",
+   "lula_1t": 47.32,
+   "lula_2t": 50.43,
+   "swing": 3.12,
+   "d_comp_pp": 2.49,
+   "erro_modelo": -3.05
+  },
+  {
+   "uf": "PA",
+   "lula_1t": 52.87,
+   "lula_2t": 55.02,
+   "swing": 2.15,
+   "d_comp_pp": -1.22,
+   "erro_modelo": -2.12
+  },
+  {
+   "uf": "PB",
+   "lula_1t": 64.96,
+   "lula_2t": 67.46,
+   "swing": 2.51,
+   "d_comp_pp": 1.84,
+   "erro_modelo": -2.46
+  },
+  {
+   "uf": "PR",
+   "lula_1t": 34.24,
+   "lula_2t": 37.42,
+   "swing": 3.18,
+   "d_comp_pp": 2.53,
+   "erro_modelo": -3.14
+  },
+  {
+   "uf": "PE",
+   "lula_1t": 67.16,
+   "lula_2t": 69.2,
+   "swing": 2.04,
+   "d_comp_pp": 2.98,
+   "erro_modelo": -1.98
+  },
+  {
+   "uf": "PI",
+   "lula_1t": 74.66,
+   "lula_2t": 75.88,
+   "swing": 1.21,
+   "d_comp_pp": -0.04,
+   "erro_modelo": -1.21
+  },
+  {
+   "uf": "RJ",
+   "lula_1t": 42.65,
+   "lula_2t": 46.9,
+   "swing": 4.25,
+   "d_comp_pp": 1.69,
+   "erro_modelo": -4.23
+  },
+  {
+   "uf": "RN",
+   "lula_1t": 63.21,
+   "lula_2t": 65.72,
+   "swing": 2.51,
+   "d_comp_pp": 2.32,
+   "erro_modelo": -2.45
+  },
+  {
+   "uf": "RS",
+   "lula_1t": 39.1,
+   "lula_2t": 42.16,
+   "swing": 3.06,
+   "d_comp_pp": 2.19,
+   "erro_modelo": -3.05
+  },
+  {
+   "uf": "RO",
+   "lula_1t": 27.74,
+   "lula_2t": 30.39,
+   "swing": 2.65,
+   "d_comp_pp": -0.21,
+   "erro_modelo": -2.59
+  },
+  {
+   "uf": "RR",
+   "lula_1t": 24.34,
+   "lula_2t": 27.54,
+   "swing": 3.2,
+   "d_comp_pp": -6.02,
+   "erro_modelo": -3.18
+  },
+  {
+   "uf": "SC",
+   "lula_1t": 27.31,
+   "lula_2t": 30.58,
+   "swing": 3.27,
+   "d_comp_pp": 1.99,
+   "erro_modelo": -3.27
+  },
+  {
+   "uf": "SP",
+   "lula_1t": 42.38,
+   "lula_2t": 46.15,
+   "swing": 3.77,
+   "d_comp_pp": 2.73,
+   "erro_modelo": -3.72
+  },
+  {
+   "uf": "SE",
+   "lula_1t": 67.2,
+   "lula_2t": 69.53,
+   "swing": 2.33,
+   "d_comp_pp": 1.59,
+   "erro_modelo": -2.29
+  },
+  {
+   "uf": "TO",
+   "lula_1t": 46.26,
+   "lula_2t": 48.63,
+   "swing": 2.37,
+   "d_comp_pp": -0.88,
+   "erro_modelo": -2.35
   }
  ],
  "efeitos_instituto": [
@@ -368,14 +691,14 @@
   "melhor": "Vox Brasil",
   "pior": "RealTimeBigData",
   "erro_1t_medio": 1.67,
-  "erro_2t_medio": -2.64,
+  "erro_2t_medio": -2.65,
   "corr_erro_1t_2t": -0.08
  },
  "uf_resumo": {
   "n": 27,
   "mae": 2.7,
   "vies": -2.7,
-  "vies_ponderado": -2.91,
+  "vies_ponderado": -2.92,
   "desvio_apos_tirar_o_vies": 0.69,
   "corr": 0.999,
   "dentro_90": 27,
@@ -392,7 +715,7 @@
    "campo_fim": "22/10",
    "n": 2000,
    "ultima": 47.87,
-   "erro_2t": -3.91,
+   "erro_2t": -3.92,
    "erro_1t": 3.45
   },
   {
@@ -400,7 +723,7 @@
    "campo_fim": "24/10",
    "n": 2400,
    "ultima": 48.0,
-   "erro_2t": -3.78,
+   "erro_2t": -3.79,
    "erro_1t": -0.1
   },
   {
@@ -408,7 +731,7 @@
    "campo_fim": "18/10",
    "n": 3000,
    "ultima": 48.42,
-   "erro_2t": -3.36,
+   "erro_2t": -3.37,
    "erro_1t": 1.61
   },
   {
@@ -416,7 +739,7 @@
    "campo_fim": "23/10",
    "n": 15554,
    "ultima": 48.45,
-   "erro_2t": -3.33,
+   "erro_2t": -3.34,
    "erro_1t": -0.05
   },
   {
@@ -424,7 +747,7 @@
    "campo_fim": "19/10",
    "n": 2700,
    "ultima": 48.47,
-   "erro_2t": -3.31,
+   "erro_2t": -3.32,
    "erro_1t": NaN
   },
   {
@@ -432,7 +755,7 @@
    "campo_fim": "15/10",
    "n": 1500,
    "ultima": 48.94,
-   "erro_2t": -2.84,
+   "erro_2t": -2.85,
    "erro_1t": NaN
   },
   {
@@ -440,7 +763,7 @@
    "campo_fim": "19/10",
    "n": 1500,
    "ultima": 48.94,
-   "erro_2t": -2.84,
+   "erro_2t": -2.85,
    "erro_1t": 1.65
   },
   {
@@ -448,7 +771,7 @@
    "campo_fim": "23/10",
    "n": 4990,
    "ultima": 49.24,
-   "erro_2t": -2.54,
+   "erro_2t": -2.55,
    "erro_1t": 2.61
   },
   {
@@ -456,7 +779,7 @@
    "campo_fim": "23/10",
    "n": 2032,
    "ultima": 49.29,
-   "erro_2t": -2.49,
+   "erro_2t": -2.5,
    "erro_1t": 4.16
   },
   {
@@ -464,7 +787,7 @@
    "campo_fim": "24/10",
    "n": 3702,
    "ultima": 49.45,
-   "erro_2t": -2.33,
+   "erro_2t": -2.34,
    "erro_1t": 2.29
   },
   {
@@ -472,7 +795,7 @@
    "campo_fim": "24/10",
    "n": 2000,
    "ultima": 49.46,
-   "erro_2t": -2.32,
+   "erro_2t": -2.33,
    "erro_1t": 4.18
   },
   {
@@ -480,7 +803,7 @@
    "campo_fim": "24/10",
    "n": 4050,
    "ultima": 49.47,
-   "erro_2t": -2.31,
+   "erro_2t": -2.32,
    "erro_1t": 2.74
   },
   {
@@ -488,7 +811,7 @@
    "campo_fim": "24/10",
    "n": 5000,
    "ultima": 49.49,
-   "erro_2t": -2.29,
+   "erro_2t": -2.3,
    "erro_1t": -1.21
   },
   {
@@ -496,7 +819,7 @@
    "campo_fim": "24/10",
    "n": 2000,
    "ultima": 49.9,
-   "erro_2t": -1.88,
+   "erro_2t": -1.89,
    "erro_1t": -0.19
   },
   {
@@ -504,7 +827,7 @@
    "campo_fim": "23/10",
    "n": 3000,
    "ultima": 50.27,
-   "erro_2t": -1.51,
+   "erro_2t": -1.52,
    "erro_1t": NaN
   },
   {
@@ -512,7 +835,7 @@
    "campo_fim": "23/10",
    "n": 2100,
    "ultima": 50.6,
-   "erro_2t": -1.18,
+   "erro_2t": -1.19,
    "erro_1t": 0.52
   }
  ],
@@ -535,7 +858,7 @@
    "p5": 50.2,
    "p95": 64.59,
    "base_1t_2026": 57.5,
-   "erro": -3.29,
+   "erro": -3.28,
    "dentro90": true,
    "vencedor_certo": true
   },
@@ -568,7 +891,7 @@
    "p5": 63.5,
    "p95": 75.63,
    "base_1t_2026": 69.87,
-   "erro": -1.43,
+   "erro": -1.44,
    "dentro90": true,
    "vencedor_certo": true
   },
@@ -629,12 +952,12 @@
   },
   {
    "index": "MG",
-   "real": 50.4,
+   "real": 50.43,
    "modelo": 47.39,
    "p5": 40.6,
    "p95": 54.32,
    "base_1t_2026": 47.32,
-   "erro": -3.01,
+   "erro": -3.05,
    "dentro90": true,
    "vencedor_certo": false
   },
@@ -662,7 +985,7 @@
   },
   {
    "index": "PA",
-   "real": 55.01,
+   "real": 55.02,
    "modelo": 52.89,
    "p5": 45.44,
    "p95": 60.31,
@@ -684,12 +1007,12 @@
   },
   {
    "index": "PE",
-   "real": 69.21,
+   "real": 69.2,
    "modelo": 67.22,
    "p5": 60.53,
    "p95": 73.28,
    "base_1t_2026": 67.16,
-   "erro": -1.99,
+   "erro": -1.98,
    "dentro90": true,
    "vencedor_certo": true
   },
@@ -711,7 +1034,7 @@
    "p5": 27.94,
    "p95": 41.33,
    "base_1t_2026": 34.24,
-   "erro": -3.13,
+   "erro": -3.14,
    "dentro90": true,
    "vencedor_certo": true
   },
@@ -788,7 +1111,7 @@
    "p5": 60.4,
    "p95": 73.46,
    "base_1t_2026": 67.2,
-   "erro": -2.28,
+   "erro": -2.29,
    "dentro90": true,
    "vencedor_certo": true
   },

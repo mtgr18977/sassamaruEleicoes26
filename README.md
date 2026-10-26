@@ -16,7 +16,7 @@ python atualizar.py                    # pesquisas → Monte Carlo → projeçã
 Abra `index.html` (o Resultado) direto no navegador (a página precisa de internet só para o Chart.js).
 
 ### Depois da eleição (2º turno de 25/10/2026): a previsão está congelada
-O modelo (`modelos/parametros.json`, `previsao-uf-turno2.csv`) é o de 25/10 e a aba Resultado o avalia; `tests/test_avaliar_2turno.py` falha se ele mudar. **Não rode `pesquisas.py` nem `montecarlo.py` com dados novos.** Para trocar o resultado provisório pelo oficial do TSE: `datasets/resultado-2026-turno2.csv` → `python avaliar_2turno.py` → `python gerar_pagina_resultado.py` (documentação, seção 9.1).
+O modelo (`modelos/parametros.json`, `previsao-uf-turno2.csv`) é o de 25/10 e a aba Resultado o avalia; `tests/test_avaliar_2turno.py` falha se ele mudar. **Não rode `pesquisas.py` nem `montecarlo.py` com dados novos.** Para atualizar o resultado (já é o oficial do TSE): `python fetch_tse_2turno.py` → `python avaliar_2turno.py` → `python gerar_pagina_resultado.py` (documentação, seção 9.1).
 
 ### Rotina a cada rodada de pesquisas (atualizar TUDO)
 1. Uma linha por pesquisa em `datasets/pesquisas-2026.csv` e em `datasets/pesquisas-2turno-pos-1t-2026.csv` (campo, divulgação, amostra, totais, registro TSE, fonte).
@@ -42,7 +42,8 @@ O modelo (`modelos/parametros.json`, `previsao-uf-turno2.csv`) é o de 25/10 e a
 | `avaliar_sentimento_redes.py` | Compara três modelos prontos, uma regressão e uma linha de base trivial contra 304 posts que eu li (`datasets/redes/rotulos-amostra.csv`); grava `avaliacao-modelos.json`. Precisa de torch, transformers e scikit-learn |
 | `analisar_redes.py` | Agrega o cache em `datasets/redes/agregado-bluesky.json` (volume por hora, efeito do debate, hashtags, repetição, posição com intervalo de Wilson) |
 | `gerar_pagina_redes.py` | Gera `redes.html` (aba Redes sociais) só a partir do agregado |
-| `avaliar_2turno.py` | Compara o resultado do 2º turno (`datasets/resultado-2026-turno2.csv`, provisório) com o modelo, os institutos e as UFs; grava `modelos/avaliacao-2turno.json` |
+| `fetch_tse_2turno.py` | Baixa o resultado OFICIAL do 2º turno do portal do TSE (por UF e Brasil) e grava `datasets/tse-presidente-2turno-uf.csv` e `resultado-2026-turno2.csv` |
+| `avaliar_2turno.py` | Compara o resultado oficial do 2º turno (`datasets/resultado-2026-turno2.csv`, do TSE) com o modelo, os institutos e as UFs; grava `modelos/avaliacao-2turno.json` |
 | `gerar_pagina_resultado.py` | Gera `index.html`, a home (aba Resultado) a partir de `modelos/avaliacao-2turno.json` |
 | `gerar_pagina_modelo.py` | Gera `analise-modelo.html` (aba Análise do modelo): reúne as previsões congeladas de 2/10 (projeção do presidente, modelo do governador, bancada) e os resultados preliminares de `datasets/resultado-2026-*.csv`; faixas, erros, pesquisas finais e a previsão atual do 2º turno (a preencher em 25/10) |
 | `gerar_pagina_lula.py` | Gera `historico.html` (dados embutidos) a partir de `apps/lula.template.html` |
