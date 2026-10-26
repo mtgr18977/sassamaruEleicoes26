@@ -1,0 +1,470 @@
+{
+ "fonte": "datasets/resultado-2026-turno2.csv (provisório: painel do TSE via imprensa, 99,9% das seções)",
+ "nacional": {
+  "real": 51.78,
+  "modelo": 49.03,
+  "erro_modelo": -2.75,
+  "faixa90": [
+   44.9,
+   53.1
+  ],
+  "dentro_faixa90": true,
+  "z": -1.1,
+  "chance_lula_modelo": 34.9
+ },
+ "institutos": {
+  "media_simples": 49.14,
+  "mediana": 49.27,
+  "erro_media": -2.64,
+  "todas_abaixo_do_real": true,
+  "melhor": "Vox Brasil",
+  "pior": "RealTimeBigData",
+  "erro_1t_medio": 1.67,
+  "erro_2t_medio": -2.64,
+  "corr_erro_1t_2t": -0.08
+ },
+ "uf_resumo": {
+  "n": 27,
+  "mae": 2.7,
+  "vies": -2.7,
+  "vies_ponderado": -2.91,
+  "desvio_apos_tirar_o_vies": 0.69,
+  "corr": 0.999,
+  "dentro_90": 27,
+  "vencedor_certo": 26,
+  "errou_vencedor": [
+   "MG"
+  ],
+  "maior_erro": "RJ",
+  "menor_erro": "PI"
+ },
+ "tabela_institutos": [
+  {
+   "instituto": "RealTimeBigData",
+   "campo_fim": "22/10",
+   "n": 2000,
+   "ultima": 47.87,
+   "erro_2t": -3.91,
+   "erro_1t": 3.45
+  },
+  {
+   "instituto": "Gerp",
+   "campo_fim": "24/10",
+   "n": 2400,
+   "ultima": 48.0,
+   "erro_2t": -3.78,
+   "erro_1t": -0.1
+  },
+  {
+   "instituto": "PoderData",
+   "campo_fim": "18/10",
+   "n": 3000,
+   "ultima": 48.42,
+   "erro_2t": -3.36,
+   "erro_1t": 1.61
+  },
+  {
+   "instituto": "Veritá",
+   "campo_fim": "23/10",
+   "n": 15554,
+   "ultima": 48.45,
+   "erro_2t": -3.33,
+   "erro_1t": -0.05
+  },
+  {
+   "instituto": "Alfa Inteligência",
+   "campo_fim": "19/10",
+   "n": 2700,
+   "ultima": 48.47,
+   "erro_2t": -3.31,
+   "erro_1t": NaN
+  },
+  {
+   "instituto": "Ipespe/Abrapel",
+   "campo_fim": "15/10",
+   "n": 1500,
+   "ultima": 48.94,
+   "erro_2t": -2.84,
+   "erro_1t": NaN
+  },
+  {
+   "instituto": "Meio/Ideia",
+   "campo_fim": "19/10",
+   "n": 1500,
+   "ultima": 48.94,
+   "erro_2t": -2.84,
+   "erro_1t": 1.65
+  },
+  {
+   "instituto": "AtlasIntel",
+   "campo_fim": "23/10",
+   "n": 4990,
+   "ultima": 49.24,
+   "erro_2t": -2.54,
+   "erro_1t": 2.61
+  },
+  {
+   "instituto": "CNT/MDA",
+   "campo_fim": "23/10",
+   "n": 2032,
+   "ultima": 49.29,
+   "erro_2t": -2.49,
+   "erro_1t": 4.16
+  },
+  {
+   "instituto": "Quaest",
+   "campo_fim": "24/10",
+   "n": 3702,
+   "ultima": 49.45,
+   "erro_2t": -2.33,
+   "erro_1t": 2.29
+  },
+  {
+   "instituto": "Nexus/BTG",
+   "campo_fim": "24/10",
+   "n": 2000,
+   "ultima": 49.46,
+   "erro_2t": -2.32,
+   "erro_1t": 4.18
+  },
+  {
+   "instituto": "Datafolha",
+   "campo_fim": "24/10",
+   "n": 4050,
+   "ultima": 49.47,
+   "erro_2t": -2.31,
+   "erro_1t": 2.74
+  },
+  {
+   "instituto": "Palver",
+   "campo_fim": "24/10",
+   "n": 5000,
+   "ultima": 49.49,
+   "erro_2t": -2.29,
+   "erro_1t": -1.21
+  },
+  {
+   "instituto": "Futura Inteligência",
+   "campo_fim": "24/10",
+   "n": 2000,
+   "ultima": 49.9,
+   "erro_2t": -1.88,
+   "erro_1t": -0.19
+  },
+  {
+   "instituto": "Colectta",
+   "campo_fim": "23/10",
+   "n": 3000,
+   "ultima": 50.27,
+   "erro_2t": -1.51,
+   "erro_1t": NaN
+  },
+  {
+   "instituto": "Vox Brasil",
+   "campo_fim": "23/10",
+   "n": 2100,
+   "ultima": 50.6,
+   "erro_2t": -1.18,
+   "erro_1t": 0.52
+  }
+ ],
+ "tabela_uf": [
+  {
+   "index": "AC",
+   "real": 33.43,
+   "modelo": 30.88,
+   "p5": 24.77,
+   "p95": 37.74,
+   "base_1t_2026": 30.8,
+   "erro": -2.55,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "AL",
+   "real": 60.77,
+   "modelo": 57.48,
+   "p5": 50.2,
+   "p95": 64.59,
+   "base_1t_2026": 57.5,
+   "erro": -3.29,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "AM",
+   "real": 54.02,
+   "modelo": 51.8,
+   "p5": 44.15,
+   "p95": 59.34,
+   "base_1t_2026": 51.74,
+   "erro": -2.22,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "AP",
+   "real": 52.88,
+   "modelo": 50.1,
+   "p5": 42.38,
+   "p95": 57.67,
+   "base_1t_2026": 50.03,
+   "erro": -2.78,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "BA",
+   "real": 71.31,
+   "modelo": 69.88,
+   "p5": 63.5,
+   "p95": 75.63,
+   "base_1t_2026": 69.87,
+   "erro": -1.43,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "CE",
+   "real": 68.93,
+   "modelo": 66.97,
+   "p5": 60.19,
+   "p95": 73.11,
+   "base_1t_2026": 66.93,
+   "erro": -1.96,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "DF",
+   "real": 45.72,
+   "modelo": 42.69,
+   "p5": 35.43,
+   "p95": 50.14,
+   "base_1t_2026": 42.62,
+   "erro": -3.03,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "ES",
+   "real": 43.63,
+   "modelo": 40.86,
+   "p5": 34.11,
+   "p95": 48.01,
+   "base_1t_2026": 40.8,
+   "erro": -2.77,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "GO",
+   "real": 40.34,
+   "modelo": 36.76,
+   "p5": 30.03,
+   "p95": 44.01,
+   "base_1t_2026": 36.69,
+   "erro": -3.58,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "MA",
+   "real": 69.54,
+   "modelo": 67.47,
+   "p5": 60.75,
+   "p95": 73.52,
+   "base_1t_2026": 67.44,
+   "erro": -2.07,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "MG",
+   "real": 50.4,
+   "modelo": 47.39,
+   "p5": 40.6,
+   "p95": 54.32,
+   "base_1t_2026": 47.32,
+   "erro": -3.01,
+   "dentro90": true,
+   "vencedor_certo": false
+  },
+  {
+   "index": "MS",
+   "real": 40.4,
+   "modelo": 37.22,
+   "p5": 30.39,
+   "p95": 44.6,
+   "base_1t_2026": 37.18,
+   "erro": -3.18,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "MT",
+   "real": 33.94,
+   "modelo": 30.93,
+   "p5": 24.89,
+   "p95": 37.99,
+   "base_1t_2026": 30.94,
+   "erro": -3.01,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "PA",
+   "real": 55.01,
+   "modelo": 52.89,
+   "p5": 45.44,
+   "p95": 60.31,
+   "base_1t_2026": 52.87,
+   "erro": -2.12,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "PB",
+   "real": 67.46,
+   "modelo": 65.0,
+   "p5": 57.94,
+   "p95": 71.32,
+   "base_1t_2026": 64.96,
+   "erro": -2.46,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "PE",
+   "real": 69.21,
+   "modelo": 67.22,
+   "p5": 60.53,
+   "p95": 73.28,
+   "base_1t_2026": 67.16,
+   "erro": -1.99,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "PI",
+   "real": 75.88,
+   "modelo": 74.67,
+   "p5": 68.56,
+   "p95": 79.92,
+   "base_1t_2026": 74.66,
+   "erro": -1.21,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "PR",
+   "real": 37.42,
+   "modelo": 34.29,
+   "p5": 27.94,
+   "p95": 41.33,
+   "base_1t_2026": 34.24,
+   "erro": -3.13,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "RJ",
+   "real": 46.9,
+   "modelo": 42.67,
+   "p5": 35.92,
+   "p95": 49.68,
+   "base_1t_2026": 42.65,
+   "erro": -4.23,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "RN",
+   "real": 65.72,
+   "modelo": 63.27,
+   "p5": 56.09,
+   "p95": 69.89,
+   "base_1t_2026": 63.21,
+   "erro": -2.45,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "RO",
+   "real": 30.39,
+   "modelo": 27.8,
+   "p5": 22.03,
+   "p95": 34.22,
+   "base_1t_2026": 27.74,
+   "erro": -2.59,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "RR",
+   "real": 27.54,
+   "modelo": 24.36,
+   "p5": 19.14,
+   "p95": 30.41,
+   "base_1t_2026": 24.34,
+   "erro": -3.18,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "RS",
+   "real": 42.16,
+   "modelo": 39.11,
+   "p5": 32.25,
+   "p95": 46.35,
+   "base_1t_2026": 39.1,
+   "erro": -3.05,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "SC",
+   "real": 30.58,
+   "modelo": 27.31,
+   "p5": 21.75,
+   "p95": 33.68,
+   "base_1t_2026": 27.31,
+   "erro": -3.27,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "SE",
+   "real": 69.53,
+   "modelo": 67.25,
+   "p5": 60.4,
+   "p95": 73.46,
+   "base_1t_2026": 67.2,
+   "erro": -2.28,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "SP",
+   "real": 46.15,
+   "modelo": 42.43,
+   "p5": 36.24,
+   "p95": 48.88,
+   "base_1t_2026": 42.38,
+   "erro": -3.72,
+   "dentro90": true,
+   "vencedor_certo": true
+  },
+  {
+   "index": "TO",
+   "real": 48.63,
+   "modelo": 46.28,
+   "p5": 38.78,
+   "p95": 53.83,
+   "base_1t_2026": 46.26,
+   "erro": -2.35,
+   "dentro90": true,
+   "vencedor_certo": true
+  }
+ ]
+}
