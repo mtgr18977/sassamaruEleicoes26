@@ -24,7 +24,7 @@ GLOBO_FIM = datetime(2026, 10, 23, 23, 30, tzinfo=BRT)
 GLOBO_BASE = (datetime(2026, 10, 20, tzinfo=BRT), datetime(2026, 10, 23, 18, tzinfo=BRT))     # "normal" da Globo: janelas de 6 h de 20/10 até a tarde do debate (sem debate, sem o efeito da Band)
 APURACAO_INI = datetime(2026, 10, 25, 18, tzinfo=BRT)      # fechamento das urnas e apuração do 2º turno (25/10); o TSE declarou a reeleição de Lula às 21h08
 APURACAO_FIM = datetime(2026, 10, 25, 23, 30, tzinfo=BRT)
-TEMAS_APURACAO = {"Fraude, urnas e auditoria": r"fraude|urna|auditor|voto impresso|recontagem|manipul|apuração|apuracao",
+TEMAS_APURACAO = {"Fraude, urnas e auditoria": r"fraude|\burnas?\b|auditor|voto impresso|recontagem|manipul",
                   "Moraes, TSE e STF": r"moraes|\btse\b|\bstf\b",
                   "Golpe, democracia e ditadura": r"golpe|democracia|ditadura",
                   "Vitória, reeleição e virada": r"reeleit|venceu|vit[óo]ria|ganhou|virada|\bganhamos\b",

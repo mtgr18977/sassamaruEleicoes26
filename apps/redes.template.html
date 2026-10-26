@@ -87,6 +87,16 @@
   <h3 class="titc">Do que se falou depois do resultado</h3>
   <p class="lead" id="lT3"></p>
   <div id="tTemasA"></div>
+  <details class="mais"><summary>Li os 70 posts de depois do resultado que citam fraude, urna ou auditoria</summary>
+  <table class="t txt"><thead><tr><th>O que o post faz</th><th>Posts</th><th>Exemplo</th></tr></thead><tbody>
+  <tr><td style="text-align:left"><b>Afirma que houve fraude na eleição</b></td><td>1</td><td>Um post em inglês diz que os estados onde Lula tem maioria "decidem" e chama isso de manipulação.</td></tr>
+  <tr><td style="text-align:left"><b>Nega ou ridiculariza a acusação</b></td><td>7</td><td>"Hilário o Flávio dando a entender que rolou fraude nas urnas sendo que essa presepada toda favoreceria ele."</td></tr>
+  <tr><td style="text-align:left"><b>Noticia ou comenta a contestação de Flávio e as respostas do STF e do TSE</b></td><td>11</td><td>"Ministros do STF e do TSE descartam anulação das eleições defendida por Flávio e reconhecem vitória de Lula."</td></tr>
+  <tr><td style="text-align:left"><b>Fala de manipulação por big techs, não da urna</b></td><td>3</td><td>Posts do lado de Lula comemorando ter vencido o algoritmo da Meta.</td></tr>
+  <tr><td style="text-align:left"><b>Só usa a palavra "urna" (voto, apuração, foto de Lula na urna)</b></td><td>48</td><td>"Pela projeção estatística Lula passa novamente por volta de 40% das urnas apuradas."</td></tr>
+  </tbody></table>
+  <p class="fonte">Classificação minha, lendo um por um os posts de 25/10 18h a 26/10 de manhã que casam com a busca por palavra, sem repetições. São 70 posts de uma amostra pequena e o critério tem margem de dúvida. O que ela mostra: <b>quase ninguém afirma fraude</b>; a maior parte dos posts com a palavra é cobertura da apuração, e a maior parte do que trata de fraude é notícia sobre a contestação de Flávio Bolsonaro, que, segundo a imprensa (InfoMoney, Folha de Minas), não reconheceu a vitória e disse que tentaria a anulação. Isso reflete o Bluesky, rede inclinada à esquerda, e não a conversa fora dela.</p>
+  </details>
   <p class="fonte">Busca por palavra no texto dos posts coletados (aproximação: "urna" também pega "urnas eletrônicas" e "apuração" também pega a contagem de votos em geral, sem ser contestação). Compara os posts de 25/10 18h em diante com os de 20/10 até aquela hora. Uma palavra ligada a fraude <b>não quer dizer que o post afirme fraude</b>: muitos a citam para negá-la.</p>
   </div><aside class="side" id="nota1a"></aside></section>
 
@@ -143,63 +153,6 @@
   <tr><td>Brandwatch (via Veja)</td><td>1/7–2/9</td><td>Não detalhadas</td><td>Volume de citações</td><td>Lula ≈ 8,7 milhões de citações</td></tr>
   </tbody></table>
   <p class="fonte">Valores como foram reportados por Terra/Aos Fatos, Gazeta do Paraná, ICL Notícias e Congresso em Foco; eu não acessei as checagens originais da Aos Fatos nem do Fato ou Fake. Com 12 e 7 declarações, a diferença entre os dois lados não é estatística: são contagens pequenas e cada agência escolhe o que checa. Veredito "sem comprovação" quer dizer que não há prova, não que a acusação seja falsa.</p>
-  <h3 class="titc">Os assuntos da checagem apareceram na conversa?</h3>
-  <p id="temaTxt"></p>
-  <div id="tTemas"></div>
-  <p class="fonte">Busca por palavra no texto dos posts coletados (aproximação: "casa", por exemplo, só conta em "casa de" ou "10 milhões"). Comparo a parcela dos posts depois do início do debate com a de 20/10 até antes dele. Cada janela é uma amostra dos posts mais recentes dela, então as parcelas valem para a amostra, não para a rede inteira.</p>
-  <div class="duas"><div><h3 class="titc">Hashtags antes da Globo (20 a 23/10)</h3><div id="tHashGA"></div></div><div><h3 class="titc">Hashtags na Globo e depois</h3><div id="tHashGD"></div></div></div>
-  </div><aside class="side" id="nota1g"></aside></section>
-
-  <section class="sec"><div>
-  <h2>3. O que se diz: a favor, contra ou neutro</h2>
-  <p id="posTxt"></p>
-  <div class="leg"><span><s class="fav"></s>favorável ao candidato citado</span><span><s class="neu"></s>neutro, notícia, piada ou sem posição</span><span><s class="des"></s>desfavorável</span></div>
-  <div id="barras"></div>
-  <div id="tPos"></div>
-  <p class="fonte">Amostra de posts que citam só um dos dois candidatos, sem link e sem texto repetido, no máximo 3 por autor por dia: 76 posts por grupo e período, sorteados ("Globo e depois" = posts de 23/10 21h20 a 24/10 de manhã, lidos em 24/10). Eu usei o Claude (uma IA) para ler e classificar cada post; não houve segundo anotador, então eu não medi a concordância entre pessoas. Intervalo de confiança de Wilson, 95%.</p>
-  </div><aside class="side" id="nota2"></aside></section>
-
-  <section class="sec"><div>
-  <h2>4. Por que não há um termômetro automático</h2>
-  <p id="modTxt"></p>
-  <div id="tMod"></div>
-  <p class="fonte">Acurácia em 3 classes (favorável, neutro, desfavorável) contra os 304 posts que classifiquei com o Claude. A linha de base não lê o texto: diz "favorável" para quem cita Lula e "desfavorável" para quem cita Flávio. Os rótulos vêm de uma só leitura, a do Claude, então isto mede a concordância dos modelos com ele, não uma verdade externa.</p>
-  </div><aside class="side" id="nota3"></aside></section>
-
-  <section class="sec"><div>
-  <h2>5. Hashtags e mensagens repetidas</h2>
-  <p id="hashTxt"></p>
-  <div class="duas"><div><h3 class="titc">Antes da Band</h3><div id="tHashA"></div></div><div><h3 class="titc">Band e depois (18 a 24/10)</h3><div id="tHashD"></div></div></div>
-  <p class="fonte">Posts que contêm cada hashtag (sem diferenciar maiúsculas nem acentos), em todos os posts coletados. Hashtags de campanha dos dois lados; eu não verifico quem as organiza.</p>
-  </div><aside class="side" id="nota4"></aside></section>
-
-  <section class="sec"><div>
-  <h2>6. As outras redes: por que eu não medi</h2>
-  <p>Eu tentei levar a mesma análise para o X, o Threads, o Instagram, o Facebook e o Mastodon. <b>Só o Bluesky deixa qualquer pessoa buscar posts e ver o total por janela, sem pagar e sem pedir autorização.</b> Nas outras, ou o acesso é pago (X) ou passa por ferramentas fechadas que devolvem resumos e amostras pequenas (Meta). A tabela mostra o que cada tentativa devolveu.</p>
-  <div id="tAcesso"></div>
-  <h3 class="titc">Posts que deu para analisar em cada rede</h3>
-  <div id="bAcesso"></div>
-  <p class="fonte">Para o X, o Threads, o Instagram e o Facebook, "0" quer dizer que não consegui contagem nem texto literal confiável, e eu não classifiquei os resumos. Eu fiz os testes (chamada ao X sem token, hashtags e busca do Mastodon, abertura dos links da Meta) em 19/10/2026. <b>Os preços e as regras de acesso vêm de blogs e reportagens de terceiros, podem ter mudado, e eu não os conferi na documentação oficial das empresas.</b> Eu não verifiquei de forma independente as respostas do Grok e da Meta AI, exceto três links da Meta, que abri e existem.</p>
-  <h3 class="titc">A Meta na campanha: o que eu apurei</h3>
-  <table class="t txt"><thead><tr><th>O quê</th><th>O que eu li</th><th>Fonte</th></tr></thead><tbody>
-  <tr><td style="text-align:left"><b>IA da Meta e imagens</b></td><td>A Meta AI recusava pedidos de imagem com o nome de Lula e gerava peças com o de Flávio Bolsonaro. O Metrópoles relatou 13 recusas em 14 pedidos de Lula. A Meta disse que restringiu temporariamente a recomendação e a geração de imagens de candidatos por causa das regras eleitorais.</td><td><a href="https://agenciabrasil.ebc.com.br/justica/noticia/2026-10/tse-determina-isonomia-apos-ia-da-meta-barrar-imagens-de-lula">Agência Brasil</a>, <a href="https://www.brasildefato.com.br/2026/10/14/ia-da-meta-bloqueia-criacao-de-imagens-com-nome-de-lula-e-libera-pecas-com-flavio/">Brasil de Fato</a>, <a href="https://www.metropoles.com/colunas/observatorio-das-eleicoes/ia-generativa-e-o-desequilibrio-no-tratamento-diferenciado-de-candidatos">Metrópoles</a></td></tr>
-  <tr><td style="text-align:left"><b>Decisão do TSE</b></td><td>Em 15/10, o ministro Marco Aurélio Bellizze determinou tratamento igual às duas candidaturas, com multa de R$ 500 mil por dia. Em exame preliminar, viu falha na ferramenta de controle de comandos e disse que não há elementos para concluir que foi deliberada.</td><td><a href="https://agenciabrasil.ebc.com.br/justica/noticia/2026-10/tse-determina-isonomia-apos-ia-da-meta-barrar-imagens-de-lula">Agência Brasil</a> (li a matéria)</td></tr>
-  <tr><td style="text-align:left"><b>Falhas técnicas e engajamento</b></td><td>Na manifestação de 12/10, a Meta reconheceu "falhas técnicas" em anúncios e publicações da campanha de Lula, sem dizer quais, e negou favorecer Flávio. A campanha de Lula aponta diferenças de engajamento e interrupções na contagem de visualizações. Em teste de 8/10 na busca do Instagram, os perfis de Lula e de Alckmin não apareceram entre os primeiros resultados e os de Flávio e de Jair Bolsonaro apareceram.</td><td><a href="https://www.cartacapital.com.br/politica/meta-admite-falhas-tecnicas-em-conteudos-de-lula-mas-nega-favorecer-flavio-bolsonaro/">CartaCapital</a> (li a matéria)</td></tr>
-  <tr><td style="text-align:left"><b>Outros relatos</b></td><td>Reportagens dizem que um relatório interno do PT mostra a página de Flávio com cerca de três vezes o engajamento da de Lula, e que mensagens internas de funcionários da Meta, publicadas pela Folha, reconheciam a desvantagem de Lula. <b>Eu li isso só em resumos de busca e não vi o relatório nem as mensagens.</b></td><td>Diário do Centro do Mundo, Revista Fórum, Bnews (resumos)</td></tr>
-  </tbody></table>
-  <p class="fonte">A Meta nega que seus sistemas tenham sido usados para prejudicar Lula ou beneficiar Flávio, e o TSE não encontrou, até aqui, prova de intenção. Eu <b>não</b> estou dizendo que foi proposital. O que importa para a medição é outra coisa: se distribuição, alcance e contagem de visualizações da Meta tiveram falhas reconhecidas pela própria empresa, o engajamento nessas redes é um termômetro ruim de opinião, e eu não tenho como auditar isso porque não tenho acesso aos dados. Parte dessas fontes tem posição política definida ou vem da própria campanha de Lula.</p>
-  </div><aside class="side"><h4>O que isso significa</h4><ul><li>Qualquer "termômetro das redes" que não mostre de onde vieram os posts, quantos foram lidos e como foram classificados <b>não dá para auditar</b>.</li><li>As redes maiores controlam o acesso por preço (X) ou por ferramentas fechadas (Meta). O que sobra de aberto é pequeno e tem viés próprio.</li></ul></aside></section>
-
-  <section class="sec"><div>
-  <h2>7. O que outros monitoramentos mostraram</h2>
-  <p>Não coletei X, Instagram nem Facebook. Para dar contexto, a tabela resume o que institutos e empresas de monitoramento divulgaram sobre essas redes. <b>Os métodos são outros e os números não se comparam com os do Bluesky nem entre si</b>: uns medem menções, outros engajamento, outros um índice próprio.</p>
-  <table class="t txt"><thead><tr><th>Quem</th><th>Período</th><th>Redes</th><th>O que mede</th><th>Resultado divulgado</th></tr></thead><tbody>
-  <tr><td style="text-align:left">Palver</td><td>15–16/8</td><td>WhatsApp público, Instagram, X</td><td>Parcela das menções</td><td>Lula: 63% no WhatsApp, 57% no Instagram, 41% no X. Flávio: entre 28% e 30% nas três</td></tr>
-  <tr><td>Bites (CNN Brasil)</td><td>jan–jun</td><td>X, Instagram, Facebook</td><td>Interações</td><td>Flávio liderou o engajamento em 21 das 26 semanas; Lula lidera em seguidores (38,9 milhões)</td></tr>
-  <tr><td>IR² Nexus</td><td>jan–jul</td><td>Instagram, X, Facebook, YouTube, TikTok</td><td>Índice de relevância (0–100)</td><td>Lula 79,8; Flávio 49,0</td></tr>
-  <tr><td>Brandwatch (via Veja)</td><td>1/7–2/9</td><td>Não detalhadas</td><td>Volume de citações</td><td>Lula ≈ 8,7 milhões de citações</td></tr>
-  </tbody></table>
-  <p class="fonte">Valores como foram reportados pela imprensa (Poder360, Money Times, ABC do ABC, Diário do Centro do Mundo, Revista Oeste); não acessei os relatórios originais. Todos são anteriores ao 2º turno e ao debate de 18/10. Mostrar mais menções ou engajamento não significa ter mais apoio: o que se mede é atenção, e atenção inclui crítica.</p>
   </div><aside class="side"><h4>Como ler</h4><ul><li>Bites e Nexus apontam Lula na frente em <b>presença</b> (seguidores, índice) e Flávio na frente em <b>engajamento</b>.</li><li>Atenção não é apoio: menção inclui crítica.</li></ul></aside></section>
 
   <section class="sec" id="s9"><div>

@@ -12,9 +12,9 @@ def test_intervalo_de_wilson():
 
 
 def test_agregado_tem_o_que_a_pagina_usa_e_nao_guarda_textos_nem_autores():
-    for k in ("volume", "debate_efeito", "globo", "corpus", "hashtags", "posicao", "avaliacao", "amostra_rotulada"):
+    for k in ("volume", "debate_efeito", "globo", "apuracao", "corpus", "hashtags", "posicao", "avaliacao", "amostra_rotulada"):
         assert k in D
-    assert len(D["posicao"]) == 6 and {p["periodo"] for p in D["posicao"]} >= {"antes do debate", "debate e depois", "Globo e depois"} and all(abs(sum(p[c]["pct"] for c in ("P", "N", "0")) - 100) < 0.2 for p in D["posicao"])
+    assert len(D["posicao"]) == 8 and {p["periodo"] for p in D["posicao"]} >= {"antes do debate", "debate e depois", "Globo e depois", "Resultado e depois"} and all(abs(sum(p[c]["pct"] for c in ("P", "N", "0")) - 100) < 0.2 for p in D["posicao"])
     g = D["globo"]
     assert set(g) >= {"efeito", "hashtags", "temas"} and any(h["h"] == "23/10 22h" and h["checagem_x"] > 5 for h in g["efeito"]["horas"])   # a palavra "checagem" disparou na hora do debate
     assert all(set(t) >= {"tema", "antes_pct", "depois_pct"} for t in g["temas"]["temas"])
