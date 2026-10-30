@@ -81,14 +81,24 @@
   </div><aside class="side" id="nota6"></aside></section>
 
   <section class="sec"><div>
-  <h2>7. Limites e como reproduzir</h2>
+  <h2>7. O comparecimento explica a virada?</h2>
+  <p id="compTxt"></p>
+  <div class="cv" style="height:400px"><canvas id="cComp"></canvas></div>
+  <div class="duas"><div><h3 class="titc">Municípios agrupados pelo aumento do comparecimento</h3><div id="tQuint"></div></div><div><h3 class="titc">Municípios agrupados pela força de Lula no 1º turno</h3><div id="tQuart"></div></div></div>
+  <div class="duas"><div><h3 class="titc">Onde o comparecimento mais subiu (≥ 50 mil eleitores)</h3><div id="tSubiu"></div></div><div><h3 class="titc">Onde mais caiu (≥ 50 mil eleitores)</h3><div id="tCaiu"></div></div></div>
+  <details><summary>Ver o comparecimento nas 27 UFs</summary><div id="tCompUF"></div></details>
+  <p class="fonte" id="compFonte"></p>
+  </div><aside class="side" id="nota8"></aside></section>
+
+  <section class="sec"><div>
+  <h2>8. Limites e como reproduzir</h2>
   <ul class="lista">
     <li>Seção não é eleitor. Uma seção reúne em média 250 pessoas de um mesmo bairro; quando eu digo que "a seção virou", eu digo que o <b>conjunto</b> dela deu mais votos a Lula no 2º turno do que a Flávio. Não sei quem trocou de voto.</li>
-    <li>A regressão ecológica supõe que a taxa de migração é a mesma em todas as seções da região. Os coeficientes dos "novos votantes" (quem não votou no 1º turno) são os menos confiáveis, porque o abstencionismo por seção não vem nesses arquivos.</li>
+    <li>A regressão ecológica supõe que a taxa de migração é a mesma em todas as seções da região. Os coeficientes dos "novos votantes" (quem não votou no 1º turno) são os menos confiáveis, porque o arquivo por seção não traz o eleitorado. Eu tentei estimar também o destino dos abstentos por município, com o eleitorado do arquivo de detalhe, e o resultado não é estável: a regressão atribui quase tudo a outros grupos, porque comparecimento, brancos e nulos e votos dos outros candidatos andam juntos. Por isso <b>não uso esse número</b>; na seção 7 eu uso só a correlação e um limite máximo.</li>
     <li>O arquivo é de 26/10 (12h07): o resultado dele coincide com o do portal. Se o TSE regerar, os números da página podem mudar na terceira casa.</li>
     <li>Eu deixei de fora o exterior (1.309 seções, cerca de 370 mil votos válidos).</li>
   </ul>
-  <p class="fonte">Para reproduzir: baixe <code>votacao_secao_2026_BR.zip</code> em <code>cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/</code>, ponha em <code>datasets/tse_raw/</code> e rode <code>python fetch_tse_secoes.py</code> e depois <code>python analisar_secoes_2026.py</code>. O <code>fetch_tse.py --anos 2026 --offline</code> atualiza o arquivo por município e zona.</p>
+  <p class="fonte">Para reproduzir: baixe <code>votacao_secao_2026_BR.zip</code> em <code>cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/</code>, ponha em <code>datasets/tse_raw/</code> e rode <code>python fetch_tse_secoes.py</code> e depois <code>python analisar_secoes_2026.py</code>; para o comparecimento, ponha também <code>detalhe_votacao_munzona_2026.zip</code> em <code>datasets/tse_raw/</code> e rode <code>python analisar_comparecimento_2026.py</code>. O <code>fetch_tse.py --anos 2026 --offline</code> atualiza o arquivo por município e zona.</p>
   </div><aside class="side" id="nota7"></aside></section>
   </div>
 </main>
@@ -191,6 +201,26 @@ function v22() {
   tab("tQueda", ["Cidade", "Votos", "Lula 2022 → 2026 (%)", "Variação (p.p.)"], V.maiores_quedas.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), `${f1(c.l22)} → ${f1(c.l2)}`, sgn(c.l2 - c.l22)]));
 }
 
+
+function comparecimento() {
+  const K = D.comparecimento, b = K.brasil, m = K.municipio;
+  $("compTxt").innerHTML = `O comparecimento subiu de <b>${f1(b.t1)}%</b> para <b>${f1(b.t2)}%</b> do eleitorado (${M(b.extra)} milhões de votantes a mais, sem o exterior), e subiu em ${pc(m.subiu)} dos ${pc(m.n)} municípios. Se fosse isso que explicasse a virada, os municípios em que o comparecimento mais cresceu deveriam ter dado mais votos a Lula. <b>Não deram:</b> a correlação entre o aumento do comparecimento e o deslocamento de Lula é de apenas <b>${f2(m.corr_pond)}</b> (ponderada pelo eleitorado), e a inclinação é de ${f2(m.inclinacao)} p.p. de Lula para cada p.p. a mais de comparecimento. Quem mais pesa no deslocamento é o ponto de partida: onde Lula tinha mais votos no 1º turno ele cresceu menos (correlação de ${f2(m.corr_l1_dl)}; em parte é o teto: perto de 100% não há como crescer). E há um <b>limite máximo</b>: mesmo que todos os ${M(b.extra)} milhões de votantes a mais tivessem votado em Lula, isso explicaria no máximo ${f1(b.parte_do_ganho_de_lula_no_limite)}% do ganho dele (${M(b.dl_votos)} milhões), e ele ainda teria <b>${f1(b.l2_sem_extra_tudo_lula)}%</b> de Lula/(Lula+Flávio) com o comparecimento do 1º turno.`;
+  const pts = K.dispersao.map(([x, y, v, uf]) => ({ x, y, v, uf }));
+  chart("cComp", { type: "scatter", data: { datasets: [
+      { label: "Municípios (≥ 20 mil eleitores)", data: pts, backgroundColor: css("--pt") + "66", pointRadius: pts.map(p => Math.max(1.5, Math.min(9, Math.sqrt(p.v) / 60))) },
+      { label: "Reta ajustada", data: [{ x: -8, y: m.constante - 8 * m.inclinacao }, { x: 8, y: m.constante + 8 * m.inclinacao }], type: "line", borderColor: css("--ink"), borderWidth: 1.5, pointRadius: 0 }] },
+    options: { parsing: false, scales: { x: eixo({ min: -8, max: 8, title: { display: true, text: "variação do comparecimento (p.p. do eleitorado)", color: css("--ink2") }, ticks: { color: css("--ink2") } }),
+        y: eixo({ min: -2, max: 8, title: { display: true, text: "deslocamento de Lula (p.p.)", color: css("--ink2") }, ticks: { color: css("--ink2") } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => i.raw.uf ? `${i.raw.uf}: comparecimento ${sgn(i.parsed.x)} p.p., Lula ${sgn(i.parsed.y)} p.p. (${pc(i.raw.v)} eleitores)` : i.dataset.label } } } } });
+  tab("tQuint", ["Aumento do comparecimento (p.p.)", "Municípios", "Lula no 1º turno (%)", "Deslocamento de Lula (p.p.)"], m.quintis.map(q => [sgn(q.dt), pc(q.n), f1(q.l1), sgn(q.dl)]));
+  tab("tQuart", ["Grupo", "Municípios", "Lula no 1º turno (%)", "Aumento do comparecimento (p.p.)", "Deslocamento de Lula (p.p.)"], m.quartis_lula.map(q => [q.grupo, pc(q.n), f1(q.l1), sgn(q.dt), sgn(q.dl)]));
+  const lin = (L) => L.map(c => [`${c.municipio} (${c.uf})`, pc(c.aptos), `${f1(c.t1)} → ${f1(c.t2)}`, sgn(c.dl)]);
+  tab("tSubiu", ["Cidade", "Eleitores", "Comparecimento (%)", "Lula desloc. (p.p.)"], lin(K.extremos.mais_subiu));
+  tab("tCaiu", ["Cidade", "Eleitores", "Comparecimento (%)", "Lula desloc. (p.p.)"], lin(K.extremos.mais_caiu));
+  tab("tCompUF", ["UF", "Comparecimento 1º → 2º (%)", "Variação (p.p.)", "Desloc. de Lula (p.p.)", "Votantes a mais", "Ganho de Lula", "Ganho de Flávio"], K.ufs.map(u => [u.uf, `${f1(u.t1)} → ${f1(u.t2)}`, sgn(u.dt), sgn(u.dl), pc(u.dc), pc(u.dL), pc(u.dF)]));
+  $("compFonte").innerHTML = `Comparecimento = comparecidos / aptos, por município, a partir do arquivo de detalhe por zona do TSE (<code>detalhe_votacao_munzona_2026</code>; soma e totais batem com o oficial: ${pc(b.comp2)} comparecidos no 2º turno, sem o exterior). Correlação nas 27 UFs: ${f2(K.uf_corr.corr_pond)} (ponderada) e ${f2(K.uf_corr.corr)} (simples): nas UFs a relação também é fraca. Com ${pc(m.n)} municípios, correlação baixa não quer dizer que o comparecimento não importou em nenhum lugar: quer dizer que ele <b>não organiza a geografia da virada</b>. O que esse teste <b>não</b> diz é se os institutos erraram por supor um comparecimento diferente do real; para isso eu precisaria do comparecimento que cada instituto usou.`;
+}
+
 function notas() {
   nota("nota1", [`<b>${P(T.secao.FL.n)}</b> seções, <b>${T.municipio.FL.n}</b> municípios e <b>1 UF</b> (MG) viraram para Lula.`, `Flávio virou em ${P(T.secao.LF.n)} seções e em 1 município pequeno.`, `A vantagem nas seções viradas foi apertada.`]);
   nota("nota2", [`Lula ficou com <b>${f1(100 * B.dl / (B.dl + B.df))}%</b> do ganho de votos.`, `Nordeste e Norte: o bolo foi para Lula.`, `Sul e Centro-Oeste: parelho ou para Flávio.`]);
@@ -198,9 +228,10 @@ function notas() {
   nota("nota4", [`O Rio de Janeiro foi a maior cidade virada.`, `Brasília, BH, Curitiba, Manaus e Goiânia: Flávio se manteve.`, `Maiores vantagens: SP e Salvador (Lula), Curitiba e Goiânia (Flávio).`]);
   nota("nota5", [`Lula subiu em quase todos os municípios.`, `As seções continuam em dois blocos.`]);
   nota("nota6", [`Vs 2022: Lula cresceu nas grandes cidades e caiu nas pequenas.`, `${pc(D.vs2022.menos_lula)} municípios tiveram menos Lula que em 2022.`]);
+  nota("nota8", [`Comparecimento: <b>${f1(D.comparecimento.brasil.t1)}% → ${f1(D.comparecimento.brasil.t2)}%</b>.`, `Correlação com o deslocamento de Lula: <b>${f2(D.comparecimento.municipio.corr_pond)}</b>.`, `No limite, explicaria no máximo ${f1(D.comparecimento.brasil.parte_do_ganho_de_lula_no_limite)}% do ganho de Lula.`]);
   nota("nota7", [`Oficial: TSE, 499 mil seções.`, `Seção não é eleitor: é indício.`]);
 }
-function tudo() { kpis(); transicoes(); como(); ufs(); cidades(); dispersao(); v22(); notas(); }
+function tudo() { kpis(); transicoes(); como(); ufs(); cidades(); dispersao(); v22(); comparecimento(); notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 tudo();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);

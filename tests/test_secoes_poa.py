@@ -49,3 +49,12 @@ def test_paginas_novas_existem_e_estao_no_menu():
     import nav
     for h in ("onde-virou.html", "portoalegre.html"):
         assert h in [a[0] for a in nav.ABAS] and (RAIZ / h).exists()
+
+
+def test_comparecimento_fecha_com_o_oficial_e_nao_organiza_a_virada():
+    K = json.load(open(RAIZ / "modelos/comparecimento-2026.json", encoding="utf-8"))
+    b, m = K["brasil"], K["municipio"]
+    assert b["comp2"] == S["brasil"]["comp2"] and b["comp1"] == S["brasil"]["comp1"] and b["comp2"] + 0 == 127_854_631
+    assert b["extra"] == b["comp2"] - b["comp1"] and b["dl_votos"] == S["brasil"]["dl"]
+    assert abs(m["corr_pond"]) < 0.3 and b["l2_sem_extra_tudo_lula"] > 50 and b["parte_do_ganho_de_lula_no_limite"] < 30
+    assert len(K["ufs"]) == 27 and m["subiu"] + m["caiu"] <= m["n"]
