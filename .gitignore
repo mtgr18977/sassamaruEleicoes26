@@ -228,3 +228,4 @@ datasets/candidatas.csv
 
 # cache local de posts do Bluesky (so agregados vao para o git)
 datasets/redes/bluesky-bruto.jsonl
+datasets/tse-presidente-secao-2026.csv.gz

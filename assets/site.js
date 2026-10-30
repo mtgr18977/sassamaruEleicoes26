@@ -37,7 +37,5 @@ function aplicarTema(tm) {
 let temaEscolhido = temaAtual();   // em memória: funciona mesmo se o localStorage estiver bloqueado
 function alternarTema() { temaEscolhido = TEMAS[(TEMAS.indexOf(temaEscolhido) + 1) % TEMAS.length]; try { localStorage.setItem("tema", temaEscolhido); } catch (e) {} aplicarTema(temaEscolhido); tudo(); }
 
-// o menu rola na horizontal no celular: deixa a aba atual visível
-(function () { const t = document.querySelector(".tabs"), a = t && t.querySelector("[aria-current]"); if (a) t.scrollLeft = Math.max(0, a.offsetLeft - t.clientWidth / 2 + a.offsetWidth / 2); })();
 function nota(id, itens) { $(id).innerHTML = `<h4>Em resumo</h4><ul>${itens.map(i => `<li>${i}</li>`).join("")}</ul>`; }
 const sg = (x) => (x > 0 ? "+" : "−") + f1(Math.abs(x));

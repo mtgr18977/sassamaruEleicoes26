@@ -10,7 +10,7 @@ A projeção de 1/10 não é mais sobrescrita no repositório: está na tag proj
 import subprocess
 import sys
 
-passos = ["pesquisas.py", "montecarlo.py", "rs_modelo.py", "projecao.py", "gerar_pagina_lula.py", "avaliar_2turno.py", "gerar_pagina_previsao.py", "gerar_pagina_analise.py", "abstencao_2t.py", "gerar_pagina_segundo_turno.py", "gerar_pagina_rs.py", "gerar_pagina_bancada.py", "gerar_paginas_analise_rs.py", "gerar_pagina_senado.py", "gerar_pagina_modelo.py", "gerar_pagina_redes.py", "gerar_pagina_resultado.py", "nav.py", "sensibilidade_2t.py"]
+passos = ["pesquisas.py", "montecarlo.py", "rs_modelo.py", "projecao.py", "gerar_pagina_lula.py", "avaliar_2turno.py", "gerar_pagina_previsao.py", "gerar_pagina_analise.py", "abstencao_2t.py", "gerar_pagina_segundo_turno.py", "gerar_pagina_rs.py", "gerar_pagina_bancada.py", "gerar_paginas_analise_rs.py", "gerar_pagina_senado.py", "gerar_pagina_modelo.py", "gerar_pagina_redes.py", "gerar_pagina_onde_virou.py", "gerar_pagina_poa.py", "gerar_pagina_resultado.py", "nav.py", "sensibilidade_2t.py"]
 for p in passos:
     print(f"\n>>> python {p}")
     subprocess.run([sys.executable, p], check=True, stdout=subprocess.DEVNULL if p in ("montecarlo.py", "rs_modelo.py") else None)

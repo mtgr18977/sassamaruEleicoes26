@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onde virou · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+<style>
+  .duas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px } @media (max-width:760px) { .duas { grid-template-columns:minmax(0,1fr) } }
+  .titc { margin:18px 0 2px; font-size:.95rem }
+  .txt th, .txt td { text-align:left; vertical-align:top }
+  table.t td.neg { color:var(--pt) } table.t td.pos { color:var(--anti) }
+  .lista { margin:8px 0; padding-left:20px } .lista li { margin:6px 0 }
+  .lula { color:var(--pt); font-weight:600 } .flavio { color:var(--anti); font-weight:600 }
+  details { margin:8px 0 } details > summary { cursor:pointer; font-weight:600; padding:6px 0 }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
+  <div class="topo"><div><h1>Onde Lula virou e onde Flávio se manteve</h1>
+  <p class="sub">O 1º turno mostrou Flávio na frente; o 2º, Lula. Eu abro a conta <b>seção por seção</b> (os boletins de urna), e também por zona, município e UF, para ver onde a virada aconteceu, quanto dela veio de cada candidato e onde cada um teve a maior vantagem.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="an">
+  <div class="aviso"><b>Os dados são os oficiais do TSE por seção</b> (arquivo de dados abertos <code>votacao_secao_2026_BR</code>, gerado em 26/10/2026; 499 mil seções). Os totais batem com o resultado oficial: Lula 64.256.232 e Flávio 59.826.041 no 2º turno. Aqui eu deixo de fora o voto no exterior, que é de outra natureza. Em todo lugar, "% de Lula" é <b>Lula/(Lula+Flávio)</b>, nos dois turnos, para poder comparar (no 1º turno os outros candidatos ficam de fora da conta).</div>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="sec"><div>
+  <h2>1. Quem virou, em quatro escalas</h2>
+  <p id="transTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cTrans"></canvas></div>
+  <div id="tTrans"></div>
+  <p class="fonte">"Lula virou" = Flávio tinha mais votos no 1º turno naquela unidade e Lula teve mais no 2º; "Flávio virou" é o contrário. As barras mostram a parcela dos votos válidos do 2º turno em cada caso. Quanto maior a unidade, mais ela esconde: uma UF "mantida" pode ter centenas de municípios virados, e um município "mantido" pode ter seções viradas.</p>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div>
+  <h2>2. De onde vieram os votos da virada</h2>
+  <p id="comoTxt"></p>
+  <div class="cv" style="height:320px"><canvas id="cRegiao"></canvas></div>
+  <div id="tRegiao"></div>
+  <p class="fonte">Ganho = votos de cada candidato no 2º turno − no 1º. A parcela de Lula é o ganho dele dividido pela soma dos ganhos dos dois. Acima de 100% quer dizer que Flávio perdeu votos (com comparecimento menor ou com votos que o 1º turno lhe deu e o 2º não repetiu). A coluna "outros candidatos" vem de uma <b>regressão ecológica</b> por seção: para cada seção, os votos de Lula e de Flávio no 2º turno contra os votos de cada grupo no 1º. É indício, não prova: ela não vê o eleitor, vê seções, e pode atribuir a um grupo o que é de outro que mora no mesmo lugar.</p>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div>
+  <h2>3. Estado por estado</h2>
+  <p id="ufTxt"></p>
+  <div class="cv" style="height:560px"><canvas id="cUF"></canvas></div>
+  <details><summary>Ver as 27 UFs (seções e municípios virados)</summary><div id="tUF"></div></details>
+  <p class="fonte">Deslocamento = Lula/(Lula+Flávio) no 2º turno − no 1º, em p.p. "Parte do ganho" = ganho de Lula / (ganho de Lula + ganho de Flávio); "–" quer dizer que a soma dos ganhos foi negativa: Flávio perdeu mais votos do que Lula ganhou (RR, AC e AP). Cores do gráfico: vermelho forte = UF em que Lula virou (MG); vermelho claro = Lula já estava na frente no 1º turno; azul = Flávio na frente nos dois turnos.</p>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div>
+  <h2>4. As cidades</h2>
+  <p id="cidTxt"></p>
+  <h3 class="titc">Onde Lula virou</h3>
+  <div id="tVirouL"></div>
+  <p class="fonte" id="virouF"></p>
+  <div class="duas"><div><h3 class="titc">Onde Flávio se manteve (maiores)</h3><div id="tManteveF"></div></div><div><h3 class="titc">Onde Lula se manteve (maiores)</h3><div id="tManteveL"></div></div></div>
+  <div class="duas"><div><h3 class="titc">Maior vantagem de Lula, em votos</h3><div id="tVantL"></div></div><div><h3 class="titc">Maior vantagem de Flávio, em votos</h3><div id="tVantF"></div></div></div>
+  <div class="duas"><div><h3 class="titc">Maior % de Lula (≥ 100 mil votos)</h3><div id="tPctL"></div></div><div><h3 class="titc">Maior % de Flávio (≥ 100 mil votos)</h3><div id="tPctF"></div></div></div>
+  <div class="duas"><div><h3 class="titc">Onde Lula mais cresceu do 1º ao 2º turno (p.p.)</h3><div id="tGanhoL"></div></div><div><h3 class="titc">Onde Lula menos cresceu (p.p.)</h3><div id="tGanhoM"></div></div></div>
+  <details><summary>Ver as 27 capitais</summary><div id="tCap"></div></details>
+  <p class="fonte">Cidades com 100 mil votos válidos ou mais no 2º turno, salvo nas listas "maiores", que usam todos os municípios. Vantagem em votos = Lula − Flávio no 2º turno (negativa = Flávio na frente).</p>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div>
+  <h2>5. Os 5.570 municípios, e as seções por dentro</h2>
+  <p id="dispTxt"></p>
+  <div class="cv" style="height:430px"><canvas id="cDisp"></canvas></div>
+  <h3 class="titc">As seções: a eleição ficou mais dividida ou menos?</h3>
+  <div class="cv" style="height:300px"><canvas id="cHist"></canvas></div>
+  <p class="fonte" id="histTxt"></p>
+  </div><aside class="side" id="nota5"></aside></section>
+
+  <section class="sec"><div>
+  <h2>6. Contra 2022: Lula cresceu nas grandes cidades e caiu nas pequenas</h2>
+  <p id="v22Txt"></p>
+  <div class="duas"><div><h3 class="titc">Por porte do município</h3><div id="tPorte"></div></div><div><h3 class="titc">Por região</h3><div id="tReg22"></div></div></div>
+  <div class="duas"><div><h3 class="titc">Maiores altas (≥ 100 mil votos)</h3><div id="tAlta"></div></div><div><h3 class="titc">Maiores quedas (≥ 100 mil votos)</h3><div id="tQueda"></div></div></div>
+  <p class="fonte">Diferença = % de Lula no 2º turno de 2026 − % de Lula no 2º turno de 2022 no mesmo município (Lula/(Lula+Bolsonaro) em 2022). Média ponderada pelos votos de 2026. O porte é o número de votos válidos do 2º turno de 2026. Fonte de 2022: <code>datasets/tse-presidente-municipio.csv</code>.</p>
+  </div><aside class="side" id="nota6"></aside></section>
+
+  <section class="sec"><div>
+  <h2>7. Limites e como reproduzir</h2>
+  <ul class="lista">
+    <li>Seção não é eleitor. Uma seção reúne em média 250 pessoas de um mesmo bairro; quando eu digo que "a seção virou", eu digo que o <b>conjunto</b> dela deu mais votos a Lula no 2º turno do que a Flávio. Não sei quem trocou de voto.</li>
+    <li>A regressão ecológica supõe que a taxa de migração é a mesma em todas as seções da região. Os coeficientes dos "novos votantes" (quem não votou no 1º turno) são os menos confiáveis, porque o abstencionismo por seção não vem nesses arquivos.</li>
+    <li>O arquivo é de 26/10 (12h07): o resultado dele coincide com o do portal. Se o TSE regerar, os números da página podem mudar na terceira casa.</li>
+    <li>Eu deixei de fora o exterior (1.309 seções, cerca de 370 mil votos válidos).</li>
+  </ul>
+  <p class="fonte">Para reproduzir: baixe <code>votacao_secao_2026_BR.zip</code> em <code>cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/</code>, ponha em <code>datasets/tse_raw/</code> e rode <code>python fetch_tse_secoes.py</code> e depois <code>python analisar_secoes_2026.py</code>. O <code>fetch_tse.py --anos 2026 --offline</code> atualiza o arquivo por município e zona.</p>
+  </div><aside class="side" id="nota7"></aside></section>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = __DATA__;
+const B = D.brasil, T = D.transicao, M = (x) => (x / 1e6).toFixed(2).replace(".", ","), P = (x) => pc(Math.round(x));
+const sgn = (x) => (x > 0 ? "+" : x < 0 ? "−" : "") + f1(Math.abs(x));
+const pct = (a, b) => f1(100 * a / b);
+const cel = (txt, v) => `<span class="${v < 0 ? "neg" : "pos"}">${txt}</span>`;
+const nomeT = { FL: "Lula virou", LF: "Flávio virou", LL: "Lula manteve", FF: "Flávio manteve" };
+
+function kpis() {
+  const s = T.secao, m = T.municipio;
+  $("kpis").innerHTML = `<div class="kpi l"><span>Seções em que Lula virou</span><b>${P(s.FL.n)}</b><small>${pct(s.FL.n, B.secoes)}% das seções · ${M(s.FL.votos_2t)} milhões de votos</small></div>
+    <div class="kpi f"><span>Seções em que Flávio virou</span><b>${P(s.LF.n)}</b><small>${pct(s.LF.n, B.secoes)}% das seções · ${M(s.LF.votos_2t)} milhão</small></div>
+    <div class="kpi l"><span>Municípios em que Lula virou</span><b>${m.FL.n}</b><small>Flávio virou em ${m.LF.n}: Uirapuru (GO), 2,2 mil votos</small></div>
+    <div class="kpi o"><span>Lula/(Lula+Flávio)</span><b>${f1(B.l1)}% → ${f1(B.l2)}%</b><small>1º → 2º turno, sem o exterior</small></div>`;
+}
+
+function transicoes() {
+  const e = ["secao", "zona", "municipio", "uf"], nome = { secao: "Seções", zona: "Zonas", municipio: "Municípios", uf: "UFs" }, ord = ["LL", "FL", "LF", "FF"];
+  const cor = { LL: css("--pt"), FL: css("--pt") + "88", LF: css("--anti") + "88", FF: css("--anti") };
+  const tot = (k) => ord.reduce((a, c) => a + T[k][c].votos_2t, 0);
+  $("transTxt").innerHTML = `Em <b>${P(T.secao.FL.n)} seções</b> (${pct(T.secao.FL.n, B.secoes)}%) Flávio tinha mais votos no 1º turno e Lula teve mais no 2º; só <b>${P(T.secao.LF.n)}</b> foram no sentido contrário. Essas seções viradas somam <b>${M(T.secao.FL.votos_2t)} milhões</b> de votos válidos, e dentro delas a vantagem foi apertada: Lula ${pct(T.secao.FL.lula, T.secao.FL.votos_2t)}% × Flávio ${pct(T.secao.FL.flavio, T.secao.FL.votos_2t)}%. No 1º turno Lula ficou na frente em ${T.uf.LL.n + T.uf.LF.n} UFs e no 2º, em ${T.uf.LL.n + T.uf.FL.n}: <b>Minas Gerais</b> é a única UF que virou, e com ela vem o município com mais votos de todos os que viraram, o <b>Rio de Janeiro</b>.`;
+  chart("cTrans", { type: "bar", data: { labels: e.map(k => nome[k]), datasets: ord.map(c => ({ label: nomeT[c], data: e.map(k => 100 * T[k][c].votos_2t / tot(k)), backgroundColor: cor[c], borderWidth: 0 })) },
+    options: { indexAxis: "y", scales: { x: eixo({ stacked: true, max: 100, ticks: { color: css("--ink2"), callback: v => v + "%" } }), y: eixo({ stacked: true, grid: { display: false } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${f1(i.parsed.x)}% dos votos válidos` } } } } });
+  tab("tTrans", ["Escala", ...ord.map(c => nomeT[c] + " (nº)"), "Lula virou: votos válidos do 2º turno"], e.map(k => [nome[k], ...ord.map(c => P(T[k][c].n)), P(T[k].FL.votos_2t)]));
+}
+
+function como() {
+  const R = D.regioes, C = D.captura_br, par = (a, b) => 100 * a / (a + b);
+  $("comoTxt").innerHTML = `Entre os turnos Lula ganhou <b>${M(B.dl)} milhões</b> de votos e Flávio <b>${M(B.df)} milhões</b>: Lula ficou com <b>${f1(par(B.dl, B.df))}%</b> do ganho. O "bolo" disponível eram os ${M(B.outros_1t)} milhões de votos de outros candidatos no 1º turno, mais a queda de brancos e nulos (${M(B.bn1)} para ${M(B.bn2)} milhões) e o comparecimento maior. A regressão por seção diz que, <b>no Brasil</b>, cerca de ${Math.round(100 * C.outros_para_lula)}% dos votos de outros candidatos foram para Lula e ${Math.round(100 * C.outros_para_flavio)}% para Flávio: um empate. <b>A diferença está na região:</b> no Nordeste e no Norte a maior parte foi para Lula (${Math.round(100 * R[1].outros_para_lula)}% e ${Math.round(100 * R[0].outros_para_lula)}%, contra ${Math.round(100 * R[1].outros_para_flavio)}% e ${Math.round(100 * R[0].outros_para_flavio)}% para Flávio); no Sul e no Centro-Oeste o bolo se dividiu a favor de Flávio ou ficou parelho.`;
+  chart("cRegiao", { type: "bar", data: { labels: R.map(r => r.regiao), datasets: [
+      { label: "Ganho de Lula (milhões de votos)", data: R.map(r => r.dl / 1e6), backgroundColor: css("--pt"), borderRadius: 3 },
+      { label: "Ganho de Flávio (milhões de votos)", data: R.map(r => r.df / 1e6), backgroundColor: css("--anti"), borderRadius: 3 }] },
+    options: { scales: { x: eixo({ grid: { display: false } }), y: eixo({ ticks: { color: css("--ink2"), callback: v => v + " mi" } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${f2(i.parsed.y)}` } } } } });
+  tab("tRegiao", ["Região", "Lula 1º → 2º (%)", "Ganho de Lula", "Ganho de Flávio", "Parte do ganho que ficou com Lula (%)", "Outros candidatos do 1º turno", "→ Lula (%)", "→ Flávio (%)"],
+    R.map(r => [r.regiao, `${f1(r.l1)} → ${f1(r.l2)}`, P(r.dl), P(r.df), f1(par(r.dl, r.df)), P(r.outros_1t), Math.round(100 * r.outros_para_lula), Math.round(100 * r.outros_para_flavio)]));
+}
+
+function ufs() {
+  const U = D.ufs.slice().sort((a, b) => b.dpp - a.dpp), lider = U[0], pior = U[U.length - 1], ac = D.ufs.filter(u => u.df < 0).map(u => u.uf).sort();
+  $("ufTxt").innerHTML = `Lula cresceu em <b>todas as 27 UFs</b> do 1º ao 2º turno, de ${f1(pior.dpp)} p.p. (${pior.uf}) a ${f1(lider.dpp)} p.p. (${lider.uf}). O maior salto foi no <b>Rio de Janeiro</b>, em <b>São Paulo</b> e em <b>Goiás</b> (o bolo de outros candidatos do 1º turno era grande nos três); o menor, no <b>Piauí</b> e na <b>Bahia</b>, onde ele já estava em torno de 70% (o teto é baixo). Em <b>${ac.join(", ")}</b> <b>Flávio teve menos votos no 2º turno do que no 1º</b> (a abstenção ou os votos que ele tinha e o 2º turno não repetiu); Lula ganhou votos em todas as UFs menos em ${D.ufs.filter(u => u.dl < 0).length ? D.ufs.filter(u => u.dl < 0).map(u => u.uf).join(", ") : "nenhuma"}.`;
+  chart("cUF", { type: "bar", data: { labels: U.map(u => u.uf), datasets: [{ label: "Deslocamento de Lula (p.p.)", data: U.map(u => u.dpp), backgroundColor: U.map(u => u.w1 === "F" && u.w2 === "L" ? css("--pt") : u.w2 === "L" ? css("--pt") + "99" : css("--anti")), borderRadius: 3 }] },
+    options: { indexAxis: "y", plugins: { legend: { display: false }, tooltip: { callbacks: { label: (i) => { const u = U[i.dataIndex]; return `${u.uf}: ${f1(u.l1)}% → ${f1(u.l2)}% (${sgn(u.dpp)} p.p.)`; } } } },
+      scales: { x: eixo({ ticks: { color: css("--ink2"), callback: v => v + " p.p." } }), y: eixo({ grid: { display: false } }) } } });
+  tab("tUF", ["UF", "Lula 1º → 2º (%)", "Desloc. (p.p.)", "Ganho de Lula", "Ganho de Flávio", "Parte do ganho de Lula (%)", "Seções Lula virou", "Seções Flávio virou", "Municípios Lula virou", "Municípios onde Lula ganhou"],
+    D.ufs.slice().sort((a, b) => b.dpp - a.dpp).map(u => [u.uf, `${f1(u.l1)} → ${f1(u.l2)}`, sgn(u.dpp), P(u.dl), P(u.df), u.cap == null ? "–" : f1(u.cap), `${P(u.sec_virou_lula)} (${pct(u.sec_virou_lula, u.secoes)}%)`, P(u.sec_virou_flavio), u.mun_virou_lula, `${u.mun_lula} de ${u.mun}`]));
+}
+
+const linhas = (L, extra) => L.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), `${f1(c.l1)} → ${f1(c.l2)}`, ...extra(c)]);
+function cidades() {
+  const C = D.cidades;
+  $("cidTxt").innerHTML = `Das ${T.municipio.FL.n} cidades em que Lula virou, as maiores são o <b>Rio de Janeiro</b> (a de longe maior: Lula ganhou ${P(C.lula_virou[0].dm)} votos de margem entre os turnos), <b>Osasco</b>, <b>Ananindeua</b>, <b>Macapá</b> e <b>São Vicente</b>. Entre as que Flávio manteve, as maiores são <b>Brasília</b>, <b>Belo Horizonte</b>, <b>Curitiba</b>, <b>Manaus</b> e <b>Goiânia</b>. Belo Horizonte ficou a 0,8 p.p. de virar e Guarulhos, a 1,1.`;
+  tab("tVirouL", ["Cidade", "Votos válidos", "Lula 1º → 2º (%)", "Margem ganha por Lula (votos)", "Ganho de Lula", "Ganho de Flávio"], linhas(C.lula_virou, c => [P(c.dm), P(c.dl), P(c.df)]));
+  $("virouF").innerHTML = `Flávio virou em ${T.municipio.LF.n} município: ${C.flavio_virou.map(c => `<b>${c.municipio} (${c.uf})</b>, ${P(c.votos)} votos válidos, Lula ${f1(c.l1)}% → ${f1(c.l2)}%`).join("; ")}. Em ${T.zona.LF.n} zona e ${T.secao.LF.n} seções ele também virou, mas nenhuma é grande.`;
+  tab("tManteveF", ["Cidade", "Votos válidos", "Lula 1º → 2º (%)"], linhas(C.flavio_manteve, () => []));
+  tab("tManteveL", ["Cidade", "Votos válidos", "Lula 1º → 2º (%)"], linhas(C.lula_manteve, () => []));
+  tab("tVantL", ["Cidade", "Votos válidos", "Lula 2º turno (%)", "Vantagem (votos)"], C.maior_vantagem_lula.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), f1(c.l2), P(2 * c.l2 / 100 * c.votos - c.votos)]));
+  tab("tVantF", ["Cidade", "Votos válidos", "Lula 2º turno (%)", "Vantagem de Flávio (votos)"], C.maior_vantagem_flavio.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), f1(c.l2), P(c.votos - 2 * c.l2 / 100 * c.votos)]));
+  tab("tPctL", ["Cidade", "Votos válidos", "Lula 2º turno (%)"], C.maior_vantagem_lula_pct.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), f1(c.l2)]));
+  tab("tPctF", ["Cidade", "Votos válidos", "Flávio 2º turno (%)"], C.maior_vantagem_flavio_pct.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), f1(100 - c.l2)]));
+  tab("tGanhoL", ["Cidade", "Votos válidos", "Lula 1º → 2º (%)", "Desloc. (p.p.)"], C.maior_ganho_lula_pp.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), `${f1(c.l1)} → ${f1(c.l2)}`, sgn(c.dpp)]));
+  tab("tGanhoM", ["Cidade", "Votos válidos", "Lula 1º → 2º (%)", "Desloc. (p.p.)"], C.menor_ganho_lula_pp.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), `${f1(c.l1)} → ${f1(c.l2)}`, sgn(c.dpp)]));
+  tab("tCap", ["Capital", "Votos válidos", "Lula 1º → 2º (%)", "Quem ganhou no 2º turno"], C.capitais.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), `${f1(c.l1)} → ${f1(c.l2)}`, c.w2 === "L" ? `<span class="lula">Lula${c.w1 === "F" ? " (virou)" : ""}</span>` : `<span class="flavio">Flávio${c.w1 === "L" ? " (virou)" : ""}</span>`]));
+}
+
+function dispersao() {
+  const pts = D.dispersao, g = { LL: [], FL: [], FF: [], LF: [] };
+  pts.forEach(([x, y, v, uf]) => g[(x > 50 ? "L" : "F") + (y > 50 ? "L" : "F")].push({ x, y, v, uf }));
+  const cor = { LL: css("--pt"), FL: css("--s4"), LF: css("--s7"), FF: css("--anti") };
+  const dl = pts.map(p => p[1] - p[0]).sort((a, b) => a - b), q = (f) => dl[Math.floor(f * (dl.length - 1))], acima = dl.filter(x => x > 0).length;
+  $("dispTxt").innerHTML = `Cada ponto é um município com 5 mil votos válidos ou mais (${pc(pts.length)} de ${pc(B.municipios)}). Em <b>${pct(acima, pts.length)}%</b> deles o ponto fica <b>acima da diagonal</b>: Lula subiu. O deslocamento mediano foi de ${sgn(q(.5))} p.p., e metade dos municípios ficou entre ${sgn(q(.25))} e ${sgn(q(.75))}. Os pontos que cruzam a linha de 50% de baixo para cima são os que viraram para Lula (${T.municipio.FL.n} no total, contando os menores de 5 mil votos). Não há um lugar que decida a virada sozinho: o ganho está espalhado.`;
+  chart("cDisp", { type: "scatter", data: { datasets: [
+      ...["LL", "FL", "FF", "LF"].filter(k => g[k].length).map(k => ({ label: nomeT[k], data: g[k], backgroundColor: cor[k] + "99", pointRadius: g[k].map(p => Math.max(1.5, Math.min(9, Math.sqrt(p.v) / 55))) })),
+      { label: "2º turno = 1º turno", data: [{ x: 0, y: 0 }, { x: 100, y: 100 }], type: "line", borderColor: css("--muted"), borderDash: [4, 4], borderWidth: 1.2, pointRadius: 0 }] },
+    options: { parsing: false, scales: { x: eixo({ min: 0, max: 100, title: { display: true, text: "Lula/(Lula+Flávio) no 1º turno (%)", color: css("--ink2") }, ticks: { color: css("--ink2"), callback: v => v + "%" } }),
+        y: eixo({ min: 0, max: 100, title: { display: true, text: "no 2º turno (%)", color: css("--ink2") }, ticks: { color: css("--ink2"), callback: v => v + "%" } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => i.raw.uf ? `${i.raw.uf}: ${f1(i.parsed.x)}% → ${f1(i.parsed.y)}% (${pc(i.raw.v)} votos)` : i.dataset.label } } } } });
+  const H = D.histograma, lab = H.faixas.map(f => `${f}–${f + 5}`);
+  chart("cHist", { type: "line", data: { labels: lab, datasets: [
+      { label: "1º turno", data: H.t1.map(v => v / 1000), borderColor: css("--anti"), backgroundColor: css("--anti"), borderWidth: 2, pointRadius: 2, tension: .25 },
+      { label: "2º turno", data: H.t2.map(v => v / 1000), borderColor: css("--pt"), backgroundColor: css("--pt"), borderWidth: 2.5, pointRadius: 2, tension: .25 }] },
+    options: { scales: { x: eixo({ grid: { display: false }, title: { display: true, text: "Lula/(Lula+Flávio) na seção (%)", color: css("--ink2") } }), y: eixo({ ticks: { color: css("--ink2"), callback: v => v + " mil" }, title: { display: true, text: "seções", color: css("--ink2") } }) } } });
+  const mod = (h) => { let i = h.indexOf(Math.max(...h)); return `${H.faixas[i]}–${H.faixas[i] + 5}%`; }, metade = (h) => h.slice(10).reduce((a, b) => a + b, 0), tot = (h) => h.reduce((a, b) => a + b, 0);
+  $("histTxt").innerHTML = `Nº de seções por faixa de % de Lula. A faixa mais comum foi a mesma nos dois turnos (${mod(H.t1)} no 1º e ${mod(H.t2)} no 2º), porque a curva tem uma cauda longa à direita: as seções muito de Lula (acima de 70%) são poucas e pesam pouco, as de Flávio são mais numerosas. O que mudou foi a curva inteira andar para a direita: Lula passou de <b>${pct(metade(H.t1), tot(H.t1))}%</b> das seções com mais da metade dos votos válidos dos dois no 1º turno para <b>${pct(metade(H.t2), tot(H.t2))}%</b> no 2º. Como as seções de Lula são maiores nas grandes cidades, o voto total fica acima de 50% mesmo com menos da metade das seções.`;
+}
+
+function v22() {
+  const V = D.vs2022;
+  $("v22Txt").innerHTML = `No país, Lula teve em 2026 <b>0,9 p.p. a mais</b> que em 2022 (51,8% contra 50,9%). Mas em <b>${pc(V.menos_lula)} de ${pc(V.n)} municípios (${pct(V.menos_lula, V.n)}%)</b> ele teve <i>menos</i> que em 2022; a mediana foi de ${sgn(V.mediana_pp)} p.p. A conta fecha porque o ganho está concentrado nas grandes cidades, onde estão os votos: nos 75 municípios com mais de 200 mil votos válidos Lula cresceu ${sgn(V.por_porte[3].ponderada)} p.p., e nos pequenos (até 10 mil votos) caiu ${f1(Math.abs(V.por_porte[0].ponderada))}. Por região, o Sudeste foi onde ele mais ganhou (${sgn(V.por_regiao.find(r => r.regiao === "Sudeste").pp)} p.p., ponderado); ${V.por_regiao.filter(r => r.pp < 0).map(r => `${r.regiao} (${sgn(r.pp)})`).join(" e ")} ficaram abaixo de 2022.`;
+  tab("tPorte", ["Porte (votos válidos)", "Municípios", "Variação mediana (p.p.)", "Variação ponderada (p.p.)", "Municípios com mais Lula que em 2022"], V.por_porte.map(p => [p.porte, pc(p.n), sgn(p.mediana), sgn(p.ponderada), `${pc(p.mais_lula)} (${pct(p.mais_lula, p.n)}%)`]));
+  tab("tReg22", ["Região", "Variação ponderada (p.p.)", "Variação mediana (p.p.)", "Municípios com mais Lula"], V.por_regiao.map(r => [r.regiao, sgn(r.pp), sgn(r.mediana), `${pc(r.mais_lula)} de ${pc(r.n)}`]));
+  tab("tAlta", ["Cidade", "Votos", "Lula 2022 → 2026 (%)", "Variação (p.p.)"], V.maiores_altas.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), `${f1(c.l22)} → ${f1(c.l2)}`, sgn(c.l2 - c.l22)]));
+  tab("tQueda", ["Cidade", "Votos", "Lula 2022 → 2026 (%)", "Variação (p.p.)"], V.maiores_quedas.map(c => [`${c.municipio} (${c.uf})`, P(c.votos), `${f1(c.l22)} → ${f1(c.l2)}`, sgn(c.l2 - c.l22)]));
+}
+
+function notas() {
+  nota("nota1", [`<b>${P(T.secao.FL.n)}</b> seções, <b>${T.municipio.FL.n}</b> municípios e <b>1 UF</b> (MG) viraram para Lula.`, `Flávio virou em ${P(T.secao.LF.n)} seções e em 1 município pequeno.`, `A vantagem nas seções viradas foi apertada.`]);
+  nota("nota2", [`Lula ficou com <b>${f1(100 * B.dl / (B.dl + B.df))}%</b> do ganho de votos.`, `Nordeste e Norte: o bolo foi para Lula.`, `Sul e Centro-Oeste: parelho ou para Flávio.`]);
+  nota("nota3", [`Lula subiu em <b>27 de 27</b> UFs.`, `Maior salto: RJ (+4,3), SP e GO. Menor: PI e BA.`, `MG foi a UF que virou.`]);
+  nota("nota4", [`O Rio de Janeiro foi a maior cidade virada.`, `Brasília, BH, Curitiba, Manaus e Goiânia: Flávio se manteve.`, `Maiores vantagens: SP e Salvador (Lula), Curitiba e Goiânia (Flávio).`]);
+  nota("nota5", [`Lula subiu em quase todos os municípios.`, `As seções continuam em dois blocos.`]);
+  nota("nota6", [`Vs 2022: Lula cresceu nas grandes cidades e caiu nas pequenas.`, `${pc(D.vs2022.menos_lula)} municípios tiveram menos Lula que em 2022.`]);
+  nota("nota7", [`Oficial: TSE, 499 mil seções.`, `Seção não é eleitor: é indício.`]);
+}
+function tudo() { kpis(); transicoes(); como(); ufs(); cidades(); dispersao(); v22(); notas(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>

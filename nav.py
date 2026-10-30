@@ -8,10 +8,17 @@ import re
 from pathlib import Path
 
 # (arquivo, rótulo, grupo). A ordem é a do menu: o Resultado (a home, index.html) primeiro, depois a Previsão (previsao.html, feita antes da votação), o 2º turno e o Histórico.
-ABAS = [("index.html", "Resultado", "Presidente"), ("previsao.html", "Previsão", "Presidente"), ("segundo-turno.html", "2º turno", "Presidente"), ("historico.html", "Histórico", "Presidente"), ("analise.html", "Análise", "Presidente"), ("redes.html", "Redes sociais", "Presidente"),
-        ("rs.html", "Governo RS", "Rio Grande do Sul"), ("analise-governo.html", "Análise do governo", "Rio Grande do Sul"),
+ABAS = [("index.html", "Resultado", "Presidente"), ("previsao.html", "Previsão", "Presidente"), ("segundo-turno.html", "2º turno", "Presidente"), ("onde-virou.html", "Onde virou", "Presidente"), ("historico.html", "Histórico", "Presidente"), ("analise.html", "Análise", "Presidente"), ("redes.html", "Redes sociais", "Presidente"),
+        ("portoalegre.html", "Porto Alegre", "Rio Grande do Sul"), ("rs.html", "Governo RS", "Rio Grande do Sul"), ("analise-governo.html", "Análise do governo", "Rio Grande do Sul"),
         ("bancada.html", "Bancada RS", "Rio Grande do Sul"), ("analise-bancada.html", "Análise da bancada", "Rio Grande do Sul"),
         ("analise-senado.html", "Análise do Senado", "Senado"), ("analise-modelo.html", "Previsto × real", "Modelo"), ("documentacao.html", "Documentação", "Sobre")]
+# O menu é um painel que abre pelo botão (hambúrguer). Sem JavaScript ele fica sempre visível (a classe "js" é que o esconde).
+SCRIPT_MENU = ('<script>(function(){var d=document,r=d.documentElement,b=d.getElementById("menu-btn"),m=d.getElementById("menu");if(!b||!m)return;r.classList.add("js");'
+               'function f(o){m.classList.toggle("aberto",o);b.setAttribute("aria-expanded",o)}'
+               'b.addEventListener("click",function(e){e.stopPropagation();f(!m.classList.contains("aberto"))});'
+               'd.addEventListener("click",function(e){if(!m.contains(e.target))f(false)});'
+               'd.addEventListener("keydown",function(e){if(e.key==="Escape"&&m.classList.contains("aberto")){f(false);b.focus()}});'
+               'm.addEventListener("click",function(e){if(e.target.closest("a"))f(false)})})()</script>')
 GITHUB = "https://github.com/mtgr18977/sassamaruEleicoes26"
 PLACEHOLDER = '<nav class="tabs" aria-label="Seções do site">__NAV__</nav>'
 BOTAO_TEMA = re.compile(r'<button id="tema"[^>]*>\s*</button>')
@@ -28,8 +35,11 @@ def html(pagina: str) -> str:
 
 
 def cabecalho(pagina: str, botao_tema: str) -> str:
+    atual = next((t for h, t, _ in ABAS if h == pagina), "")
+    menu = ('<button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><span class="hb" aria-hidden="true"></span>Menu'
+            + (f'<span class="menu-aqui"> · {atual}</span>' if atual else "") + "</button>")
     return ('<header class="mast"><a class="brand" href="index.html">' + ICONE + '<span><b>Eleições 2026</b><small>Dados, modelos e análises do Brasil e do RS</small></span></a>'
-            + botao_tema + "</header>" + f'<nav class="tabs" aria-label="Seções do site">{html(pagina)}</nav>')
+            + '<div class="mast-r">' + botao_tema + menu + "</div>" + f'<nav class="tabs" id="menu" aria-label="Seções do site">{html(pagina)}</nav></header>' + SCRIPT_MENU)
 
 
 def rodape() -> str:

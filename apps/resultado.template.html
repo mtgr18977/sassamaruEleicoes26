@@ -132,7 +132,7 @@
   </tbody></table>
   <h3 class="titc">Limites</h3>
   <ul class="lista">
-    <li>O resultado é oficial, mas é o <b>agregado por UF</b>. O comparecimento por município, zona e seção do 2º turno só sai nos arquivos de dados abertos do TSE; enquanto isso eu não consigo testar a hipótese do comparecimento por lugar (seção 6).</li>
+    <li>O resultado desta página é o oficial <b>agregado por UF</b>. Os arquivos de dados abertos por município, zona e seção saíram em 26/10 e eu os uso na aba <a href="onde-virou.html">Onde virou</a> (onde Lula virou, de onde vieram os votos) e na de <a href="portoalegre.html">Porto Alegre</a>. O teste do <b>comparecimento</b> por lugar eu ainda não fiz: o arquivo por seção só traz votos, sem eleitorado nem abstenção.</li>
     <li>Uma eleição não valida nem refuta um modelo: um evento de 35% de chance acontece uma vez em cada três. O que dá para avaliar é o nível do erro (2,76 p.p.), a direção compartilhada por todos os institutos e a estrutura por UF.</li>
     <li>Os intervalos do modelo eram calibrados com poucas eleições (duas para o viés do 2º turno); o resultado ficou dentro do intervalo de 90% nacional e em todos os 27 intervalos por UF, mas isso não prova que os intervalos estavam bem calibrados.</li>
     <li>Eu mudei o método três vezes nos últimos quatro dias antes da votação (tirar as pesquisas de antes do 1º turno, acrescentar institutos que faltavam, tirar a tendência). Nenhuma mudança foi escolhida olhando o resultado, mas elas mostram que o modelo era sensível ao que entrava nele.</li>
@@ -240,7 +240,7 @@ function notas() {
   nota("nota4", [`Estrutura por UF e faixa de incerteza: <b>acertou</b>.`, `Nível e favorito: <b>errou</b>.`, `Método mudou três vezes em quatro dias.`]);
   nota("nota5", [`O modelo é uma média de pesquisas com efeito de instituto, uma conta de incerteza e uma distribuição por UF.`, `Assumido: efeito de desenho 1,5, piso de 2,5 p.p. e institutos sem viés médio.`, `Faltou um termo para o erro comum a todos os institutos.`]);
   nota("nota6", [`Nenhuma hipótese está confirmada.`, `O teste mais viável: comparecimento por UF do 2º turno, quando o TSE publicar.`]);
-  nota("nota7", [`Resultado <b>oficial</b> do TSE, 100% das seções (25/10, 23h27).`, `Falta o arquivo por zona e seção para testar o comparecimento.`]);
+  nota("nota7", [`Resultado <b>oficial</b> do TSE, 100% das seções (25/10, 23h27).`, `Por município, zona e seção: aba <a href="onde-virou.html">Onde virou</a>.`]);
 }
 function tudo() { kpis(); nacional(); institutos(); ufs(); modeloExplicado(); contaVotos(); avaliacao(); notas(); }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
