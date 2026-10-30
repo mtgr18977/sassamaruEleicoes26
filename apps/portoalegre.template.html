@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Porto Alegre · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+<style>
+  .duas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px } @media (max-width:760px) { .duas { grid-template-columns:minmax(0,1fr) } }
+  .titc { margin:18px 0 2px; font-size:.95rem }
+  .txt th, .txt td { text-align:left; vertical-align:top }
+  table.t td.neg { color:var(--pt) } table.t td.pos { color:var(--anti) }
+  .lista { margin:8px 0; padding-left:20px } .lista li { margin:6px 0 }
+  .lula { color:var(--pt); font-weight:600 } .flavio { color:var(--anti); font-weight:600 }
+  details { margin:8px 0 } details > summary { cursor:pointer; font-weight:600; padding:6px 0 }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
+  <div class="topo"><div><h1>Porto Alegre, zona por zona: presidente e governador</h1>
+  <p class="sub">Eu olho as <b>10 zonas eleitorais</b> da capital (e os 346 locais de votação) no 1º e no 2º turno de 2026, e comparo com 2018 e 2022: onde cada candidato ganhou, onde Lula virou e onde o voto para presidente e o voto para governador foram para lados diferentes.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="an">
+  <div class="aviso"><b>Os dados são os oficiais do TSE</b> (votação por zona, <code>votacao_candidato_munzona</code>, e por seção, <code>votacao_secao_2026_BR</code>). "% do PT" no presidente é <b>PT/(PT+adversário)</b> no 2º turno (Haddad em 2018, Lula em 2022 e 2026); no 1º turno de 2026 eu mostro as duas formas. No governador, as porcentagens são sobre os votos nominais. <b>Eu não rotulo as zonas por bairro</b>: o TSE não publica essa correspondência junto dos dados, e eu prefiro mostrar os três maiores locais de votação de cada uma a adivinhar.</div>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="sec"><div>
+  <h2>1. Presidente: o 2º turno nas 10 zonas</h2>
+  <p id="presTxt"></p>
+  <div class="cv" style="height:380px"><canvas id="cPres"></canvas></div>
+  <div id="tPres"></div>
+  <p class="fonte">% do PT = PT/(PT+adversário) no 2º turno. Variação = 2026 − 2022, em p.p. "Locais" = os três locais de votação com mais seções na zona (só para identificar a região; não é o centro nem o bairro oficial da zona).</p>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div>
+  <h2>2. Onde Lula virou e onde Flávio se manteve</h2>
+  <p id="virTxt"></p>
+  <div class="cv" style="height:340px"><canvas id="cVir"></canvas></div>
+  <div id="tVir"></div>
+  <div class="duas"><div><h3 class="titc">Locais de votação em que Lula virou (maiores)</h3><div id="tLVirou"></div></div><div><h3 class="titc">Locais onde Lula mais cresceu (p.p.)</h3><div id="tLGanho"></div></div></div>
+  <div class="duas"><div><h3 class="titc">Os 10 locais mais de Lula no 2º turno</h3><div id="tLLula"></div></div><div><h3 class="titc">Os 10 locais mais de Flávio no 2º turno</h3><div id="tLFlavio"></div></div></div>
+  <p class="fonte">Locais de votação com pelo menos 800 votos válidos no 2º turno (319 dos 346). "Virou" = Lula abaixo de 50% de Lula/(Lula+Flávio) no 1º turno e acima no 2º. Cada local reúne de 1 a 20 seções; os de poucos votos oscilam mais.</p>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div>
+  <h2>3. Governador: a cidade votou em Brizola, o estado em Zucco</h2>
+  <p id="govTxt"></p>
+  <div class="cv" style="height:380px"><canvas id="cGov"></canvas></div>
+  <div id="tGov"></div>
+  <h3 class="titc">A cidade em cada eleição para governador</h3>
+  <div id="tGovCid"></div>
+  <p class="fonte" id="govFonte"></p>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div>
+  <h2>4. O voto casado: presidente × governador no 1º turno de 2026</h2>
+  <p id="casTxt"></p>
+  <div id="tCas"></div>
+  <p class="fonte">Porcentagens sobre os votos válidos de cada cargo na zona (incluindo todos os candidatos). "Lula − Brizola" mede o quanto o voto no PT para presidente superou o voto na candidata do PDT para governadora; "Flávio − Zucco", o mesmo para o PL.</p>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div>
+  <h2>5. As seções por dentro</h2>
+  <div class="cv" style="height:300px"><canvas id="cHist"></canvas></div>
+  <p class="fonte" id="histTxt"></p>
+  </div><aside class="side" id="nota5"></aside></section>
+
+  <section class="sec"><div>
+  <h2>6. Limites e como reproduzir</h2>
+  <ul class="lista">
+    <li>Zona não é bairro: cada zona reúne vários bairros e a divisão já foi alterada pelo TRE ao longo dos anos. Aqui as 10 zonas de Porto Alegre existem com o mesmo número em 2018, 2022 e 2026, mas eu não verifiquei se o território delas é exatamente o mesmo nas três eleições.</li>
+    <li>Para o governador de 2026 só há o 1º turno (Zucco foi eleito nele), então a comparação com 2018 e 2022 mistura turnos: o 1º turno de 2026 contra o 1º e o 2º de eleições passadas. Os candidatos também são outros.</li>
+    <li>O voto casado é uma diferença entre porcentagens da mesma zona. Não é o mesmo eleitor: o TSE não publica o voto de cada pessoa.</li>
+    <li>Os totais por candidato são os votos nominais; votos brancos e nulos ficam de fora das porcentagens.</li>
+  </ul>
+  <p class="fonte">Para reproduzir: <code>python fetch_tse_poa.py</code> (precisa dos zips de 2018, 2022 e 2026 em <code>datasets/tse_raw/</code>), <code>python fetch_tse_secoes.py</code> e <code>python analisar_poa.py</code>.</p>
+  </div><aside class="side" id="nota6"></aside></section>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = __DATA__;
+const C = D.cidade, Z = D.zonas, L = D.locais, S = D.secoes, P = (x) => pc(Math.round(x));
+const sgn = (x) => (x > 0 ? "+" : x < 0 ? "−" : "") + f1(Math.abs(x));
+const pr = (z, k) => z.presidente[k], zn = (z) => `${z.zona}ª zona`, zo = (z) => `${z.zona}ª`, cel = (txt, v) => `<span class="${v < 0 ? "neg" : "pos"}">${txt}</span>`;
+const lug = (z) => z.locais.map(l => l.replace(/ - .*/, "").replace(/ \(.*\)/, "")).join("; ");
+
+function kpis() {
+  const a = C.presidente["2026_2"], b = C.presidente["2022_2"], c = C.presidente["2018_2"], g = C.governador["2026_1"], ganhou = Z.filter(z => pr(z, "2026_2").pct > 50).length;
+  $("kpis").innerHTML = `<div class="kpi l"><span>Lula no 2º turno (PT/(PT+adv.))</span><b>${f1(a.pct)}%</b><small>${P(a.pt)} × ${P(a.adv)} · 2022: ${f1(b.pct)}% · 2018 (Haddad): ${f1(c.pct)}%</small></div>
+    <div class="kpi o"><span>Zonas em que Lula ganhou</span><b>${ganhou} de ${Z.length}</b><small>em 2022: ${Z.filter(z => pr(z, "2022_2").pct > 50).length} de ${Z.length}</small></div>
+    <div class="kpi l"><span>Brizola (PDT), 1º turno</span><b>${f1(g[0].pct)}%</b><small>${g[0].candidato} ${P(g[0].votos)} · ${g[1].candidato} ${f1(g[1].pct)}%</small></div>
+    <div class="kpi f"><span>Seções em que Lula virou</span><b>${P(S.transicao.FL)}</b><small>${f1(100 * S.transicao.FL / S.n)}% das ${P(S.n)} seções · Flávio virou em ${S.transicao.LF}</small></div>`;
+}
+
+function presidente() {
+  const a = C.presidente["2026_2"], b = C.presidente["2022_2"], c = C.presidente["2018_2"], o = Z.slice().sort((x, y) => pr(y, "2026_2").pct - pr(x, "2026_2").pct), f = o.filter(z => pr(z, "2026_2").pct <= 50);
+  const dm = Z.map(z => pr(z, "2026_2").pct - pr(z, "2022_2").pct);
+  $("presTxt").innerHTML = `Lula teve <b>${f1(a.pct)}%</b> de Lula/(Lula+Flávio) em Porto Alegre no 2º turno (${P(a.pt)} contra ${P(a.adv)} votos), contra ${f1(b.pct)}% em 2022 e ${f1(c.pct)}% de Haddad em 2018. Ele ganhou em <b>${Z.length - f.length} das ${Z.length} zonas</b>; Flávio ganhou na${f.length > 1 ? "s zonas" : " zona"} ${f.map(z => zo(z)).join(" e ")}, com ${f.map(z => f1(100 - pr(z, "2026_2").pct) + "%").join(" e ")}, respectivamente. A melhor zona de Lula foi a <b>${zn(o[0])}</b> (${f1(pr(o[0], "2026_2").pct)}%) e a melhor de Flávio, a <b>${zn(o[o.length - 1])}</b>. Em relação a 2022, Lula subiu em todas as zonas (de ${sgn(Math.min(...dm))} a ${sgn(Math.max(...dm))} p.p.).`;
+  const ordem = Z.slice().sort((x, y) => pr(y, "2026_2").pct - pr(x, "2026_2").pct), lab = ordem.map(zn);
+  chart("cPres", { type: "bar", data: { labels: lab, datasets: [
+      { label: "2018 (Haddad)", data: ordem.map(z => pr(z, "2018_2").pct), backgroundColor: css("--muted") + "88", borderRadius: 2 },
+      { label: "2022 (Lula)", data: ordem.map(z => pr(z, "2022_2").pct), backgroundColor: css("--pt") + "88", borderRadius: 2 },
+      { label: "2026, 2º turno (Lula)", data: ordem.map(z => pr(z, "2026_2").pct), backgroundColor: css("--pt"), borderRadius: 2 },
+      { label: "50%", data: ordem.map(() => 50), type: "line", borderColor: css("--ink"), borderDash: [4, 4], borderWidth: 1, pointRadius: 0 }] },
+    options: { scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 30, max: 70, ticks: { color: css("--ink2"), callback: v => v + "%" } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${f1(i.parsed.y)}%` } } } } });
+  tab("tPres", ["Zona", "Locais", "2018 (%)", "2022 (%)", "2026 1º turno (%)", "2026 2º turno (%)", "Variação 2026 − 2022 (p.p.)", "Quem ganhou em 2026"],
+    ordem.map(z => [zn(z), lug(z), f1(pr(z, "2018_2").pct), f1(pr(z, "2022_2").pct), f1(pr(z, "2026_1").pct), f1(pr(z, "2026_2").pct), sgn(pr(z, "2026_2").pct - pr(z, "2022_2").pct), pr(z, "2026_2").pct > 50 ? `<span class="lula">Lula</span>` : `<span class="flavio">Flávio</span>`]));
+}
+
+function virada() {
+  const t = S.transicao, o = Z.slice().sort((x, y) => y.sec_virou_lula / y.secoes - x.sec_virou_lula / x.secoes);
+  $("virTxt").innerHTML = `Em Porto Alegre, <b>${P(t.FL)} seções</b> (${f1(100 * t.FL / S.n)}%) viraram para Lula (Flávio tinha mais votos no 1º turno, Lula teve mais no 2º) e <b>${t.LF}</b> viraram para Flávio. Foram ${P(S.votos_virou_lula)} votos válidos do 2º turno nas seções viradas. A virada foi maior nas zonas <b>${zo(o[0])}</b> (${f1(100 * o[0].sec_virou_lula / o[0].secoes)}% das seções) e <b>${zo(o[1])}</b> (${f1(100 * o[1].sec_virou_lula / o[1].secoes)}%), e menor na <b>${zn(o[o.length - 1])}</b> (${f1(100 * o[o.length - 1].sec_virou_lula / o[o.length - 1].secoes)}%), que já era de Lula. Nos <b>${L.n} locais de votação</b> com votos suficientes, Lula ganhou em ${L.lula_ganha} e Flávio em ${L.flavio_ganha}; ${L.virou_lula_n} locais viraram para Lula e ${L.virou_flavio_n} para Flávio.`;
+  chart("cVir", { type: "bar", data: { labels: Z.map(zn), datasets: [
+      { label: "Ganho de Lula (votos)", data: Z.map(z => z.dl), backgroundColor: css("--pt"), borderRadius: 2 },
+      { label: "Ganho de Flávio (votos)", data: Z.map(z => z.df), backgroundColor: css("--anti"), borderRadius: 2 }] },
+    options: { scales: { x: eixo({ grid: { display: false } }), y: eixo({ ticks: { color: css("--ink2"), callback: v => pc(v) } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${pc(i.parsed.y)}` } } } } });
+  tab("tVir", ["Zona", "Seções", "Lula virou", "Flávio virou", "Seções onde Lula ganhou no 2º turno", "Ganho de Lula", "Ganho de Flávio", "Parte do ganho de Lula (%)"],
+    Z.map(z => [zn(z), z.secoes, `${z.sec_virou_lula} (${f1(100 * z.sec_virou_lula / z.secoes)}%)`, z.sec_virou_flavio, `${z.sec_lula_2t} (${f1(100 * z.sec_lula_2t / z.secoes)}%)`, P(z.dl), P(z.df), f1(100 * z.dl / (z.dl + z.df))]));
+  const lin = (a, ex) => a.map(l => [l.local, `${l.zona}ª`, P(l.votos), `${f1(l.l1)} → ${f1(l.l2)}`, ...ex(l)]);
+  tab("tLVirou", ["Local", "Zona", "Votos", "Lula 1º → 2º (%)"], lin(L.virou_lula, () => []));
+  tab("tLGanho", ["Local", "Zona", "Votos", "Lula 1º → 2º (%)", "p.p."], lin(L.maior_ganho, l => [sgn(l.dpp)]));
+  tab("tLLula", ["Local", "Zona", "Votos", "Lula 1º → 2º (%)"], lin(L.mais_lula, () => []));
+  tab("tLFlavio", ["Local", "Zona", "Votos", "Lula 1º → 2º (%)"], lin(L.mais_flavio, () => []));
+}
+
+function governador() {
+  const g26 = C.governador["2026_1"], zs = Z.map(z => ({ z, b: z.gov_2026_1.find(c => c.candidato === "Juliana Brizola"), u: z.gov_2026_1.find(c => c.candidato === "Zucco"), s: z.gov_2026_1.find(c => c.candidato === "Gabriel Souza") }));
+  const zb = zs.filter(x => x.b.pct > x.u.pct), zu = zs.filter(x => x.u.pct > x.b.pct);
+  $("govTxt").innerHTML = `Em Porto Alegre, <b>Juliana Brizola (PDT)</b> teve ${f1(g26[0].pct)}% dos votos nominais e <b>Zucco (PL)</b>, ${f1(g26[1].pct)}%: ${P(g26[0].votos)} contra ${P(g26[1].votos)}. Ela ganhou em <b>${zb.length} zonas</b> e ele em <b>${zu.length}</b> (${zu.map(x => zn(x.z)).join(", ")}). No estado inteiro foi o contrário: Zucco venceu no 1º turno com 58,05% dos votos nominais (3,52 milhões; Brizola teve 31,65%). A diferença na capital foi pequena, ${f1(g26[0].pct - g26[1].pct)} p.p.`;
+  const o = zs.slice().sort((a, b) => b.b.pct - a.b.pct);
+  chart("cGov", { type: "bar", data: { labels: o.map(x => zn(x.z)), datasets: [
+      { label: "Juliana Brizola (PDT)", data: o.map(x => x.b.pct), backgroundColor: css("--pt"), borderRadius: 2 },
+      { label: "Zucco (PL)", data: o.map(x => x.u.pct), backgroundColor: css("--anti"), borderRadius: 2 },
+      { label: "Gabriel Souza (MDB)", data: o.map(x => x.s ? x.s.pct : 0), backgroundColor: css("--s4"), borderRadius: 2 }] },
+    options: { scales: { x: eixo({ grid: { display: false } }), y: eixo({ ticks: { color: css("--ink2"), callback: v => v + "%" } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${f1(i.parsed.y)}%` } } } } });
+  tab("tGov", ["Zona", "Brizola (%)", "Zucco (%)", "Souza (%)", "Quem ganhou", "Leite × Onyx 2022 (2º turno): Leite (%)", "Leite × Sartori 2018 (2º turno): Leite (%)"],
+    o.map(x => [zn(x.z), f1(x.b.pct), f1(x.u.pct), x.s ? f1(x.s.pct) : "–", x.b.pct > x.u.pct ? `<span class="lula">Brizola</span>` : `<span class="flavio">Zucco</span>`, f1(x.z.gov_2022_2.find(c => c.candidato === "Eduardo Leite").pct), f1(x.z.gov_2018_2.find(c => c.candidato === "Eduardo Leite").pct)]));
+  const ch = [["2018, 1º turno", "2018_1"], ["2018, 2º turno", "2018_2"], ["2022, 1º turno", "2022_1"], ["2022, 2º turno", "2022_2"], ["2026, 1º turno", "2026_1"]];
+  tab("tGovCid", ["Eleição", "Candidatos (% dos votos nominais em Porto Alegre)"], ch.map(([n, k]) => [n, C.governador[k].map(c => `${c.candidato} (${c.partido}) ${f1(c.pct)}%`).join(" · ")]));
+  $("govFonte").textContent = "Só aparecem candidatos com pelo menos 2% dos votos nominais na cidade. Eduardo Leite foi o candidato mais votado na capital nos dois turnos de 2022 e no 2º turno de 2018; em 2018 e 2022 eu mostro o 2º turno para comparar com o voto de agora, que é de 1º turno.";
+}
+
+function casado() {
+  const K = D.casado, ok = K.every(k => k.brizola != null);
+  const dif = K.map(k => k.lula - k.brizola), dz = K.map(k => k.flavio - k.zucco);
+  $("casTxt").innerHTML = `No 1º turno, Lula teve <b>${f1(C.presidente["2026_1"].pct_validos)}%</b> dos votos válidos para presidente na cidade e Brizola teve ${f1(C.governador["2026_1"][0].pct)}% para governadora; Flávio teve ${f1(C.presidente["2026_1"].pct_adv_validos)}% e Zucco, ${f1(C.governador["2026_1"][1].pct)}%. Ou seja: <b>Lula foi ${f1(Math.abs(C.presidente["2026_1"].pct_validos - C.governador["2026_1"][0].pct))} p.p. acima de Brizola</b> e <b>Zucco, ${f1(Math.abs(C.presidente["2026_1"].pct_adv_validos - C.governador["2026_1"][1].pct))} p.p. acima de Flávio</b>. Em todas as zonas Lula ficou acima de Brizola (${sgn(Math.min(...dif))} a ${sgn(Math.max(...dif))} p.p.) e Zucco acima de Flávio (${sgn(-Math.max(...dz))} a ${sgn(-Math.min(...dz))} p.p.). Uma parte dessa diferença pode ter passado por <b>Gabriel Souza (MDB)</b>, que teve ${f1(C.governador["2026_1"].find(c => c.candidato === "Gabriel Souza").pct)}% na cidade, e por outros candidatos a presidente; o TSE não publica o voto de cada eleitor, então eu só descrevo a diferença, sem dizer quem trocou de lado.`;
+  tab("tCas", ["Zona", "Lula, presidente (%)", "Brizola, governador (%)", "Lula − Brizola (p.p.)", "Flávio, presidente (%)", "Zucco, governador (%)", "Flávio − Zucco (p.p.)"],
+    K.map(k => [zn({ zona: k.zona }), f1(k.lula), f1(k.brizola), sgn(k.lula - k.brizola), f1(k.flavio), f1(k.zucco), sgn(k.flavio - k.zucco)]));
+}
+
+function secoes() {
+  const lab = Array.from({ length: 20 }, (_, i) => `${5 * i}–${5 * i + 5}`);
+  chart("cHist", { type: "line", data: { labels: lab, datasets: [
+      { label: "1º turno", data: S.hist1, borderColor: css("--anti"), backgroundColor: css("--anti"), borderWidth: 2, pointRadius: 2, tension: .25 },
+      { label: "2º turno", data: S.hist2, borderColor: css("--pt"), backgroundColor: css("--pt"), borderWidth: 2.5, pointRadius: 2, tension: .25 }] },
+    options: { scales: { x: eixo({ grid: { display: false }, title: { display: true, text: "Lula/(Lula+Flávio) na seção (%)", color: css("--ink2") } }), y: eixo({ title: { display: true, text: "seções", color: css("--ink2") } }) } } });
+  const m = (h) => h.slice(10).reduce((a, b) => a + b, 0);
+  $("histTxt").textContent = `Porto Alegre tem ${P(S.n)} seções. Lula tinha mais votos que Flávio em ${P(m(S.hist1))} (${f1(100 * m(S.hist1) / S.n)}%) no 1º turno e em ${P(m(S.hist2))} (${f1(100 * m(S.hist2) / S.n)}%) no 2º. Cada ponto é o número de seções numa faixa de 5 p.p. de Lula/(Lula+Flávio).`;
+}
+
+function notas() {
+  const a = C.presidente["2026_2"], b = C.presidente["2022_2"];
+  nota("nota1", [`Lula: <b>${f1(a.pct)}%</b> (2022: ${f1(b.pct)}%).`, `Ganhou em <b>${Z.filter(z => pr(z, "2026_2").pct > 50).length} de ${Z.length}</b> zonas.`, `Subiu em todas as zonas contra 2022.`]);
+  nota("nota2", [`<b>${P(S.transicao.FL)}</b> seções viraram para Lula e <b>${S.transicao.LF}</b> para Flávio.`, `${L.virou_lula_n} locais viraram para Lula e ${L.virou_flavio_n} para Flávio.`]);
+  nota("nota3", [`Brizola ganhou na cidade; Zucco, no estado.`, `A diferença na capital foi de ${f1(C.governador["2026_1"][0].pct - C.governador["2026_1"][1].pct)} p.p.`]);
+  nota("nota4", [`Lula ${D.casado.every(k => k.lula > k.brizola) ? "ficou acima de Brizola em todas as zonas" : "nem sempre ficou acima de Brizola"}.`, `Zucco ${D.casado.every(k => k.zucco > k.flavio) ? "ficou acima de Flávio em todas as zonas" : "nem sempre ficou acima de Flávio"}.`]);
+  nota("nota5", [`Lula passou de ${f1(100 * S.hist1.slice(10).reduce((a, b) => a + b, 0) / S.n)}% para ${f1(100 * S.hist2.slice(10).reduce((a, b) => a + b, 0) / S.n)}% das seções.`]);
+  nota("nota6", [`Zona não é bairro.`, `Governador de 2026: só 1º turno.`, `Voto casado = diferença entre porcentagens, não o mesmo eleitor.`]);
+}
+function tudo() { kpis(); presidente(); virada(); governador(); casado(); secoes(); notas(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>
