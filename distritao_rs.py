@@ -26,7 +26,7 @@ def lista_de(r) -> str:
     """Unidade de disputa das cadeiras: federação (2022/2026), coligação (2018) ou o partido sozinho."""
     for c in ("NM_FEDERACAO", "NM_COLIGACAO"):
         v = r[c]
-        if isinstance(v, str) and v not in ("#NULO", "#NE", "PARTIDO ISOLADO", ""):
+        if isinstance(v, str) and not v.startswith("#") and v not in ("PARTIDO ISOLADO", "FEDERAÇÃO", ""):
             return v
     return r["SG_PARTIDO"]
 

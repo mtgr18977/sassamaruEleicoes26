@@ -24,7 +24,7 @@ MAIORIA = 257
 
 def lista_de(f, c, p) -> str:
     for v in (f, c):
-        if isinstance(v, str) and v not in ("#NULO", "#NE", "PARTIDO ISOLADO", ""):
+        if isinstance(v, str) and not v.startswith("#") and v not in ("PARTIDO ISOLADO", "FEDERAÇÃO", ""):
             return v
     return p
 
@@ -99,6 +99,57 @@ def resumo(g: pd.DataFrame, cargo: str, ano: int, qe: dict | None) -> dict:
     return out
 
 
+def gallagher(c: pd.DataFrame, col: str) -> float:
+    """Índice de Gallagher entre a parcela de votos nominais de cada partido (nacional) e a parcela de cadeiras: quanto maior, menos proporcional (em p.p.)."""
+    v = c.groupby("partido").votos.sum()
+    v = 100 * v / v.sum()
+    s = 100 * c[c[col]].groupby("partido").size().reindex(v.index).fillna(0) / c[col].sum()
+    return float(np.sqrt(0.5 * ((v - s) ** 2).sum()))
+
+
+def analise(c: pd.DataFrame, cargo: str, qe: dict | None) -> dict:
+    """Mecanismos por trás das trocas: quem sai e quem entra, quanto vem de puxadores, concentração de votos por partido, proporcionalidade, votos que não elegem e tamanho da UF."""
+    c = c.copy()
+    c["eleito_dist"] = c.dist
+    tot = float(c.votos.sum())
+    sai, entra = c[c.eleito & ~c.dist], c[~c.eleito & c.dist]
+    out = dict(sai_n=int(len(sai)), entra_n=int(len(entra)), votos_medianos_sai=int(sai.votos.median()), votos_medianos_entra=int(entra.votos.median()),
+               razao_media_entra_sai=round(float(entra.votos.mean() / sai.votos.mean()), 2), gallagher_atual=round(gallagher(c, "eleito"), 2), gallagher_distritao=round(gallagher(c, "dist"), 2))
+    # votos que não elegem ninguém
+    lista_sem = c.groupby(["uf", "lista"]).eleito.transform("sum") == 0
+    out["votos_sem_cadeira"] = dict(lista_sem_cadeira_pct=r1(100 * c[lista_sem].votos.sum() / tot), nao_eleitos_atual_pct=r1(100 * c[~c.eleito].votos.sum() / tot), fora_dos_n_distritao_pct=r1(100 * c[~c.dist].votos.sum() / tot))
+    # por tamanho da UF
+    faixas = [(0, 10, "até 10 cadeiras"), (11, 20, "11 a 20"), (21, 40, "21 a 40"), (41, 999, "mais de 40")] if cargo == "DF" else [(0, 30, "até 30 cadeiras"), (31, 45, "31 a 45"), (46, 70, "46 a 70"), (71, 999, "mais de 70")]
+    mag = []
+    for lo, hi, nome in faixas:
+        x = c[(c.n >= lo) & (c.n <= hi)]
+        if len(x):
+            mag.append(dict(faixa=nome, ufs=int(x.uf.nunique()), cadeiras=int(x.eleito.sum()), trocas=int((x.eleito & ~x.dist).sum()), pl_atual=int((x.eleito & (x.partido == "PL")).sum()), pl_dist=int((x.dist & (x.partido == "PL")).sum())))
+    out["por_tamanho"] = mag
+    if qe is not None:
+        c["qe"] = [qe[(u, cargo)] / n for u, n in zip(c.uf, c.n)]
+        estrela = set(map(tuple, c[c.votos >= c.qe][["uf", "lista"]].values))
+        sai = sai.assign(puxado=[(u, l) in estrela for u, l in zip(sai.uf, sai.lista)])
+        por = []
+        for p, x in sai.groupby("partido"):
+            e = entra[entra.partido == p]
+            por.append(dict(partido=p, sai=int(len(x)), sai_com_puxador_na_lista=int(x.puxado.sum()), entra=int(len(e))))
+        out["mecanismos"] = dict(sai_com_puxador=int(sai.puxado.sum()), sai_sem_puxador=int((~sai.puxado).sum()), por_partido=sorted(por, key=lambda r: -(r["sai"] + r["entra"]))[:12],
+                                 pl=next((r for r in por if r["partido"] == "PL"), None))
+        # concentração: parcela dos votos do partido que são "excesso de estrela" (votos acima de 1 quociente)
+        c["exc"] = (c.votos - c.qe).clip(lower=0)
+        pa, pdn = Counter(c[c.eleito].partido), Counter(c[c.dist].partido)
+        linhas = []
+        for p, x in c.groupby("partido"):
+            if max(pa.get(p, 0), pdn.get(p, 0)) >= 8:
+                linhas.append(dict(partido=p, votos_pct=r1(100 * x.votos.sum() / tot), estrelas_pct=r1(100 * x.exc.sum() / x.votos.sum()), atual=pa.get(p, 0), distritao=pdn.get(p, 0), var_pct=r1(100 * (pdn.get(p, 0) - pa.get(p, 0)) / max(pa.get(p, 0), 1))))
+        a, b = np.array([l["estrelas_pct"] for l in linhas]), np.array([l["var_pct"] for l in linhas])
+        rk = lambda v: pd.Series(v).rank().values
+        if len(linhas) >= 5:      # com poucos partidos (uma UF só) a correlação não faz sentido
+          out["concentracao"] = dict(partidos=sorted(linhas, key=lambda l: -l["estrelas_pct"]), corr=round(float(np.corrcoef(a, b)[0, 1]), 2), corr_spearman=round(float(np.corrcoef(rk(a), rk(b))[0, 1]), 2), n=len(linhas))
+    return out
+
+
 def main() -> None:
     saida = {}
     qe = qe_2026()
@@ -107,6 +158,9 @@ def main() -> None:
         saida[str(ano)] = {}
         for cargo in ("DF", "DE"):
             r = resumo(g, cargo, ano, qe if ano == 2026 else None)
+            r["analise"] = analise(g[g.cargo == cargo], cargo, qe if ano == 2026 else None)
+            if ano == 2026:
+                r["analise_rs"] = analise(g[(g.cargo == cargo) & (g.uf == "RS")], cargo, qe)
             saida[str(ano)][cargo] = r
             print(ano, cargo, "cadeiras", r["cadeiras"], "trocas", r["trocas"], "| PL", r["pl"], "| blocos", r["blocos"], "| ENP", r["enp_atual"], r["enp_distritao"])
         assert saida[str(ano)]["DF"]["cadeiras"] == 513, ano

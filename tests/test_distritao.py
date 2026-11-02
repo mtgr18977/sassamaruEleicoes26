@@ -50,3 +50,14 @@ def test_distritao_brasil_fecha_513_e_1059_e_o_pl_encolhe_em_2026():
     pl = B["2026"]["DF"]["pl"]
     assert pl["atual"] == 121 and pl["distritao"] == 102 and sum(u["pl_atual"] for u in B["2026"]["DF"]["por_uf"]) == 121
     assert B["2026"]["DF"]["puxadores"]["topo"][0]["nome"] == "Nikolas Ferreira" and (RAIZ / "distritao-brasil.html").exists()
+
+
+def test_analise_do_distritao_e_consistente():
+    B = json.load(open(RAIZ / "modelos/distritao-br.json", encoding="utf-8"))
+    A = B["2026"]["DF"]["analise"]
+    assert A["sai_n"] == A["entra_n"] == B["2026"]["DF"]["trocas"] and A["mecanismos"]["sai_com_puxador"] + A["mecanismos"]["sai_sem_puxador"] == A["sai_n"]
+    assert A["mecanismos"]["pl"]["sai"] == 22 and A["mecanismos"]["pl"]["entra"] == 3 and abs(A["concentracao"]["corr"]) < 0.3
+    assert A["votos_sem_cadeira"]["fora_dos_n_distritao_pct"] > 5 * A["votos_sem_cadeira"]["lista_sem_cadeira_pct"]
+    assert A["gallagher_distritao"] > A["gallagher_atual"] and sum(x["cadeiras"] for x in A["por_tamanho"]) == 513
+    assert B["2018"]["DF"]["analise"]["votos_sem_cadeira"]["lista_sem_cadeira_pct"] > 0           # 2018: federação "#NULO#" tratada como nula
+    assert B["2026"]["DF"]["analise_rs"]["sai_n"] == 3 and B["2026"]["DE"]["analise_rs"]["sai_n"] == 7
