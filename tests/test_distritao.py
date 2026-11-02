@@ -37,3 +37,16 @@ def test_o_rs_e_pouco_afetado_e_a_pagina_existe():
     assert D["2026"]["DF"]["trocas"] == 3 and D["2026"]["DE"]["trocas"] == 7 and D["2018"]["DF"]["trocas"] == 2
     assert all(D[a][s]["trocas"] <= 0.2 * D[a][s]["cadeiras"] for a in D for s in D[a])
     assert (RAIZ / "distritao.html").exists()
+
+
+def test_distritao_brasil_fecha_513_e_1059_e_o_pl_encolhe_em_2026():
+    B = json.load(open(RAIZ / "modelos/distritao-br.json", encoding="utf-8"))
+    for ano in ("2018", "2022", "2026"):
+        assert B[ano]["DF"]["cadeiras"] == 513 and B[ano]["DE"]["cadeiras"] == 1059, ano
+        for cargo in ("DF", "DE"):
+            s = B[ano][cargo]
+            assert sum(p["atual"] for p in s["partidos"]) == s["cadeiras"] == sum(p["distritao"] for p in s["partidos"]) and s["iguais"] + s["trocas"] == s["cadeiras"]
+            assert sum(u["cadeiras"] for u in s["por_uf"]) == s["cadeiras"] and sum(u["trocas"] for u in s["por_uf"]) == s["trocas"]
+    pl = B["2026"]["DF"]["pl"]
+    assert pl["atual"] == 121 and pl["distritao"] == 102 and sum(u["pl_atual"] for u in B["2026"]["DF"]["por_uf"]) == 121
+    assert B["2026"]["DF"]["puxadores"]["topo"][0]["nome"] == "Nikolas Ferreira" and (RAIZ / "distritao-brasil.html").exists()

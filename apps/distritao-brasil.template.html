@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distritão no Brasil · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+<style>
+  .duas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px } @media (max-width:760px) { .duas { grid-template-columns:minmax(0,1fr) } }
+  .titc { margin:18px 0 2px; font-size:.95rem }
+  .txt th, .txt td { text-align:left; vertical-align:top }
+  table.t td.neg { color:var(--pt) } table.t td.pos { color:var(--anti) }
+  .lista { margin:8px 0; padding-left:20px } .lista li { margin:6px 0 }
+  .filtros { display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; margin:10px 0 }
+  details { margin:8px 0 } details > summary { cursor:pointer; font-weight:600; padding:6px 0 }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
+  <div class="topo"><div><h1>E se o Brasil inteiro elegesse só os mais votados? O distritão e o PL</h1>
+  <p class="sub">Eu refaço a Câmara dos Deputados (513 cadeiras) e as assembleias estaduais e a Câmara Legislativa do DF (1.059) como se cada UF elegesse <b>os mais votados dela, sem olhar partido</b>, o chamado distritão. A pergunta é quanto do tamanho do PL vem dos votos individuais e quanto vem das regras de lista e dos puxadores.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="an">
+  <div class="aviso"><b>É uma releitura da mesma votação, não uma previsão.</b> Num distritão os partidos lançariam candidatos de outro jeito e os eleitores votariam de outro jeito (o voto em legenda, que ajuda partidos pequenos, deixaria de existir). Eu uso os votos nominais válidos de cada candidato nos arquivos de dados abertos do TSE (por UF, 2026 gerado em 30/10/2026) e o número de cadeiras de cada UF é o de eleitos de verdade (a soma dá 513 na Câmara). Os eleitos são os da situação do TSE ("eleito por QP" ou "por média"). O RS está na aba <a href="distritao.html">Distritão RS</a>.</div>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="sec"><div>
+  <h2>1. A resposta curta</h2>
+  <p id="curtaTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cPL"></canvas></div>
+  <div id="tCurta"></div>
+  <p class="fonte">Nas três eleições, "trocas" = deputados eleitos de verdade que não estariam entre os N mais votados da UF. A parcela de votos do PL é sobre os votos nominais válidos (sem votos de legenda). Blocos: esquerda (PT, PDT, PSOL, PSB, PV, PCdoB, Rede e outros), centro (MDB, PSDB, Cidadania, PSD) e direita e demais (PL, PP, União, Republicanos, Podemos, Novo e o resto), como no resto do site; é uma aproximação minha.</p>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div>
+  <h2>2. O PL, UF por UF</h2>
+  <div class="filtros"><span>Eleição <span class="seg" id="segAno"></span></span></div>
+  <p id="plTxt"></p>
+  <div class="cv" style="height:680px"><canvas id="cPLuf"></canvas></div>
+  <details><summary>Ver as 27 UFs</summary><div id="tUF"></div></details>
+  <p class="fonte">Diferença = cadeiras do PL no distritão − cadeiras de verdade. Negativo = o PL perde cadeira ao ler a mesma votação só pelos mais votados.</p>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div>
+  <h2>3. Os puxadores de 2026</h2>
+  <p id="puxTxt"></p>
+  <div id="tPux"></div>
+  <p class="fonte">Em quocientes = votos do candidato ÷ quociente eleitoral da UF (votos válidos ÷ cadeiras). Excesso = parte dos votos acima de 1 quociente, em unidades de cadeira. "Colegas abaixo do corte" = deputados da mesma lista eleitos que não estariam entre os mais votados da UF. Só há quociente exato para 2026, porque só esse ano tem o arquivo de detalhe com os votos de legenda em <code>datasets/tse_raw/</code>.</p>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div>
+  <h2>4. Todos os partidos e blocos</h2>
+  <div class="cv" style="height:520px"><canvas id="cPart"></canvas></div>
+  <div id="tBloco"></div>
+  <details><summary>Ver a tabela por partido</summary><div id="tPart"></div></details>
+  <p class="fonte">O partido é o do candidato, também dentro de federações. "Votos" = parcela dos votos nominais válidos do partido em todo o país. Nº efetivo de partidos = 1 ÷ soma dos quadrados das parcelas de cadeiras.</p>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div>
+  <h2>5. Os maiores que entrariam e os maiores que sairiam</h2>
+  <div class="duas"><div><h3 class="titc">Eleitos de verdade que sairiam (mais votados)</h3><div id="tSai"></div></div><div><h3 class="titc">Mais votados que entrariam</h3><div id="tEntra"></div></div></div>
+  <p class="fonte">Entre os que sairiam estão os menos votados dentro da UF; "posição" é a colocação deles por votos na UF.</p>
+  </div><aside class="side" id="nota5"></aside></section>
+
+  <section class="sec"><div>
+  <h2>6. E nas assembleias?</h2>
+  <p id="assTxt"></p>
+  <div id="tAss"></div>
+  <p class="fonte">1.059 cadeiras: 24 assembleias estaduais e a Câmara Legislativa do DF, somadas. Mesma regra: os N mais votados de cada UF.</p>
+  </div><aside class="side" id="nota6"></aside></section>
+
+  <section class="sec"><div>
+  <h2>7. Limites e como reproduzir</h2>
+  <ul class="lista">
+    <li>Eu uso a mesma votação nos dois sistemas. Um distritão mudaria as candidaturas (os partidos lançariam menos candidatos e mais famosos), o voto útil e o papel do voto de legenda. O PL, com os maiores puxadores, tenderia a se organizar para ter mais candidatos fortes.</li>
+    <li>Os candidatos com votos anulados (sub judice) ficam fora (<code>QT_VOTOS_NOMINAIS_VALIDOS</code>). As contagens de cadeiras por partido vêm da situação do TSE e podem diferir em 1 cadeira da composição final da Câmara em 2018 e 2022, por substituições posteriores.</li>
+    <li>O partido de cada candidato é o do registro, e eu uniformizo nomes antigos (PR → PL, DEM → União, PSL → União etc.). O bloco é aproximado.</li>
+    <li>Eu não separo mulheres, negros nem a representação regional dentro das UFs: o distritão tende a concentrar a representação em quem tem mais votos individuais, e essa parte eu não medi.</li>
+  </ul>
+  <p class="fonte">Para reproduzir: <code>python distritao_br.py</code> (precisa dos zips <code>votacao_candidato_munzona_2018/2022/2026.zip</code> e <code>detalhe_votacao_munzona_2026.zip</code> em <code>datasets/tse_raw/</code>) e <code>python gerar_pagina_distritao_brasil.py</code>.</p>
+  </div><aside class="side" id="nota7"></aside></section>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = __DATA__;
+state.ano = "2026";
+const P = (x) => pc(Math.round(x)), vir = (x) => String(x).replace(".", ","), nm = (a) => a.length ? a.join(", ") : "nenhum";
+const cur = () => D[state.ano].DF, ANOS = ["2018", "2022", "2026"], pl = (a) => D[a].DF.partidos.find(p => p.partido === "PL");
+const cel = (v) => `<span class="${v < 0 ? "neg" : "pos"}">${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v)}</span>`;
+const NB = { E: "Esquerda", C: "Centro", D: "Direita e demais" };
+
+function kpis() {
+  const s = D["2026"].DF, p = pl("2026");
+  $("kpis").innerHTML = `<div class="kpi f"><span>PL na Câmara, 2026</span><b>${p.atual} → ${p.distritao}</b><small>sistema atual → distritão (${(100 * p.atual / 513).toFixed(1).replace(".", ",")}% → ${(100 * p.distritao / 513).toFixed(1).replace(".", ",")}% das cadeiras)</small></div>
+    <div class="kpi o"><span>Cadeiras que mudariam de dono</span><b>${s.trocas} de 513</b><small>${(100 * s.trocas / 513).toFixed(0)}% · em ${s.ufs_com_troca} das 27 UFs</small></div>
+    <div class="kpi l"><span>Esquerda, 2026</span><b>${s.blocos.E.atual} → ${s.blocos.E.distritao}</b><small>direita e demais: ${s.blocos.D.atual} → ${s.blocos.D.distritao}</small></div>
+    <div class="kpi"><span>Votos nominais do PL</span><b>${vir(p.votos_pct)}%</b><small>contra ${(100 * p.atual / 513).toFixed(1).replace(".", ",")}% das cadeiras de verdade</small></div>`;
+}
+
+function curta() {
+  const p = pl("2026"), q = pl("2022"), s = D["2026"].DF;
+  $("curtaTxt").innerHTML = `<b>O PL continuaria o maior partido da Câmara, mas encolheria.</b> Em 2026 ele elegeu <b>${p.atual}</b> deputados federais; lendo a mesma votação só pelos mais votados de cada UF, seriam <b>${p.distritao}</b> (${p.dif}). Em 2022 seriam ${q.distritao} em vez de ${q.atual} (${q.dif}). O PT passaria de ${D["2026"].DF.partidos.find(x => x.partido === "PT").atual} para ${D["2026"].DF.partidos.find(x => x.partido === "PT").distritao}. Na Câmara toda, <b>${s.trocas}</b> dos 513 eleitos de 2026 (${(100 * s.trocas / 513).toFixed(0)}%) não estariam entre os mais votados da UF. O que mais pesa é o contrário do que se diria: o PL teve ${vir(p.votos_pct)}% dos votos nominais e ${(100 * p.atual / 513).toFixed(1).replace(".", ",")}% das cadeiras, ou seja, o sistema atual dá a ele cadeiras <b>em proporção aos votos</b>, e o distritão o <b>subrepresentaria</b> (${(100 * p.distritao / 513).toFixed(1).replace(".", ",")}%), porque os votos dele estão concentrados em poucos nomes muito votados (Nikolas Ferreira, Lucas Pavanato), e os votos acima do que um deputado precisa seriam "perdidos" no distritão.`;
+  chart("cPL", { type: "bar", data: { labels: ANOS, datasets: [
+      { label: "PL: sistema atual", data: ANOS.map(a => pl(a).atual), backgroundColor: css("--muted"), borderRadius: 3 },
+      { label: "PL: distritão", data: ANOS.map(a => pl(a).distritao), backgroundColor: css("--s4"), borderRadius: 3 }] },
+    options: { scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, ticks: { color: css("--ink2") }, title: { display: true, text: "deputados federais", color: css("--ink2") } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${i.parsed.y} cadeiras` } } } } });
+  tab("tCurta", ["Eleição", "Trocas (de 513)", "PL: atual → distritão", "PL: % dos votos nominais", "PL: % das cadeiras (atual → distritão)", "Esquerda", "Centro", "Direita e demais", "Nº efetivo de partidos"],
+    ANOS.map(a => { const d = D[a].DF, x = pl(a), b = d.blocos; return [a, d.trocas, `${x.atual} → ${x.distritao}`, vir(x.votos_pct), `${(100 * x.atual / 513).toFixed(1).replace(".", ",")} → ${(100 * x.distritao / 513).toFixed(1).replace(".", ",")}`, `${b.E.atual} → ${b.E.distritao}`, `${b.C.atual} → ${b.C.distritao}`, `${b.D.atual} → ${b.D.distritao}`, `${vir(d.enp_atual)} → ${vir(d.enp_distritao)}`]; }));
+}
+
+function plUF() {
+  const s = cur(), a = state.ano, p = pl(a), U = s.por_uf.map(u => ({ ...u, dif: u.pl_dist - u.pl_atual })), perde = U.filter(u => u.dif < 0).sort((x, y) => x.dif - y.dif), ganha = U.filter(u => u.dif > 0);
+  $("plTxt").innerHTML = `${a}: o PL tem ${p.atual} deputados federais e teria ${p.distritao} no distritão. As UFs em que ele mais perde são ${nm(perde.slice(0, 4).map(u => `<b>${u.uf}</b> (${u.dif})`))}${ganha.length ? `; as em que ganha são ${nm(ganha.map(u => `<b>${u.uf}</b> (+${u.dif})`))}` : ""}. Em ${U.filter(u => u.dif === 0).length} das 27 UFs a conta não muda para o PL.`;
+  const o = U.slice().sort((x, y) => x.dif - y.dif);
+  chart("cPLuf", { type: "bar", data: { labels: o.map(u => u.uf), datasets: [{ label: "Cadeiras do PL: distritão − atual", data: o.map(u => u.dif), backgroundColor: o.map(u => u.dif < 0 ? css("--anti") : u.dif > 0 ? css("--s3") : css("--muted")), borderRadius: 3 }] },
+    options: { indexAxis: "y", plugins: { legend: { display: false }, tooltip: { callbacks: { label: (i) => `${o[i.dataIndex].uf}: ${o[i.dataIndex].pl_atual} → ${o[i.dataIndex].pl_dist}` } } }, scales: { x: eixo({ ticks: { color: css("--ink2"), stepSize: 1 } }), y: eixo({ grid: { display: false }, ticks: { color: css("--ink2"), autoSkip: false } }) } } });
+  tab("tUF", ["UF", "Cadeiras", "Trocas", "PL atual", "PL distritão", "Esquerda atual", "Esquerda distritão", "Direita atual", "Direita distritão"], s.por_uf.map(u => [u.uf, u.cadeiras, u.trocas, u.pl_atual, u.pl_dist, u.e_atual, u.e_dist, u.d_atual, u.d_dist]));
+}
+
+function puxadores() {
+  const Q = D["2026"].DF.puxadores, t = Q.topo;
+  $("puxTxt").innerHTML = `Em 2026, <b>${Q.n}</b> candidatos a deputado federal passaram de 1 quociente da UF. A soma do que passou do quociente deles equivale a <b>${vir(Q.excesso_total)} cadeiras</b>, e <b>${vir(Q.pl_excesso)}</b> delas são de candidatos do PL: o PL tem puxadores muito maiores que os dos outros partidos. O maior é <b>${t[0].nome} (${t[0].partido}-${t[0].uf})</b>, com ${P(t[0].votos)} votos, ${vir(t[0].em_quocientes)} quocientes da UF; ${t[0].colegas_abaixo_do_corte} deputados eleitos na lista dele <b>não estariam entre os mais votados da UF (${t[0].uf})</b>. Esse é o efeito puxador no sentido forte, e ele existe: no RS ele era pequeno; no país ele é grande, e pesa mais no PL (só em ${D["2026"].DF.por_uf.find(u => u.uf === t[0].uf).pl_atual - D["2026"].DF.por_uf.find(u => u.uf === t[0].uf).pl_dist} das ${D["2026"].DF.pl.atual - D["2026"].DF.pl.distritao} cadeiras que o PL perderia estão em ${t[0].uf}).`;
+  tab("tPux", ["Candidato", "UF", "Partido", "Votos", "Em quocientes", "Colegas eleitos abaixo do corte"], t.map(x => [x.nome, x.uf, x.partido, P(x.votos), vir(x.em_quocientes), x.colegas_abaixo_do_corte]));
+}
+
+function partidos() {
+  const s = cur(), a = state.ano, L = s.partidos.filter(p => p.atual >= 3 || p.distritao >= 3);
+  chart("cPart", { type: "bar", data: { labels: L.map(p => p.partido), datasets: [
+      { label: "Sistema atual (eleitos)", data: L.map(p => p.atual), backgroundColor: css("--muted"), borderRadius: 3 }, { label: "Distritão", data: L.map(p => p.distritao), backgroundColor: css("--s4"), borderRadius: 3 }] },
+    options: { indexAxis: "y", scales: { x: eixo({ ticks: { color: css("--ink2") } }), y: eixo({ grid: { display: false } }) }, plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${i.parsed.x} cadeiras` } } } } });
+  tab("tBloco", ["Bloco", `Câmara ${a}: atual`, "Distritão", "Diferença"], Object.keys(NB).map(k => [NB[k], s.blocos[k].atual, s.blocos[k].distritao, cel(s.blocos[k].distritao - s.blocos[k].atual)]));
+  tab("tPart", ["Partido", "Votos nominais (%)", "Atual", "Distritão", "Diferença"], s.partidos.map(p => [p.partido, vir(p.votos_pct), p.atual, p.distritao, cel(p.dif)]));
+}
+
+function trocas() {
+  const s = cur();
+  tab("tSai", ["Candidato", "UF", "Partido", "Votos", "Posição"], s.maiores_que_saem.map(x => [x.nome, x.uf, x.partido, P(x.votos), x.pos + "º"]));
+  tab("tEntra", ["Candidato", "UF", "Partido", "Votos", "Posição"], s.maiores_que_entram.map(x => [x.nome, x.uf, x.partido, P(x.votos), x.pos + "º"]));
+}
+
+function assembleias() {
+  const e = D["2026"].DE, x = e.partidos.find(p => p.partido === "PL");
+  $("assTxt").innerHTML = `Nas assembleias o efeito é menor para o PL: em 2026 ele tem ${x.atual} dos 1.059 deputados estaduais e distritais e teria ${x.distritao} (${x.dif}); ${e.trocas} deputados (${(100 * e.trocas / 1059).toFixed(0)}%) mudariam. O que muda mais é o <b>centro</b>: ${e.blocos.C.atual} → ${e.blocos.C.distritao}, enquanto a direita e demais vai de ${e.blocos.D.atual} para ${e.blocos.D.distritao}.`;
+  tab("tAss", ["Eleição", "Trocas (de 1.059)", "PL: atual → distritão", "Esquerda", "Centro", "Direita e demais", "Nº efetivo de partidos"],
+    ANOS.map(a => { const d = D[a].DE, y = d.partidos.find(p => p.partido === "PL"); return [a, d.trocas, `${y.atual} → ${y.distritao}`, `${d.blocos.E.atual} → ${d.blocos.E.distritao}`, `${d.blocos.C.atual} → ${d.blocos.C.distritao}`, `${d.blocos.D.atual} → ${d.blocos.D.distritao}`, `${vir(d.enp_atual)} → ${vir(d.enp_distritao)}`]; }));
+}
+
+function notas() {
+  const p = pl("2026"), s = D["2026"].DF;
+  nota("nota1", [`PL: <b>${p.atual} → ${p.distritao}</b> na Câmara em 2026.`, `Trocas: <b>${s.trocas}</b> de 513.`, `O distritão subrepresentaria o PL frente aos votos dele.`]);
+  const q = cur(), pp = pl(state.ano); nota("nota2", [`${state.ano}: PL ${pp.atual} → ${pp.distritao}.`, `Maiores perdas: ${cur().por_uf.slice().sort((x, y) => (x.pl_dist - x.pl_atual) - (y.pl_dist - y.pl_atual)).slice(0, 2).map(u => `${u.uf} (${u.pl_dist - u.pl_atual})`).join(" e ")}.`]);
+  nota("nota3", [`Excesso de votos dos puxadores: <b>${vir(D["2026"].DF.puxadores.excesso_total)}</b> cadeiras (PL: ${vir(D["2026"].DF.puxadores.pl_excesso)}).`, `Maior puxador: Nikolas Ferreira, ${vir(D["2026"].DF.puxadores.topo[0].em_quocientes)} quocientes.`]);
+  nota("nota4", [`Esquerda: ${s.blocos.E.atual} → ${s.blocos.E.distritao}.`, `Direita e demais: ${s.blocos.D.atual} → ${s.blocos.D.distritao} (maioria: 257).`]);
+  nota("nota5", [`${state.ano}: ${s.trocas} eleitos de verdade sairiam e ${s.trocas} mais votados entrariam.`]);
+  nota("nota6", [`Assembleias: PL ${D["2026"].DE.partidos.find(x => x.partido === "PL").atual} → ${D["2026"].DE.partidos.find(x => x.partido === "PL").distritao}.`]);
+  nota("nota7", [`Releitura da mesma votação, não previsão.`, `Eleitos oficiais do TSE (30/10/2026).`]);
+}
+function seletores() {
+  const sa = $("segAno");
+  sa.innerHTML = ANOS.map(a => `<button data-a="${a}" aria-pressed="${state.ano == a}">${a}</button>`).join("");
+  sa.onclick = (e) => { const a = e.target.dataset.a; if (!a) return; state.ano = a; seletores(); tudo(); };
+}
+function tudo() { kpis(); curta(); plUF(); puxadores(); partidos(); trocas(); assembleias(); notas(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+seletores(); tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>
