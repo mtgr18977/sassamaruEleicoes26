@@ -12,15 +12,15 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 
-from rs_bancada import ESQ, CEN, RENOME
+from rs_bancada import ESQ, CEN, RENOME, RADICAL
 
 CARGOS = {"Deputado Federal": ("DF", 31), "Deputado Estadual": ("DE", 55)}
 ANOS = (2018, 2022, 2026)
 COLS = ["DS_CARGO", "SQ_CANDIDATO", "NM_URNA_CANDIDATO", "SG_PARTIDO", "NM_FEDERACAO", "NM_COLIGACAO", "QT_VOTOS_NOMINAIS_VALIDOS", "DS_SIT_TOT_TURNO", "NM_TIPO_DESTINACAO_VOTOS"]
 r1 = lambda x: round(float(x), 1)
-# Quatro grupos (classificação minha, discutível): esquerda e centro-esquerda, centro (MDB, PSDB, Cidadania, PSD), centrão e direita (o resto) e o PL, separado porque é o partido do bolsonarismo
-bloco = lambda p: "X" if p == "PL" else "E" if p in ESQ else "C" if p in CEN else "R"
-BNOME = {"E": "Esquerda e centro-esquerda", "C": "Centro", "R": "Centrão e direita", "X": "PL"}
+# Quatro grupos (classificação minha, discutível): esquerda e centro-esquerda, centro (MDB, PSDB, Cidadania, PSD), centrão e direita (o resto) e o grupo PL, Novo e Missão, separado do centrão e da direita tradicional
+bloco = lambda p: "X" if p in RADICAL else "E" if p in ESQ else "C" if p in CEN else "R"
+BNOME = {"E": "Esquerda e centro-esquerda", "C": "Centro", "R": "Centrão e direita", "X": "PL, Novo e Missão"}
 
 
 def lista_de(r) -> str:

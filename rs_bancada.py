@@ -30,9 +30,10 @@ ESQ = {"PT", "PDT", "PSOL", "PSB", "PV", "PSTU", "PCO", "PCB", "PCdoB", "REDE", 
 CEN = {"MDB", "PSDB", "CIDADANIA", "PSD"}
 bloco = lambda p: "E" if p in ESQ else "C" if p in CEN else "D"          # 3 blocos: é o que o modelo usa (choques e variação do governador); NÃO mudar sem refazer a previsão
 BNOME = {"E": "Esquerda", "C": "Centro", "D": "Direita e demais"}
-# 4 grupos de APRESENTAÇÃO (classificação minha, discutível; como nas abas de distritão): esquerda e centro-esquerda, centro, centrão e direita, e o PL, separado do resto da direita por ser o partido do bolsonarismo
-grupo = lambda p: "X" if p == "PL" else bloco(p).replace("D", "R")
-GNOME = {"E": "Esquerda e centro-esquerda", "C": "Centro", "R": "Centrão e direita", "X": "PL"}
+# 4 grupos de APRESENTAÇÃO (classificação minha, discutível; como nas abas de distritão): esquerda e centro-esquerda, centro, centrão e direita, e o grupo PL, Novo e Missão, separado do centrão e da direita tradicional
+RADICAL = {"PL", "NOVO", "MISSÃO"}       # grupo X: PL, Novo e Missão (classificação do usuário: os três são direita, separados do centrão)
+grupo = lambda p: "X" if p in RADICAL else bloco(p).replace("D", "R")
+GNOME = {"E": "Esquerda e centro-esquerda", "C": "Centro", "R": "Centrão e direita", "X": "PL, Novo e Missão"}
 GRUPOS = "ECRX"
 
 
