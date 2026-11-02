@@ -10,8 +10,8 @@ from pathlib import Path
 # (arquivo, rótulo, grupo). A ordem é a do menu: o Resultado (a home, index.html) primeiro, depois a Previsão (previsao.html, feita antes da votação), o 2º turno e o Histórico.
 ABAS = [("index.html", "Resultado", "Presidente"), ("previsao.html", "Previsão", "Presidente"), ("segundo-turno.html", "2º turno", "Presidente"), ("onde-virou.html", "Onde virou", "Presidente"), ("historico.html", "Histórico", "Presidente"), ("analise.html", "Análise", "Presidente"), ("redes.html", "Redes sociais", "Presidente"),
         ("portoalegre.html", "Porto Alegre", "Rio Grande do Sul"), ("rs.html", "Governo RS", "Rio Grande do Sul"), ("analise-governo.html", "Análise do governo", "Rio Grande do Sul"),
-        ("bancada.html", "Bancada RS", "Rio Grande do Sul"), ("analise-bancada.html", "Análise da bancada", "Rio Grande do Sul"),
-        ("analise-senado.html", "Análise do Senado", "Senado"), ("analise-modelo.html", "Previsto × real", "Modelo"), ("documentacao.html", "Documentação", "Sobre")]
+        ("bancada.html", "Bancada RS", "Rio Grande do Sul"), ("analise-bancada.html", "Análise da bancada", "Rio Grande do Sul"), ("distritao.html", "Distritão RS", "Rio Grande do Sul"),
+        ("analise-senado.html", "Análise do Senado", "Congresso"), ("distritao-brasil.html", "Distritão Brasil", "Congresso"), ("analise-modelo.html", "Previsto × real", "Modelo"), ("documentacao.html", "Documentação", "Sobre")]
 # O menu é um painel que abre pelo botão (hambúrguer). Sem JavaScript ele fica sempre visível (a classe "js" é que o esconde).
 SCRIPT_MENU = ('<script>(function(){var d=document,r=d.documentElement,b=d.getElementById("menu-btn"),m=d.getElementById("menu");if(!b||!m)return;r.classList.add("js");'
                'function f(o){m.classList.toggle("aberto",o);b.setAttribute("aria-expanded",o)}'

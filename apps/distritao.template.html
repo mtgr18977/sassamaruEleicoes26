@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distritão no RS · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+<style>
+  .duas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px } @media (max-width:760px) { .duas { grid-template-columns:minmax(0,1fr) } }
+  .titc { margin:18px 0 2px; font-size:.95rem }
+  .txt th, .txt td { text-align:left; vertical-align:top }
+  table.t td.neg { color:var(--pt) } table.t td.pos { color:var(--anti) }
+  .lista { margin:8px 0; padding-left:20px } .lista li { margin:6px 0 }
+  .filtros { display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; margin:10px 0 }
+  details { margin:8px 0 } details > summary { cursor:pointer; font-weight:600; padding:6px 0 }
+</style>
+</head>
+<body>
+<main>
+  <nav class="tabs" aria-label="Seções do site">__NAV__</nav>
+  <div class="topo"><div><h1>E se o RS elegesse só os mais votados? Sem puxadores, sem quociente</h1>
+  <p class="sub">O sistema atual elege deputados por <b>lista</b>: o partido (ou a federação) soma os votos, ganha cadeiras pelo quociente e as entrega aos mais votados dele. Aqui eu faço o contrário: pego os votos de cada candidato e elejo os <b>31 (federal) e os 55 (estadual) mais votados do estado</b>, sem olhar partido. É o chamado distritão. Eu refaço 2018, 2022 e 2026.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
+  <div class="an">
+  <div class="aviso"><b>É uma releitura da mesma votação, não uma previsão do que aconteceria.</b> Num distritão os partidos lançariam candidatos de outro jeito, os eleitores votariam de outro jeito (o voto "útil" mudaria) e os votos de legenda (de 3% a 8% do total) não elegeriam ninguém. Eu não modelo nada disso: uso os votos nominais válidos do TSE (arquivos de dados abertos por candidato e zona, 2026 gerado em 30/10/2026) e peguei os eleitos de verdade na coluna de situação do próprio TSE. "Puxador" aqui é o candidato que tem votos acima do quociente eleitoral (votos válidos ÷ cadeiras) e, por isso, ajuda a eleger outros da mesma lista.</div>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="sec"><div>
+  <h2>1. A resposta curta</h2>
+  <p id="curtaTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cTrocas"></canvas></div>
+  <div id="tCurta"></div>
+  <p class="fonte">"Trocas" = candidatos que foram eleitos no sistema atual e não estariam entre os N mais votados (e, em número igual, os mais votados que ficaram de fora). Não há empate de votos na posição de corte em nenhuma das seis disputas. O quociente eleitoral é votos válidos (nominais + legenda) ÷ cadeiras; em 2018 e 2022 os votos válidos vêm de <code>datasets/tse-legislativo-rs-listas.csv</code>.</p>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div>
+  <h2>2. Quem entraria e quem sairia</h2>
+  <div class="filtros"><span>Eleição <span class="seg" id="segAno"></span></span><span>Casa <span class="seg" id="segCargo"></span></span></div>
+  <p id="trocaTxt"></p>
+  <div class="duas"><div><h3 class="titc">Eleitos de verdade que sairiam</h3><div id="tSai"></div></div><div><h3 class="titc">Mais votados que entrariam</h3><div id="tEntra"></div></div></div>
+  <p class="fonte">Votos nominais válidos. "Posição" = colocação entre todos os candidatos do estado por votos. A linha de corte do distritão é o voto do último dos N mais votados.</p>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div>
+  <h2>3. Quanto muda por partido e por bloco</h2>
+  <div class="cv" style="height:420px"><canvas id="cPart"></canvas></div>
+  <div id="tBloco"></div>
+  <details><summary>Ver a tabela por partido</summary><div id="tPart"></div></details>
+  <p class="fonte">Grupos (classificação minha, discutível): esquerda e centro-esquerda (PT, PDT, PSOL, PSB, PV, PCdoB, Rede, UP e outros), centro (MDB, PSDB, Cidadania, PSD), centrão e direita (PP, União, Republicanos, Podemos e o resto) e o PL, que eu separo do resto da direita por ser o partido do bolsonarismo (muitos analistas o tratam como extrema direita, e o centrão como direita). Vista de fora, a esquerda brasileira é em boa parte de centro-esquerda. O partido é o do candidato, também dentro de federações.</p>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div>
+  <h2>4. Os puxadores de verdade</h2>
+  <p id="puxTxt"></p>
+  <div id="tPux"></div>
+  <p class="fonte">Em quocientes = votos do candidato ÷ quociente eleitoral. Excesso = parte dos votos acima de 1 quociente. "Colegas eleitos" = outros candidatos da mesma lista (partido, federação ou coligação) que se elegeram; "abaixo do corte" = quantos deles não estariam entre os N mais votados. O que eu mostro é a medida direta: não separo o efeito do puxador do efeito da lista inteira.</p>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div>
+  <h2>5. O efeito que importa não é o do puxador: é o da lista</h2>
+  <p id="listaTxt"></p>
+  <div id="tListas"></div>
+  <p class="fonte">Lista = federação (2022 e 2026), coligação (2018) ou partido isolado. "Atual" = eleitos da lista; "distritão" = candidatos da lista entre os N mais votados. "Campeão" = o candidato mais votado da lista.</p>
+  </div><aside class="side" id="nota5"></aside></section>
+
+  <section class="sec"><div>
+  <h2>6. Análise: o que as mudanças dizem no RS</h2>
+  <p class="lead" id="anLead"></p>
+  <h3 class="titc">a) Tamanho da mudança, ao lado do país</h3>
+  <p id="anA"></p>
+  <h3 class="titc">b) Dois mecanismos: puxador e lista</h3>
+  <p id="anB"></p>
+  <h3 class="titc">c) Proporcionalidade e votos que não elegem ninguém</h3>
+  <p id="anC"></p>
+  <div id="tAnRS"></div>
+  <p class="fonte">Índice de Gallagher = raiz de metade da soma dos quadrados das diferenças entre a parcela de votos nominais e a parcela de cadeiras de cada partido no estado (em p.p.; zero seria proporcionalidade perfeita). Votos "sem cadeira" no sistema atual = votos de listas (federação ou partido) que não elegeram ninguém; no distritão = votos de candidatos fora dos N mais votados. "Puxador" = candidato com 1 quociente ou mais.</p>
+  <h3 class="titc">d) O que eu concluo e o que eu não concluo</h3>
+  <div class="duas"><div><h4>Eu concluo</h4><ul class="lista" id="anConc"></ul></div><div><h4>Eu não concluo</h4><ul class="lista" id="anNao"></ul></div></div>
+  </div><aside class="side" id="notaAn"></aside></section>
+
+  <section class="sec"><div>
+  <h2>7. Limites e como reproduzir</h2>
+  <ul class="lista">
+    <li>Eu uso a mesma votação nos dois sistemas. Num distritão de verdade o comportamento muda: lançam-se mais celebridades e menos chapas "de militância", e o eleitor evita candidatos sem chance. Os números daqui são o que a votação de 2026 daria <b>se</b> fosse lida desse jeito.</li>
+    <li>Os candidatos com votos anulados (sub judice) ficam fora: eu uso <code>QT_VOTOS_NOMINAIS_VALIDOS</code>. Votos de legenda não entram em nenhum candidato.</li>
+    <li>Os eleitos de 2026 são os oficiais do TSE (<code>ELEITO POR QP</code> e <code>ELEITO POR MÉDIA</code>; arquivo de 30/10, 31 federais e 55 estaduais). Eu conferi a contagem por partido contra a que eu usava em <a href="analise-bancada.html">Análise da bancada</a> (feita a partir de listas de imprensa): batem em todos os partidos.</li>
+    <li>Não separo mulheres, negros nem a distribuição regional dos eleitos: o distritão tende a concentrar a representação em quem tem mais votos individuais, e essa parte eu não medi.</li>
+  </ul>
+  <p class="fonte">Para reproduzir: <code>python distritao_rs.py</code> (precisa dos zips <code>votacao_candidato_munzona_2018/2022/2026.zip</code> e <code>detalhe_votacao_munzona_2026.zip</code> em <code>datasets/tse_raw/</code>) e <code>python gerar_pagina_distritao.py</code>.</p>
+  </div><aside class="side" id="nota6"></aside></section>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = __DATA__;
+state.ano = "2026"; state.cargo = "DF";
+const P = (x) => pc(Math.round(x)), sgn = (x) => (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x);
+const CASA = { DF: "Câmara dos Deputados", DE: "Assembleia Legislativa" }, CASA_C = { DF: "Câmara", DE: "Assembleia" };
+const cur = () => D[state.ano][state.cargo];
+const cel = (v) => `<span class="${v < 0 ? "neg" : "pos"}">${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v)}</span>`;
+const nm = (a) => a.length ? a.join(", ") : "nenhum";
+
+function kpis() {
+  const f = D["2026"].DF, e = D["2026"].DE;
+  $("kpis").innerHTML = `<div class="kpi l"><span>Câmara 2026: eleitos que continuam</span><b>${f.iguais} de ${f.cadeiras}</b><small>${f.trocas} cadeiras mudariam de dono</small></div>
+    <div class="kpi f"><span>Assembleia 2026: eleitos que continuam</span><b>${e.iguais} de ${e.cadeiras}</b><small>${e.trocas} cadeiras mudariam de dono</small></div>
+    <div class="kpi o"><span>Em 2018 e 2022 (federal / estadual)</span><b>${D["2018"].DF.trocas} e ${D["2022"].DF.trocas} / ${D["2018"].DE.trocas} e ${D["2022"].DE.trocas}</b><small>trocas por eleição</small></div>
+    <div class="kpi"><span>Eleitos abaixo do quociente, 2026</span><b>${f.eleitos_abaixo_do_quociente} de ${f.cadeiras} / ${e.eleitos_abaixo_do_quociente} de ${e.cadeiras}</b><small>votaram menos que 1 quociente</small></div>`;
+}
+
+function curta() {
+  const f = D["2026"].DF, e = D["2026"].DE, anos = ["2018", "2022", "2026"];
+  const pf = anos.map(a => 100 * D[a].DF.trocas / D[a].DF.cadeiras), pe = anos.map(a => 100 * D[a].DE.trocas / D[a].DE.cadeiras);
+  $("curtaTxt").innerHTML = `<b>No RS o cenário seria bem parecido.</b> Em 2026, ${f.iguais} dos ${f.cadeiras} deputados federais e ${e.iguais} dos ${e.cadeiras} estaduais seriam os mesmos: mudariam <b>${f.trocas}</b> cadeiras na Câmara (${(100 * f.trocas / f.cadeiras).toFixed(0)}%) e <b>${e.trocas}</b> na Assembleia (${(100 * e.trocas / e.cadeiras).toFixed(0)}%). Nas três eleições que eu refiz, o distritão trocaria de ${Math.min(...anos.map(a => D[a].DF.trocas))} a ${Math.max(...anos.map(a => D[a].DF.trocas))} dos 31 federais e de ${Math.min(...anos.map(a => D[a].DE.trocas))} a ${Math.max(...anos.map(a => D[a].DE.trocas))} dos 55 estaduais. A maior parte dos eleitos já está entre os mais votados: a lista só decide quem fica com as últimas cadeiras. O efeito foi maior na Assembleia nas três eleições (a Assembleia tem mais cadeiras, e o corte fica em votações menores, de ${P(e.corte_distritao)} votos em 2026, onde a soma dos votos da lista pesa mais).`;
+  chart("cTrocas", { type: "bar", data: { labels: anos, datasets: [
+      { label: "Câmara (31)", data: pf, backgroundColor: css("--s4"), borderRadius: 3 }, { label: "Assembleia (55)", data: pe, backgroundColor: css("--s3"), borderRadius: 3 }] },
+    options: { scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, ticks: { color: css("--ink2"), callback: v => v + "%" } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${i.parsed.y.toFixed(0)}% das cadeiras mudariam de dono` } } } } });
+  const l = [];
+  anos.forEach(a => ["DF", "DE"].forEach(c => { const s = D[a][c]; l.push([a, CASA_C[c], s.cadeiras, P(s.corte_distritao), P(s.menor_eleito_atual), P(s.maior_nao_eleito_atual), s.iguais, s.trocas, `${s.n_partidos_atual} → ${s.n_partidos_distritao}`, `${s.enp_atual.toFixed(1).replace(".", ",")} → ${s.enp_distritao.toFixed(1).replace(".", ",")}`]); }));
+  tab("tCurta", ["Eleição", "Casa", "Cadeiras", "Corte do distritão (votos)", "Menos votado eleito de verdade", "Mais votado que ficou de fora", "Iguais", "Trocas", "Partidos com cadeira", "Nº efetivo de partidos"], l);
+}
+
+function trocas() {
+  const s = cur(), a = state.ano, c = state.cargo;
+  $("trocaTxt").innerHTML = `${CASA[c]}, ${a}: o menos votado entre os eleitos de verdade teve <b>${P(s.menor_eleito_atual)}</b> votos e o mais votado que ficou de fora teve <b>${P(s.maior_nao_eleito_atual)}</b>. No distritão o corte seria de ${P(s.corte_distritao)} votos. Sairiam <b>${s.trocas}</b> deputados (${nm(s.so_atual.map(x => `${x.nome} (${x.partido})`))}) e entrariam ${nm(s.so_distritao.map(x => `${x.nome} (${x.partido})`))}.`;
+  tab("tSai", ["Candidato", "Partido", "Votos", "Posição"], s.so_atual.map(x => [x.nome, x.partido, P(x.votos), x.pos + "º"]));
+  tab("tEntra", ["Candidato", "Partido", "Votos", "Posição"], s.so_distritao.map(x => [x.nome, x.partido, P(x.votos), x.pos + "º"]));
+}
+
+function partidos() {
+  const s = cur(), a = state.ano, c = state.cargo, B = s.blocos, nb = { E: "Esquerda e centro-esquerda", C: "Centro", R: "Centrão e direita", X: "PL" };
+  const L = s.partidos.filter(p => p.atual || p.distritao);
+  chart("cPart", { type: "bar", data: { labels: L.map(p => p.partido), datasets: [
+      { label: "Sistema atual (eleitos)", data: L.map(p => p.atual), backgroundColor: css("--muted"), borderRadius: 3 }, { label: "Distritão", data: L.map(p => p.distritao), backgroundColor: css("--s4"), borderRadius: 3 }] },
+    options: { indexAxis: "y", scales: { x: eixo({ ticks: { color: css("--ink2"), stepSize: 1 } }), y: eixo({ grid: { display: false } }) }, plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${i.parsed.x} cadeiras` } } } } });
+  tab("tBloco", ["Bloco", `${CASA_C[c]} ${a}: sistema atual`, "Distritão", "Diferença"], Object.keys(nb).map(k => [nb[k], B[k].atual, B[k].distritao, cel(B[k].distritao - B[k].atual)]));
+  tab("tPart", ["Partido", "Sistema atual", "Distritão", "Diferença"], s.partidos.map(p => [p.partido, p.atual, p.distritao, cel(p.dif)]));
+}
+
+function puxadores() {
+  const s = cur(), c = state.cargo, x = s.puxadores.filter(p => p.em_quocientes >= 1);
+  $("puxTxt").innerHTML = `${CASA[c]}, ${state.ano}: <b>${x.length}</b> candidatos passaram de 1 quociente (${P(s.quociente)} votos). Somando só os votos que passaram de 1 quociente em cada um, o "excesso" dos puxadores equivale a <b>${String(s.excesso_total).replace(".", ",")} cadeira${s.excesso_total >= 1.5 ? "s" : ""}</b>: é o tamanho do efeito puxador, em cadeiras. ${x.length ? `O maior foi <b>${x[0].nome} (${x[0].partido})</b>, com ${P(x[0].votos)} votos (${String(x[0].em_quocientes).replace(".", ",")} quociente${x[0].em_quocientes >= 2 ? "s" : ""}); a lista dele elegeu ${x[0].companheiros_eleitos} colega${x[0].companheiros_eleitos === 1 ? "" : "s"}${x[0].companheiros_eleitos ? `, dos quais ${x[0].companheiros_abaixo_do_corte === 0 ? "nenhum" : x[0].companheiros_abaixo_do_corte} ${x[0].companheiros_abaixo_do_corte === 1 ? "não estaria" : "não estariam"} entre os mais votados` : ""}.` : ""}`;
+  tab("tPux", ["Candidato", "Partido", "Votos", "Em quocientes", "Excesso", "Eleito", "Colegas eleitos", "Colegas abaixo do corte"],
+    s.puxadores.slice(0, 12).map(p => [p.nome, p.partido, P(p.votos), String(p.em_quocientes).replace(".", ","), String(p.excesso).replace(".", ","), p.eleito ? "sim" : "não", p.companheiros_eleitos, p.companheiros_abaixo_do_corte]));
+}
+
+function listas() {
+  const s = cur(), c = state.cargo, dif = s.listas.slice().sort((a, b) => Math.abs(b.atual - b.distritao) - Math.abs(a.atual - a.distritao)), g = dif.filter(l => l.atual > l.distritao), p = dif.filter(l => l.atual < l.distritao);
+  $("listaTxt").innerHTML = `${CASA[c]}, ${state.ano}: as listas que ganham cadeira com o sistema atual (frente ao distritão) são ${nm(g.map(l => `<b>${l.lista.replace(/^FEDERAÇÃO /, "")}</b> (+${l.atual - l.distritao})`))}; as que perdem, ${nm(p.map(l => `<b>${l.lista.replace(/^FEDERAÇÃO /, "")}</b> (${l.atual - l.distritao})`))}. Isso vem da regra: cada lista recebe cadeiras pela <b>soma</b> dos seus votos (quociente e sobras) e só depois as entrega aos mais votados dela. Uma lista pode ter mais candidatos entre os N mais votados do que cadeiras (e perde), ou menos (e ganha com a sobra).`;
+  tab("tListas", ["Lista", "Votos da lista", "Eleitos (atual)", "Distritão", "Campeão da lista", "Votos do campeão", "Campeão: % da lista"], s.listas.map(l => [l.lista.replace(/^FEDERAÇÃO /, ""), P(l.votos_lista), l.atual, l.distritao, l.campeao, P(l.votos_campeao), String(l.parte_do_campeao).replace(".", ",") + "%"]));
+}
+
+function notas() {
+  const f = D["2026"].DF, e = D["2026"].DE;
+  nota("nota1", [`Câmara 2026: <b>${f.iguais} de ${f.cadeiras}</b> seriam os mesmos.`, `Assembleia 2026: <b>${e.iguais} de ${e.cadeiras}</b>.`, `O efeito é maior na Assembleia.`]);
+  nota("nota2", [`O corte do distritão: ${P(cur().corte_distritao)} votos.`, `Troca: quem tem mais votos que o último eleito mas fica de fora pela lista.`]);
+  const bd = Object.values(cur().blocos).map(b => Math.abs(b.distritao - b.atual)); nota("nota3", [`${CASA_C[state.cargo]} ${state.ano}: nenhum bloco muda mais que <b>${Math.max(...bd)}</b> cadeira${Math.max(...bd) === 1 ? "" : "s"}.`, `Por partido, a diferença pode ser maior (veja a tabela).`]);
+  nota("nota4", [`Excesso de votos dos puxadores, ${CASA_C[state.cargo]} ${state.ano}: <b>${String(cur().excesso_total).replace(".", ",")}</b> cadeira(s).`]);
+  nota("nota5", [`O que pesa é a soma dos votos da lista, não um nome só.`]);
+  nota("nota6", [`É releitura da mesma votação, não previsão.`, `Eleitos oficiais do TSE, 30/10/2026.`]);
+}
+
+function analise() {
+  const g26 = D["2026"], R = D.analise_rs, B = D.brasil, pct = (a, b) => (100 * a / b).toFixed(0);
+  const f = g26.DF, e = g26.DE, Af = R.DF, Ae = R.DE, v = (x) => String(x).replace(".", ",");
+  const sai = (s) => s.so_atual.map(x => `${x.nome} (${x.partido})`).join(", "), entra = (s) => s.so_distritao.map(x => `${x.nome} (${x.partido})`).join(", ");
+  const pxl = (a) => a.mecanismos.por_partido.map(x => `${x.partido} (${x.sai_com_puxador_na_lista} de ${x.sai})`).join(", ");
+  const ple = e.partidos.find(x => x.partido === "PL"), pde = e.partidos.find(x => x.partido === "PDT"), ptf = f.partidos.find(x => x.partido === "PT"), pte = e.partidos.find(x => x.partido === "PT");
+  $("anLead").innerHTML = `Eu comparo o RS com o país (aba <a href="distritao-brasil.html">Distritão Brasil</a>). Resumo: <b>o RS muda tanto quanto o país</b> (${pct(f.trocas, f.cadeiras)}% da Câmara e ${pct(e.trocas, e.cadeiras)}% da Assembleia, contra ${pct(B.DF.trocas, B.DF.cadeiras)}% e ${pct(B.DE.trocas, B.DE.cadeiras)}% no Brasil), mas com <b>números pequenos demais</b> para falar em tendência: são ${f.trocas} e ${e.trocas} cadeiras. O que dá para ver é o mecanismo de cada troca.`;
+  $("anA").innerHTML = `Em 2026, ${f.trocas} dos ${f.cadeiras} federais e ${e.trocas} dos ${e.cadeiras} estaduais mudariam, e os que entram têm em média <b>${v(Af.razao_media_entra_sai)}×</b> (Câmara) e <b>${v(Ae.razao_media_entra_sai)}×</b> (Assembleia) os votos dos que saem; no país o múltiplo é ${v(B.DF.razao)}× (Câmara) e ${v(B.DE.razao)}× (assembleias). Na Câmara sairiam ${sai(f)}; entrariam ${entra(f)}. Na Assembleia, sairiam ${sai(e)}; entrariam ${entra(e)}.`;
+  $("anB").innerHTML = `<b>Câmara:</b> ${Af.mecanismos.sai_com_puxador} dos ${f.trocas} que sairiam estão em listas com um puxador (${pxl(Af)}). São Alceu Moreira (MDB, 1,11 quociente) e Rony Gabriel (Pode, 1,14); a terceira saída, de Busato (União), é de lista sem puxador: vem da soma e das sobras. <b>Assembleia:</b> ${Ae.mecanismos.sai_com_puxador} dos ${e.trocas} estão em listas com puxador (${pxl(Ae)}). Os três deputados do PL que sairiam estão todos na lista do PL, que tem <b>três puxadores</b> (Adri Cherini, 1,17 quociente, Prof. Cláudio Branchieri, 1,11, e Comandante Nádia, 1,00); os três do PDT estão em lista sem puxador: a cadeira deles vem do quociente e das sobras, e o PDT cai de ${pde.atual} para ${pde.distritao} cadeira${pde.distritao === 1 ? "" : "s"}. O PT, ao contrário, ganharia ${ptf.distritao - ptf.atual} na Câmara e ${pte.distritao - pte.atual} na Assembleia, porque tem muitos candidatos com votação alta e nenhum puxador (o mais votado do PT, Maria do Rosário, teve 0,89 quociente na Câmara e Leonel Radde, 0,84 na Assembleia).`;
+  $("anC").innerHTML = `No RS o distritão seria <b>menos proporcional</b> aos votos dos partidos nas duas casas (Gallagher ${v(Af.gallagher_atual)} → ${v(Af.gallagher_distritao)} na Câmara e ${v(Ae.gallagher_atual)} → ${v(Ae.gallagher_distritao)} na Assembleia). Com poucas cadeiras (31 e 55), uma troca de 3 ou 4 cadeiras entre partidos já pesa muito nesse índice. E ele <b>despreza votos</b>: <b>${v(Af.votos_sem_cadeira.fora_dos_n_distritao_pct)}%</b> dos votos nominais para federal e <b>${v(Ae.votos_sem_cadeira.fora_dos_n_distritao_pct)}%</b> para estadual vão para candidatos que não se elegem, contra ${v(Af.votos_sem_cadeira.lista_sem_cadeira_pct)}% e ${v(Ae.votos_sem_cadeira.lista_sem_cadeira_pct)}% de votos em listas sem nenhuma cadeira no sistema atual.`;
+  tab("tAnRS", ["Casa (2026)", "Trocas", "Múltiplo de votos (entra ÷ sai)", "Sairiam com puxador na lista", "Gallagher: atual → distritão", "Votos sem cadeira: atual (listas) → distritão (candidatos), %"],
+    [["Câmara (31)", f.trocas, v(Af.razao_media_entra_sai) + "×", `${Af.mecanismos.sai_com_puxador} de ${f.trocas}`, `${v(Af.gallagher_atual)} → ${v(Af.gallagher_distritao)}`, `${v(Af.votos_sem_cadeira.lista_sem_cadeira_pct)} → ${v(Af.votos_sem_cadeira.fora_dos_n_distritao_pct)}`],
+     ["Assembleia (55)", e.trocas, v(Ae.razao_media_entra_sai) + "×", `${Ae.mecanismos.sai_com_puxador} de ${e.trocas}`, `${v(Ae.gallagher_atual)} → ${v(Ae.gallagher_distritao)}`, `${v(Ae.votos_sem_cadeira.lista_sem_cadeira_pct)} → ${v(Ae.votos_sem_cadeira.fora_dos_n_distritao_pct)}`]]);
+  const li = (id, a) => $(id).innerHTML = a.map(x => `<li>${x}</li>`).join("");
+  li("anConc", [`O RS muda na mesma proporção do país: cerca de um em cada oito ou dez deputados.`,
+    `As trocas colocam candidatos com bem mais votos no lugar de colegas de lista: ${v(Af.razao_media_entra_sai)}× na Câmara e ${v(Ae.razao_media_entra_sai)}× na Assembleia.`,
+    `O PL perde ${ple.atual - ple.distritao} cadeiras na Assembleia por puxadores (três candidatos acima de 1 quociente) e o PDT perde ${pde.atual - pde.distritao} por quociente e sobras; PT e PSD ganham.`,
+    `O distritão desprezaria uma parcela muito maior dos votos do que o sistema atual.`]);
+  li("anNao", [`Que haja uma tendência: 3 e 7 trocas são pouca coisa para generalizar.`,
+    `Que o PDT perderia de fato 3 cadeiras: um distritão mudaria as candidaturas do partido, e o PDT teria incentivo a lançar menos nomes e mais fortes.`,
+    `Qualquer coisa sobre gênero, raça, regiões do estado ou o voto de legenda.`]);
+  nota("notaAn", [`Mudança: ${pct(f.trocas, f.cadeiras)}% da Câmara e ${pct(e.trocas, e.cadeiras)}% da Assembleia; no país, ${pct(B.DF.trocas, B.DF.cadeiras)}% e ${pct(B.DE.trocas, B.DE.cadeiras)}%.`, `Puxador: ${Af.mecanismos.sai_com_puxador} de ${f.trocas} (Câmara) e ${Ae.mecanismos.sai_com_puxador} de ${e.trocas} (Assembleia).`]);
+}
+
+function seletores() {
+  const sa = $("segAno"), sc = $("segCargo");
+  sa.innerHTML = ["2018", "2022", "2026"].map(a => `<button data-a="${a}" aria-pressed="${state.ano == a}">${a}</button>`).join("");
+  sa.onclick = (e) => { const a = e.target.dataset.a; if (!a) return; state.ano = a; seletores(); tudo(); };
+  sc.innerHTML = ["DF", "DE"].map(c => `<button data-c="${c}" aria-pressed="${state.cargo == c}">${c === "DF" ? "Câmara" : "Assembleia"}</button>`).join("");
+  sc.onclick = (e) => { const c = e.target.dataset.c; if (!c) return; state.cargo = c; seletores(); tudo(); };
+}
+function tudo() { kpis(); curta(); analise(); trocas(); partidos(); puxadores(); listas(); notas(); }
+aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
+seletores(); tudo();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tudo);
+</script>
+</body>
+</html>
