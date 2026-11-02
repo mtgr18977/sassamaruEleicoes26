@@ -13,7 +13,7 @@
   <div class="topo"><div><h1>Análise: bancada do RS, 1º turno (4/10/2026)</h1>
   <p class="sub">Aqui eu mostro quem ganhou e quem perdeu cadeiras na Câmara (31) e na Assembleia (55), o que o meu modelo previu e o que o resultado diz sobre a "onda" do PL.</p></div><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button></div>
   <div class="an">
-  <div class="aviso"><b>Os dados são preliminares e eu não os conferi no TSE nem na Assembleia.</b> As cadeiras por partido são contagem minha, a partir das listas de eleitos da CNN Brasil e da Gazeta do Povo (federal) e da CNN Brasil, batida com uma busca web (estadual); nos dois casos a soma fecha 31 e 55. Os blocos e as federações são os do meu modelo (PSD no Centro). Fontes em <code>datasets/resultado-2026-rs-bancada.csv</code>. <b>Atualização de 2/11:</b> conferi a contagem de cadeiras por partido contra a situação de eleito do TSE (dados abertos por candidato, arquivo de 30/10): bate em todos os partidos, nas duas casas (<a href="distritao.html">Distritão RS</a>).</div>
+  <div class="aviso"><b>Os dados são preliminares e eu não os conferi no TSE nem na Assembleia.</b> As cadeiras por partido são contagem minha, a partir das listas de eleitos da CNN Brasil e da Gazeta do Povo (federal) e da CNN Brasil, batida com uma busca web (estadual); nos dois casos a soma fecha 31 e 55. Os grupos são quatro (classificação minha, discutível: esquerda e centro-esquerda, centro, centrão e direita, e o PL, que eu separo do resto da direita por ser o partido do bolsonarismo; muitos analistas o tratam como extrema direita e o centrão como direita); a previsão em si usa três blocos (o PL entra em "direita e demais"). As federações são as do meu modelo. Fontes em <code>datasets/resultado-2026-rs-bancada.csv</code>. <b>Atualização de 2/11:</b> conferi a contagem de cadeiras por partido contra a situação de eleito do TSE (dados abertos por candidato, arquivo de 30/10): bate em todos os partidos, nas duas casas (<a href="distritao.html">Distritão RS</a>).</div>
   <div class="kpis" id="kpis"></div>
 
   <section class="sec"><div>
@@ -43,7 +43,7 @@
   <h2>4. A aritmética da maioria</h2>
   <p id="maiTxt"></p>
   <div class="cv" style="height:260px"><canvas id="cMai"></canvas></div>
-  <p class="fonte">Os blocos que eu uso: Esquerda (PT, PCdoB, PDT, PSOL, PSB, PV…), Centro (MDB, PSD, PSDB, Cidadania) e Direita (PL, PP, União, Republicanos, Podemos, Novo e demais). Não são coalizões nem base de governo: partidos de um bloco votam separados, e a Assembleia e a Câmara têm dinâmicas próprias.</p>
+  <p class="fonte">Os grupos que eu uso: esquerda e centro-esquerda (PT, PCdoB, PDT, PSOL, PSB, PV…), centro (MDB, PSD, PSDB, Cidadania), centrão e direita (PP, União, Republicanos, Podemos, Novo e demais) e o PL, separado do resto da direita. Não são coalizões nem base de governo: partidos de um bloco votam separados, e a Assembleia e a Câmara têm dinâmicas próprias.</p>
   </div><aside class="side" id="nota4"></aside></section>
   <section class="sec"><div>
   <h2>5. Limites desta análise</h2>
@@ -62,6 +62,8 @@
 <script>
 const D = __DATA__;
 state.cargo = "DF";
+Object.assign(BNOME, D.bloco_nome);   // nesta aba os 4 grupos têm os nomes completos
+const dir = (B) => ({ real: B.R.real + B.X.real, e22: B.R.e22 + B.X.e22, atual: B.R.atual + B.X.atual, med: B.R.med + B.X.med });   // PL + centrão e direita (o que antes era "Direita")
 const NOMECARGO = { DF: "Câmara dos Deputados (31 cadeiras)", DE: "Assembleia Legislativa (55 cadeiras)" };
 const cur = () => D[state.cargo], tot = () => D.cadeiras[state.cargo];
 const nomeLista = (l) => l.lista;
@@ -70,8 +72,8 @@ function kpis() {
   const f = D.DF.blocos, e = D.DE.blocos, pl = (c) => D[c].listas.find(l => l.lista === "PL");
   $("kpis").innerHTML = `<div class="kpi f"><span>PL na Câmara</span><b>${pl("DF").real}</b><small>de 31 · eram ${pl("DF").eleitos_2022} eleitos em 2022</small></div>
     <div class="kpi f"><span>PL na Assembleia</span><b>${pl("DE").real}</b><small>de 55 · eram ${pl("DE").eleitos_2022} eleitos em 2022</small></div>
-    <div class="kpi"><span>Direita na Câmara</span><b>${f.D.real}</b><small>de 31 (maioria: 16) · eram ${f.D.e22} em 2022</small></div>
-    <div class="kpi"><span>Direita na Assembleia</span><b>${e.D.real}</b><small>de 55 (maioria: 28) · eram ${e.D.e22} em 2022</small></div>`;
+    <div class="kpi"><span>PL + centrão e direita na Câmara</span><b>${dir(f).real}</b><small>de 31 (maioria: 16) · eram ${dir(f).e22} em 2022</small></div>
+    <div class="kpi"><span>PL + centrão e direita na Assembleia</span><b>${dir(e).real}</b><small>de 55 (maioria: 28) · eram ${dir(e).e22} em 2022</small></div>`;
 }
 function lista() {
   const c = cur(), L = c.listas.slice().sort((a, b) => b.real - a.real || b.med - a.med);
@@ -89,23 +91,23 @@ function lista() {
 }
 function modelo() {
   const c = cur(), L = c.listas.filter(l => l.med >= 0.5 || l.real > 0), fora = L.filter(l => l.real < l.p10 || l.real > l.p90), n = L.length;
-  $("modTxt").innerHTML = `${NOMECARGO[state.cargo]}: o resultado ficou dentro da faixa de 80% do modelo em <b>${n - fora.length} de ${n}</b> listas (eu calibrei a faixa para cobrir ~80%, e no backtest de 2010–2022 ela cobriu 82%). Fora: ${fora.map(l => `<b>${l.lista}</b> (previsto ${l.mediana}, faixa ${l.p10}–${l.p90}; eleitos ${l.real})`).join("; ") || "nenhuma"}. A diferença total foi de <b>${f1(c.trocadas)} cadeiras trocadas</b> (metade da soma dos desvios por lista), contra ${f1(D.backtest_med)} em média no backtest (2010–2022). Nos <b>blocos</b>, o resultado ficou dentro da faixa em ${["E", "C", "D"].filter(b => c.blocos[b].real >= c.blocos[b].p10 && c.blocos[b].real <= c.blocos[b].p90).length} de 3.`;
-  const B = c.blocos, ks = ["E", "C", "D"];
+  $("modTxt").innerHTML = `${NOMECARGO[state.cargo]}: o resultado ficou dentro da faixa de 80% do modelo em <b>${n - fora.length} de ${n}</b> listas (eu calibrei a faixa para cobrir ~80%, e no backtest de 2010–2022 ela cobriu 82%). Fora: ${fora.map(l => `<b>${l.lista}</b> (previsto ${l.mediana}, faixa ${l.p10}–${l.p90}; eleitos ${l.real})`).join("; ") || "nenhuma"}. A diferença total foi de <b>${f1(c.trocadas)} cadeiras trocadas</b> (metade da soma dos desvios por lista), contra ${f1(D.backtest_med)} em média no backtest (2010–2022). Nos <b>blocos</b>, o resultado ficou dentro da faixa em ${["E", "C", "R", "X"].filter(b => c.blocos[b].real >= c.blocos[b].p10 && c.blocos[b].real <= c.blocos[b].p90).length} de 4.`;
+  const B = c.blocos, ks = ["E", "C", "R", "X"];
   chart("cBlocos", { type: "bar", data: { labels: ks.map(b => BNOME[b]), datasets: [
     { label: "Eleitos em 2022", data: ks.map(b => B[b].e22), backgroundColor: css("--line") },
     { label: "Bancada hoje", data: ks.map(b => B[b].atual), backgroundColor: css("--muted") },
     { label: "Previsão (média)", data: ks.map(b => B[b].med), backgroundColor: css("--s4") },
     { label: "Eleitos em 2026", data: ks.map(b => B[b].real), backgroundColor: ks.map(b => cor(BCOR[b])) }] },
     options: { plugins: { rotulos: { on: true } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ title: { display: true, text: "cadeiras", color: css("--ink2") } }) } } });
-  tab("tBlocos", ["Bloco", "Eleitos 2022", "Bancada hoje", "Previsão (faixa 80%)", "Eleitos 2026", "Faixa 80%"],
+  tab("tBlocos", ["Grupo", "Eleitos 2022", "Bancada hoje", "Previsão (faixa 80%)", "Eleitos 2026", "Faixa 80%"],
     ks.map(b => [BNOME[b], B[b].e22, B[b].atual, `${f1(B[b].med)} (${f1(B[b].p10)}–${f1(B[b].p90)})`, B[b].real, dentro(B[b].real, B[b].p10, B[b].p90)]));
 }
 function post() {
   const g = D.gov_blocos, c = state.cargo, P = D.posthoc[c];
   const pl = P["0.25"].pl, base = cur().listas.find(l => l.lista === "PL");
-  $("postTxt").innerHTML = `As pesquisas que eu usei diziam que a Direita teria ${f1(g.pesquisas.D)}% no governo; teve ${f1(g.real.D)}%. Quando refaço a previsão com o resultado real, o erro das cadeiras quase não muda (${f1(cur().trocadas)} → ${f1(P["0.25"].trocadas)} cadeiras trocadas com λ = 0,25), e o PL, que fez <b>${pl.real}</b>, continua previsto em ${f1(pl.med)} (${pl.p10}–${pl.p90}); com ${f1(base.med)} antes. Ou seja: <b>saber o resultado do governador não resolve</b>. Eu acho que o desvio está no mecanismo (a votação de 2022 se desloca por uma tendência estadual e o PL entra como partido, sem o efeito de candidatos puxadores e de nacionalização que o resultado sugere), e não só na entrada. Como é uma só eleição, vejo isso como indício para investigar, não como conclusão.`;
-  tab("tPost", ["λ (peso da tendência do governador)", "Cadeiras trocadas", "PL previsto (mediana, faixa)", "PL eleito", "Direita prevista (média)", "Direita eleita"],
-    ["0.0", "0.25", "0.5"].map(k => [k.replace(".", ","), f1(P[k].trocadas), `${P[k].pl.med.toFixed(1).replace(".", ",")} (${P[k].pl.p10}–${P[k].pl.p90})`, P[k].pl.real, f1(P[k].blocos.D.med), cur().blocos.D.real]));
+  $("postTxt").innerHTML = `As pesquisas que eu usei diziam que a direita (Zucco e os nanicos) teria ${f1(g.pesquisas.D)}% no governo; teve ${f1(g.real.D)}%. Quando refaço a previsão com o resultado real, o erro das cadeiras quase não muda (${f1(cur().trocadas)} → ${f1(P["0.25"].trocadas)} cadeiras trocadas com λ = 0,25), e o PL, que fez <b>${pl.real}</b>, continua previsto em ${f1(pl.med)} (${pl.p10}–${pl.p90}); com ${f1(base.med)} antes. Ou seja: <b>saber o resultado do governador não resolve</b>. Eu acho que o desvio está no mecanismo (a votação de 2022 se desloca por uma tendência estadual e o PL entra como partido, sem o efeito de candidatos puxadores e de nacionalização que o resultado sugere), e não só na entrada. Como é uma só eleição, vejo isso como indício para investigar, não como conclusão.`;
+  tab("tPost", ["λ (peso da tendência do governador)", "Cadeiras trocadas", "PL previsto (mediana, faixa)", "PL eleito", "PL + centrão e direita previstos (média)", "PL + centrão e direita eleitos"],
+    ["0.0", "0.25", "0.5"].map(k => [k.replace(".", ","), f1(P[k].trocadas), `${P[k].pl.med.toFixed(1).replace(".", ",")} (${P[k].pl.p10}–${P[k].pl.p90})`, P[k].pl.real, f1(P[k].blocos.R.med + P[k].blocos.X.med), dir(cur().blocos).real]));
 }
 function maisVotados() {
   tab("tTop", ["Casa", "Candidato", "Partido", "Votos 2026", "Votos 2022", "Variação"], D.top.map(t => [t.cargo === "DF" ? "Câmara" : "Assembleia", t.nome, t.partido, pc(t.votos), t.votos22 == null ? "–" : pc(t.votos22), t.votos22 == null ? "–" : `${pp(100 * (t.votos / t.votos22 - 1))}%`]));
@@ -114,8 +116,8 @@ function maisVotados() {
 }
 function maioria() {
   const f = D.DF.blocos, e = D.DE.blocos, mf = 16, me = 28;
-  $("maiTxt").innerHTML = `Pela minha conta, na <b>Câmara</b> (maioria = ${mf} de 31) a Direita tem <b>${f.D.real}</b> (${pp(f.D.real - f.D.e22)} vs 2022, quando tinha ${f.D.e22}): maioria sozinha. Na <b>Assembleia</b> (maioria = ${me} de 55) a Direita tem <b>${e.D.real}</b> (${pp(e.D.real - e.D.e22)} vs ${e.D.e22} em 2022), <b>${me - e.D.real} cadeira(s) a menos</b> que a maioria, e o Centro (${e.C.real}) é o fiel da balança: a Esquerda (${e.E.real}) somada ao Centro chega a ${e.E.real + e.C.real}, ${e.E.real + e.C.real >= me ? "maioria possível" : "sem maioria"} só com todos os partidos de centro e de esquerda juntos.`;
-  chart("cMai", { type: "bar", data: { labels: ["Câmara (31)", "Assembleia (55)"], datasets: ["E", "C", "D"].map(b => ({ label: BNOME[b], data: [D.DF.blocos[b].real, D.DE.blocos[b].real], backgroundColor: cor(BCOR[b]), borderColor: css("--surface"), borderWidth: 2 })) },
+  $("maiTxt").innerHTML = `Pela minha conta, na <b>Câmara</b> (maioria = ${mf} de 31) o PL e o centrão e a direita juntos têm <b>${dir(f).real}</b> (PL ${f.X.real}, centrão e direita ${f.R.real}; ${pp(dir(f).real - dir(f).e22)} vs 2022, quando tinham ${dir(f).e22}): maioria sozinhos. Na <b>Assembleia</b> (maioria = ${me} de 55) o PL e o centrão e a direita juntos têm <b>${dir(e).real}</b> (PL ${e.X.real}, centrão e direita ${e.R.real}; ${pp(dir(e).real - dir(e).e22)} vs ${dir(e).e22} em 2022), <b>${me - dir(e).real} cadeira(s) a menos</b> que a maioria, e o Centro (${e.C.real}) é o fiel da balança: a esquerda e a centro-esquerda (${e.E.real}) somadas ao Centro chegam a ${e.E.real + e.C.real}, ${e.E.real + e.C.real >= me ? "maioria possível" : "sem maioria"} só com todos os partidos de centro e de esquerda juntos.`;
+  chart("cMai", { type: "bar", data: { labels: ["Câmara (31)", "Assembleia (55)"], datasets: ["E", "C", "R", "X"].map(b => ({ label: BNOME[b], data: [D.DF.blocos[b].real, D.DE.blocos[b].real], backgroundColor: cor(BCOR[b]), borderColor: css("--surface"), borderWidth: 2 })) },
     options: { indexAxis: "y", plugins: { rotulos: { on: false } }, scales: { x: eixo({ stacked: true, min: 0, ticks: { color: css("--ink2"), precision: 0 } }), y: eixo({ stacked: true, grid: { display: false } }) } } });
 }
 // ---------- notas laterais ----------
@@ -124,7 +126,7 @@ function notas() {
   const Ls = c.listas.filter(l => l.med >= 0.5 || l.real > 0), fora = Ls.filter(l => l.real < l.p10 || l.real > l.p90);
   const m = D.top.find(t => t.nome.includes("Marcon")), me = D.top.find(t => t.nome.includes("Melchionna"));
   nota("nota1", [`PL na Câmara: <b>${pl("DF").eleitos_2022} → ${pl("DF").real}</b> (2022 → 2026); na Assembleia: <b>${pl("DE").eleitos_2022} → ${pl("DE").real}</b>.`,
-    `Direita na Câmara: ${f.D.e22} → ${f.D.real} de 31.`,
+    `PL + centrão e direita na Câmara: ${dir(f).e22} → ${dir(f).real} de 31 (só o PL: ${f.X.e22} → ${f.X.real}).`,
     `Contagem minha, a partir de listas de imprensa: <b>não conferida</b> no TSE nem na Assembleia.`]);
   nota("nota2", [`${NOMECARGO[state.cargo]}: <b>${Ls.length - fora.length} de ${Ls.length}</b> listas dentro da faixa de 80% do modelo.`,
     `Cadeiras trocadas: <b>${f1(c.trocadas)}</b> (no backtest de 2010–2022, ${f1(D.backtest_med)}).`,
@@ -132,9 +134,9 @@ function notas() {
   nota("nota3", [`${m.nome} (PL): ${pc(m.votos22)} → <b>${pc(m.votos)}</b> votos, o deputado federal mais votado.`,
     `${me.nome} (PSOL): ${pc(me.votos22)} → ${pc(me.votos)}, com a única vaga do PSOL.`,
     `Votos de 2026 conforme a imprensa; não conferidos no TSE.`]);
-  nota("nota4", [`Direita na Câmara: <b>${f.D.real}</b> de 31 (maioria: 16).`,
-    `Na Assembleia: <b>${e.D.real}</b> de 55 (maioria: 28)${e.D.real >= 28 ? "" : `, ${28 - e.D.real} a menos; o Centro (${e.C.real}) decide`}.`,
-    `Os blocos são classificação minha, não coalizões de governo.`]);
+  nota("nota4", [`PL + centrão e direita na Câmara: <b>${dir(f).real}</b> de 31 (maioria: 16).`,
+    `Na Assembleia: <b>${dir(e).real}</b> de 55 (maioria: 28)${dir(e).real >= 28 ? "" : `, ${28 - dir(e).real} a menos; o Centro (${e.C.real}) decide`}.`,
+    `Os grupos são classificação minha e discutível, não coalizões de governo.`]);
 }
 function tudo() { kpis(); lista(); modelo(); post(); maisVotados(); maioria();  notas(); }
 function segCargo() { const el = $("segCargo"); el.innerHTML = ["DF", "DE"].map(c => `<button data-c="${c}" aria-pressed="${state.cargo == c}">${c === "DF" ? "Federal" : "Estadual"}</button>`).join(""); el.onclick = (e) => { const c = e.target.dataset.c; if (!c) return; state.cargo = c; segCargo(); tudo(); }; }

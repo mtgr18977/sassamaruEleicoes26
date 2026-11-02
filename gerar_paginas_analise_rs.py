@@ -97,10 +97,10 @@ def bancada():
         sem = set(real_l.index) - {l["lista"] for l in listas}
         assert not sem, sem
         blocos = {}
-        for b in "ECD":
-            blocos[b] = dict(real=int(sum(n for p, n in real_p.items() if rs_bancada.bloco(p) == b)),
-                             e22=int(sum(n for p, n in pac["atual"][cargo]["eleitos_2022"].items() if rs_bancada.bloco(rs_bancada.sucessor(p)) == b)),
-                             atual=int(sum(n for p, n in pac["atual"][cargo]["atual"].items() if rs_bancada.bloco(rs_bancada.sucessor(p)) == b)), **prev["blocos"][b])
+        for b in rs_bancada.GRUPOS:        # 4 grupos de apresentação (E, C, R = centrão e direita, X = PL); o modelo continua com 3 blocos
+            blocos[b] = dict(real=int(sum(n for p, n in real_p.items() if rs_bancada.grupo(p) == b)),
+                             e22=int(sum(n for p, n in pac["atual"][cargo]["eleitos_2022"].items() if rs_bancada.grupo(rs_bancada.sucessor(p)) == b)),
+                             atual=int(sum(n for p, n in pac["atual"][cargo]["atual"].items() if rs_bancada.grupo(rs_bancada.sucessor(p)) == b)), **prev["blocos"][b])
         out[cargo] = dict(listas=listas, blocos=blocos, real_partidos=real_p, e22_partidos=pac["atual"][cargo]["eleitos_2022"], atual_partidos=pac["atual"][cargo]["atual"],
                           trocadas=round(sum(abs(l["med"] - l["real"]) for l in listas) / 2, 1))
     # pós-fato: mesma previsão, mas com o resultado REAL do governador (blocos: Brizola; Souza + Maranata; Zucco + nanicos) no lugar das pesquisas

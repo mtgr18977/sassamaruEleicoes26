@@ -28,8 +28,12 @@ FEDERACOES_2026 = {"Brasil da Esperança": ["PT", "PCdoB", "PV"], "PSOL Rede": [
 # Blocos como no resto do projeto (rs_dados.py), com PCdoB/Rede/UP à esquerda e o PSD no centro (ASSUMIDO: aproximação; ver tabela por partido)
 ESQ = {"PT", "PDT", "PSOL", "PSB", "PV", "PSTU", "PCO", "PCB", "PCdoB", "REDE", "UP"}
 CEN = {"MDB", "PSDB", "CIDADANIA", "PSD"}
-bloco = lambda p: "E" if p in ESQ else "C" if p in CEN else "D"
+bloco = lambda p: "E" if p in ESQ else "C" if p in CEN else "D"          # 3 blocos: é o que o modelo usa (choques e variação do governador); NÃO mudar sem refazer a previsão
 BNOME = {"E": "Esquerda", "C": "Centro", "D": "Direita e demais"}
+# 4 grupos de APRESENTAÇÃO (classificação minha, discutível; como nas abas de distritão): esquerda e centro-esquerda, centro, centrão e direita, e o PL, separado do resto da direita por ser o partido do bolsonarismo
+grupo = lambda p: "X" if p == "PL" else bloco(p).replace("D", "R")
+GNOME = {"E": "Esquerda e centro-esquerda", "C": "Centro", "R": "Centrão e direita", "X": "PL"}
+GRUPOS = "ECRX"
 
 
 def renomear(p: str) -> str:
@@ -246,9 +250,9 @@ def prever(cargo, lam, mu, regra="todos", S=6000, blk=None, seed=11):
     listas, seats, partidos, v = simular(pv, estr, CADEIRAS[cargo], regra, SIG_B, SIG_I, S=S, seed=seed)
     idx = {l: j for j, l in enumerate(listas)}
     # cadeiras por bloco: cada lista reparte suas cadeiras entre os partidos pela votação simulada de cada um
-    bl = np.array([bloco(p) for p in partidos])
+    bl = np.array([grupo(p) for p in partidos])
     blocos = {}
-    for b in "ECD":
+    for b in GRUPOS:
         tot = np.zeros(S)
         for l, j in idx.items():
             cols = [i for i, p in enumerate(partidos) if estr[p] == l]
@@ -261,7 +265,7 @@ def prever(cargo, lam, mu, regra="todos", S=6000, blk=None, seed=11):
     linhas = []
     for l, j in idx.items():
         membros = [p for p in partidos if estr[p] == l]
-        linhas.append(dict(lista=l, membros=membros if len(membros) > 1 else [], blocos=sorted({bloco(p) for p in membros}), voto_base=round(100 * float(base.reindex(membros).sum()), 2),
+        linhas.append(dict(lista=l, membros=membros if len(membros) > 1 else [], blocos=sorted({grupo(p) for p in membros}), voto_base=round(100 * float(base.reindex(membros).sum()), 2),
                            voto_2026=round(100 * float(pv.reindex(membros).sum()), 2), eleitos_2022=int(el22.get(l, 0)), atual=int(atual.get(l, 0)),
                            med=round(float(seats[:, j].mean()), 2), mediana=int(pq(seats[:, j], 50)), p10=int(pq(seats[:, j], 10)), p90=int(pq(seats[:, j], 90)),
                            p1=round(float((seats[:, j] >= 1).mean()), 3)))
@@ -286,8 +290,8 @@ def historico(pl, el, ls, un, at):
         share = 100 * votos / votos.sum()
         parts = [p for p in seats.index if seats.loc[p].sum() > 0 or share.loc[p].max() >= 2]
         parts = sorted(parts, key=lambda p: -share.loc[p].iloc[-3:].sum())
-        bl_seats = {b: [int(seats[a][[p for p in seats.index if bloco(p) == b]].sum()) for a in ANOS] for b in "ECD"}
-        bl_votes = {b: [round(float(share[a][[p for p in share.index if bloco(p) == b]].sum()), 2) for a in ANOS] for b in "ECD"}
+        bl_seats = {b: [int(seats[a][[p for p in seats.index if grupo(p) == b]].sum()) for a in ANOS] for b in GRUPOS}
+        bl_votes = {b: [round(float(share[a][[p for p in share.index if grupo(p) == b]].sum()), 2) for a in ANOS] for b in GRUPOS}
         listas = {}
         for a in ANOS:
             g = ls[(ls.ano == a) & (ls.cargo == cargo)].sort_values("votos", ascending=False)
@@ -296,10 +300,10 @@ def historico(pl, el, ls, un, at):
                                    composicao=" / ".join(sorted({renomear(x.strip()) for x in str(r.composicao).replace(",", "/").split("/") if x.strip()})),
                                    votos=int(r.votos), pct=round(100 * r.votos / tot, 2), cadeiras=int(r.cadeiras)) for r in g.itertuples() if r.cadeiras > 0 or r.votos / tot >= 0.01]
         u = un[un.cargo == cargo].groupby(["ano", "unidade", "partido"]).votos.sum().reset_index()
-        u["bloco"] = u.partido.map(bloco)
+        u["bloco"] = u.partido.map(grupo)
         ub = u.groupby(["ano", "unidade", "bloco"]).votos.sum().unstack("bloco").fillna(0)
         ub = 100 * ub.div(ub.sum(axis=1), axis=0)
-        reg = {str(a): {un_: {b: round(float(ub.loc[(a, un_), b]), 2) for b in "ECD"} for un_ in ub.loc[a].index} for a in ANOS}
+        reg = {str(a): {un_: {b: round(float(ub.loc[(a, un_), b]), 2) if b in ub.columns else 0.0 for b in GRUPOS} for un_ in ub.loc[a].index} for a in ANOS}
         out[cargo] = dict(anos=ANOS, partidos=parts, cadeiras={p: seats.loc[p].tolist() for p in parts}, voto={p: [round(float(x), 2) for x in share.loc[p]] for p in parts},
                           bloco_cadeiras=bl_seats, bloco_voto=bl_votes,
                           enp_voto=[round(enp(votos[a][votos[a] > 0]), 2) for a in ANOS], enp_cadeiras=[round(enp(seats[a][seats[a] > 0]), 2) for a in ANOS],
@@ -333,7 +337,7 @@ def construir(S=6000):
                 prev[cargo][f"{lam}_{mu}"] = r
         prev[cargo]["alt_80"] = prever(cargo, LAM_PADRAO, MU_PADRAO, "80", S=S, blk=blk)
     return dict(cadeiras=CADEIRAS, historico=historico(pl, el, ls, un, at), atual=atual_pacote(pl, el, ls, un, at), blocos_gov=blk,
-                bloco_nome=BNOME, bloco_de=bloco_partidos(pl), federacoes=FEDERACOES_2026, sucessao=SUCESSAO_2026, previsao=prev,
+                bloco_nome=GNOME, bloco_de=bloco_partidos(pl), federacoes=FEDERACOES_2026, sucessao=SUCESSAO_2026, previsao=prev,
                 backtest=dict(linhas=bt.to_dict("records"), medio={str(k): round(float(v), 2) for k, v in bt.groupby("lam").trocadas.mean().items()}, cobertura=cob),
                 validacao=validar_alocador().to_dict("records"),
                 params=dict(lam=LAM_PADRAO, mu=MU_PADRAO, lams=list(LAMS), mus=list(MUS), sig_b=SIG_B, sig_i=SIG_I, sims=S))
@@ -341,4 +345,4 @@ def construir(S=6000):
 
 def bloco_partidos(pl):
     ps = sorted(pl[pl.ano == 2022].partido.unique())
-    return {p: bloco(p) for p in ps}
+    return {p: grupo(p) for p in ps}
