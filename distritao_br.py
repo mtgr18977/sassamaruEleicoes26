@@ -74,13 +74,13 @@ def resumo(g: pd.DataFrame, cargo: str, ano: int, qe: dict | None) -> dict:
     pa, pd_ = Counter(c[c.eleito].partido), Counter(c[c.dist].partido)
     vt = c.groupby("partido").votos.sum()
     partidos = [dict(partido=p, atual=pa.get(p, 0), distritao=pd_.get(p, 0), dif=pd_.get(p, 0) - pa.get(p, 0), votos_pct=r1(100 * vt.get(p, 0) / vt.sum())) for p in sorted(set(pa) | set(pd_), key=lambda p: (-max(pa.get(p, 0), pd_.get(p, 0)), p))]
-    blocos = {k: dict(atual=int(sum(v for p, v in pa.items() if bloco(p) == k)), distritao=int(sum(v for p, v in pd_.items() if bloco(p) == k))) for k in "ECD"}
+    blocos = {k: dict(atual=int(sum(v for p, v in pa.items() if bloco(p) == k)), distritao=int(sum(v for p, v in pd_.items() if bloco(p) == k))) for k in "ECRX"}
     por_uf = []
     for uf, x in c.groupby("uf"):
         a, d_ = Counter(x[x.eleito].partido), Counter(x[x.dist].partido)
         por_uf.append(dict(uf=uf, cadeiras=int(x.eleito.sum()), trocas=int((x.eleito & ~x.dist).sum()), pl_atual=a.get("PL", 0), pl_dist=d_.get("PL", 0),
                            e_atual=int(sum(v for p, v in a.items() if bloco(p) == "E")), e_dist=int(sum(v for p, v in d_.items() if bloco(p) == "E")),
-                           d_atual=int(sum(v for p, v in a.items() if bloco(p) == "D")), d_dist=int(sum(v for p, v in d_.items() if bloco(p) == "D")),
+                           r_atual=int(sum(v for p, v in a.items() if bloco(p) == "R")), r_dist=int(sum(v for p, v in d_.items() if bloco(p) == "R")),
                            corte=int(x[x.dist].votos.min()), menor_eleito=int(x[x.eleito].votos.min()), maior_fora=int(x[~x.eleito].votos.max())))
     lin = lambda r: dict(uf=r.uf, nome=r.nome.title(), partido=r.partido, votos=int(r.votos), pos=int(r.pos))
     sai, entra = c[c.eleito & ~c.dist], c[~c.eleito & c.dist]

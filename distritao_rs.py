@@ -18,8 +18,9 @@ CARGOS = {"Deputado Federal": ("DF", 31), "Deputado Estadual": ("DE", 55)}
 ANOS = (2018, 2022, 2026)
 COLS = ["DS_CARGO", "SQ_CANDIDATO", "NM_URNA_CANDIDATO", "SG_PARTIDO", "NM_FEDERACAO", "NM_COLIGACAO", "QT_VOTOS_NOMINAIS_VALIDOS", "DS_SIT_TOT_TURNO", "NM_TIPO_DESTINACAO_VOTOS"]
 r1 = lambda x: round(float(x), 1)
-bloco = lambda p: "E" if p in ESQ else "C" if p in CEN else "D"
-BNOME = {"E": "Esquerda", "C": "Centro", "D": "Direita e demais"}
+# Quatro grupos (classificação minha, discutível): esquerda e centro-esquerda, centro (MDB, PSDB, Cidadania, PSD), centrão e direita (o resto) e o PL, separado porque é o partido do bolsonarismo
+bloco = lambda p: "X" if p == "PL" else "E" if p in ESQ else "C" if p in CEN else "R"
+BNOME = {"E": "Esquerda e centro-esquerda", "C": "Centro", "R": "Centrão e direita", "X": "PL"}
 
 
 def lista_de(r) -> str:
@@ -76,7 +77,7 @@ def simular(g: pd.DataFrame, cargo: str, ano: int) -> dict:
     # por partido
     pa, pd_ = Counter(c[c.eleito].partido), Counter(c[c.dist].partido)
     partidos = [dict(partido=p, atual=pa.get(p, 0), distritao=pd_.get(p, 0), dif=pd_.get(p, 0) - pa.get(p, 0)) for p in sorted(set(pa) | set(pd_), key=lambda p: (-(pa.get(p, 0) + pd_.get(p, 0)), p))]
-    blocos = {k: dict(atual=int(sum(v for p, v in pa.items() if bloco(p) == k)), distritao=int(sum(v for p, v in pd_.items() if bloco(p) == k))) for k in "ECD"}
+    blocos = {k: dict(atual=int(sum(v for p, v in pa.items() if bloco(p) == k)), distritao=int(sum(v for p, v in pd_.items() if bloco(p) == k))) for k in "ECRX"}
     # por lista (federação, coligação ou partido): onde estão os "puxados"
     por_lista = []
     for l, x in c.groupby("lista"):

@@ -46,7 +46,7 @@
   <div class="cv" style="height:420px"><canvas id="cPart"></canvas></div>
   <div id="tBloco"></div>
   <details><summary>Ver a tabela por partido</summary><div id="tPart"></div></details>
-  <p class="fonte">Bloco: esquerda (PT, PDT, PSOL, PSB, PV, PCdoB, Rede, UP e outros), centro (MDB, PSDB, Cidadania, PSD) e direita e demais, como no resto do site; é uma aproximação minha. O partido é o do candidato, também dentro de federações.</p>
+  <p class="fonte">Grupos (classificação minha, discutível): esquerda e centro-esquerda (PT, PDT, PSOL, PSB, PV, PCdoB, Rede, UP e outros), centro (MDB, PSDB, Cidadania, PSD), centrão e direita (PP, União, Republicanos, Podemos e o resto) e o PL, que eu separo do resto da direita por ser o partido do bolsonarismo (muitos analistas o tratam como extrema direita, e o centrão como direita). Vista de fora, a esquerda brasileira é em boa parte de centro-esquerda. O partido é o do candidato, também dentro de federações.</p>
   </div><aside class="side" id="nota3"></aside></section>
 
   <section class="sec"><div>
@@ -131,7 +131,7 @@ function trocas() {
 }
 
 function partidos() {
-  const s = cur(), a = state.ano, c = state.cargo, B = s.blocos, nb = { E: "Esquerda", C: "Centro", D: "Direita e demais" };
+  const s = cur(), a = state.ano, c = state.cargo, B = s.blocos, nb = { E: "Esquerda e centro-esquerda", C: "Centro", R: "Centrão e direita", X: "PL" };
   const L = s.partidos.filter(p => p.atual || p.distritao);
   chart("cPart", { type: "bar", data: { labels: L.map(p => p.partido), datasets: [
       { label: "Sistema atual (eleitos)", data: L.map(p => p.atual), backgroundColor: css("--muted"), borderRadius: 3 }, { label: "Distritão", data: L.map(p => p.distritao), backgroundColor: css("--s4"), borderRadius: 3 }] },
