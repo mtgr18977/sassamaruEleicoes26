@@ -6,7 +6,7 @@
 <title>Bancada do RS 2026 · Eleições Dashboard</title>
 <link rel="stylesheet" href="assets/site.css">
 <style>
-  .hero-grid.tres { grid-template-columns:repeat(3,1fr) } @media (max-width:820px) { .hero-grid.tres { grid-template-columns:1fr } }
+  .hero-grid.quatro { grid-template-columns:repeat(4,1fr) } @media (max-width:1100px) { .hero-grid.quatro { grid-template-columns:repeat(2,1fr) } } @media (max-width:560px) { .hero-grid.quatro { grid-template-columns:1fr } }
   .ctl { display:flex; flex-wrap:wrap; gap:6px 18px; align-items:center; font-size:.85rem; color:var(--ink2); margin:0 0 8px }
   .heat td.n { min-width:44px } .bl { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px }
   table.t td.txt, table.t th.txt { text-align:left } .cv.lista { height:auto }
@@ -25,7 +25,7 @@
   <div class="aviso semnota" id="resultado1t" style="border-left-color:var(--pt)"><b>Bancada eleita em 4/10/2026 (preliminar):</b> na Câmara, PL 8, PT 5, PP 4, MDB 3 e demais; na Assembleia, PL 12, PT 9, PP 7, MDB 5, PSD 5 e demais. A previsão abaixo é a feita antes da eleição (pesquisas até 2/10); veja a <a href="analise-bancada.html">Análise da bancada RS</a> para o modelo contra o resultado.</div>
       <span class="seg" id="segCargo"></span>
     </div>
-    <div class="hero-grid tres" id="heroGrid"></div>
+    <div class="hero-grid quatro" id="heroGrid"></div>
     <div class="hero-foot" id="heroFoot"></div>
     <h3 style="margin:14px 0 4px">Cadeiras por lista: eleitos em 2022, bancada hoje e previsão para 2026</h3>
     <div class="ctl"><span>Peso da tendência do governo (λ) <span class="seg" id="segLam"></span></span><span>Migração dos eleitos (μ) <span class="seg" id="segMu"></span></span></div>
@@ -35,7 +35,7 @@
   </section>
   </div><aside class="side" id="nota0"></aside></div>
 
-  <div class="aviso semnota"><b>Como ler:</b> <b>Lista</b> é a unidade que disputa as cadeiras: federação ou partido isolado (coligações em eleições proporcionais acabaram em 2020). Os <b>blocos</b> seguem o resto do site, com PCdoB, Rede e UP à esquerda e o PSD no centro (aproximação: veja a classificação por partido no fim da página). Dados do TSE (2002–2022); a <b>bancada de hoje</b> vem da API da Câmara (federais) e da Wikipédia (estaduais, <b>não conferida com a Assembleia</b>). A previsão é uma simulação condicional ao método, validada só pelo backtest da seção 5.</div>
+  <div class="aviso semnota"><b>Como ler:</b> <b>Lista</b> é a unidade que disputa as cadeiras: federação ou partido isolado (coligações em eleições proporcionais acabaram em 2020). Os <b>grupos</b> são quatro (classificação minha, discutível): esquerda e centro-esquerda (com PCdoB, Rede e UP), centro (MDB, PSD, PSDB, Cidadania), centrão e direita (PP, União, Republicanos, Podemos e o resto) e o grupo <b>PL, Novo e Missão</b>, que eu separo do centrão e da direita tradicional (o PL é o partido do bolsonarismo, que muitos analistas tratam como extrema direita; Novo e Missão eu coloco no mesmo grupo por serem partidos de direita como o PL; o centrão eu trato como direita). A previsão em si usa três blocos (esses três partidos entram em "direita e demais"); os quatro grupos são só a apresentação (veja a classificação por partido no fim da página). Dados do TSE (2002–2022); a <b>bancada de hoje</b> vem da API da Câmara (federais) e da Wikipédia (estaduais, <b>não conferida com a Assembleia</b>). A previsão é uma simulação condicional ao método, validada só pelo backtest da seção 5.</div>
 
   <section class="sec"><div class="mainc">
   <h2>1. Bancada hoje × eleita em 2022</h2>
@@ -85,7 +85,7 @@
   <div class="card">
     <div class="filtros">Bloco <span class="seg" id="segBloco"></span></div>
     <div style="overflow-x:auto"><table class="t heat" id="heatReg"></table></div>
-    <p class="nota">Percentual dos votos válidos (nominais + legenda) do bloco na região. O bloco de cada partido segue a classificação desta aba.</p>
+    <p class="nota">Percentual dos votos válidos (nominais + legenda) do bloco na região. O grupo de cada partido segue a classificação desta aba.</p>
   </div>
   </div><aside class="side" id="nota4"></aside></section>
 
@@ -101,7 +101,7 @@
     <h3 style="margin:12px 0 4px">Sensibilidade da previsão (cadeiras esperadas)</h3>
     <div class="ctl"><span>Casa <span class="seg" id="segCargo2"></span></span></div>
     <div style="overflow-x:auto" id="tSens"></div>
-    <details><summary>Classificação dos partidos em blocos e premissas assumidas</summary><div id="tBloco"></div><ul class="nota" id="premissas"></ul></details>
+    <details><summary>Classificação dos partidos em grupos e premissas assumidas</summary><div id="tBloco"></div><ul class="nota" id="premissas"></ul></details>
   </div>
   </div><aside class="side" id="nota5"></aside></section>
 </main>
@@ -110,14 +110,14 @@
 <script>
 const D = __DATA__;
 const CARGO = { DF: { nome: "Câmara dos Deputados", curto: "Deputados federais", n: 31 }, DE: { nome: "Assembleia Legislativa", curto: "Deputados estaduais", n: 55 } };
-const BNOME = D.bloco_nome, BCOR = { E: "--pt", C: "--s7", D: "--anti" }, ANOS = D.historico.DF.anos;
+const BNOME = D.bloco_nome, BCOR = { E: "--pt", C: "--s7", R: "--anti", X: "--s3" }, ANOS = D.historico.DF.anos;
 const state = { cargo: "DF", lam: D.params.lam, mu: D.params.mu, bloco: "E", ano: "2022" };
 const cor = (b) => css(BCOR[b]);
 const fp = (x) => String(Math.round(x * 100) / 100).replace(".", ",");      // 11 -> "11", 0.25 -> "0,25"
 const key = (x) => Number.isInteger(x) ? x.toFixed(1) : String(x);      // 0 -> "0.0", 0.25 -> "0.25": chaves do JSON
 const prev = () => D.previsao[state.cargo][key(state.lam) + "_" + key(state.mu)];
 const dot = (b) => `<i class="bl" style="background:${cor(b)}"></i>`;
-const blocoDe = (p) => D.bloco_de[p] || "D";
+const blocoDe = (p) => D.bloco_de[p] || "R";
 const sgn = (x) => (x > 0 ? "+" : x < 0 ? "−" : "±") + f1(Math.abs(x)).replace(/,0$/, "");
 
 function segN(el, key, vals, fmt, redraw) {
@@ -134,9 +134,9 @@ Chart.register(faixa);
 // ---------- hero ----------
 function hero() {
   const P = prev(), N = CARGO[state.cargo].n, A = D.atual[state.cargo];
-  const por = (obj) => { const r = { E: 0, C: 0, D: 0 }; Object.entries(obj).forEach(([p, n]) => r[blocoDe(p)] += n); return r; };
+  const por = (obj) => { const r = { E: 0, C: 0, R: 0, X: 0 }; Object.entries(obj).forEach(([p, n]) => r[blocoDe(p)] += n); return r; };
   const e22 = por(A.eleitos_2022), hoje = por(A.atual);
-  $("heroGrid").innerHTML = ["E", "C", "D"].map(b => { const x = P.blocos[b];
+  $("heroGrid").innerHTML = ["E", "C", "R", "X"].map(b => { const x = P.blocos[b];
     return `<div class="cand" style="--c:${cor(b)}"><div class="nome"><i></i>${BNOME[b]}</div><div class="big">${Math.round(x.med)}</div>
       <div class="rot">cadeiras esperadas em 2026 (de ${N})</div><div class="comp"><span style="flex:${Math.max(x.med, .2)}"></span><span style="flex:${Math.max(N - x.med, .2)};background:var(--grid)"></span></div>
       <ul><li>Faixa de 80% <b>${fp(x.p10)} a ${fp(x.p90)}</b></li><li>Eleitos em 2022 <b>${e22[b]}</b> (${sgn(x.med - e22[b])} p/ 2026)</li><li>Bancada hoje <b>${hoje[b]}</b></li></ul></div>`; }).join("");
@@ -179,9 +179,9 @@ function mapaCalor(id, linhas, anos, vals, fmt, max, cab) {
 }
 function historico() {
   const H = D.historico[state.cargo], N = CARGO[state.cargo].n, lab = H.anos.map(String);
-  chart("cBlCad", { type: "bar", data: { labels: lab, datasets: ["E", "C", "D"].map(b => ({ label: BNOME[b], data: H.bloco_cadeiras[b], backgroundColor: cor(b), borderColor: css("--surface"), borderWidth: 2, borderRadius: 3 })) },
+  chart("cBlCad", { type: "bar", data: { labels: lab, datasets: ["E", "C", "R", "X"].map(b => ({ label: BNOME[b], data: H.bloco_cadeiras[b], backgroundColor: cor(b), borderColor: css("--surface"), borderWidth: 2, borderRadius: 3 })) },
     options: { scales: { x: eixo({ stacked: true, grid: { display: false } }), y: eixo({ stacked: true, max: N, ticks: { color: css("--ink2"), precision: 0 } }) } } });
-  chart("cBlVot", { type: "line", data: { labels: lab, datasets: ["E", "C", "D"].map(b => ({ label: BNOME[b], data: H.bloco_voto[b], borderColor: cor(b), backgroundColor: cor(b), borderWidth: 2, pointRadius: 4, tension: 0 })) },
+  chart("cBlVot", { type: "line", data: { labels: lab, datasets: ["E", "C", "R", "X"].map(b => ({ label: BNOME[b], data: H.bloco_voto[b], borderColor: cor(b), backgroundColor: cor(b), borderWidth: 2, pointRadius: 4, tension: 0 })) },
     options: { interaction: { mode: "index", intersect: false }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, ticks: { color: css("--ink2"), callback: v => v + "%" } }) }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${f1(c.parsed.y)}%` } } } } });
   const ps = H.partidos.filter(p => H.cadeiras[p].some(x => x > 0));
   mapaCalor("heatCad", ps, H.anos, p => H.cadeiras[p], v => v, Math.max(...ps.map(p => Math.max(...H.cadeiras[p]))) * 1.1);
@@ -218,10 +218,10 @@ function metodo() {
   const s = D.previsao[state.cargo], cen = [["Padrão", `${D.params.lam}_${D.params.mu}`], ["Sem migração (μ = 0)", `${D.params.lam}_0.0`], ["Migração total (μ = 1)", `${D.params.lam}_1.0`], ["Sem tendência do governo (λ = 0)", `0.0_${D.params.mu}`], ["Tendência maior (λ = 0,5)", `0.5_${D.params.mu}`], ["Sobras só com 80% do QE (regra de 2022)", "alt_80"]];
   const L = s[cen[0][1]].listas.filter(l => l.med >= 0.5);
   $("tSens").innerHTML = `<table class="t"><tr><th class="txt">Lista</th><th>Hoje</th>${cen.map(c => `<th>${c[0]}</th>`).join("")}</tr>` + L.map(l => `<tr><td class="txt">${l.lista}</td><td>${l.atual}</td>${cen.map(c => `<td>${f1((s[c[1]].listas.find(x => x.lista === l.lista) || { med: 0 }).med)}</td>`).join("")}</tr>`).join("") + "</table>";
-  $("tBloco").innerHTML = `<table class="t"><tr><th class="txt">Bloco</th><th class="txt">Partidos</th></tr>${["E", "C", "D"].map(b => `<tr><td class="txt">${dot(b)}${BNOME[b]}</td><td class="txt">${Object.entries(D.bloco_de).filter(([, x]) => x === b).map(([p]) => p).join(", ")}</td></tr>`).join("")}</table>`;
+  $("tBloco").innerHTML = `<table class="t"><tr><th class="txt">Grupo</th><th class="txt">Partidos</th></tr>${["E", "C", "R", "X"].map(b => `<tr><td class="txt">${dot(b)}${BNOME[b]}</td><td class="txt">${Object.entries(D.bloco_de).filter(([, x]) => x === b).map(([p]) => p).join(", ")}</td></tr>`).join("")}</table>`;
   $("premissas").innerHTML = [`<b>Blocos:</b> aproximação por partido (PSD no centro; PCdoB, Rede e UP à esquerda); deputados de um mesmo partido podem divergir.`,
     `<b>Migração (μ):</b> sem histórico para medir; o cenário padrão é ${fp(D.params.mu)}, e a tabela acima mostra 0 e 1.`,
-    `<b>Ruído:</b> choque comum do bloco (${D.params.sig_b}) e ruído por partido maior nos pequenos, ajustados para a faixa de 80% cobrir ~80% das cadeiras por lista no backtest.`,
+    `<b>Ruído:</b> choque comum do bloco (o modelo usa três blocos: esquerda, centro e direita e demais; ${D.params.sig_b}) e ruído por partido maior nos pequenos, ajustados para a faixa de 80% cobrir ~80% das cadeiras por lista no backtest.`,
     `<b>Partidos novos</b> (sem votação em 2022) e candidatos individuais (cláusula de 10% do QE) não entram.`,
     `<b>Sobras de 2026:</b> abertas a todas as listas (decisão do STF de 2024); o cenário "80% do QE" mostra a regra de 2022. <b>Conferir no TSE.</b>`,
     `<b>Federações de 2026:</b> segundo A Gazeta (ago/2026); conferir no TSE.`].map(x => `<li>${x}</li>`).join("");
@@ -229,13 +229,13 @@ function metodo() {
 
 function notas() {
   const P = prev(), H = D.historico[state.cargo], A = D.atual[state.cargo], N = CARGO[state.cargo].n, i0 = H.anos.length - 1;
-  nota("nota0", [`${CARGO[state.cargo].nome}: <b>${Math.round(P.blocos.D.med)}</b> cadeiras para a direita, <b>${Math.round(P.blocos.E.med)}</b> para a esquerda e <b>${Math.round(P.blocos.C.med)}</b> para o centro (de ${N}).`,
+  nota("nota0", [`${CARGO[state.cargo].nome}: <b>${Math.round(P.blocos.X.med)}</b> cadeiras para PL, Novo e Missão, <b>${Math.round(P.blocos.R.med)}</b> para o centrão e a direita, <b>${Math.round(P.blocos.E.med)}</b> para a esquerda e centro-esquerda e <b>${Math.round(P.blocos.C.med)}</b> para o centro (de ${N}).`,
     `Maior lista: <b>${P.listas[0].lista}</b> (faixa ${P.listas[0].p10}–${P.listas[0].p90}).`, `Incerteza grande: mesmo as maiores listas variam alguns assentos para cima ou para baixo.`]);
   nota("nota1", [`<b>${A.trocaram}</b> de ${N} eleitos trocaram de partido desde 2022.`, A.migracao[0] ? `Maior fluxo: <b>${A.migracao[0].de} → ${A.migracao[0].para}</b> (${A.migracao[0].n}).` : "", `Fontes: ${A.fonte}.`].filter(Boolean));
-  nota("nota2", [`Direita nos votos: <b>${f1(H.bloco_voto.D[0])}%</b> (2002) → <b>${f1(H.bloco_voto.D[i0])}%</b> (2022).`, `Número efetivo de partidos: <b>${f1(H.enp_voto[0])}</b> (2002) → <b>${f1(H.enp_voto[i0])}</b> (2022), pelos votos.`, `Cadeiras de esquerda: <b>${H.bloco_cadeiras.E[0]}</b> → <b>${H.bloco_cadeiras.E[i0]}</b>.`]);
+  nota("nota2", [`Direita toda nos votos: <b>${f1(H.bloco_voto.R[0] + H.bloco_voto.X[0])}%</b> (2002) → <b>${f1(H.bloco_voto.R[i0] + H.bloco_voto.X[i0])}%</b> (2022); só PL, Novo e Missão: <b>${f1(H.bloco_voto.X[0])}%</b> → <b>${f1(H.bloco_voto.X[i0])}%</b>.`, `Número efetivo de partidos: <b>${f1(H.enp_voto[0])}</b> (2002) → <b>${f1(H.enp_voto[i0])}</b> (2022), pelos votos.`, `Cadeiras de esquerda: <b>${H.bloco_cadeiras.E[0]}</b> → <b>${H.bloco_cadeiras.E[i0]}</b>.`]);
   nota("nota3", [`Até 2018, cada coligação somava votos; em 2022 as federações juntaram PT/PCdoB/PV, PSDB/Cidadania e PSOL/Rede.`, `Para 2026 há 5 federações, duas novas: União Progressista e Renovação Solidária.`]);
-  const R = H.regioes["2022"], us = Object.keys(R).sort((x, y) => R[y].D - R[x].D);
-  nota("nota4", [`Direita mais forte em 2022: <b>${us[0]}</b> (${f1(R[us[0]].D)}%).`, `Esquerda mais forte: <b>${Object.keys(R).sort((x, y) => R[y].E - R[x].E)[0]}</b>.`, `Troque o bloco acima para ver cada campo.`]);
+  const R = H.regioes["2022"], us = Object.keys(R).sort((x, y) => (R[y].R + R[y].X) - (R[x].R + R[x].X));
+  nota("nota4", [`Direita toda (centrão e direita, PL, Novo e Missão) mais forte em 2022: <b>${us[0]}</b> (${f1(R[us[0]].R + R[us[0]].X)}%).`, `Esquerda mais forte: <b>${Object.keys(R).sort((x, y) => R[y].E - R[x].E)[0]}</b>.`, `Troque o bloco acima para ver cada campo.`]);
   nota("nota5", [`Erro médio do backtest: <b>${f1(D.backtest.medio[key(D.params.lam)])}</b> cadeiras trocadas.`, `Faixa de 80% cobriu <b>${Math.round(100 * D.backtest.cobertura[key(D.params.lam)])}%</b> das cadeiras reais por lista.`, `O alocador reproduz as 12 distribuições de 2002–2022 (±1 cadeira).`]);
 }
 
@@ -247,7 +247,7 @@ function ligar() {
   segCargos();
   segN($("segLam"), "lam", D.params.lams, v => fp(v), redraw);
   segN($("segMu"), "mu", D.params.mus, v => fp(v), redraw);
-  segN($("segBloco"), "bloco", ["E", "C", "D"], b => BNOME[b].split(" ")[0], regioes);
+  segN($("segBloco"), "bloco", ["E", "C", "R", "X"], b => BNOME[b].split(" ")[0], regioes);
 }
 aplicarTema(temaEscolhido); $("tema").onclick = alternarTema;
 ligar(); tudo();
