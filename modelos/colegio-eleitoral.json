@@ -1,0 +1,499 @@
+{
+ "total_delegados": 594,
+ "maioria": 298,
+ "cadeiras": 513,
+ "senadores_por_uf": 3,
+ "sorteios": 300,
+ "popular": {
+  "lula": 64056078,
+  "flavio": 59654544,
+  "lula_pct": 51.78
+ },
+ "regras": {
+  "vencedor_leva": 276,
+  "proporcional_uf": 305.8,
+  "distritos_bonus": 284,
+  "distritos_puro": 245
+ },
+ "faixa": {
+  "distritos_bonus": {
+   "min": 274,
+   "p5": 278,
+   "mediana": 282,
+   "p95": 287,
+   "max": 290,
+   "prob_lula": 0.0,
+   "hist": [
+    {
+     "lula": 274,
+     "n": 1
+    },
+    {
+     "lula": 276,
+     "n": 4
+    },
+    {
+     "lula": 277,
+     "n": 5
+    },
+    {
+     "lula": 278,
+     "n": 20
+    },
+    {
+     "lula": 279,
+     "n": 19
+    },
+    {
+     "lula": 280,
+     "n": 34
+    },
+    {
+     "lula": 281,
+     "n": 49
+    },
+    {
+     "lula": 282,
+     "n": 49
+    },
+    {
+     "lula": 283,
+     "n": 36
+    },
+    {
+     "lula": 284,
+     "n": 24
+    },
+    {
+     "lula": 285,
+     "n": 26
+    },
+    {
+     "lula": 286,
+     "n": 12
+    },
+    {
+     "lula": 287,
+     "n": 10
+    },
+    {
+     "lula": 288,
+     "n": 7
+    },
+    {
+     "lula": 289,
+     "n": 2
+    },
+    {
+     "lula": 290,
+     "n": 2
+    }
+   ]
+  },
+  "distritos_puro": {
+   "min": 235,
+   "p5": 239,
+   "mediana": 243,
+   "p95": 248,
+   "max": 251,
+   "prob_lula": 0.0,
+   "hist": [
+    {
+     "lula": 235,
+     "n": 1
+    },
+    {
+     "lula": 237,
+     "n": 4
+    },
+    {
+     "lula": 238,
+     "n": 5
+    },
+    {
+     "lula": 239,
+     "n": 20
+    },
+    {
+     "lula": 240,
+     "n": 19
+    },
+    {
+     "lula": 241,
+     "n": 34
+    },
+    {
+     "lula": 242,
+     "n": 49
+    },
+    {
+     "lula": 243,
+     "n": 49
+    },
+    {
+     "lula": 244,
+     "n": 36
+    },
+    {
+     "lula": 245,
+     "n": 24
+    },
+    {
+     "lula": 246,
+     "n": 26
+    },
+    {
+     "lula": 247,
+     "n": 12
+    },
+    {
+     "lula": 248,
+     "n": 10
+    },
+    {
+     "lula": 249,
+     "n": 7
+    },
+    {
+     "lula": 250,
+     "n": 2
+    },
+    {
+     "lula": 251,
+     "n": 2
+    }
+   ]
+  }
+ },
+ "maioria_puro": 257,
+ "desvio_max_populacao": 0.198,
+ "por_uf": [
+  {
+   "uf": "SP",
+   "cadeiras": 70,
+   "delegados": 73,
+   "lula_pct": 46.15,
+   "vence": "Flávio",
+   "dist_lula": 27,
+   "dist_flavio": 43,
+   "dist_lula_min": 22,
+   "dist_lula_max": 28,
+   "eleitores": 26258452
+  },
+  {
+   "uf": "MG",
+   "cadeiras": 53,
+   "delegados": 56,
+   "lula_pct": 50.43,
+   "vence": "Lula",
+   "dist_lula": 23,
+   "dist_flavio": 30,
+   "dist_lula_min": 19,
+   "dist_lula_max": 26,
+   "eleitores": 12592885
+  },
+  {
+   "uf": "RJ",
+   "cadeiras": 46,
+   "delegados": 49,
+   "lula_pct": 46.9,
+   "vence": "Flávio",
+   "dist_lula": 12,
+   "dist_flavio": 34,
+   "dist_lula_min": 11,
+   "dist_lula_max": 15,
+   "eleitores": 9734426
+  },
+  {
+   "uf": "BA",
+   "cadeiras": 39,
+   "delegados": 42,
+   "lula_pct": 71.31,
+   "vence": "Lula",
+   "dist_lula": 39,
+   "dist_flavio": 0,
+   "dist_lula_min": 39,
+   "dist_lula_max": 39,
+   "eleitores": 9094019
+  },
+  {
+   "uf": "RS",
+   "cadeiras": 31,
+   "delegados": 34,
+   "lula_pct": 42.16,
+   "vence": "Flávio",
+   "dist_lula": 6,
+   "dist_flavio": 25,
+   "dist_lula_min": 5,
+   "dist_lula_max": 9,
+   "eleitores": 6698930
+  },
+  {
+   "uf": "PR",
+   "cadeiras": 30,
+   "delegados": 33,
+   "lula_pct": 37.42,
+   "vence": "Flávio",
+   "dist_lula": 0,
+   "dist_flavio": 30,
+   "dist_lula_min": 0,
+   "dist_lula_max": 0,
+   "eleitores": 6857948
+  },
+  {
+   "uf": "PE",
+   "cadeiras": 25,
+   "delegados": 28,
+   "lula_pct": 69.2,
+   "vence": "Lula",
+   "dist_lula": 25,
+   "dist_flavio": 0,
+   "dist_lula_min": 25,
+   "dist_lula_max": 25,
+   "eleitores": 5950067
+  },
+  {
+   "uf": "CE",
+   "cadeiras": 22,
+   "delegados": 25,
+   "lula_pct": 68.93,
+   "vence": "Lula",
+   "dist_lula": 22,
+   "dist_flavio": 0,
+   "dist_lula_min": 22,
+   "dist_lula_max": 22,
+   "eleitores": 5855602
+  },
+  {
+   "uf": "MA",
+   "cadeiras": 18,
+   "delegados": 21,
+   "lula_pct": 69.54,
+   "vence": "Lula",
+   "dist_lula": 18,
+   "dist_flavio": 0,
+   "dist_lula_min": 17,
+   "dist_lula_max": 18,
+   "eleitores": 4038202
+  },
+  {
+   "uf": "GO",
+   "cadeiras": 17,
+   "delegados": 20,
+   "lula_pct": 40.34,
+   "vence": "Flávio",
+   "dist_lula": 0,
+   "dist_flavio": 17,
+   "dist_lula_min": 0,
+   "dist_lula_max": 1,
+   "eleitores": 3930889
+  },
+  {
+   "uf": "PA",
+   "cadeiras": 17,
+   "delegados": 20,
+   "lula_pct": 55.02,
+   "vence": "Lula",
+   "dist_lula": 12,
+   "dist_flavio": 5,
+   "dist_lula_min": 11,
+   "dist_lula_max": 14,
+   "eleitores": 4890389
+  },
+  {
+   "uf": "SC",
+   "cadeiras": 16,
+   "delegados": 19,
+   "lula_pct": 30.58,
+   "vence": "Flávio",
+   "dist_lula": 0,
+   "dist_flavio": 16,
+   "dist_lula_min": 0,
+   "dist_lula_max": 0,
+   "eleitores": 4638385
+  },
+  {
+   "uf": "PB",
+   "cadeiras": 12,
+   "delegados": 15,
+   "lula_pct": 67.46,
+   "vence": "Lula",
+   "dist_lula": 12,
+   "dist_flavio": 0,
+   "dist_lula_min": 12,
+   "dist_lula_max": 12,
+   "eleitores": 2659269
+  },
+  {
+   "uf": "ES",
+   "cadeiras": 10,
+   "delegados": 13,
+   "lula_pct": 43.63,
+   "vence": "Flávio",
+   "dist_lula": 1,
+   "dist_flavio": 9,
+   "dist_lula_min": 0,
+   "dist_lula_max": 1,
+   "eleitores": 2296469
+  },
+  {
+   "uf": "PI",
+   "cadeiras": 10,
+   "delegados": 13,
+   "lula_pct": 75.88,
+   "vence": "Lula",
+   "dist_lula": 10,
+   "dist_flavio": 0,
+   "dist_lula_min": 10,
+   "dist_lula_max": 10,
+   "eleitores": 2179848
+  },
+  {
+   "uf": "AL",
+   "cadeiras": 9,
+   "delegados": 12,
+   "lula_pct": 60.77,
+   "vence": "Lula",
+   "dist_lula": 7,
+   "dist_flavio": 2,
+   "dist_lula_min": 6,
+   "dist_lula_max": 8,
+   "eleitores": 1896761
+  },
+  {
+   "uf": "AC",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 33.43,
+   "vence": "Flávio",
+   "dist_lula": 0,
+   "dist_flavio": 8,
+   "dist_lula_min": 0,
+   "dist_lula_max": 0,
+   "eleitores": 432228
+  },
+  {
+   "uf": "AP",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 52.88,
+   "vence": "Lula",
+   "dist_lula": 7,
+   "dist_flavio": 1,
+   "dist_lula_min": 6,
+   "dist_lula_max": 7,
+   "eleitores": 421642
+  },
+  {
+   "uf": "AM",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 54.02,
+   "vence": "Lula",
+   "dist_lula": 4,
+   "dist_flavio": 4,
+   "dist_lula_min": 3,
+   "dist_lula_max": 5,
+   "eleitores": 2121028
+  },
+  {
+   "uf": "DF",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 45.72,
+   "vence": "Flávio",
+   "dist_lula": 0,
+   "dist_flavio": 8,
+   "dist_lula_min": 0,
+   "dist_lula_max": 0,
+   "eleitores": 1804766
+  },
+  {
+   "uf": "MT",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 33.94,
+   "vence": "Flávio",
+   "dist_lula": 0,
+   "dist_flavio": 8,
+   "dist_lula_min": 0,
+   "dist_lula_max": 0,
+   "eleitores": 2045266
+  },
+  {
+   "uf": "MS",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 40.4,
+   "vence": "Flávio",
+   "dist_lula": 0,
+   "dist_flavio": 8,
+   "dist_lula_min": 0,
+   "dist_lula_max": 0,
+   "eleitores": 1556865
+  },
+  {
+   "uf": "RN",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 65.72,
+   "vence": "Lula",
+   "dist_lula": 8,
+   "dist_flavio": 0,
+   "dist_lula_min": 8,
+   "dist_lula_max": 8,
+   "eleitores": 2151005
+  },
+  {
+   "uf": "RO",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 30.39,
+   "vence": "Flávio",
+   "dist_lula": 0,
+   "dist_flavio": 8,
+   "dist_lula_min": 0,
+   "dist_lula_max": 0,
+   "eleitores": 968828
+  },
+  {
+   "uf": "RR",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 27.54,
+   "vence": "Flávio",
+   "dist_lula": 0,
+   "dist_flavio": 8,
+   "dist_lula_min": 0,
+   "dist_lula_max": 0,
+   "eleitores": 303180
+  },
+  {
+   "uf": "SE",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 69.53,
+   "vence": "Lula",
+   "dist_lula": 8,
+   "dist_flavio": 0,
+   "dist_lula_min": 8,
+   "dist_lula_max": 8,
+   "eleitores": 1422395
+  },
+  {
+   "uf": "TO",
+   "cadeiras": 8,
+   "delegados": 11,
+   "lula_pct": 48.63,
+   "vence": "Flávio",
+   "dist_lula": 4,
+   "dist_flavio": 4,
+   "dist_lula_min": 2,
+   "dist_lula_max": 4,
+   "eleitores": 910878
+  }
+ ],
+ "ufs_venceu_lula": 13,
+ "ufs_venceu_flavio": 14,
+ "exterior_ignorado": 371651
+}
