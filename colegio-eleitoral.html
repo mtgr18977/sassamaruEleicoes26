@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colégio Eleitoral no Brasil · Eleições Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/analise.css">
+<style>
+  .duas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px } @media (max-width:760px) { .duas { grid-template-columns:minmax(0,1fr) } }
+  .titc { margin:18px 0 2px; font-size:.95rem }
+  .lista { margin:8px 0; padding-left:20px } .lista li { margin:6px 0 }
+  table.t td.l { color:var(--pt); font-weight:600 } table.t td.f { color:var(--anti); font-weight:600 }
+  details { margin:8px 0 } details > summary { cursor:pointer; font-weight:600; padding:6px 0 }
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<main id="conteudo">
+  <header class="mast"><a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><rect x="2" y="11" width="6" height="11" rx="1.6" fill="var(--anti)"/><rect x="9" y="3" width="6" height="19" rx="1.6" fill="var(--pt)"/><rect x="16" y="8" width="6" height="14" rx="1.6" fill="var(--s4)"/></svg><span><b>Eleições 2026</b><small>Dados, modelos e análises do Brasil e do RS</small></span></a><div class="mast-r"><button id="tema" class="tema" type="button" aria-label="Alternar tema claro/escuro"></button><button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><span class="hb" aria-hidden="true"></span>Menu<span class="menu-aqui"> · Colégio Eleitoral</span></button></div><nav class="tabs" id="menu" aria-label="Seções do site"><span class="g"><span class="grp">Presidente</span><span class="gl"><a href="index.html">Resultado</a><a href="previsao.html">Previsão</a><a href="segundo-turno.html">2º turno</a><a href="onde-virou.html">Onde virou</a><a href="historico.html">Histórico</a><a href="analise.html">Análise</a><a href="redes.html">Redes sociais</a><a href="colegio-eleitoral.html" aria-current="page">Colégio Eleitoral</a></span></span><span class="g"><span class="grp">Rio Grande do Sul</span><span class="gl"><a href="portoalegre.html">Porto Alegre</a><a href="rs.html">Governo RS</a><a href="analise-governo.html">Análise do governo</a><a href="bancada.html">Bancada RS</a><a href="analise-bancada.html">Análise da bancada</a><a href="distritao.html">Distritão RS</a></span></span><span class="g"><span class="grp">Congresso</span><span class="gl"><a href="analise-senado.html">Análise do Senado</a><a href="distritao-brasil.html">Distritão Brasil</a></span></span><span class="g"><span class="grp">Modelo</span><span class="gl"><a href="analise-modelo.html">Previsto × real</a></span></span><span class="g"><span class="grp">Sobre</span><span class="gl"><a href="documentacao.html">Documentação</a></span></span></nav></header><script>(function(){var d=document,r=d.documentElement,b=d.getElementById("menu-btn"),m=d.getElementById("menu");if(!b||!m)return;r.classList.add("js");function f(o){m.classList.toggle("aberto",o);b.setAttribute("aria-expanded",o)}b.addEventListener("click",function(e){e.stopPropagation();f(!m.classList.contains("aberto"))});d.addEventListener("click",function(e){if(!m.contains(e.target))f(false)});d.addEventListener("keydown",function(e){if(e.key==="Escape"&&m.classList.contains("aberto")){f(false);b.focus()}});m.addEventListener("click",function(e){if(e.target.closest("a"))f(false)})})()</script>
+  <div class="topo"><div><h1>E se o presidente fosse eleito como nos EUA? Delegados e distritos</h1>
+  <p class="sub">Eu refaço o <b>2º turno de 25/10/2026</b> com as regras do Colégio Eleitoral americano: cada UF vale tantos delegados quanto tem de deputados federais mais três senadores, e o <b>vencedor leva tudo</b>. Depois eu desenho distritos, como Maine e Nebraska, e deixo cada um valer um delegado. A pergunta é se o candidato mais votado do país ainda ganharia.</p></div></div>
+  <div class="an">
+  <div class="aviso"><b>É uma releitura do mesmo voto, não uma previsão.</b> Com outra regra as campanhas e os eleitores se comportariam de outro jeito (ninguém faria campanha em Roraima hoje, mas faria com 11 delegados em jogo). E o Brasil <b>não tem distritos</b>: os que eu uso são desenhados por mim, por um método neutro que não olha o voto (seção 4). O voto no exterior (ZZ) não elege delegado.</div>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="sec"><div>
+  <h2>1. A resposta curta</h2>
+  <p id="curtaTxt"></p>
+  <div class="cv" style="height:300px"><canvas id="cRegra"></canvas></div>
+  <div id="tRegra"></div>
+  <p class="fonte">Delegados = cadeiras da Câmara na UF (513, as de hoje) + 3 senadores = 594; maioria = 298. No cenário com distritos, cada distrito vale 1 delegado e o vencedor da UF leva os 3 delegados dos senadores (como Maine e Nebraska, que dão 2 ao vencedor do estado). "Só distritos" = 513 distritos, maioria 257, sem bônus. "Proporcional" divide os delegados de cada UF pela parcela de votos, sem arredondar.</p>
+  </div><aside class="side" id="nota1"></aside></section>
+
+  <section class="sec"><div>
+  <h2>2. UF por UF: quem leva os delegados</h2>
+  <div class="cv alto"><canvas id="cUF"></canvas></div>
+  <details><summary>Ver a tabela das 27 UFs</summary><div id="tUF"></div></details>
+  <p class="fonte">Percentual de Lula sobre os votos válidos (Lula + Flávio) na UF. "Distritos" = distritos que cada um leva no desenho neutro (cadeiras da UF = número de distritos); "faixa" = mínimo e máximo de distritos de Lula em 120 sorteios do desenho.</p>
+  </div><aside class="side" id="nota2"></aside></section>
+
+  <section class="sec"><div>
+  <h2>3. Por que o resultado se inverte</h2>
+  <p id="porqueTxt"></p>
+  <div class="duas"><div><h3 class="titc">Votos "desperdiçados" (acima de 50% + 1 em cada UF que o candidato venceu)</h3><div class="cv" style="height:240px"><canvas id="cDesp"></canvas></div></div>
+  <div><h3 class="titc">Delegados por mil votos válidos, por faixa de tamanho da UF</h3><div class="cv" style="height:240px"><canvas id="cPeso"></canvas></div></div></div>
+  <div id="tPorque"></div>
+  <p class="fonte">Desperdício = votos do vencedor na UF além da metade dos válidos mais um; é um jeito de medir quanto de uma vitória larga "não rende" delegado. Faixas de tamanho: UFs de 8 cadeiras (piso), de 9 a 20, de 21 a 40 e de mais de 40.</p>
+  </div><aside class="side" id="nota3"></aside></section>
+
+  <section class="sec"><div>
+  <h2>4. Os distritos: como eu desenhei e quanto o desenho pesa</h2>
+  <p id="distTxt"></p>
+  <div class="duas"><div><h3 class="titc">Delegados de Lula com distritos (300 sorteios)</h3><div class="cv" style="height:260px"><canvas id="cHistB"></canvas></div></div>
+  <div><h3 class="titc">Distritos de Lula entre 513 (300 sorteios)</h3><div class="cv" style="height:260px"><canvas id="cHistP"></canvas></div></div></div>
+  <div id="tFaixa"></div>
+  <p class="fonte"><b>Método:</b> em cada UF eu pego as zonas eleitorais (município + zona, com a coordenada do município, IBGE) e as divido em tantos distritos quantas as cadeiras da UF, com o mesmo número de votos válidos, por <b>bisseção recursiva</b>: corto a UF em duas partes de peso proporcional ao número de distritos de cada lado, ao longo do eixo de maior extensão, e repito em cada parte. Os sorteios sacodem o ângulo de corte (desvio-padrão de 25°). Zonas com mais de 30% da cota de um distrito (capitais pequenas) são fatiadas em partes iguais. A diferença de tamanho entre distritos fica em ~<span id="dev"></span>% no pior distrito de cada UF, em média.</p>
+  </div><aside class="side" id="nota4"></aside></section>
+
+  <section class="sec"><div>
+  <h2>5. O que eu concluo e o que eu não concluo</h2>
+  <div class="duas"><div><h4>Eu concluo</h4><ul class="lista" id="conc"></ul></div><div><h4>Eu não concluo</h4><ul class="lista" id="nao"></ul></div></div>
+  </div><aside class="side" id="nota5"></aside></section>
+
+  <section class="sec"><div>
+  <h2>6. Limites e como reproduzir</h2>
+  <ul class="lista">
+    <li>Eu uso o voto real nas duas regras. Num Colégio Eleitoral o voto nas UFs decisivas (MG, SP, RJ) seria disputado voto a voto e o resto seria ignorado; o resultado nacional não seria igual.</li>
+    <li>O desenho dos distritos é meu e simples: sem respeito a rios, regiões metropolitanas, comunidades de interesse ou município inteiro (um município grande se divide em vários distritos pelas zonas). Distritos reais, desenhados por quem tem interesse, poderiam favorecer qualquer lado (gerrymandering); aqui só mostro o que um desenho neutro dá, e a faixa de sorteios.</li>
+    <li>Os delegados seguem a distribuição atual da Câmara (513), com piso de 8 e teto de 70 deputados por UF. Isso já inflaciona as UFs pequenas e achata SP; é regra do Brasil, não minha. Os 3 senadores por UF agem como os 2 dos EUA (aqui, como a regra americana, ajudam as UFs pequenas).</li>
+    <li>O peso de cada zona é o total de votos válidos de Lula e Flávio, não o número de eleitores. Isso distorce pouco, mas a abstenção alta (19%) em algumas zonas fica fora da conta.</li>
+    <li>Voto do exterior (ZZ, <span id="ext"></span> votos válidos) fica de fora; ele não elege delegado.</li>
+  </ul>
+  <p class="fonte">Para reproduzir: <code>python colegio_eleitoral.py</code> (usa <code>datasets/tse-presidente-zona-2026.csv</code>, do TSE, e <code>datasets/municipios-coordenadas.csv</code>, com as coordenadas dos municípios) e <code>python gerar_pagina_colegio_eleitoral.py</code>.</p>
+  </div><aside class="side" id="nota6"></aside></section>
+  </div>
+</main>
+<footer class="rodape"><div class="rodape-in"><p><b>Isto não é pesquisa eleitoral nem previsão validada.</b> É um modelo estatístico condicionado às pesquisas e ao histórico do TSE; pesquisas e resultados de 2026 nem sempre foram conferidos na fonte oficial, e cada página diz o que foi e o que não foi.</p><p>Fontes: TSE (resultados e dados abertos), API de Dados Abertos do Senado e da Câmara, institutos de pesquisa e imprensa, conforme a <a href="documentacao.html">documentação</a>. Código aberto (MIT) em <a href="https://github.com/mtgr18977/sassamaruEleicoes26" target="_blank" rel="noopener">GitHub</a>. Página gerada em 04/11/2026.</p></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/analise.js"></script>
+<script>
+const D = {"total_delegados":594,"maioria":298,"cadeiras":513,"senadores_por_uf":3,"sorteios":300,"popular":{"lula":64056078,"flavio":59654544,"lula_pct":51.78},"regras":{"vencedor_leva":276,"proporcional_uf":305.8,"distritos_bonus":284,"distritos_puro":245},"faixa":{"distritos_bonus":{"min":274,"p5":278,"mediana":282,"p95":287,"max":290,"prob_lula":0.0,"hist":[{"lula":274,"n":1},{"lula":276,"n":4},{"lula":277,"n":5},{"lula":278,"n":20},{"lula":279,"n":19},{"lula":280,"n":34},{"lula":281,"n":49},{"lula":282,"n":49},{"lula":283,"n":36},{"lula":284,"n":24},{"lula":285,"n":26},{"lula":286,"n":12},{"lula":287,"n":10},{"lula":288,"n":7},{"lula":289,"n":2},{"lula":290,"n":2}]},"distritos_puro":{"min":235,"p5":239,"mediana":243,"p95":248,"max":251,"prob_lula":0.0,"hist":[{"lula":235,"n":1},{"lula":237,"n":4},{"lula":238,"n":5},{"lula":239,"n":20},{"lula":240,"n":19},{"lula":241,"n":34},{"lula":242,"n":49},{"lula":243,"n":49},{"lula":244,"n":36},{"lula":245,"n":24},{"lula":246,"n":26},{"lula":247,"n":12},{"lula":248,"n":10},{"lula":249,"n":7},{"lula":250,"n":2},{"lula":251,"n":2}]}},"maioria_puro":257,"desvio_max_populacao":0.198,"por_uf":[{"uf":"SP","cadeiras":70,"delegados":73,"lula_pct":46.15,"vence":"Flávio","dist_lula":27,"dist_flavio":43,"dist_lula_min":22,"dist_lula_max":28,"eleitores":26258452},{"uf":"MG","cadeiras":53,"delegados":56,"lula_pct":50.43,"vence":"Lula","dist_lula":23,"dist_flavio":30,"dist_lula_min":19,"dist_lula_max":26,"eleitores":12592885},{"uf":"RJ","cadeiras":46,"delegados":49,"lula_pct":46.9,"vence":"Flávio","dist_lula":12,"dist_flavio":34,"dist_lula_min":11,"dist_lula_max":15,"eleitores":9734426},{"uf":"BA","cadeiras":39,"delegados":42,"lula_pct":71.31,"vence":"Lula","dist_lula":39,"dist_flavio":0,"dist_lula_min":39,"dist_lula_max":39,"eleitores":9094019},{"uf":"RS","cadeiras":31,"delegados":34,"lula_pct":42.16,"vence":"Flávio","dist_lula":6,"dist_flavio":25,"dist_lula_min":5,"dist_lula_max":9,"eleitores":6698930},{"uf":"PR","cadeiras":30,"delegados":33,"lula_pct":37.42,"vence":"Flávio","dist_lula":0,"dist_flavio":30,"dist_lula_min":0,"dist_lula_max":0,"eleitores":6857948},{"uf":"PE","cadeiras":25,"delegados":28,"lula_pct":69.2,"vence":"Lula","dist_lula":25,"dist_flavio":0,"dist_lula_min":25,"dist_lula_max":25,"eleitores":5950067},{"uf":"CE","cadeiras":22,"delegados":25,"lula_pct":68.93,"vence":"Lula","dist_lula":22,"dist_flavio":0,"dist_lula_min":22,"dist_lula_max":22,"eleitores":5855602},{"uf":"MA","cadeiras":18,"delegados":21,"lula_pct":69.54,"vence":"Lula","dist_lula":18,"dist_flavio":0,"dist_lula_min":17,"dist_lula_max":18,"eleitores":4038202},{"uf":"GO","cadeiras":17,"delegados":20,"lula_pct":40.34,"vence":"Flávio","dist_lula":0,"dist_flavio":17,"dist_lula_min":0,"dist_lula_max":1,"eleitores":3930889},{"uf":"PA","cadeiras":17,"delegados":20,"lula_pct":55.02,"vence":"Lula","dist_lula":12,"dist_flavio":5,"dist_lula_min":11,"dist_lula_max":14,"eleitores":4890389},{"uf":"SC","cadeiras":16,"delegados":19,"lula_pct":30.58,"vence":"Flávio","dist_lula":0,"dist_flavio":16,"dist_lula_min":0,"dist_lula_max":0,"eleitores":4638385},{"uf":"PB","cadeiras":12,"delegados":15,"lula_pct":67.46,"vence":"Lula","dist_lula":12,"dist_flavio":0,"dist_lula_min":12,"dist_lula_max":12,"eleitores":2659269},{"uf":"ES","cadeiras":10,"delegados":13,"lula_pct":43.63,"vence":"Flávio","dist_lula":1,"dist_flavio":9,"dist_lula_min":0,"dist_lula_max":1,"eleitores":2296469},{"uf":"PI","cadeiras":10,"delegados":13,"lula_pct":75.88,"vence":"Lula","dist_lula":10,"dist_flavio":0,"dist_lula_min":10,"dist_lula_max":10,"eleitores":2179848},{"uf":"AL","cadeiras":9,"delegados":12,"lula_pct":60.77,"vence":"Lula","dist_lula":7,"dist_flavio":2,"dist_lula_min":6,"dist_lula_max":8,"eleitores":1896761},{"uf":"AC","cadeiras":8,"delegados":11,"lula_pct":33.43,"vence":"Flávio","dist_lula":0,"dist_flavio":8,"dist_lula_min":0,"dist_lula_max":0,"eleitores":432228},{"uf":"AP","cadeiras":8,"delegados":11,"lula_pct":52.88,"vence":"Lula","dist_lula":7,"dist_flavio":1,"dist_lula_min":6,"dist_lula_max":7,"eleitores":421642},{"uf":"AM","cadeiras":8,"delegados":11,"lula_pct":54.02,"vence":"Lula","dist_lula":4,"dist_flavio":4,"dist_lula_min":3,"dist_lula_max":5,"eleitores":2121028},{"uf":"DF","cadeiras":8,"delegados":11,"lula_pct":45.72,"vence":"Flávio","dist_lula":0,"dist_flavio":8,"dist_lula_min":0,"dist_lula_max":0,"eleitores":1804766},{"uf":"MT","cadeiras":8,"delegados":11,"lula_pct":33.94,"vence":"Flávio","dist_lula":0,"dist_flavio":8,"dist_lula_min":0,"dist_lula_max":0,"eleitores":2045266},{"uf":"MS","cadeiras":8,"delegados":11,"lula_pct":40.4,"vence":"Flávio","dist_lula":0,"dist_flavio":8,"dist_lula_min":0,"dist_lula_max":0,"eleitores":1556865},{"uf":"RN","cadeiras":8,"delegados":11,"lula_pct":65.72,"vence":"Lula","dist_lula":8,"dist_flavio":0,"dist_lula_min":8,"dist_lula_max":8,"eleitores":2151005},{"uf":"RO","cadeiras":8,"delegados":11,"lula_pct":30.39,"vence":"Flávio","dist_lula":0,"dist_flavio":8,"dist_lula_min":0,"dist_lula_max":0,"eleitores":968828},{"uf":"RR","cadeiras":8,"delegados":11,"lula_pct":27.54,"vence":"Flávio","dist_lula":0,"dist_flavio":8,"dist_lula_min":0,"dist_lula_max":0,"eleitores":303180},{"uf":"SE","cadeiras":8,"delegados":11,"lula_pct":69.53,"vence":"Lula","dist_lula":8,"dist_flavio":0,"dist_lula_min":8,"dist_lula_max":8,"eleitores":1422395},{"uf":"TO","cadeiras":8,"delegados":11,"lula_pct":48.63,"vence":"Flávio","dist_lula":4,"dist_flavio":4,"dist_lula_min":2,"dist_lula_max":4,"eleitores":910878}],"ufs_venceu_lula":13,"ufs_venceu_flavio":14,"exterior_ignorado":371651};
+const R = D.regras, ML = D.maioria, vir = (x) => String(x).replace(".", ","), mil = (x) => x.toLocaleString("pt-BR");
+const LULA = () => css("--pt"), FLAV = () => css("--anti");
+const total = D.total_delegados, tdist = D.cadeiras;
+const por = D.por_uf;
+const cl = (x) => `<span class="l">${x}</span>`, cf = (x) => `<span class="f">${x}</span>`;
+
+function kpis() {
+  const lf = (l, t) => `${Math.round(l)} × ${Math.round(t - l)}`;
+  $("kpis").innerHTML = `<div class="kpi l"><span>Voto popular (real)</span><b>${vir(D.popular.lula_pct)}%</b><small>Lula, ${mil(D.popular.lula)} contra ${mil(D.popular.flavio)}</small></div>
+    <div class="kpi f"><span>Vencedor leva tudo</span><b>${lf(R.vencedor_leva, total)}</b><small>Lula × Flávio · Flávio ganha (maioria: ${ML})</small></div>
+    <div class="kpi f"><span>Distritos + bônus da UF</span><b>${lf(R.distritos_bonus, total)}</b><small>mediana dos sorteios: ${D.faixa.distritos_bonus.mediana} para Lula</small></div>
+    <div class="kpi f"><span>Só distritos (513)</span><b>${lf(R.distritos_puro, tdist)}</b><small>Lula leva ${(100 * R.distritos_puro / tdist).toFixed(1).replace(".", ",")}% dos distritos</small></div>
+    <div class="kpi l"><span>Proporcional por UF</span><b>${vir(R.proporcional_uf)} × ${vir((total - R.proporcional_uf).toFixed(1))}</b><small>Lula ganha só se os delegados seguirem o voto</small></div>`;
+}
+
+function curta() {
+  const fb = D.faixa.distritos_bonus, fp = D.faixa.distritos_puro;
+  $("curtaTxt").innerHTML = `<b>Lula teria mais votos que Flávio (${vir(D.popular.lula_pct)}%) e perderia em qualquer regra de Colégio Eleitoral que dê o delegado ao vencedor do lugar.</b> Com o vencedor leva tudo por UF seria <b>${R.vencedor_leva} × ${total - R.vencedor_leva}</b> para Flávio, com maioria em ${ML}. Desenhando distritos, Lula sobe um pouco (${R.distritos_bonus} delegados no desenho-base, ${fb.p5} a ${fb.p95} em 90% dos sorteios), mas <b>nenhum dos ${D.sorteios} sorteios chega a ${ML}</b> (o melhor dá ${fb.max}). Só distritos, sem bônus de UF, Lula leva <b>${R.distritos_puro} dos ${tdist}</b> distritos (de ${fp.min} a ${fp.max}), longe dos ${D.maioria_puro} necessários. Só no proporcional, que ignora a fronteira das UFs, Lula ganharia (${vir(R.proporcional_uf)}).`;
+  const rows = [["Voto popular (proporcional ao voto)", D.popular.lula_pct * total / 100], ["Proporcional por UF", R.proporcional_uf], ["Distritos + bônus da UF", R.distritos_bonus], ["Vencedor leva tudo", R.vencedor_leva]];
+  chart("cRegra", { type: "bar", data: { labels: rows.map(r => r[0]), datasets: [
+      { label: "Lula", data: rows.map(r => +r[1].toFixed(1)), backgroundColor: LULA(), borderRadius: 3 },
+      { label: "Flávio", data: rows.map(r => +(total - r[1]).toFixed(1)), backgroundColor: FLAV(), borderRadius: 3 }] },
+    options: { indexAxis: "y", scales: { x: eixo({ stacked: true, min: 0, max: total, ticks: { color: css("--ink2") }, title: { display: true, text: `delegados (maioria: ${ML})`, color: css("--ink2") } }), y: eixo({ stacked: true, grid: { display: false } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => `${i.dataset.label}: ${vir(i.parsed.x)} delegados` } } } } });
+  tab("tRegra", ["Regra", "Lula", "Flávio", "Quem ganha"], [
+    ["Voto popular", `${mil(D.popular.lula)} (${vir(D.popular.lula_pct)}%)`, `${mil(D.popular.flavio)} (${vir((100 - D.popular.lula_pct).toFixed(2))}%)`, cl("Lula")],
+    ["Proporcional por UF (594)", vir(R.proporcional_uf), vir((total - R.proporcional_uf).toFixed(1)), R.proporcional_uf >= ML ? cl("Lula") : cf("Flávio")],
+    ["Distritos + bônus da UF (594)", R.distritos_bonus, total - R.distritos_bonus, R.distritos_bonus >= ML ? cl("Lula") : cf("Flávio")],
+    ["Só distritos (513)", R.distritos_puro, tdist - R.distritos_puro, R.distritos_puro >= D.maioria_puro ? cl("Lula") : cf("Flávio")],
+    ["Vencedor leva tudo (594)", R.vencedor_leva, total - R.vencedor_leva, R.vencedor_leva >= ML ? cl("Lula") : cf("Flávio")]]);
+  nota("nota1", [`Voto popular: Lula ${vir(D.popular.lula_pct)}%.`, `Colégio Eleitoral (vencedor leva tudo): Flávio ${total - R.vencedor_leva} × ${R.vencedor_leva}.`, `Nenhum desenho de distrito dá a Lula a maioria.`]);
+}
+
+function ufs() {
+  const o = [...por].sort((a, b) => b.delegados - a.delegados);
+  chart("cUF", { type: "bar", data: { labels: o.map(u => `${u.uf} · ${vir(u.lula_pct.toFixed(1))}%`), datasets: [
+      { label: "Lula leva", data: o.map(u => u.vence === "Lula" ? u.delegados : 0), backgroundColor: LULA(), borderRadius: 3 },
+      { label: "Flávio leva", data: o.map(u => u.vence === "Flávio" ? u.delegados : 0), backgroundColor: FLAV(), borderRadius: 3 }] },
+    options: { indexAxis: "y", scales: { x: eixo({ stacked: true, ticks: { color: css("--ink2") }, title: { display: true, text: "delegados da UF", color: css("--ink2") } }), y: eixo({ stacked: true, grid: { display: false } }) },
+      plugins: { tooltip: { callbacks: { label: (i) => i.parsed.x ? `${i.dataset.label}: ${i.parsed.x} delegados` : "" } } } } });
+  tab("tUF", ["UF", "Delegados", "Lula (% válidos)", "Vence a UF", "Distritos Lula × Flávio", "Faixa (Lula)"],
+    o.map(u => [u.uf, u.delegados, vir(u.lula_pct.toFixed(1)), u.vence === "Lula" ? cl("Lula") : cf("Flávio"), `${u.dist_lula} × ${u.dist_flavio}`, `${u.dist_lula_min} a ${u.dist_lula_max}`]));
+  const apertadas = por.filter(u => Math.abs(u.lula_pct - 50) < 5).sort((a, b) => b.delegados - a.delegados);
+  nota("nota2", [`${D.ufs_venceu_flavio} UFs para Flávio, ${D.ufs_venceu_lula} para Lula.`, `Decisivas (a menos de 5 p.p. de 50%): ${apertadas.map(u => `${u.uf} ${u.delegados}`).join(", ")}.`]);
+}
+
+function porque() {
+  const v = (u) => u.eleitores;
+  const desp = (lado) => por.reduce((s, u) => {
+    const l = v(u) * u.lula_pct / 100, f = v(u) - l, ganha = lado === "Lula" ? l > f : f > l;
+    return s + (ganha ? Math.max((lado === "Lula" ? l : f) - (v(u) / 2 + 1), 0) : 0);
+  }, 0);
+  const perd = (lado) => por.reduce((s, u) => { const l = v(u) * u.lula_pct / 100, f = v(u) - l, g = l > f; return s + ((lado === "Lula") !== g ? (lado === "Lula" ? l : f) : 0); }, 0);
+  const dl = desp("Lula"), df = desp("Flávio"), pl = perd("Lula"), pf = perd("Flávio");
+  const tot = por.reduce((s, u) => s + v(u), 0), pop = (x) => mil(Math.round(x / 1000) * 1000);
+  $("porqueTxt").innerHTML = `<b>Lula acumula votos onde não precisa deles.</b> Ele vence nas UFs do Nordeste com 61% a 76% e "desperdiça" ${pop(dl)} votos acima da metade; Flávio desperdiça ${pop(df)}. Ao mesmo tempo, Lula perde por 19 a 45 pontos de diferença em UFs onde Flávio leva o bloco inteiro de delegados (SC, PR, GO, MT, RO, RR, AC). O pior para Lula é a soma: Flávio ganha em ${D.ufs_venceu_flavio} UFs, e as grandes (SP e RJ) vão para ele por menos de 8 pontos de diferença, o que vale ${por.filter(u => ["SP", "RJ"].includes(u.uf)).reduce((s, u) => s + u.delegados, 0)} delegados de uma vez.`;
+  const faixas = [["8 cadeiras (piso)", u => u.cadeiras === 8], ["9 a 20", u => u.cadeiras > 8 && u.cadeiras <= 20], ["21 a 40", u => u.cadeiras > 20 && u.cadeiras <= 40], ["mais de 40", u => u.cadeiras > 40]];
+  const ag = faixas.map(([n, f]) => { const g = por.filter(f), e = g.reduce((s, u) => s + v(u), 0), d = g.reduce((s, u) => s + u.delegados, 0); return { n, d, e, dm: d / e * 1e6, ufs: g.length }; });
+  chart("cDesp", { type: "bar", data: { labels: ["Lula", "Flávio"], datasets: [{ label: "votos desperdiçados (milhões)", data: [+(dl / 1e6).toFixed(2), +(df / 1e6).toFixed(2)], backgroundColor: [LULA(), FLAV()], borderRadius: 3 }] },
+    options: { plugins: { legend: { display: false } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, ticks: { color: css("--ink2") }, title: { display: true, text: "milhões de votos", color: css("--ink2") } }) } } });
+  chart("cPeso", { type: "bar", data: { labels: ag.map(a => a.n), datasets: [{ label: "delegados por milhão de votos válidos", data: ag.map(a => +a.dm.toFixed(1)), backgroundColor: css("--muted"), borderRadius: 3 }] },
+    options: { plugins: { legend: { display: false } }, scales: { x: eixo({ grid: { display: false } }), y: eixo({ min: 0, ticks: { color: css("--ink2") }, title: { display: true, text: "delegados por milhão de votos", color: css("--ink2") } }) } } });
+  tab("tPorque", ["Lado", "Votos nas UFs que venceu", "Votos em UFs que perdeu (sem delegado)", "Votos desperdiçados (excesso de vitória)"],
+    [[cl("Lula"), mil(Math.round(por.reduce((s, u) => s + (u.vence === "Lula" ? v(u) * u.lula_pct / 100 : 0), 0))), mil(Math.round(pl)), mil(Math.round(dl))],
+     [cf("Flávio"), mil(Math.round(por.reduce((s, u) => s + (u.vence === "Flávio" ? v(u) * (100 - u.lula_pct) / 100 : 0), 0))), mil(Math.round(pf)), mil(Math.round(df))]]);
+  nota("nota3", [`Desperdício: Lula ${pop(dl)}, Flávio ${pop(df)}.`, `UFs pequenas rendem ${vir(ag[0].dm.toFixed(0))} delegados por milhão de votos; as de mais de 40 cadeiras, ${vir(ag[3].dm.toFixed(0))}.`]);
+}
+
+function distritos() {
+  const fb = D.faixa.distritos_bonus, fp = D.faixa.distritos_puro;
+  $("dev").textContent = Math.round(D.desvio_max_populacao * 100);
+  $("distTxt").innerHTML = `<b>Distritos com o mesmo número de votos válidos, sem olhar o voto, dão a Lula ${R.distritos_puro} de ${tdist} (${(100 * R.distritos_puro / tdist).toFixed(1).replace(".", ",")}%), mesmo com ${vir(D.popular.lula_pct)}% dos votos.</b> O padrão é compatível com uma geografia em que o voto de Lula se concentra em menos distritos, com margens grandes, e o de Flávio ganha mais distritos por margens menores (não medi a composição de cada distrito). A variação por desenho é pequena (${fp.p5} a ${fp.p95} distritos para Lula em 90% dos sorteios) perto da distância até a maioria: faltam ${D.maioria_puro - fp.max} a ${D.maioria_puro - fp.min} distritos. Com o bônus de 3 delegados por UF vencida, Lula chega a ${fb.mediana} (de ${fb.min} a ${fb.max}), abaixo de ${ML}.`;
+  const h = (id, f, cor, linha) => { const mn = f.hist[0].lula, mx = f.hist[f.hist.length - 1].lula, labs = [], dados = []; const mp = Object.fromEntries(f.hist.map(x => [x.lula, x.n]));
+    for (let i = mn - 2; i <= Math.max(mx, linha) + 2; i++) { labs.push(i); dados.push(mp[i] || 0); }
+    chart(id, { type: "bar", data: { labels: labs, datasets: [{ label: "sorteios", data: dados, backgroundColor: labs.map(l => l >= linha ? LULA() : FLAV()), borderRadius: 2 }] },
+      options: { plugins: { legend: { display: false }, tooltip: { callbacks: { title: (i) => `${i[0].label} ${id === "cHistB" ? "delegados" : "distritos"} de Lula`, label: (i) => `${i.parsed.y} de ${D.sorteios} sorteios` } } }, scales: { x: eixo({ grid: { display: false }, title: { display: true, text: `${id === "cHistB" ? "delegados" : "distritos"} de Lula (azul: abaixo da maioria ${linha})`, color: css("--ink2") } }), y: eixo({ min: 0, ticks: { color: css("--ink2") }, title: { display: true, text: "sorteios", color: css("--ink2") } }) } } }); };
+  h("cHistB", fb, 0, ML); h("cHistP", fp, 0, D.maioria_puro);
+  tab("tFaixa", ["Regra", "Mínimo", "5%", "Mediana", "95%", "Máximo", "Maioria", "Sorteios em que Lula ganha"], [
+    ["Distritos + bônus (594)", fb.min, fb.p5, fb.mediana, fb.p95, fb.max, ML, `${(100 * fb.prob_lula).toFixed(0)}%`],
+    ["Só distritos (513)", fp.min, fp.p5, fp.mediana, fp.p95, fp.max, D.maioria_puro, `${(100 * fp.prob_lula).toFixed(0)}%`]]);
+  nota("nota4", [`Lula nos distritos: ${R.distritos_puro} de ${tdist}.`, `Faixa dos ${D.sorteios} sorteios: ${fb.min} a ${fb.max} delegados (maioria: ${ML}).`, `Desenho neutro: um desenho enviesado poderia mudar muito isso.`]);
+}
+
+function conclusoes() {
+  const fb = D.faixa.distritos_bonus;
+  $("conc").innerHTML = [
+    `Com o resultado real de 2026, uma eleição por Colégio Eleitoral com vencedor leva tudo daria a vitória a <b>Flávio, ${total - R.vencedor_leva} × ${R.vencedor_leva}</b>, mesmo com Lula ${vir(D.popular.lula_pct)}% no voto popular.`,
+    `Distritos desenhados de modo neutro <b>não resgatam Lula</b>: em nenhum dos ${D.sorteios} sorteios ele chega a ${ML} delegados (máximo ${fb.max}).`,
+    `A origem é a distribuição do voto, em duas camadas: entre UFs (excesso de vitória no Nordeste e perdas apertadas em SP e RJ) e dentro delas (Lula ganha menos distritos do que sua parcela de votos).`,
+    `Os 3 senadores por UF e o piso de 8 deputados dão mais delegados por voto às UFs pequenas, onde Flávio vence com folga.`].map(t => `<li>${t}</li>`).join("");
+  $("nao").innerHTML = [
+    `Que "Flávio venceria" uma eleição assim: o candidato certo para essa regra faria campanha diferente e o voto também seria outro.`,
+    `Que os distritos de um jogo político real teriam o mesmo resultado: desenhados por interessados, poderiam dar mais ou menos distritos a cada lado.`,
+    `Que o sistema americano seja "injusto" ou "justo": isso é uma conta, não um juízo.`,
+    `Qualquer coisa sobre 2022: só reli o 2º turno de 2026.`].map(t => `<li>${t}</li>`).join("");
+  nota("nota5", [`Voto: Lula. Colégio Eleitoral: Flávio.`, `Uma releitura, não uma previsão.`]);
+  $("ext").textContent = mil(D.exterior_ignorado);
+  nota("nota6", [`Resultado oficial do TSE (25/10/2026, 100% das seções).`, `Distritos desenhados por mim, sem olhar voto.`]);
+}
+
+kpis(); curta(); ufs(); porque(); distritos(); conclusoes();
+</script>
+</body>
+</html>
